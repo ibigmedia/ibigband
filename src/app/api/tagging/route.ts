@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { GoogleGenAI } from '@google/genai';
 
 export async function POST(req: Request) {
   try {
@@ -8,23 +9,38 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: '가사 정보가 필요합니다.' }, { status: 400 });
     }
 
-    // 실제 환경: 구글 제미나이 SDK 연동 (예: @google/genai) 
-    // const { GoogleGenAI } = require('@google/genai');
-    // const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    // const prompt = `다음 찬양 가사를 바탕으로 곡의 BPM, Mood, Key를 추론하고 요약해줘.\n제목:${title}\n가사:\n${lyrics}`;
-    // const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt });
-    // const text = response.text();
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("API Key for Gemini is not present in environment variables.");
+    }
 
-    // 임시 더미(Dummy) 응답 로직
-    const dummyAiResponse = {
-      bpm: 110,
-      key: "G",
-      moodTags: ["은혜로운", "결단", "위로"],
-      summary: "이 찬양은 모든 것이 하나님의 은혜임을 고백하며, 삶의 고독 속에서도 주님을 의지하겠다는 신앙적 고백과 결단을 담고 있습니다."
-    };
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    
+    // We request JSON format back from Gemini to easily parse it into our system
+    const prompt = `다음 찬양 가사를 바탕으로 곡의 정보를 분석해서 JSON 형식으로 반환해줘.
+제목: ${title}
+가사: ${lyrics}
+요구 응답 포맷 (JSON):
+{
+  "bpm": 120 (또는 다른 숫자),
+  "key": "G" (코드 형식),
+  "moodTags": ["은혜", "결단", "기쁨"],
+  "summary": "가사를 바탕으로 한 1~2줄 요약글"
+}
+반드시 JSON 포맷만 출력해줘.\n`;
 
-    return NextResponse.json({ success: true, data: dummyAiResponse });
+    const response = await ai.models.generateContent({ 
+      model: 'gemini-2.5-flash', 
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+      }
+    });
+
+    const parsedData = JSON.parse(response.text || '{}');
+
+    return NextResponse.json({ success: true, data: parsedData });
   } catch (error: any) {
+    console.error("Gemini Error:", error);
     return NextResponse.json({ error: error.message || 'Server Error' }, { status: 500 });
   }
 }
