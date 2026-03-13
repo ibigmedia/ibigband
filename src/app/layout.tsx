@@ -7,8 +7,9 @@ import { AuthProvider } from "@/lib/firebase/auth";
 
 const gaegu = Gaegu({
   variable: "--font-gaegu",
-  subsets: ["latin"],
   weight: ["300", "400", "700"],
+  subsets: ["latin"],
+  preload: false,
 });
 
 const inter = Inter({
