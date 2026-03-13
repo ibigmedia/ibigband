@@ -68,3 +68,15 @@ export const createOrUpdateDoc = async (colName: string, id: string, data: any) 
   const docRef = doc(db, colName, id);
   await setDoc(docRef, data, { merge: true });
 };
+
+export const addDocument = async (colName: string, data: any): Promise<string> => {
+  const { addDoc, collection } = await import('firebase/firestore');
+  const docRef = await addDoc(collection(db, colName), data);
+  return docRef.id;
+};
+
+export const deleteDocument = async (colName: string, id: string) => {
+  const { deleteDoc, doc } = await import('firebase/firestore');
+  const docRef = doc(db, colName, id);
+  await deleteDoc(docRef);
+};
