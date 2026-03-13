@@ -1,0 +1,40 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      // Cross-service access: reads the user doc from firestore
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+    
+    function isPremium() {
+      return isAuthenticated() && (getUserData().isPremium == true || isAdmin());
+    }
+
+    // Publicly accessible path for generic images (blog thumbnails, artists, etc.)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    // Premium tier digital assets (PDFs, MRs)
+    match /premium/{allPaths=**} {
+      allow read: if isPremium();
+      allow write: if isAdmin();
+    }
+    
+    // User-specific paths (e.g., user avatars)
+    match /users/{userId}/{allPaths=**} {
+      allow read: if true; // anyone can view avatars
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+  }
+}

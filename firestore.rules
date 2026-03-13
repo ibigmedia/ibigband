@@ -1,1 +1,44 @@
-rules_version = '2';\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /{document=**} {\n      allow read, write: if request.auth != null;\n    }\n  }\n}\n
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserData().role == 'admin';
+    }
+
+    match /users/{userId} {
+      // Users can manage their own profile; Admins have full access
+      allow read, write: if request.auth.uid == userId || isAdmin();
+    }
+
+    match /sheets/{sheetId} {
+      // Sheet metadata is public; only Admins can create/edit
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    
+    match /artists/{artistId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /setlists/{setlistId} {
+      // Users can only access and manage their own setlists
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read, update, delete: if isAuthenticated() && (resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
