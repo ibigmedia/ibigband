@@ -75,9 +75,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-    } catch (error) {
+      // Check if the user is on a mobile device
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Use redirect for mobile to avoid popup blockers and in-app browser issues
+        import('firebase/auth').then(({ signInWithRedirect }) => {
+          signInWithRedirect(auth, provider).catch(err => {
+            console.error("Redirect Error:", err);
+            alert("구글 로그인 중 문제가 발생했습니다: " + err.message);
+          });
+        });
+      } else {
+        // Use popup for desktop
+        await signInWithPopup(auth, provider);
+      }
+    } catch (error: any) {
       console.error("Error signing in with Google", error);
+      alert('구글 로그인 중 오류가 발생했습니다. 브라우저 팝업을 허용해주세요.\\n' + error?.message);
     }
   };
 
