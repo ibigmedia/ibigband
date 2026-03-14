@@ -23,10 +23,46 @@ export default function AdminBlogPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState('');
   const [saving, setSaving] = useState(false);
+  
+  // AI Config State
+  const [aiTopic, setAiTopic] = useState('');
+  const [aiKeywords, setAiKeywords] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+  const [imagePrompt, setImagePrompt] = useState('');
 
   useEffect(() => {
     fetchBlogs();
   }, []);
+
+  const handleAIGenerate = async () => {
+    if (!aiTopic) {
+      alert("Please enter a topic for the AI.");
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const res = await fetch('/api/generate-blog', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic: aiTopic, keywords: aiKeywords })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to generate');
+      if (data.success && data.data) {
+        setTitle(data.data.title || '');
+        setContent(data.data.content || '');
+        if (data.data.tags && Array.isArray(data.data.tags)) {
+          setTags(data.data.tags.join(', '));
+        }
+        if (data.data.imagePrompt) setImagePrompt(data.data.imagePrompt);
+      }
+    } catch (e: any) {
+      console.error(e);
+      alert("AI Generation failed: " + e.message);
+    } finally {
+      setAiLoading(false);
+    }
+  };
 
   const fetchBlogs = async () => {
     setLoading(true);
@@ -133,6 +169,41 @@ export default function AdminBlogPage() {
           <h3 className="text-xl font-bold mb-6">{currentId ? 'Edit Post' : 'New Post'}</h3>
           <form onSubmit={handleSave} className="space-y-6">
             <div className="space-y-6">
+              {/* AI Auto Generate Section */}
+              <div className="p-4 mb-6 bg-black/10 rounded-ibig border border-dashed border-[#E6C79C]/50">
+                <label className="block text-sm font-bold text-[#E6C79C] mb-2 flex items-center">
+                  ✨ AI 블로그 자동 생성기 (Gemini)
+                </label>
+                <div className="flex gap-2 mb-2">
+                  <Input 
+                    value={aiTopic} 
+                    onChange={e => setAiTopic(e.target.value)} 
+                    placeholder="블로그 주제를 입력하세요 (예: 크리스마스 예배 준비)" 
+                    className="bg-black/20 text-white border-none flex-1"
+                  />
+                  <Input 
+                    value={aiKeywords} 
+                    onChange={e => setAiKeywords(e.target.value)} 
+                    placeholder="키워드 (예: 기쁨, 탄생, 찬양)" 
+                    className="bg-black/20 text-white border-none flex-1"
+                  />
+                </div>
+                <Button 
+                  type="button" 
+                  onClick={handleAIGenerate} 
+                  disabled={aiLoading} 
+                  className="w-full bg-[#E6C79C] text-[#2D2926] hover:bg-[#E6C79C]/80"
+                >
+                  {aiLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> 생성 중...</> : '내용 및 제목 자동 생성하기'}
+                </Button>
+                {imagePrompt && (
+                   <div className="mt-4 p-3 bg-black/20 rounded text-sm text-gray-300">
+                     <p className="font-bold text-[#E6C79C] mb-1">썸네일 생성용 추천 프롬프트 (Midjourney / DALL-E):</p>
+                     <p className="italic">{imagePrompt}</p>
+                   </div>
+                )}
+              </div>
+
               <div>
                 <label className="block text-sm text-[#E6C79C] mb-2">Title *</label>
                 <Input required value={title} onChange={e => setTitle(e.target.value)} placeholder="Post title..." className="bg-black/20 text-white border-none w-full text-xl py-4"/>

@@ -9,7 +9,7 @@ export function Button({ variant = 'primary', size = 'md', className = '', child
   const baseStyle = "inline-flex items-center justify-center font-bold transition-all rounded-ibig";
   const variants = {
     primary: "bg-[#2D2926] text-white hover:bg-[#78716A] shadow-md hover:scale-105 transform",
-    secondary: "bg-[#E6C79C] text-[#2D2926] hover:shadow-lg",
+    secondary: "bg-[#E6C79C] text-black hover:bg-[#D4A373] hover:shadow-lg",
     outline: "bg-white border-2 border-[#78716A]/10 text-[#78716A] hover:bg-[#78716A]/5"
   };
   const sizes = {

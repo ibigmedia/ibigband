@@ -1,39 +1,151 @@
-"use client";
+'use client';
 
-import Image from 'next/image';
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '@/lib/firebase/config';
+import { Calendar, User, ArrowRight, Loader2 } from 'lucide-react';
+import Link from 'next/link';
 
-export default function Blog() {
-  return (
-    <div className="pt-32 px-6 max-w-5xl mx-auto mb-20">
-      <div className="text-center mb-20 space-y-4">
-        <h2 className="text-6xl font-handwriting">묵상과 예술</h2>
-        <p className="text-[#78716A] italic font-light">"찬양은 삶의 고백이자 예술의 완성입니다."</p>
-        <div className="w-20 h-1 bg-[#E6C79C] mx-auto rounded-full mt-8"></div>
+interface Blog {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  imageUrl: string;
+  createdAt: any;
+}
+
+export default function BlogListingPage() {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBlogs();
+  }, []);
+
+  const fetchBlogs = async () => {
+    try {
+      const q = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Blog));
+      setBlogs(data);
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (timestamp: any) => {
+    if (!timestamp) return '';
+    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center bg-[#FAF9F6]">
+        <Loader2 className="w-12 h-12 text-[#E6C79C] animate-spin" />
       </div>
-      
-      <div className="space-y-32">
-        {[1, 2].map(i => (
-          <article key={i} className="group relative">
-            <div className="aspect-[21/10] rounded-ibig overflow-hidden mb-10 shadow-2xl relative bg-[#2D2926]">
-              {/* Note: Using a placeholder color or gradient if external image domain isn't configured in next.config.ts */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#2D2926] to-[#78716A] group-hover:scale-110 transition-transform duration-[2s]"></div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-              <div className="absolute bottom-10 left-10 text-white z-10">
-                <span className="text-[10px] font-bold tracking-[0.3em] uppercase mb-2 block text-[#E6C79C]">Artist Note • 2024.11.20</span>
-                <h3 className="text-4xl md:text-5xl font-handwriting leading-tight">깊은 밤의 찬양,<br/>고독이 예술이 될 때</h3>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#FAF9F6] pt-32 pb-20">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        
+        {/* Magazine Header */}
+        <div className="text-center mb-24 space-y-6">
+          <h1 className="text-5xl md:text-7xl font-handwriting font-bold text-[#2D2926]">
+            iBigMedia <span className="text-[#E6C79C]">Journal</span>
+          </h1>
+          <p className="text-[#78716A] text-lg max-w-2xl mx-auto italic font-light">
+            "Art and faith intersecting in our daily lives. Read our latest thoughts, AI-generated insights, and updates."
+          </p>
+          <div className="w-24 h-1 bg-[#E6C79C] mx-auto rounded-full mt-10"></div>
+        </div>
+
+        {/* Featured / Grid Loop */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {blogs.length === 0 ? (
+            <div className="col-span-12 text-center py-20 text-[#78716A]">
+              No posts found. Start writing in the admin panel!
+            </div>
+          ) : (
+            <>
+              {/* Top Featured Post (Latest) */}
+              <div className="col-span-1 lg:col-span-12">
+                <Link href={`/blog/${blogs[0].id}`} className="group block">
+                  <div className="relative rounded-[2rem] overflow-hidden aspect-[16/9] md:aspect-[21/9] bg-[#2D2926] shadow-2xl">
+                    {blogs[0].imageUrl && (
+                      <img 
+                        src={blogs[0].imageUrl} 
+                        alt={blogs[0].title}
+                        className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                    
+                    <div className="absolute bottom-8 left-8 right-8 md:bottom-16 md:left-16 md:right-16 text-white">
+                      <div className="flex items-center gap-4 text-sm font-medium text-[#E6C79C] mb-4 uppercase tracking-widest">
+                        <span className="flex items-center gap-1.5"><Calendar size={14} /> {formatDate(blogs[0].createdAt)}</span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1.5"><User size={14} /> {blogs[0].author || 'Admin'}</span>
+                      </div>
+                      <h2 className="text-3xl md:text-5xl font-bold mb-4 leading-tight group-hover:text-[#E6C79C] transition-colors line-clamp-2">
+                        {blogs[0].title}
+                      </h2>
+                      <p className="text-[#D4D4D8] md:text-lg line-clamp-2 max-w-3xl font-light">
+                        {blogs[0].excerpt || blogs[0].content.replace(/<[^>]+>/g, '')}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
               </div>
-            </div>
-            
-            <div className="max-w-3xl mx-auto text-center md:text-left">
-              <p className="text-lg text-[#78716A] leading-relaxed font-light mb-8">
-                음악은 때로 단어보다 훨씬 많은 것을 말해줍니다. 우리가 광야에 서 있을 때, 그 적막 속에서 울려 퍼지는 작은 멜로디는 하나님께 닿는 가장 순수한 기도가 됩니다. 이번 리세션에서는 우리가 가진 가장 연약한 부분을 찬양으로 승화시키는 과정을 돌아봅니다...
-              </p>
-              <button className="px-8 py-3 border border-[#E6C79C] text-[#E6C79C] rounded-full text-sm font-bold hover:bg-[#E6C79C] hover:text-[#2D2926] transition-all">
-                더 읽어보기
-              </button>
-            </div>
-          </article>
-        ))}
+
+              {/* Remaining Posts Grid */}
+              {blogs.slice(1).map((blog) => (
+                <div key={blog.id} className="col-span-1 md:col-span-6 lg:col-span-4">
+                  <Link href={`/blog/${blog.id}`} className="group block h-full flex flex-col">
+                    <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#2D2926] shadow-lg mb-6">
+                      {blog.imageUrl ? (
+                        <img 
+                          src={blog.imageUrl} 
+                          alt={blog.title}
+                          className="w-full h-full object-cover opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-tr from-[#2D2926] to-[#78716A] flex items-center justify-center">
+                           <h3 className="text-white/30 font-handwriting text-3xl px-4 text-center line-clamp-2">{blog.title}</h3>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="flex-1 flex flex-col">
+                      <div className="flex items-center gap-3 text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-3">
+                        <span>{formatDate(blog.createdAt)}</span>
+                      </div>
+                      
+                      <h3 className="text-2xl font-bold text-[#2D2926] mb-3 line-clamp-2 group-hover:text-[#E6C79C] transition-colors">
+                        {blog.title}
+                      </h3>
+                      
+                      <p className="text-[#78716A] line-clamp-3 mb-6 font-light leading-relaxed flex-1">
+                        {blog.excerpt || blog.content.replace(/<[^>]+>/g, '')}
+                      </p>
+                      
+                      <div className="flex items-center text-[#E6C79C] font-bold text-sm uppercase tracking-wide group-hover:translate-x-2 transition-transform self-start">
+                        Read Story <ArrowRight className="w-4 h-4 ml-2" />
+                      </div>
+                    </div>
+                  </Link>
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+
       </div>
     </div>
   );

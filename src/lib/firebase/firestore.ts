@@ -14,12 +14,16 @@ export interface SheetMusic {
   id?: string;
   title: string;
   artistId: string;
+  youtubeId?: string;
   bpm: number;
   key: string;
   moodTags: string[];
-  pdfUrl: string;
+  pdfUrl?: string; // 이제 MR 전용이 있을 수 있으니 선택적으로
+  thumbnailUrl?: string;
   audioUrl?: string;
   isPremiumOnly: boolean;
+  level?: string;
+  price?: string;
   createdAt: number;
 }
 
@@ -64,12 +68,12 @@ export const getDocById = async <T,>(colName: string, id: string): Promise<T | n
   return null;
 };
 
-export const createOrUpdateDoc = async (colName: string, id: string, data: any) => {
+export const createOrUpdateDoc = async (colName: string, id: string, data: Record<string, unknown> | Partial<unknown>) => {
   const docRef = doc(db, colName, id);
   await setDoc(docRef, data, { merge: true });
 };
 
-export const addDocument = async (colName: string, data: any): Promise<string> => {
+export const addDocument = async (colName: string, data: Record<string, unknown> | Partial<unknown>): Promise<string> => {
   const { addDoc, collection } = await import('firebase/firestore');
   const docRef = await addDoc(collection(db, colName), data);
   return docRef.id;

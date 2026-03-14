@@ -4,7 +4,8 @@
   --color-background: #FAF9F6;
   --color-foreground: #2D2926;
   --font-sans: var(--font-inter), "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-  --font-handwriting: var(--font-gaegu), cursive;
+  --font-handwriting: "Gaegu", cursive;
+  --font-gaegu: "Gaegu";
   
   --color-brand-cream: #FAF9F6;
   --color-brand-charcoal: #2D2926;
@@ -40,4 +41,6 @@ body {
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-brand-gold); border-radius: 10px; }
 .glass-effect { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
+
+/* Force HMR rebuild */
 

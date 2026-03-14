@@ -1,16 +1,11 @@
 import type { Metadata } from "next";
-import { Gaegu, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/firebase/auth";
 
-const gaegu = Gaegu({
-  variable: "--font-gaegu",
-  weight: ["300", "400", "700"],
-  subsets: ["latin"],
-  preload: false,
-});
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,7 +24,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${gaegu.variable} ${inter.variable} antialiased font-sans bg-[#FAF9F6] text-[#2D2926]`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet" />
+      </head>
+      <body className={`${inter.variable} antialiased font-sans bg-[#FAF9F6] text-[#2D2926]`}>
         <AuthProvider>
           <Navigation />
           <main className="pt-20">

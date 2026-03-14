@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '@/lib/firebase/auth';
-import { createOrUpdateDoc } from '@/lib/firebase/firestore';
-import { Button } from '@/components/ui/Button';
 import { X, CheckCircle } from 'lucide-react';
+import PayPalButton from '@/components/PayPalButton'; // 새로 만든 페이팔 버튼 임포트
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -13,34 +12,9 @@ interface PaymentModalProps {
 
 export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
   const { user, userData } = useAuth();
-  const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   if (!isOpen) return null;
-
-  const handleMockPayment = async () => {
-    if (!user) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-    
-    setIsProcessing(true);
-    // 실제 환경: PayPal JS SDK Buttons 처리
-    // return <PayPalButtons createOrder={...} onApprove={...} />
-    
-    // 타임아웃으로 결제 딜레이 시뮬레이션
-    setTimeout(async () => {
-      try {
-        await createOrUpdateDoc('users', user.uid, { isPremium: true });
-        setIsSuccess(true);
-      } catch (error) {
-        console.error("결제 상태 업데이트 실패:", error);
-        alert("처리에 실패했습니다.");
-      } finally {
-        setIsProcessing(false);
-      }
-    }, 1500);
-  };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -64,35 +38,32 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
                  <li className="flex items-center gap-2"><CheckCircle size={14} className="text-[#E6C79C]"/> PDF 악보 무제한 다운</li>
                  <li className="flex items-center gap-2"><CheckCircle size={14} className="text-[#E6C79C]"/> 오리지널 MR 다운</li>
                  <li className="flex items-center gap-2"><CheckCircle size={14} className="text-[#E6C79C]"/> 셋리스트 캘린더 연동</li>
+                 <li className="flex items-center gap-2"><CheckCircle size={14} className="text-[#E6C79C]"/> 무제한 AI 추천, 태깅</li>
                </ul>
             </div>
 
-            <Button 
-              className="w-full" 
-              variant="primary" 
-              onClick={handleMockPayment}
-              disabled={isProcessing}
-            >
-              {isProcessing ? '처리 중...' : 'PayPal로 결제하기'}
-            </Button>
-            <p className="text-[10px] text-center text-[#78716A] mt-4">
-              * (MVP 시뮬레이션) 결제하기 클릭 시 가상으로 권한이 갱신됩니다.
-            </p>
+            {/* 실제 페이팔 결제 버튼으로 교체 */}
+            <PayPalButton 
+              amount="9.99" 
+              onSuccess={() => setIsSuccess(true)} 
+            />
           </>
         ) : (
           <div className="text-center py-8">
             <CheckCircle size={60} className="mx-auto text-green-500 mb-6" />
-            <h3 className="text-3xl font-handwriting mb-2">결제 완료!</h3>
+            <h3 className="text-3xl font-handwriting mb-2">결제 및 권한 승격 완료!</h3>
             <p className="text-sm text-[#78716A] mb-8">
               이제 모든 프리미엄 혜택을 이용하실 수 있습니다.<br/> ibigband와 함께 찬양을 나누세요.
             </p>
-            <Button variant="secondary" className="w-full" onClick={() => {
-              setIsSuccess(false);
-              onClose();
-              window.location.reload(); // 새로고침해서 유저 정보 갱신(데모용)
-            }}>
-              시작하기
-            </Button>
+            <button 
+              className="bg-[#2D2926] text-white w-full py-3 rounded-lg font-bold"
+              onClick={() => {
+                setIsSuccess(false);
+                onClose();
+              }}
+            >
+              확인
+            </button>
           </div>
         )}
       </div>

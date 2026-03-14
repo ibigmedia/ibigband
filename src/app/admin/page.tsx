@@ -1,16 +1,51 @@
 "use client";
 
-import { Users, FileText, Music, DollarSign } from 'lucide-react';
+import React, { useState } from 'react';
+import { Users, FileText, Music, DollarSign, Loader2, ShieldAlert } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
+import { Button } from '@/components/ui/Button';
 
 export default function AdminDashboard() {
-  const { userData } = useAuth();
+  const { user, userData } = useAuth();
+  const [loadingPromote, setLoadingPromote] = useState(false);
+
+  const handlePromoteToAdmin = async () => {
+    if (!user) return alert("로그인 먼저 해주세요.");
+    setLoadingPromote(true);
+    try {
+      const res = await fetch('/api/make-me-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: user.uid }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      alert("관리자로 승급되었습니다! 홈페이지를 새로고침(F5) 해주세요.");
+      window.location.reload();
+    } catch (e: any) {
+      alert("승급 실패: " + e.message);
+    } finally {
+      setLoadingPromote(false);
+    }
+  };
 
   if (userData?.role !== 'admin') {
     return (
-      <div className="flex flex-col items-center justify-center h-[50vh] text-center">
-        <h2 className="text-2xl font-bold mb-4 text-[#E6C79C]">접근 권한이 없습니다</h2>
+      <div className="flex flex-col items-center justify-center h-[50vh] text-center space-y-4">
+        <ShieldAlert className="w-16 h-16 text-[#E6C79C] mb-2" />
+        <h2 className="text-2xl font-bold text-[#E6C79C]">접근 권한이 없습니다</h2>
         <p className="text-white/50 text-sm">이 페이지는 관리자만 열람할 수 있습니다.</p>
+        
+        {/* 개발 환경 전용 임시 승급 버튼 */}
+        {process.env.NODE_ENV === 'development' && user && (
+          <div className="mt-8 p-6 bg-black/20 rounded-ibig border border-dashed border-[#E6C79C]/50">
+            <p className="text-xs text-white/50 mb-4">개발용 기능: 현재 접속하신 계정({user.email})에 임시로 관리자 권한을 부여할 수 있습니다.</p>
+            <Button onClick={handlePromoteToAdmin} disabled={loadingPromote} className="bg-[#E6C79C] text-[#2D2926]">
+              {loadingPromote ? <Loader2 className="w-4 h-4 mr-2 animate-spin"/> : null}
+              클릭하여 내 계정을 관리자로 승급하기
+            </Button>
+          </div>
+        )}
       </div>
     );
   }
