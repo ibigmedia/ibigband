@@ -44,8 +44,8 @@ export default function Home() {
             className="w-full h-auto object-contain mix-blend-multiply" 
           />
         </div>
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-handwriting mb-4 md:mb-6 leading-tight text-[#2D2926] relative z-10 tracking-tighter break-keep">
-          찬양이 멈추지 않는 <br className="hidden sm:block" />
+        <h1 className="text-[40px] sm:text-[54px] md:text-[80px] font-handwriting mb-4 md:mb-6 leading-tight text-[#2D2926] relative z-10 tracking-tighter break-keep">
+          찬양이 멈추지 않는 <br />
           <span className="text-[#E6C79C]">아카이브</span>
         </h1>
         <p className="text-[#78716A] text-[15px] md:text-lg max-w-xl mx-auto mb-10 font-light leading-relaxed relative z-10 break-keep px-2 sm:px-0">
