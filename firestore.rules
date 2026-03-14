@@ -40,5 +40,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    match /music/{musicId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }

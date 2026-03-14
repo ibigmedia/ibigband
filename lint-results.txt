@@ -1,0 +1,184 @@
+
+> ibigband@0.1.0 lint
+> eslint
+
+
+/Users/hyunggonback/projects/ibigband/check_db.js
+  1:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  2:24  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/hyunggonback/projects/ibigband/fix_music.js
+  1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/hyunggonback/projects/ibigband/setAdmin.js
+  1:15  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+  3:24  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports
+
+/Users/hyunggonback/projects/ibigband/src/app/admin/AdminNav.tsx
+  5:51  warning  'Menu' is defined but never used      @typescript-eslint/no-unused-vars
+  5:57  warning  'X' is defined but never used         @typescript-eslint/no-unused-vars
+  6:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/hyunggonback/projects/ibigband/src/app/admin/blog/page.tsx
+   59:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  135:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/admin/music/page.tsx
+    8:24   warning  'Edit' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+    8:43   warning  'LayoutGrid' is defined but never used                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+   12:11   warning  'user' is assigned a value but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   81:14   warning  'e' is defined but never used                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  144:66   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  168:102  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  224:37   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  224:37   warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+  275:95   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  298:36   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  298:36   warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+  300:36   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  300:36   warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+  436:23   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/admin/page.tsx
+  25:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/admin/sheets/page.tsx
+    7:16  warning  'Edit' is defined but never used                                                                                                                                                                                                                                                         @typescript-eslint/no-unused-vars
+   11:11  warning  'user' is assigned a value but never used                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   16:10  warning  'selectedSheet' is assigned a value but never used                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+  107:67  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  173:14  warning  'e' is defined but never used                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+  275:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  275:41  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+  400:35  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  411:35  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/hyunggonback/projects/ibigband/src/app/api/generate-blog/route.ts
+  44:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/api/make-me-admin/route.ts
+  23:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/api/paypal/capture-order/route.ts
+  39:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/api/paypal/create-order/route.ts
+  22:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/api/tagging/route.ts
+  42:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/blog/[id]/page.tsx
+  17:14  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  30:6   warning  React Hook useEffect has a missing dependency: 'fetchBlog'. Either include it or remove the dependency array                                                                                                                                                                             react-hooks/exhaustive-deps
+  49:34  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  72:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/hyunggonback/projects/ibigband/src/app/blog/page.tsx
+   16:14   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   40:34   error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+   64:13   error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+   64:122  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                          react/no-unescaped-entities
+   82:23   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  113:25   warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+/Users/hyunggonback/projects/ibigband/src/app/layout.tsx
+  30:9  warning  Custom fonts not added in `pages/_document.js` will only load for a single page. This is discouraged. See: https://nextjs.org/docs/messages/no-page-custom-font  @next/next/no-page-custom-font
+
+/Users/hyunggonback/projects/ibigband/src/app/music/page.tsx
+    7:29  warning  'TrackCredit' is defined but never used       @typescript-eslint/no-unused-vars
+    7:42  warning  'TrackVersion' is defined but never used      @typescript-eslint/no-unused-vars
+  126:10  warning  'loading' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  150:59  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  153:34  error    Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/app/page.tsx
+   12:52  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+   13:50  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-explicit-any
+   16:5   error    Error: Cannot access variable before it is declared
+
+`fetchLatestContent` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+/Users/hyunggonback/projects/ibigband/src/app/page.tsx:16:5
+  14 |
+  15 |   useEffect(() => {
+> 16 |     fetchLatestContent();
+     |     ^^^^^^^^^^^^^^^^^^ `fetchLatestContent` accessed before it is declared
+  17 |   }, []);
+  18 |
+  19 |   const fetchLatestContent = async () => {
+
+/Users/hyunggonback/projects/ibigband/src/app/page.tsx:19:3
+  17 |   }, []);
+  18 |
+> 19 |   const fetchLatestContent = async () => {
+     |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 20 |     try {
+     | ^^^^^^^^^
+> 21 |       // 1. Fetch latest 6 sheets
+     …
+     | ^^^^^^^^^
+> 40 |     }
+     | ^^^^^^^^^
+> 41 |   };
+     | ^^^^^ `fetchLatestContent` is declared here
+  42 |
+  43 |   return (
+  44 |     <div className="flex-1 flex flex-col">  react-hooks/immutability
+   49:11  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @next/next/no-img-element
+  121:59  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react/no-unescaped-entities
+  121:82  error    `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react/no-unescaped-entities
+  129:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          @next/next/no-img-element
+
+/Users/hyunggonback/projects/ibigband/src/app/premium/page.tsx
+  8:11  warning  'user' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/hyunggonback/projects/ibigband/src/app/setlist/page.tsx
+  7:17  warning  'setItems' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/hyunggonback/projects/ibigband/src/app/sheets/[id]/page.tsx
+  85:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  87:15  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  87:15  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+
+/Users/hyunggonback/projects/ibigband/src/app/sheets/page.tsx
+    6:70  warning  'TagIcon' is defined but never used                                                                                                                                                                                                                                                      @typescript-eslint/no-unused-vars
+   55:19  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  163:21  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  170:23  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  284:26  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  286:26  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  286:26  warning  img elements must have an alt prop, either with meaningful text, or an empty string for decorative images                                                                                                                                                                                jsx-a11y/alt-text
+
+/Users/hyunggonback/projects/ibigband/src/components/PayPalButton.tsx
+  55:34  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/components/layout/Footer.tsx
+  5:10  warning  'Music' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/hyunggonback/projects/ibigband/src/components/payment/PaymentModal.tsx
+  14:11  warning  'user' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  14:17  warning  'userData' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/hyunggonback/projects/ibigband/src/lib/firebase/admin.ts
+  12:19  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/lib/firebase/auth.tsx
+   8:3   warning  'signInWithRedirect' is defined but never used  @typescript-eslint/no-unused-vars
+  96:21  error    Unexpected any. Specify a different type        @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/lib/firebase/firestore.ts
+  1:52  warning  'updateDoc' is defined but never used  @typescript-eslint/no-unused-vars
+  1:70  warning  'where' is defined but never used      @typescript-eslint/no-unused-vars
+
+/Users/hyunggonback/projects/ibigband/src/lib/paypal.ts
+  41:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  73:62  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/hyunggonback/projects/ibigband/src/lib/utils/pdfGenerator.ts
+  1:42  warning  'title' is defined but never used         @typescript-eslint/no-unused-vars
+  1:57  warning  'items' is defined but never used         @typescript-eslint/no-unused-vars
+  1:64  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 88 problems (38 errors, 50 warnings)
+

@@ -13,7 +13,7 @@ interface Blog {
   content: string;
   author: string;
   imageUrl: string;
-  createdAt: any;
+  createdAt: { toDate?: () => Date } | Date | string | number | null;
 }
 
 export default function BlogListingPage() {
@@ -37,9 +37,12 @@ export default function BlogListingPage() {
     }
   };
 
-  const formatDate = (timestamp: any) => {
+  const formatDate = (timestamp: { toDate?: () => Date } | Date | string | number | null | undefined) => {
     if (!timestamp) return '';
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+    const date = 
+      typeof timestamp === 'object' && timestamp !== null && 'toDate' in timestamp && typeof timestamp.toDate === 'function' 
+        ? timestamp.toDate() 
+        : new Date(timestamp as string | number | Date);
     return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
@@ -60,10 +63,9 @@ export default function BlogListingPage() {
           <h1 className="text-5xl md:text-7xl font-handwriting font-bold text-[#2D2926]">
             iBigMedia <span className="text-[#E6C79C]">Journal</span>
           </h1>
-          <p className="text-[#78716A] text-lg max-w-2xl mx-auto italic font-light">
-            "Art and faith intersecting in our daily lives. Read our latest thoughts, AI-generated insights, and updates."
-          </p>
-          <div className="w-24 h-1 bg-[#E6C79C] mx-auto rounded-full mt-10"></div>
+          <h2 className="text-6xl font-handwriting text-[#2D2926]">아티스트 저널</h2>
+          <p className="text-[#78716A] italic font-light">&quot;찬양은 삶의 고백이자 예술의 완성입니다.&quot;</p>
+          <div className="w-20 h-1 bg-[#E6C79C] mx-auto rounded-full mt-8"></div>
         </div>
 
         {/* Featured / Grid Loop */}

@@ -6,39 +6,42 @@ import { db } from '@/lib/firebase/config';
 import { Music, FileText, List, ArrowRight, PlayCircle, Heart, Download, BookOpen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   const router = useRouter();
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   const [latestSheets, setLatestSheets] = useState<any[]>([]);
   const [latestBlogs, setLatestBlogs] = useState<any[]>([]);
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   useEffect(() => {
+    const fetchLatestContent = async () => {
+      try {
+        // 1. Fetch latest 6 premium/free sheets
+        const qSheets = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'), limit(6));
+        const snapSheets = await getDocs(qSheets);
+        
+        setLatestSheets(snapSheets.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            // Convert timestamp to string or date object as needed for display
+            releaseDate: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString()
+          };
+        }));
+
+        // 2. Fetch latest 2 blogs
+        const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(2));
+        const snapBlogs = await getDocs(qBlogs);
+        setLatestBlogs(snapBlogs.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      } catch (error) {
+        console.error('Error fetching latest content', error);
+      }
+    };
     fetchLatestContent();
   }, []);
-
-  const fetchLatestContent = async () => {
-    try {
-      // 1. Fetch latest 6 sheets
-      const qSheets = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'), limit(6));
-      const snapSheets = await getDocs(qSheets);
-      setLatestSheets(snapSheets.docs.map(doc => {
-        const d = doc.data();
-        return { 
-          id: doc.id, 
-          ...d,
-          title: d.title ? String(d.title).normalize('NFC') : d.title,
-          artist: d.artist ? String(d.artist).normalize('NFC') : d.artist,
-        };
-      }));
-
-      // 2. Fetch latest 2 blogs
-      const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(2));
-      const snapBlogs = await getDocs(qBlogs);
-      setLatestBlogs(snapBlogs.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    } catch (error) {
-      console.error('Error fetching latest content', error);
-    }
-  };
 
   return (
     <div className="flex-1 flex flex-col">
@@ -46,9 +49,11 @@ export default function Home() {
       <section className="pt-24 min-h-[80vh] flex flex-col items-center justify-center text-center px-6">
         {/* Band Image Container */}
         <div className="-mt-10 md:-mt-16 mb-8 md:mb-12 w-full max-w-[320px] md:max-w-[480px] lg:max-w-[600px] h-auto relative z-10 mx-auto opacity-90 transform transition-transform hover:scale-105 duration-500">
-          <img 
+          <Image 
             src="/hero-band.png" 
             alt="ibigband outline art" 
+            width={600} 
+            height={400} 
             className="w-full h-auto object-contain mix-blend-multiply" 
           />
         </div>
@@ -118,7 +123,7 @@ export default function Home() {
       <section className="pt-32 px-6 max-w-5xl mx-auto pb-12 md:pb-24">
         <div className="text-center mb-20 space-y-4">
           <h2 className="text-6xl font-handwriting text-[#2D2926]">묵상과 예술</h2>
-          <p className="text-[#78716A] italic font-light">"찬양은 삶의 고백이자 예술의 완성입니다."</p>
+          <p className="text-[#78716A] italic font-light">&quot;찬양은 삶의 고백이자 예술의 완성입니다.&quot;</p>
           <div className="w-20 h-1 bg-[#E6C79C] mx-auto rounded-full mt-8"></div>
         </div>
         <div className="space-y-32">
@@ -126,7 +131,7 @@ export default function Home() {
             <article key={blog.id} className="group relative">
               <div className="aspect-[21/10] rounded-ibig overflow-hidden mb-10 shadow-2xl bg-[#2D2926] relative cursor-pointer" onClick={() => router.push(`/blog/${blog.id}`)}>
                 {blog.imageUrl ? (
-                    <img src={blog.imageUrl} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]" alt={blog.title} />
+                    <Image src={blog.imageUrl} alt={blog.title} fill className="object-cover group-hover:scale-110 transition-transform duration-[2s]" unoptimized />
                 ) : (
                     <div className="w-full h-full flex items-center justify-center bg-black/40"><BookOpen size={48} className="text-white/20"/></div>
                 )}
