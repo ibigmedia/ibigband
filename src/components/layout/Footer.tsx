@@ -6,7 +6,7 @@ import { Music, ExternalLink, Youtube, Heart } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#2D2926] text-white/50 py-16 md:py-24 px-6 mt-16 md:mt-20">
+    <footer className="bg-[#2D2926] text-white/50 py-16 md:py-24 px-6 border-t border-black/10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
         <div className="col-span-1 md:col-span-1 border-b border-white/10 md:border-0 pb-10 md:pb-0">
           <div className="flex items-center gap-3 text-white mb-6 md:mb-8">

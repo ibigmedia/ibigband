@@ -54,7 +54,7 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-32 pb-20 flex items-center justify-center bg-[#FAF9F6]">
+      <div className="flex-1 py-32 flex items-center justify-center bg-[#FAF9F6]">
         <Loader2 className="w-12 h-12 text-[#E6C79C] animate-spin" />
       </div>
     );
@@ -65,7 +65,7 @@ export default function BlogPostPage() {
   }
 
   return (
-    <article className="min-h-screen bg-[#FAF9F6] pt-24 pb-32">
+    <article className="flex-1 bg-[#FAF9F6] pb-12 md:pb-24">
       {/* Hero Header Area */}
       <header className="relative w-full h-[60vh] md:h-[70vh] bg-[#2D2926] flex items-center justify-center -mt-24 mb-16 overflow-hidden">
         {blog.imageUrl ? (

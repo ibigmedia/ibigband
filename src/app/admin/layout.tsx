@@ -4,10 +4,10 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#2D2926] text-white">
+    <div className="flex-1 bg-[#2D2926] text-white flex flex-col">
       {/* 어드민 사이드바 등 전용 레이아웃 요소를 배치할 수 있습니다 */}
-      <div className="flex">
-        <aside className="w-64 bg-black/20 p-6 hidden md:block min-h-screen">
+      <div className="flex flex-1">
+        <aside className="w-64 bg-black/20 p-6 hidden md:block">
           <h2 className="text-2xl font-handwriting text-[#E6C79C] mb-10">ibigband<br/>Admin Space</h2>
           <nav className="space-y-4 text-sm font-light">
             <a href="/admin" className="block text-[#E6C79C] font-bold">Dashboard</a>

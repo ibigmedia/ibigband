@@ -26,7 +26,8 @@ export default function Home() {
         return { 
           id: doc.id, 
           ...d,
-          title: d.title ? d.title.normalize('NFC') : ''
+          title: d.title ? String(d.title).normalize('NFC') : d.title,
+          artist: d.artist ? String(d.artist).normalize('NFC') : d.artist,
         };
       }));
 
@@ -40,7 +41,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="flex-1 flex flex-col">
       {/* Hero Section */}
       <section className="pt-24 min-h-[80vh] flex flex-col items-center justify-center text-center px-6">
         {/* Band Image Container */}
@@ -51,11 +52,11 @@ export default function Home() {
             className="w-full h-auto object-contain mix-blend-multiply" 
           />
         </div>
-        <h1 className="text-[40px] sm:text-[54px] md:text-[80px] font-handwriting mb-4 md:mb-6 leading-tight text-[#2D2926] relative z-10 tracking-tighter break-keep">
+        <h1 className="text-[46px] sm:text-[60px] md:text-[88px] font-handwriting mb-2 md:mb-6 leading-[1.05] text-[#2D2926] relative z-10 tracking-[-0.06em] break-keep">
           찬양이 멈추지 않는 <br />
-          <span className="text-[#E6C79C]">아카이브</span>
+          <span className="text-[#E6C79C] tracking-[-0.08em]">아카이브</span>
         </h1>
-        <p className="text-[#78716A] text-[15px] md:text-lg max-w-xl mx-auto mb-10 font-light leading-relaxed relative z-10 break-keep px-2 sm:px-0">
+        <p className="text-[#78716A] text-[14px] sm:text-[15px] md:text-lg max-w-xl mx-auto mb-10 font-light leading-relaxed relative z-10 break-keep px-4 sm:px-0 tracking-tight">
           고퀄리티 프리미엄 악보와 영감을 주는 아티스트 저널을 만나보세요. <br className="hidden sm:block"/>
           어디서든 모바일 앱처럼 가장 빠르게 접속할 수 있습니다.
         </p>
@@ -114,7 +115,7 @@ export default function Home() {
       </section>
 
       {/* Featured Blog Section */}
-      <section className="pt-32 px-6 max-w-5xl mx-auto pb-32">
+      <section className="pt-32 px-6 max-w-5xl mx-auto pb-12 md:pb-24">
         <div className="text-center mb-20 space-y-4">
           <h2 className="text-6xl font-handwriting text-[#2D2926]">묵상과 예술</h2>
           <p className="text-[#78716A] italic font-light">"찬양은 삶의 고백이자 예술의 완성입니다."</p>

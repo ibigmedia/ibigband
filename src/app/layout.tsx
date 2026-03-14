@@ -23,16 +23,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" className="bg-[#2D2926]">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className={`${inter.variable} antialiased font-sans bg-[#FAF9F6] text-[#2D2926] min-h-screen flex flex-col`}>
+      <body className={`${inter.variable} antialiased font-sans bg-[#FAF9F6] text-[#2D2926] flex flex-col`}>
         <AuthProvider>
           <Navigation />
-          <main className="flex-1 pt-20 flex flex-col">
+          <main className="pt-20 flex flex-col bg-[#FAF9F6]">
             {children}
           </main>
           <Footer />
