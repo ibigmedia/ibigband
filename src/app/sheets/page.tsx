@@ -42,7 +42,15 @@ export default function SheetsGalleryPage() {
       setError(null);
       const q = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Sheet));
+      const data = snapshot.docs.map(doc => {
+        const d = doc.data() as Omit<Sheet, 'id'>;
+        return { 
+          id: doc.id, 
+          ...d,
+          title: d.title ? d.title.normalize('NFC') : '',
+          artistId: d.artistId ? d.artistId.normalize('NFC') : d.artistId,
+        } as Sheet;
+      });
       setSheets(data);
     } catch (err: any) {
       console.error('Error fetching sheets:', err);
@@ -61,15 +69,18 @@ export default function SheetsGalleryPage() {
     )
   );
 
+  // Normalize search term as well just to be safe
+  const normalizedSearchTerm = searchTerm.normalize('NFC');
+
   const filteredSheets = sheets.filter(sheet => {
-    const matchesSearch = sheet.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          (sheet.artistId || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = sheet.title.toLowerCase().includes(normalizedSearchTerm.toLowerCase()) || 
+                          (sheet.artistId && sheet.artistId.toLowerCase().includes(normalizedSearchTerm.toLowerCase()));
     const matchesTag = selectedTag ? (sheet.moodTags || []).includes(selectedTag) : true;
     return matchesSearch && matchesTag;
   });
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#F4F4F5] pt-24 pb-16">
+    <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-12 pb-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">

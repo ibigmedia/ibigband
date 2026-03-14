@@ -36,7 +36,12 @@ export default function SheetDetailPage() {
         const docRef = doc(db, 'sheets', id);
         const snap = await getDoc(docRef);
         if (snap.exists()) {
-          setSheet({ id: snap.id, ...snap.data() } as SheetDetail);
+          const d = snap.data();
+          setSheet({ 
+            id: snap.id, 
+            ...d,
+            title: d.title ? d.title.normalize('NFC') : ''
+          } as SheetDetail);
         } else {
           alert('Content not found.');
           router.push('/sheets');
@@ -52,7 +57,7 @@ export default function SheetDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center pt-24">
+      <div className="flex-1 bg-[#0A0A0A] flex items-center justify-center py-12">
         <Loader2 className="w-10 h-10 animate-spin text-[#E6C79C]" />
       </div>
     );
@@ -61,7 +66,7 @@ export default function SheetDetailPage() {
   if (!sheet) return null;
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-[#F4F4F5] pt-24 pb-16">
+    <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-10 pb-16">
       <div className="max-w-5xl mx-auto px-6 lg:px-8">
         {/* Back Button */}
         <button 

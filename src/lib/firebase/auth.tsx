@@ -6,7 +6,8 @@ import {
   GoogleAuthProvider, 
   signInWithPopup, 
   signOut as firebaseSignOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  getRedirectResult
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from './config';
@@ -42,6 +43,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Catch errors from redirect flow
+    getRedirectResult(auth).catch((error) => {
+      console.error("Redirect Error:", error);
+      alert("구글 로그인 중 오류가 발생했습니다: " + error.message);
+    });
+
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {

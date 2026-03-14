@@ -117,7 +117,7 @@ export default function Navigation() {
                 <>
                   {userData?.role === 'admin' && (
                     <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 py-3 text-lg font-bold text-[#2D2926]">
-                      <Settings size={22} /> 관리자 설정
+                      <Settings size={22} /> 대시보드 가기
                     </Link>
                   )}
                   {userData?.isPremium ? (

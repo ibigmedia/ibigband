@@ -21,7 +21,14 @@ export default function Home() {
       // 1. Fetch latest 6 sheets
       const qSheets = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'), limit(6));
       const snapSheets = await getDocs(qSheets);
-      setLatestSheets(snapSheets.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      setLatestSheets(snapSheets.docs.map(doc => {
+        const d = doc.data();
+        return { 
+          id: doc.id, 
+          ...d,
+          title: d.title ? d.title.normalize('NFC') : ''
+        };
+      }));
 
       // 2. Fetch latest 2 blogs
       const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(2));

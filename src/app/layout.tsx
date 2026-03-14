@@ -29,10 +29,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className={`${inter.variable} antialiased font-sans bg-[#FAF9F6] text-[#2D2926]`}>
+      <body className={`${inter.variable} antialiased font-sans bg-[#FAF9F6] text-[#2D2926] min-h-screen flex flex-col`}>
         <AuthProvider>
           <Navigation />
-          <main className="pt-20">
+          <main className="flex-1 pt-20 flex flex-col">
             {children}
           </main>
           <Footer />
