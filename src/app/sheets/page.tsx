@@ -26,6 +26,7 @@ interface Sheet {
 export default function SheetsGalleryPage() {
   const [sheets, setSheets] = useState<Sheet[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
@@ -38,12 +39,14 @@ export default function SheetsGalleryPage() {
 
   const fetchSheets = async () => {
     try {
+      setError(null);
       const q = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'));
       const snapshot = await getDocs(q);
       const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Sheet));
       setSheets(data);
-    } catch (error) {
-      console.error('Error fetching sheets:', error);
+    } catch (err: any) {
+      console.error('Error fetching sheets:', err);
+      setError(err?.message || '악보를 불러오는 중 오류가 발생했습니다.');
     } finally {
       setLoading(false);
     }
@@ -123,6 +126,11 @@ export default function SheetsGalleryPage() {
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <div className="w-8 h-8 rounded-full border-2 border-[#E6C79C] border-t-transparent animate-spin"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 bg-red-500/10 rounded-3xl border border-red-500/20">
+            <h3 className="text-xl font-bold text-red-500 mb-2">악보를 불러오지 못했습니다</h3>
+            <p className="text-red-400 max-w-md mx-auto">{error}</p>
           </div>
         ) : filteredSheets.length === 0 ? (
           <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/10">
