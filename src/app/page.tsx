@@ -44,11 +44,12 @@ export default function Home() {
             className="w-full h-auto object-contain mix-blend-multiply" 
           />
         </div>
-        <h1 className="text-5xl md:text-7xl font-handwriting mb-6 leading-tight text-[#2D2926] relative z-10">
-          찬양이 멈추지 않는 <br/><span className="text-[#E6C79C]">아카이브</span>
+        <h1 className="text-4xl sm:text-5xl md:text-7xl font-handwriting mb-4 md:mb-6 leading-tight text-[#2D2926] relative z-10 tracking-tighter break-keep">
+          찬양이 멈추지 않는 <br className="hidden sm:block" />
+          <span className="text-[#E6C79C]">아카이브</span>
         </h1>
-        <p className="text-[#78716A] md:text-lg max-w-xl mx-auto mb-10 font-light leading-relaxed relative z-10">
-          고퀄리티 프리미엄 악보와 영감을 주는 아티스트 저널을 만나보세요. <br/>
+        <p className="text-[#78716A] text-[15px] md:text-lg max-w-xl mx-auto mb-10 font-light leading-relaxed relative z-10 break-keep px-2 sm:px-0">
+          고퀄리티 프리미엄 악보와 영감을 주는 아티스트 저널을 만나보세요. <br className="hidden sm:block"/>
           어디서든 모바일 앱처럼 가장 빠르게 접속할 수 있습니다.
         </p>
         <div className="flex flex-wrap gap-4 justify-center relative z-10">
