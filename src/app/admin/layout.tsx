@@ -10,7 +10,7 @@ export default function AdminLayout({
       <div className="flex flex-1 relative">
         <AdminSideNav />
         {/* 모바일 에서는 탭바만큼 공간 확보(pb-28), 상단은 헤더/네비(pt-8) */}
-        <main className="flex-1 p-4 pb-28 pt-8 md:p-10 md:pt-10 overflow-x-hidden overflow-y-auto w-full">
+        <main className="flex-1 p-4 pb-28 pt-8 lg:p-10 lg:pt-10 lg:pb-10 overflow-x-hidden overflow-y-auto w-full">
           {children}
         </main>
       </div>

@@ -68,7 +68,7 @@ export default function AdminDashboard() {
       {/* =========================================================
           모바일 전용 레이아웃 (Material 3 Style)
           ========================================================= */}
-      <div className="md:hidden flex flex-col space-y-6">
+      <div className="lg:hidden flex flex-col space-y-6">
         
         {/* 모바일 헤더 */}
         <div className="pt-2 pb-4 px-2">
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* 모바일 통계 (2x2 Grid) */}
-        <div className="grid grid-cols-2 gap-3 px-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 px-2">
           {stats.map((stat, i) => (
             <div key={i} className="bg-white/5 p-5 rounded-3xl border border-white/5 flex flex-col justify-between aspect-square relative overflow-hidden active:bg-white/10 transition-colors">
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${stat.color} mb-4`}>
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
       {/* =========================================================
           데스크탑 전용 레이아웃 (기존보다 더 세련되게 다듬음)
           ========================================================= */}
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <h1 className="text-3xl font-handwriting mb-8 text-[#E6C79C]">Dashboard Overview</h1>
         
         <div className="grid grid-cols-4 gap-6 mb-12">

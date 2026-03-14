@@ -16,7 +16,7 @@ export function AdminSideNav() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-black/20 p-6 hidden md:block border-r border-white/5">
+    <aside className="w-64 bg-black/20 p-6 hidden lg:block border-r border-white/5">
       <h2 className="text-2xl font-handwriting text-[#E6C79C] mb-10 leading-relaxed">
         ibigband<br />Admin Space
       </h2>
@@ -47,7 +47,7 @@ export function AdminMobileNav() {
   const pathname = usePathname();
 
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 bg-[#2D2926]/95 backdrop-blur-xl border-t border-white/10 z-50 pb-[env(safe-area-inset-bottom)]">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-[#2D2926]/95 backdrop-blur-xl border-t border-white/10 z-50 pb-[env(safe-area-inset-bottom)]">
       <nav className="flex justify-around items-center h-20 px-2 lg:px-4">
         {navItems.map((item) => {
           const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));

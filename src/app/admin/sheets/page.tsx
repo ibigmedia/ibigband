@@ -234,10 +234,10 @@ export default function AdminSheetsPage() {
   );
 
   return (
-    <div className="md:h-[calc(100vh-100px)] flex flex-col md:flex-row gap-6 bg-[#0A0A0A] text-[#F4F4F5] font-sans h-auto">
+    <div className="lg:h-[calc(100vh-100px)] flex flex-col lg:flex-row gap-6 bg-[#0A0A0A] text-[#F4F4F5] font-sans h-auto">
       
       {/* LEFT PANEL : List of Sheets (Hide on mobile if editing) */}
-      <div className={`w-full md:w-1/3 lg:w-[400px] flex-col bg-[#141414] border border-[#27272A] rounded-3xl md:rounded-2xl overflow-hidden shadow-2xl ${currentId ? 'hidden md:flex' : 'flex'}`}>
+      <div className={`w-full lg:w-1/3 lg:w-[400px] flex-col bg-[#141414] border border-[#27272A] rounded-3xl lg:rounded-2xl overflow-hidden shadow-2xl ${currentId ? 'hidden lg:flex' : 'flex'}`}>
         <div className="p-5 border-b border-[#27272A] bg-[#1A1A1A] flex flex-col gap-4">
           <div className="flex items-center justify-between">
              <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -251,15 +251,15 @@ export default function AdminSheetsPage() {
                placeholder="검색..." 
                value={searchTerm}
                onChange={e => setSearchTerm(e.target.value)}
-               className="w-full pl-9 pr-4 py-3 md:py-2 bg-[#27272A] border border-[#3F3F46] rounded-2xl md:rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#E6C79C]"
+               className="w-full pl-9 pr-4 py-3 lg:py-2 bg-[#27272A] border border-[#3F3F46] rounded-2xl lg:rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#E6C79C]"
              />
           </div>
-          <Button variant="secondary" onClick={() => { handleCreateNew(); setCurrentId('new'); }} className="w-full hover:bg-[#D4A373] font-bold rounded-2xl py-3 md:py-2 flex items-center justify-center gap-2">
+          <Button variant="secondary" onClick={() => { handleCreateNew(); setCurrentId('new'); }} className="w-full hover:bg-[#D4A373] font-bold rounded-2xl py-3 lg:py-2 flex items-center justify-center gap-2">
             <Plus className="w-4 h-4"/> 새 콘텐츠 추가
           </Button>
         </div>
 
-        <div className="flex-1 overflow-y-auto space-y-2 p-3 hide-scrollbar min-h-[50vh] md:min-h-0">
+        <div className="flex-1 overflow-y-auto space-y-2 p-3 hide-scrollbar min-h-[50vh] lg:min-h-0">
           {loading ? (
              <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#A1A1AA]"/></div>
           ) : filteredSheets.length === 0 ? (
@@ -269,13 +269,13 @@ export default function AdminSheetsPage() {
               <div 
                 key={sheet.id} 
                 onClick={() => selectSheet(sheet)}
-                className={`p-3 rounded-2xl md:rounded-xl border cursor-pointer transition-all flex gap-3 ${currentId === sheet.id ? 'bg-[#27272A] border-[#E6C79C]/50 shadow-lg' : 'bg-transparent border-[#27272A]/50 hover:bg-[#1A1A1A] hover:border-[#27272A]'}`}
+                className={`p-3 rounded-2xl lg:rounded-xl border cursor-pointer transition-all flex gap-3 ${currentId === sheet.id ? 'bg-[#27272A] border-[#E6C79C]/50 shadow-lg' : 'bg-transparent border-[#27272A]/50 hover:bg-[#1A1A1A] hover:border-[#27272A]'}`}
               >
-                <div className="w-14 h-14 md:w-12 md:h-12 rounded-xl bg-black border border-[#3F3F46] flex shrink-0 items-center justify-center overflow-hidden">
+                <div className="w-14 h-14 lg:w-12 lg:h-12 rounded-xl bg-black border border-[#3F3F46] flex shrink-0 items-center justify-center overflow-hidden">
                   {sheet.thumbnailUrl ? <img src={sheet.thumbnailUrl} className="w-full h-full object-cover"/> : <Music className="w-5 h-5 text-[#71717A]"/>}
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <h4 className="text-white font-bold text-[15px] md:text-sm truncate leading-tight">{sheet.title}</h4>
+                  <h4 className="text-white font-bold text-[15px] lg:text-sm truncate leading-tight">{sheet.title}</h4>
                   <p className="text-xs text-[#A1A1AA] truncate mt-0.5">{sheet.artistId || 'Unknown Artist'}</p>
                   <div className="flex items-center gap-2 mt-1.5">
                     {sheet.pdfUrl && <span className="w-2 h-2 rounded-full bg-green-500" title="악보 포함"></span>}
@@ -283,7 +283,7 @@ export default function AdminSheetsPage() {
                   </div>
                 </div>
                 <button onClick={(e) => handleDelete(sheet.id!, e)} className="p-3 text-[#71717A] hover:text-red-400 hover:bg-red-400/10 rounded-xl shrink-0 self-center">
-                  <Trash2 className="w-5 h-5 md:w-4 md:h-4"/>
+                  <Trash2 className="w-5 h-5 lg:w-4 lg:h-4"/>
                 </button>
               </div>
             ))
@@ -292,19 +292,19 @@ export default function AdminSheetsPage() {
       </div>
 
       {/* RIGHT PANEL : Editor Form (Hide on mobile if NOT editing) */}
-      <div className={`flex-1 bg-[#141414] border border-[#27272A] rounded-3xl md:rounded-2xl overflow-hidden shadow-2xl flex-col ${!currentId ? 'hidden md:flex' : 'flex'}`}>
-        <div className="px-5 md:px-8 py-4 border-b border-[#27272A] bg-[#1A1A1A] flex items-center justify-between shrink-0">
+      <div className={`flex-1 bg-[#141414] border border-[#27272A] rounded-3xl lg:rounded-2xl overflow-hidden shadow-2xl flex-col ${!currentId ? 'hidden lg:flex' : 'flex'}`}>
+        <div className="px-5 lg:px-8 py-4 border-b border-[#27272A] bg-[#1A1A1A] flex items-center justify-between shrink-0">
            <div className="flex-1">
-             <div className="flex items-center gap-2 mb-1 md:hidden">
+             <div className="flex items-center gap-2 mb-1 lg:hidden">
                <button onClick={handleCreateNew} className="text-[#A1A1AA] flex items-center text-sm font-semibold active:text-white">
                  <ChevronRight className="w-4 h-4 rotate-180"/> 뒤로
                </button>
              </div>
-             <h2 className="text-xl md:text-2xl font-black text-white">{currentId && currentId !== 'new' ? '콘텐츠 수정' : '새 콘텐츠 추가'}</h2>
-             <p className="text-xs text-[#A1A1AA] hidden md:block">악보와 MR(음원)을 구분하여 업로드하고 관리할 수 있습니다.</p>
+             <h2 className="text-xl lg:text-2xl font-black text-white">{currentId && currentId !== 'new' ? '콘텐츠 수정' : '새 콘텐츠 추가'}</h2>
+             <p className="text-xs text-[#A1A1AA] hidden lg:block">악보와 MR(음원)을 구분하여 업로드하고 관리할 수 있습니다.</p>
            </div>
            {currentId && currentId !== 'new' && (
-             <span className="hidden md:flex px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-[#A1A1AA] items-center gap-2">
+             <span className="hidden lg:flex px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-[#A1A1AA] items-center gap-2">
                 ID: {currentId.slice(0, 8)}...
              </span>
            )}
@@ -318,7 +318,7 @@ export default function AdminSheetsPage() {
                  <div className="w-8 h-8 rounded-full bg-[#E6C79C]/10 flex items-center justify-center border border-[#E6C79C]/30"><FileText className="w-4 h-4 text-[#E6C79C]"/></div>
                  <h3 className="text-lg font-bold text-white">1. 기본 정보</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A]">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A]">
                  <div className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">제목 (Title) *</label>
@@ -347,7 +347,7 @@ export default function AdminSheetsPage() {
                  </div>
 
                  {/* AI Extraction Row */}
-                 <div className="col-span-1 md:col-span-2 pt-4 border-t border-[#3F3F46]">
+                 <div className="col-span-1 lg:col-span-2 pt-4 border-t border-[#3F3F46]">
                    <label className="block text-xs font-bold text-[#E6C79C] uppercase tracking-wider mb-2">AI 자동 분석 (가사 입력)</label>
                    <div className="flex gap-2">
                      <input value={aiLyrics} onChange={e => setAiLyrics(e.target.value)} placeholder="가사를 붙여넣으면 연관 태그를 자동 추출합니다." className="flex-1 px-4 py-2 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-sm text-white focus:outline-none focus:border-[#E6C79C]"/>
@@ -366,7 +366,7 @@ export default function AdminSheetsPage() {
                  <h3 className="text-lg font-bold text-white">2. 파일 관리 (악보 / 음원)</h3>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                  
                  {/* SHEET MUSIC SECTION */}
                  <div className="bg-[#1A1A1A] p-6 rounded-2xl border-t-4 border-[#1A1A1A] border-t-green-500 shadow-lg relative overflow-hidden group">
@@ -464,10 +464,10 @@ export default function AdminSheetsPage() {
 
            {/* Section 3: Pricing & Check */}
            <section>
-              <div className="bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A] flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A] flex flex-col lg:flex-row items-center justify-between gap-6">
                  <div className="flex-1 space-y-2">
                     <h4 className="text-sm font-bold text-white">가격 설정 (USD)</h4>
-                    <input type="number" min="0" step="0.01" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00 (무료)" className="w-full md:w-32 px-4 py-2 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white text-center focus:outline-none focus:border-[#E6C79C]"/>
+                    <input type="number" min="0" step="0.01" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00 (무료)" className="w-full lg:w-32 px-4 py-2 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white text-center focus:outline-none focus:border-[#E6C79C]"/>
                  </div>
                  <div className="flex-1 flex items-center justify-end">
                     <label className="flex items-center cursor-pointer p-4 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl hover:border-[#E6C79C]/50 transition-colors">
