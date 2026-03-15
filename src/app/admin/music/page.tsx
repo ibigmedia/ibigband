@@ -125,13 +125,14 @@ export default function AdminMusicPage() {
 
       if (currentId && currentId !== 'new') {
         await createOrUpdateDoc('music', currentId, albumData);
+        alert('저장되었습니다. 관리할 음반을 선택하거나 새로 추가하세요.');
       } else {
-        await addDocument('music', albumData);
+        const docId = await addDocument('music', albumData);
+        setCurrentId(docId);
+        alert('저장되었습니다. 관리할 음반을 선택하거나 새로 추가하세요.');
       }
 
       await fetchAlbums();
-      alert('저장되었습니다.');
-      setCurrentId(null);
     } catch (err) {
       console.error(err);
       alert('저장 중 오류가 발생했습니다.');
@@ -319,7 +320,7 @@ export default function AdminMusicPage() {
            </div>
         ) : (
            <>
-              <div className="px-5 lg:px-8 py-4 border-b border-[#27272A] bg-[#1A1A1A] flex items-center justify-between shrink-0">
+               <div className="px-5 lg:px-8 py-4 border-b border-[#27272A] bg-[#1A1A1A] flex items-center justify-between shrink-0">
                  <div className="flex-1">
                    <div className="flex items-center gap-2 mb-1 lg:hidden">
                      <button onClick={() => setCurrentId(null)} className="text-[#A1A1AA] flex items-center text-sm font-semibold active:text-white">
@@ -328,9 +329,6 @@ export default function AdminMusicPage() {
                    </div>
                    <h2 className="text-xl lg:text-2xl font-black text-white">{currentId === 'new' ? '새 음반 추가' : '음반 정보 수정'}</h2>
                  </div>
-                 <Button type="button" onClick={handleSave} disabled={saving} variant="secondary" className="hover:bg-[#D4A373] font-black px-4 md:px-6 rounded-xl shadow-lg shadow-[#E6C79C]/20 text-xs md:text-sm h-10 ml-4 shrink-0">
-                    {saving ? <><Loader2 className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2 animate-spin"/> 저장 중...</> : <><Save className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2"/> 상단 저장하기</>}
-                 </Button>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 lg:p-8 hide-scrollbar space-y-8 pb-32">
@@ -339,8 +337,8 @@ export default function AdminMusicPage() {
                  <div className="bg-[#1A1A1A] border border-[#27272A] rounded-2xl p-6">
                     <div className="flex items-center justify-between border-b border-[#27272A] pb-3 mb-6">
                        <h3 className="text-lg font-bold text-white">1. 트랙 관리</h3>
-                       <Button size="sm" onClick={addTrack} variant="secondary" className="h-8 text-xs font-bold rounded-lg px-3">
-                          <Plus className="w-3 h-3 mr-1"/> 트랙 추가
+                       <Button onClick={addTrack} variant="secondary" className="h-10 text-sm font-black rounded-xl px-4 md:px-5 hover:bg-[#D4A373] shadow-md shadow-[#E6C79C]/10 text-[#000]">
+                          <Plus className="w-4 h-4 md:w-5 md:h-5 mr-1.5"/> 트랙 추가
                        </Button>
                     </div>
 
@@ -515,7 +513,7 @@ export default function AdminMusicPage() {
                      취소
                   </Button>
                   <Button type="button" onClick={handleSave} disabled={saving} variant="secondary" className="hover:bg-[#D4A373] font-black px-10 rounded-xl shadow-lg shadow-[#E6C79C]/20 text-sm h-11">
-                     {saving ? <><Loader2 className="w-5 h-5 mr-2 animate-spin"/> 저장 중...</> : <><Save className="w-5 h-5 mr-2"/> 이대로 음반 저장하기</>}
+                     {saving ? <><Loader2 className="w-5 h-5 mr-2 animate-spin"/> 저장 중...</> : <><Save className="w-5 h-5 mr-2"/> 음반 저장</>}
                   </Button>
               </div>
            </>
