@@ -341,11 +341,7 @@ export default function Home() {
                 <p className="text-sm text-[#78716A] line-clamp-3 font-light leading-relaxed mb-4 flex-1">
                   {blog.excerpt || blog.content.replace(/<[^>]+>/g, '')}
                 </p>
-                <div className="flex items-center text-xs text-[#78716A] gap-2 mt-auto">
-                  <span>{new Date(blog.createdAt).toLocaleDateString('ko-KR')}</span>
-                  <span>•</span>
-                  <span>{blog.authorId || 'admin'}</span>
-                </div>
+                {/* Date and author removed as requested */}
               </div>
             </article>
           ))}

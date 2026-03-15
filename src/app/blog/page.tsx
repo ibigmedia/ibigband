@@ -96,9 +96,7 @@ export default function BlogPage() {
                   </p>
                   <div className="flex items-center justify-between mt-auto pt-6 border-t border-[#78716A]/10">
                     <div className="flex items-center text-xs text-[#78716A] gap-2 font-medium">
-                      <span>{new Date(blog.createdAt).toLocaleDateString('ko-KR')}</span>
-                      <span>•</span>
-                      <span>By {blog.authorId || 'admin'}</span>
+                      
                     </div>
                     <div className="text-[#2D2926] bg-[#FAF9F6] p-2 rounded-full group-hover:bg-[#E6C79C]/20 transition-colors">
                       <ArrowRight size={16} />
