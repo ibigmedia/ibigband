@@ -82,9 +82,9 @@ export default function Home() {
   return (
     <div className="flex-1 flex flex-col">
       {/* Hero Section */}
-      <section className="pt-24 min-h-[80vh] flex flex-col items-center justify-center text-center px-6">
+      <section className="pt-16 md:pt-24 min-h-[50vh] md:min-h-[80vh] flex flex-col items-center justify-center text-center px-4 md:px-6">
         {/* Band Image Container */}
-        <div className="-mt-10 md:-mt-16 mb-8 md:mb-12 w-full max-w-[320px] md:max-w-[480px] lg:max-w-[600px] h-auto relative z-10 mx-auto opacity-90 transform transition-transform hover:scale-105 duration-500">
+        <div className="-mt-6 md:-mt-16 mb-6 md:mb-12 w-full max-w-[280px] sm:max-w-[320px] md:max-w-[480px] lg:max-w-[600px] h-auto relative z-10 mx-auto opacity-90 transform transition-transform hover:scale-105 duration-500">
           <Image 
             src="/hero-band.png" 
             alt="ibiGband outline art" 
@@ -93,33 +93,33 @@ export default function Home() {
             className="w-full h-auto object-contain mix-blend-multiply" 
           />
         </div>
-        <h1 className="text-[46px] sm:text-[60px] md:text-[88px] font-handwriting mb-2 md:mb-6 leading-[1.05] text-[#2D2926] relative z-10 tracking-[-0.06em] break-keep">
+        <h1 className="text-[38px] sm:text-[60px] md:text-[88px] font-handwriting mb-2 md:mb-6 leading-[1.1] md:leading-[1.05] text-[#2D2926] relative z-10 tracking-[-0.06em] break-keep">
           찬양이 멈추지 않는 <br />
           <span className="text-[#E6C79C] tracking-[-0.08em]">아카이브</span>
         </h1>
-        <p className="text-[#78716A] text-[14px] sm:text-[15px] md:text-lg max-w-xl mx-auto mb-10 font-light leading-relaxed relative z-10 break-keep px-4 sm:px-0 tracking-tight">
+        <p className="text-[#78716A] text-[13px] sm:text-[15px] md:text-lg max-w-xl mx-auto mb-8 md:mb-10 font-light leading-relaxed relative z-10 break-keep px-2 sm:px-0 tracking-tight">
           고퀄리티 프리미엄 악보와 영감을 주는 아티스트 저널을 만나보세요. <br className="hidden sm:block"/>
           어디서든 모바일 앱처럼 가장 빠르게 접속할 수 있습니다.
         </p>
-        <div className="flex flex-wrap gap-4 justify-center relative z-10">
-          <button onClick={() => router.push('/sheets')} className="bg-[#2D2926] text-white px-10 py-5 rounded-ibig shadow-2xl flex items-center gap-3 transform hover:-translate-y-1 hover:shadow-3xl transition-all font-bold">
-            <FileText size={20}/> 악보 라이브러리 입장
+        <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center relative z-10 w-full px-4 md:px-0 max-w-sm sm:max-w-none mx-auto">
+          <button onClick={() => router.push('/sheets')} className="bg-[#2D2926] text-white px-6 py-4 md:px-10 md:py-5 rounded-2xl md:rounded-ibig shadow-2xl flex items-center justify-center gap-3 transform hover:-translate-y-1 hover:shadow-3xl transition-all font-bold text-sm md:text-base w-full sm:w-auto">
+            <FileText size={18}/> 악보 라이브러리 입장
           </button>
-          <button onClick={() => router.push('/setlist')} className="bg-white border-2 border-[#78716A]/10 text-[#78716A] px-10 py-5 rounded-ibig flex items-center gap-3 hover:bg-[#78716A]/5 transition-all font-bold">
-            <List size={20}/> 스마트 셋리스트
+          <button onClick={() => router.push('/setlist')} className="bg-white border-2 border-[#78716A]/10 text-[#78716A] px-6 py-4 md:px-10 md:py-5 rounded-2xl md:rounded-ibig flex items-center justify-center gap-3 hover:bg-[#78716A]/5 transition-all font-bold text-sm md:text-base w-full sm:w-auto">
+            <List size={18}/> 스마트 셋리스트
           </button>
         </div>
       </section>
 
       {/* Featured Music Section */}
-      <section className="pt-24 px-6 max-w-7xl mx-auto border-t border-[#78716A]/10">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
+      <section className="pt-12 md:pt-24 px-4 md:px-6 max-w-7xl mx-auto border-t border-[#78716A]/10">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
           <div className="text-center md:text-left">
-            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">새로운 음반</h2>
-            <p className="text-sm text-[#78716A]">가장 최근에 발매된 음반들을 들어보세요</p>
+            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">새로운 음반</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">가장 최근에 발매된 음반들을 들어보세요</p>
           </div>
-          <div className="flex gap-2 w-full md:w-auto">
-            <Link href="/music" className="px-5 py-3 bg-[#2D2926] text-white rounded-full hover:bg-[#E6C79C] hover:text-[#2D2926] flex items-center justify-center font-bold text-sm transition-all">전체 듣기</Link>
+          <div className="flex w-full md:w-auto">
+            <Link href="/music" className="w-full px-5 py-3 md:py-3 bg-[#2D2926] text-white rounded-full hover:bg-[#E6C79C] hover:text-[#2D2926] flex items-center justify-center font-bold text-[13px] md:text-sm transition-all shadow-sm">전체 듣기</Link>
           </div>
         </div>
         
@@ -184,14 +184,14 @@ export default function Home() {
       </section>
 
       {/* Featured Video Section */}
-      <section className="pt-24 px-6 max-w-7xl mx-auto border-t border-[#78716A]/10 mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
+      <section className="pt-12 md:pt-24 px-4 md:px-6 max-w-7xl mx-auto border-t border-[#78716A]/10 mt-12 md:mt-20">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
           <div className="text-center md:text-left">
-            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">iBigMedia 비주얼</h2>
-            <p className="text-sm text-[#78716A]">공식 비디오, 라이브 워십, 강좌 및 다양한 영상들</p>
+            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">iBigMedia 비주얼</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">공식 비디오, 라이브 워십, 강좌 및 다양한 영상들</p>
           </div>
-          <div className="flex gap-2 w-full md:w-auto">
-            <Link href="/video" className="px-5 py-3 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full hover:bg-[#E6C79C]/20 flex items-center justify-center font-bold text-sm transition-all">전체 영상 보기</Link>
+          <div className="flex w-full md:w-auto">
+            <Link href="/video" className="w-full px-5 py-3 md:py-3 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full hover:bg-[#E6C79C]/20 flex items-center justify-center font-bold text-[13px] md:text-sm transition-all shadow-sm">전체 영상 보기</Link>
           </div>
         </div>
         
@@ -235,20 +235,20 @@ export default function Home() {
       </section>
 
       {/* Featured Sheet Music Section */}
-      <section className="pt-24 px-6 max-w-7xl mx-auto mb-20 border-t border-[#78716A]/10 mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
+      <section className="pt-12 md:pt-24 px-4 md:px-6 max-w-7xl mx-auto mb-12 md:mb-20 border-t border-[#78716A]/10 mt-12 md:mt-20">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
           <div className="text-center md:text-left">
-            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">악보 라이브러리</h2>
-            <p className="text-sm text-[#78716A]">최신 등록된 고해상도 악보와 음원자료</p>
+            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">악보 라이브러리</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">최신 등록된 고해상도 악보와 음원자료</p>
           </div>
-          <div className="flex gap-2 w-full md:w-auto">
-            <Link href="/sheets" className="p-4 bg-white border border-[#78716A]/10 rounded-full hover:bg-[#78716A]/5 flex items-center justify-center transition-all"><ArrowRight size={20} className="text-[#78716A]"/></Link>
+          <div className="flex w-full md:w-auto">
+            <Link href="/sheets" className="w-full py-3 md:p-4 bg-white border border-[#78716A]/10 rounded-full hover:bg-[#78716A]/5 flex items-center justify-center transition-all shadow-sm"><ArrowRight size={20} className="text-[#78716A]"/></Link>
           </div>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
             {latestSheets.map((sheet) => (
-              <div key={sheet.id} className="bg-white p-8 rounded-ibig shadow-sm border border-[#78716A]/5 group hover:shadow-xl transition-all relative overflow-hidden flex flex-col cursor-pointer" onClick={() => setPreviewSheet(sheet)}>
+              <div key={sheet.id} className="bg-white p-6 md:p-8 rounded-3xl md:rounded-ibig shadow-sm border border-[#78716A]/5 group hover:shadow-xl transition-all relative overflow-hidden flex flex-col cursor-pointer" onClick={() => setPreviewSheet(sheet)}>
                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                   <Music size={80} className="text-[#E6C79C]" />
                 </div>
@@ -295,14 +295,14 @@ export default function Home() {
       </section>
 
       {/* Featured Blog Section */}
-      <section className="pt-24 px-6 max-w-7xl mx-auto pb-12 md:pb-24 border-t border-[#78716A]/10 mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
+      <section className="pt-12 md:pt-24 px-4 md:px-6 max-w-7xl mx-auto pb-8 md:pb-24 border-t border-[#78716A]/10 mt-12 md:mt-20">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
           <div className="text-center md:text-left">
-            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">ibiGmedia Journal</h2>
-            <p className="text-sm text-[#78716A]">찬양은 삶의 고백이자 예술의 완성입니다</p>
+            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">ibiGmedia Journal</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">찬양은 삶의 고백이자 예술의 완성입니다</p>
           </div>
-          <div className="flex gap-2 w-full md:w-auto">
-            <Link href="/blog" className="px-5 py-3 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full hover:bg-[#E6C79C]/20 flex items-center justify-center font-bold text-sm transition-all">
+          <div className="flex w-full md:w-auto">
+            <Link href="/blog" className="w-full px-5 py-3 md:py-3 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full hover:bg-[#E6C79C]/20 flex items-center justify-center font-bold text-[13px] md:text-sm transition-all shadow-sm">
               더 보기 <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
@@ -352,12 +352,12 @@ export default function Home() {
       </section>
 
       {/* Minimal Archive CTA Section */}
-      <section className="py-12 md:py-16 px-6 max-w-2xl mx-auto text-center mt-10 mb-20 border-t border-[#78716A]/10">
-        <h2 className="text-2xl font-bold text-[#2D2926] mb-3">ibiGmedia 저장소</h2>
-        <p className="text-sm text-[#78716A] mb-8 font-light">
+      <section className="py-10 md:py-16 px-4 md:px-6 max-w-2xl mx-auto text-center mt-6 md:mt-10 mb-12 md:mb-20 border-t border-[#78716A]/10">
+        <h2 className="text-xl md:text-2xl font-bold text-[#2D2926] mb-2 md:mb-3">ibiGmedia 저장소</h2>
+        <p className="text-[13px] md:text-sm text-[#78716A] mb-6 md:mb-8 font-light leading-relaxed">
           음악, 영상, 악보, 저널 등 ibiGband의 모든 컨텐츠를 한곳에서 검색하고 찾아보세요.
         </p>
-        <Link href="/archive" className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full font-bold text-sm hover:bg-[#E6C79C]/10 transition-colors shadow-sm">
+        <Link href="/archive" className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-3 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full font-bold text-[13px] hover:bg-[#E6C79C]/10 transition-colors shadow-sm">
           <LayoutList size={16} /> 저장소 둘러보기 <ArrowRight size={16} className="ml-1" />
         </Link>
       </section>
