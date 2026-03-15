@@ -351,17 +351,15 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Archive CTA Section */}
-      <section className="py-24 px-6 bg-[#2D2926] text-white mt-20 mb-32 rounded-3xl max-w-[95%] mx-auto">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-handwriting text-[#E6C79C] mb-6">모든 컨텐츠를 한곳에서</h2>
-          <p className="text-[#FAF9F6] text-lg md:text-xl mb-10 font-light max-w-2xl mx-auto leading-relaxed opacity-90">
-            음악, 영상, 악보, 저널 그리고 다양한 자료들까지.<br/>ibiGband의 모든 미디어와 리소스를 아카이브에서 한눈에 찾아보세요.
-          </p>
-          <Link href="/archive" className="inline-flex items-center gap-2 px-8 py-4 bg-[#E6C79C] text-[#2D2926] rounded-full font-bold hover:bg-white hover:scale-105 transition-all shadow-lg hover:shadow-xl">
-            <LayoutList size={20} /> 저장소 입장하기 <ArrowRight size={20} className="ml-2" />
-          </Link>
-        </div>
+      {/* Minimal Archive CTA Section */}
+      <section className="py-12 md:py-16 px-6 max-w-2xl mx-auto text-center mt-10 mb-20 border-t border-[#78716A]/10">
+        <h2 className="text-2xl font-bold text-[#2D2926] mb-3">ibiGmedia 저장소</h2>
+        <p className="text-sm text-[#78716A] mb-8 font-light">
+          음악, 영상, 악보, 저널 등 ibiGband의 모든 컨텐츠를 한곳에서 검색하고 찾아보세요.
+        </p>
+        <Link href="/archive" className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full font-bold text-sm hover:bg-[#E6C79C]/10 transition-colors shadow-sm">
+          <LayoutList size={16} /> 저장소 둘러보기 <ArrowRight size={16} className="ml-1" />
+        </Link>
       </section>
 
       {previewSheet && (
