@@ -4,8 +4,8 @@
   --color-background: #FAF9F6;
   --color-foreground: #2D2926;
   --font-sans: var(--font-inter), "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-  --font-handwriting: "Nanum Pen Script", cursive;
-  --font-nanum-pen: "Nanum Pen Script";
+  --font-handwriting: var(--font-nanum-pen), cursive;
+  --font-nanum-pen: var(--font-nanum-pen);
   
   --color-brand-cream: #FAF9F6;
   --color-brand-charcoal: #2D2926;
