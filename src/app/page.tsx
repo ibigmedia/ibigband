@@ -115,7 +115,7 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">새로운 음반</h2>
+            <h2 className="text-[40px] leading-tight md:text-5xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">새로운 음반</h2>
             <p className="text-xs md:text-sm text-[#78716A]">가장 최근에 발매된 음반들을 들어보세요</p>
           </div>
           <div className="flex w-full md:w-auto">
@@ -189,7 +189,7 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10 mt-8 md:mt-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">iBigMedia 비주얼</h2>
+            <h2 className="text-[40px] leading-tight md:text-5xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">iBigMedia 비주얼</h2>
             <p className="text-xs md:text-sm text-[#78716A]">공식 비디오, 라이브 워십, 강좌 및 다양한 영상들</p>
           </div>
           <div className="flex w-full md:w-auto">
@@ -240,7 +240,7 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-8 md:mb-16 border-t border-[#78716A]/10 mt-8 md:mt-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">악보 라이브러리</h2>
+            <h2 className="text-[40px] leading-tight md:text-5xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">악보 라이브러리</h2>
             <p className="text-xs md:text-sm text-[#78716A]">최신 등록된 고해상도 악보와 음원자료</p>
           </div>
           <div className="flex w-full md:w-auto">
@@ -300,7 +300,7 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto pb-6 md:pb-16 border-t border-[#78716A]/10 mt-8 md:mt-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">ibiGband Journal</h2>
+            <h2 className="text-[40px] leading-tight md:text-5xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">ibiGband Journal</h2>
             <p className="text-xs md:text-sm text-[#78716A]">찬양은 삶의 고백이자 예술의 완성입니다</p>
           </div>
           <div className="flex w-full md:w-auto">
