@@ -2,12 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Music, FileText, Users } from 'lucide-react';
+import { LayoutDashboard, Music, FileText, Users, Video } from 'lucide-react';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/sheets', label: 'Sheets', icon: Music },
   { href: '/admin/music', label: '음반 관리', icon: Music },
+  { href: '/admin/video', label: '영상 관리', icon: Video },
   { href: '/admin/blog', label: 'Blog', icon: FileText },
   { href: '/admin/analytics', label: 'Analytics (SEO)', icon: FileText },
   { href: '/admin/users', label: '회원 관리', icon: Users },

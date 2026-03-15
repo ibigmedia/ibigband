@@ -9,6 +9,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import SheetModal from '@/components/sheets/SheetModal';
 import { Sheet } from '@/types/sheet';
+import { Video as VideoType } from '@/types/video';
+import VideoModal from '@/components/video/VideoModal';
 
 export default function Home() {
   const router = useRouter();
@@ -17,6 +19,8 @@ export default function Home() {
   const [latestSheets, setLatestSheets] = useState<any[]>([]);
   const [latestBlogs, setLatestBlogs] = useState<any[]>([]);
   const [latestMusic, setLatestMusic] = useState<any[]>([]);
+  const [latestVideos, setLatestVideos] = useState<VideoType[]>([]);
+  const [previewVideo, setPreviewVideo] = useState<VideoType | null>(null);
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   useEffect(() => {
@@ -63,6 +67,11 @@ export default function Home() {
             description: data.description ? data.description.normalize('NFC') : data.description
           };
         }));
+
+        // 4. Fetch latest 3 featured/latest videos
+        const qVideos = query(collection(db, 'videos'), orderBy('createdAt', 'desc'), limit(3));
+        const snapVideos = await getDocs(qVideos);
+        setLatestVideos(snapVideos.docs.map(doc => ({ id: doc.id, ...doc.data() } as VideoType)));
       } catch (error) {
         console.error('Error fetching latest content', error);
       }
@@ -170,6 +179,58 @@ export default function Home() {
             ))}
             {latestMusic.length === 0 && (
               <div className="col-span-full text-center py-20 text-[#78716A]">아직 등록된 음반이 없습니다</div>
+            )}
+        </div>
+      </section>
+
+      {/* Featured Video Section */}
+      <section className="pt-24 px-6 max-w-7xl mx-auto border-t border-[#78716A]/10 mt-20">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">iBigMedia 비주얼</h2>
+            <p className="text-sm text-[#78716A]">공식 비디오, 라이브 워십, 강좌 및 다양한 영상들</p>
+          </div>
+          <div className="flex gap-2 w-full md:w-auto">
+            <Link href="/video" className="px-5 py-3 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full hover:bg-[#E6C79C]/20 flex items-center justify-center font-bold text-sm transition-all">전체 영상 보기</Link>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {latestVideos.map((video) => (
+              <div 
+                key={video.id} 
+                className="group cursor-pointer flex flex-col h-full bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-[#78716A]/10 transform hover:-translate-y-2"
+                onClick={() => setPreviewVideo(video)}
+              >
+                <div className="aspect-video relative overflow-hidden bg-black/5">
+                  {video.thumbnailUrl ? (
+                    <Image 
+                      src={video.thumbnailUrl} 
+                      alt={video.title} 
+                      fill 
+                      className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-[#78716A]/20">
+                      <Play size={48} className="text-[#E6C79C]/50" />
+                    </div>
+                  )}
+                  {/* Overlay Play Button */}
+                  <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                    <div className="w-16 h-16 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-[#2D2926] shadow-xl transform scale-90 opacity-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-300">
+                       <Play size={24} fill="currentColor" className="ml-1" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="p-6 flex flex-col flex-1 relative">
+                  <h3 className="font-bold text-xl text-[#2D2926] mb-3 leading-tight group-hover:text-[#C48C5E] transition-colors line-clamp-2">{video.title}</h3>
+                  <p className="text-sm text-[#78716A] line-clamp-2 font-light mb-4 flex-1">{video.description}</p>
+                </div>
+              </div>
+            ))}
+            {latestVideos.length === 0 && (
+              <div className="col-span-full text-center py-20 text-[#78716A]">아직 등록된 영상이 없습니다</div>
             )}
         </div>
       </section>
@@ -297,6 +358,9 @@ export default function Home() {
 
       {previewSheet && (
         <SheetModal sheet={previewSheet} onClose={() => setPreviewSheet(null)} theme="light" />
+      )}
+      {previewVideo && (
+        <VideoModal video={previewVideo} onClose={() => setPreviewVideo(null)} />
       )}
     </div>
   );
