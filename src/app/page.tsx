@@ -7,9 +7,12 @@ import { Music, FileText, List, ArrowRight, Play, PlayCircle, Heart, Download, B
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import SheetModal from '@/components/sheets/SheetModal';
+import { Sheet } from '@/types/sheet';
 
 export default function Home() {
   const router = useRouter();
+  const [previewSheet, setPreviewSheet] = useState<Sheet | null>(null);
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [latestSheets, setLatestSheets] = useState<any[]>([]);
   const [latestBlogs, setLatestBlogs] = useState<any[]>([]);
@@ -185,7 +188,7 @@ export default function Home() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {latestSheets.map((sheet) => (
-              <div key={sheet.id} className="bg-white p-8 rounded-ibig shadow-sm border border-[#78716A]/5 group hover:shadow-xl transition-all relative overflow-hidden flex flex-col cursor-pointer" onClick={() => router.push(`/sheets?id=${sheet.id}`)}>
+              <div key={sheet.id} className="bg-white p-8 rounded-ibig shadow-sm border border-[#78716A]/5 group hover:shadow-xl transition-all relative overflow-hidden flex flex-col cursor-pointer" onClick={() => setPreviewSheet(sheet)}>
                 <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
                   <Music size={80} className="text-[#E6C79C]" />
                 </div>
@@ -207,7 +210,7 @@ export default function Home() {
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      router.push(`/sheets?sheetId=${sheet.id}`);
+                      setPreviewSheet(sheet);
                     }}
                     className="flex-1 py-4 bg-[#2D2926] text-white rounded-2xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-[#78716A] transition-all shadow-md"
                   >
@@ -216,7 +219,7 @@ export default function Home() {
                   <button 
                     onClick={(e) => {
                       e.stopPropagation();
-                      router.push(`/sheets?sheetId=${sheet.id}`);
+                      setPreviewSheet(sheet);
                     }}
                     className="w-14 h-14 shrink-0 bg-[#FAF9F6] rounded-2xl flex items-center justify-center hover:bg-[#E6C79C]/20 transition-all text-[#2D2926]"
                   >
@@ -266,6 +269,10 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {previewSheet && (
+        <SheetModal sheet={previewSheet} onClose={() => setPreviewSheet(null)} theme="light" />
+      )}
     </div>
   );
 }
