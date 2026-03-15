@@ -63,7 +63,7 @@ export default function VideoLibraryPage() {
         {loading ? (
           <div className="text-center py-32 text-[#78716A]">영상 데이터를 불러오는 중...</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 gap-y-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 gap-y-12">
             {videos.map(video => (
               <div 
                 key={video.id} 
