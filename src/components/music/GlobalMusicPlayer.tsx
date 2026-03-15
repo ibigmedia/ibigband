@@ -221,8 +221,18 @@ export default function GlobalMusicPlayer() {
                       {/* Album Info Section */}
                       <div className="p-6 md:p-10 flex flex-col sm:flex-row lg:flex-col gap-6 lg:gap-8 items-start">
                          <div className="flex flex-col lg:flex-row gap-6 w-full items-center lg:items-end">
-                            <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-40 lg:h-40 aspect-square rounded-[24px] overflow-hidden shadow-lg relative shrink-0 mx-auto sm:mx-0">
+                            <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-40 lg:h-40 aspect-square rounded-[24px] overflow-hidden shadow-lg relative shrink-0 mx-auto sm:mx-0 group">
                                <Image src={selectedAlbum.coverUrl} alt={selectedAlbum.title} fill className="object-cover" sizes="(max-width: 768px) 128px, 160px" />
+                               
+                               {/* Waveform Overlay when playing */}
+                               {isPlaying && (
+                                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center gap-1.5 z-10 animate-in fade-in duration-300">
+                                   <div className="w-1.5 h-6 bg-white/90 rounded-full animate-waveform-1"></div>
+                                   <div className="w-1.5 h-10 bg-[#C48C5E] rounded-full animate-waveform-2"></div>
+                                   <div className="w-1.5 h-5 bg-white/90 rounded-full animate-waveform-3"></div>
+                                   <div className="w-1.5 h-8 bg-[#C48C5E] rounded-full animate-waveform-4"></div>
+                                 </div>
+                               )}
                             </div>
                             
                             {/* PC Only: Track Credits */}
@@ -541,6 +551,15 @@ export default function GlobalMusicPlayer() {
         .animate-marquee:hover {
           animation-play-state: paused;
         }
+
+        @keyframes waveform {
+          0%, 100% { transform: scaleY(0.4); }
+          50% { transform: scaleY(1.2); }
+        }
+        .animate-waveform-1 { animation: waveform 1.0s ease-in-out infinite; }
+        .animate-waveform-2 { animation: waveform 1.1s ease-in-out infinite 0.2s; }
+        .animate-waveform-3 { animation: waveform 0.9s ease-in-out infinite 0.4s; }
+        .animate-waveform-4 { animation: waveform 1.2s ease-in-out infinite 0.1s; }
       `}} />
     </>
   );
