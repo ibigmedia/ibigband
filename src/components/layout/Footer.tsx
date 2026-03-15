@@ -7,8 +7,8 @@ import { Music, ExternalLink, Youtube, Heart } from 'lucide-react';
 export default function Footer() {
   return (
     <footer className="bg-[#2D2926] text-white/50 py-10 md:py-24 px-5 md:px-6 border-t border-black/10">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-12">
-        <div className="col-span-1 md:col-span-1 border-b border-white/10 md:border-0 pb-6 md:pb-0">
+      <div className="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-4 gap-6 md:gap-12">
+        <div className="border-b border-white/10 md:border-0 pb-6 md:pb-0">
           <div className="flex items-center gap-3 text-white mb-4 md:mb-8">
             <div className="w-10 h-10 md:w-12 md:h-12 bg-white/10 rounded-xl flex items-center justify-center overflow-hidden">
               <svg viewBox="0 0 100 100" className="w-6 h-6 md:w-7 md:h-7 fill-white">
@@ -22,27 +22,29 @@ export default function Footer() {
           </div>
           <p className="text-[13px] md:text-base leading-relaxed font-light mb-4 md:mb-0">예술로 복음을 전하는 컨템포러리 아카이브. <br className="hidden md:block"/>하나님이 주신 재능으로 세상을 아름답게 만듭니다.</p>
         </div>
-        <div className="pt-2 md:pt-0">
-          <h5 className="text-white text-xs md:text-sm font-bold mb-4 md:mb-8 uppercase tracking-[0.2em]">네비게이션</h5>
-          <ul className="text-[13px] md:text-base space-y-3 md:space-y-5 font-light">
-            <li><Link href="/archive" className="hover:text-[#E6C79C] transition-colors">음악 & 악보</Link></li>
-            <li><Link href="/blog" className="hover:text-[#E6C79C] transition-colors">아카이브 블로그</Link></li>
-            <li><Link href="/setlist" className="hover:text-[#E6C79C] transition-colors">셑리스트 메이커</Link></li>
-          </ul>
-        </div>
-        <div>
-          <h5 className="text-white text-xs md:text-sm font-bold mb-4 md:mb-8 uppercase tracking-[0.2em]">문의 및 지원</h5>
-          <ul className="text-[13px] md:text-base space-y-3 md:space-y-5 font-light">
-            <li className="cursor-pointer hover:text-white transition-colors flex items-center gap-2"><ExternalLink size={14} className="md:w-4 md:h-4"/> 파트너십 문의</li>
-            <li className="cursor-pointer hover:text-white transition-colors">개인정보처리방침</li>
-            <li className="cursor-pointer hover:text-white transition-colors">고객 지원 센터</li>
-          </ul>
-        </div>
-        <div>
-          <h5 className="text-white text-xs md:text-sm font-bold mb-4 md:mb-8 uppercase tracking-[0.2em]">글로벌 연결</h5>
-          <div className="flex gap-3 md:gap-4">
-            <a href="#" className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E6C79C] hover:text-[#2D2926] transition-all"><Youtube size={20} className="md:w-6 md:h-6" /></a>
-            <a href="#" className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E6C79C] hover:text-[#2D2926] transition-all"><Heart size={20} className="md:w-6 md:h-6" /></a>
+        <div className="grid grid-cols-3 gap-2 md:contents">
+          <div className="pt-2 md:pt-0 shrink-0">
+            <h5 className="text-white text-[10px] md:text-sm font-bold mb-3 md:mb-8 uppercase tracking-tighter md:tracking-[0.2em] whitespace-nowrap">네비게이션</h5>
+            <ul className="text-[10px] md:text-base space-y-2 md:space-y-5 font-light tracking-tighter md:tracking-normal">
+              <li><Link href="/archive" className="hover:text-[#E6C79C] transition-colors whitespace-nowrap">음악 & 악보</Link></li>
+              <li><Link href="/blog" className="hover:text-[#E6C79C] transition-colors whitespace-nowrap">아카이브 블로그</Link></li>
+              <li><Link href="/setlist" className="hover:text-[#E6C79C] transition-colors whitespace-nowrap">셑리스트 메이커</Link></li>
+            </ul>
+          </div>
+          <div className="pt-2 md:pt-0 shrink-0">
+            <h5 className="text-white text-[10px] md:text-sm font-bold mb-3 md:mb-8 uppercase tracking-tighter md:tracking-[0.2em] whitespace-nowrap">문의 및 지원</h5>
+            <ul className="text-[10px] md:text-base space-y-2 md:space-y-5 font-light tracking-tighter md:tracking-normal">
+              <li className="cursor-pointer hover:text-white transition-colors flex items-center gap-1 whitespace-nowrap"><ExternalLink size={10} className="md:w-4 md:h-4"/> 파트너십 문의</li>
+              <li className="cursor-pointer hover:text-white transition-colors whitespace-nowrap">개인정보처리방침</li>
+              <li className="cursor-pointer hover:text-white transition-colors whitespace-nowrap">고객 지원 센터</li>
+            </ul>
+          </div>
+          <div className="pt-2 md:pt-0 shrink-0">
+            <h5 className="text-white text-[10px] md:text-sm font-bold mb-3 md:mb-8 uppercase tracking-tighter md:tracking-[0.2em] whitespace-nowrap">글로벌 연결</h5>
+            <div className="flex gap-2 flex-wrap">
+              <a href="#" className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E6C79C] hover:text-[#2D2926] transition-all"><Youtube size={16} className="md:w-6 md:h-6" /></a>
+              <a href="#" className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E6C79C] hover:text-[#2D2926] transition-all"><Heart size={16} className="md:w-6 md:h-6" /></a>
+            </div>
           </div>
         </div>
       </div>
