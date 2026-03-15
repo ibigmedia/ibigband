@@ -208,7 +208,7 @@ export default function MusicPage() {
     <div className="min-h-screen bg-[#FDFCFB] text-slate-800 font-sans">
       
       {/* MAIN LAYOUT */}
-      <main className="max-w-[1400px] mx-auto px-4 lg:px-8 pb-32 pt-6 flex flex-col gap-12 lg:gap-16">
+      <main className="max-w-[1400px] mx-auto px-4 lg:px-8 pb-32 pt-12 md:pt-16 flex flex-col gap-12 lg:gap-16">
         
         {/* Header & Tabs */}
         <header className="flex flex-col gap-8">

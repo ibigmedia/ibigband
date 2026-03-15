@@ -103,7 +103,7 @@ export default function SheetsGalleryPage() {
   };
 
   return (
-    <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-6 pb-16">
+    <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-12 md:pt-16 pb-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
