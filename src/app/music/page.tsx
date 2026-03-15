@@ -137,7 +137,7 @@ export default function MusicPage() {
   const audioRef = useRef<HTMLAudioElement>(null);
   
   // Custom lyrics font scale
-  const [lyricsScale, setLyricsScale] = useState(1);
+  const [lyricsScale, setLyricsScale] = useState(0.8);
 
   // Fetch data from Firebase
   useEffect(() => {
@@ -486,48 +486,48 @@ export default function MusicPage() {
              </button>
 
              {/* Modal Left Pane (Details & Tracks & Credits) */}
-             <div className="md:w-5/12 lg:w-4/12 flex flex-col h-[40%] md:h-full bg-[#FDFCFB] border-r border-slate-100 relative shrink-0">
+             <div className="md:w-5/12 lg:w-4/12 flex flex-col h-[30%] md:h-full bg-[#FDFCFB] border-r border-slate-100 relative shrink-0">
                
-               <div className="relative z-10 flex flex-col h-full overflow-y-auto hide-scrollbar p-6 lg:p-10">
-                  <div className="flex md:flex-col items-center md:items-start gap-5 mb-8 md:mt-6">
-                     <div className="w-24 h-24 md:w-full md:max-w-[200px] aspect-square rounded-[20px] md:rounded-[32px] overflow-hidden shadow-[0_12px_40px_rgba(0,0,0,0.1)] relative shrink-0">
-                        <Image src={selectedAlbum.coverUrl} alt={selectedAlbum.title} fill className="object-cover" sizes="(max-width: 768px) 96px, 200px" />
+               <div className="relative z-10 flex flex-col h-full overflow-y-auto hide-scrollbar p-3 md:p-6 lg:p-8">
+                  <div className="flex md:flex-col items-center md:items-start gap-4 mb-4 md:mt-2">
+                     <div className="w-16 h-16 md:w-full md:max-w-[160px] aspect-square rounded-[16px] md:rounded-[24px] overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.1)] relative shrink-0">
+                        <Image src={selectedAlbum.coverUrl} alt={selectedAlbum.title} fill className="object-cover" sizes="(max-width: 768px) 64px, 160px" />
                      </div>
-                     <div className="flex-1 mt-2">
-                        <span className="text-[#C48C5E] text-[10px] md:text-xs font-bold uppercase tracking-widest block mb-1.5 md:mb-2 border border-[#C48C5E]/30 bg-[#C48C5E]/5 px-2 py-1 rounded-full w-max">
+                     <div className="flex-1 mt-1">
+                        <span className="text-[#C48C5E] text-[10px] font-bold uppercase tracking-widest block mb-1 border border-[#C48C5E]/30 bg-[#C48C5E]/5 px-2 py-0.5 rounded-full w-max">
                            {selectedAlbum.type}
                         </span>
-                        <h2 className="text-xl md:text-3xl font-extrabold text-slate-900 leading-tight mb-2 md:mb-3 font-serif">{selectedAlbum.title}</h2>
-                        <p className="text-slate-500 text-xs md:text-sm leading-relaxed hidden md:block">{selectedAlbum.description}</p>
+                        <h2 className="text-2xl md:text-3xl font-handwriting text-slate-900 leading-tight mb-1">{selectedAlbum.title}</h2>
+                        <p className="text-slate-500 text-[11px] md:text-xs leading-snug hidden md:block line-clamp-3">{selectedAlbum.description}</p>
                      </div>
                   </div>
 
                   {/* Tracklist */}
-                  <div className="mb-10 flex-1">
-                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest px-2 mb-3">Tracklist</h3>
-                     <div className="flex flex-col gap-2">
+                  <div className="mb-6 flex-1">
+                     <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">Tracklist</h3>
+                     <div className="flex flex-col gap-1">
                         {selectedAlbum.tracks.map((track, i) => {
                           const isActive = activeTrack.id === track.id;
                           return (
                             <div 
                               key={track.id} 
                               onClick={() => handleTrackSelect(track)}
-                              className={`flex items-center gap-3 md:gap-4 p-3 rounded-2xl cursor-pointer transition-all duration-300 ${
+                              className={`flex items-center gap-2 md:gap-3 p-2 rounded-xl cursor-pointer transition-all duration-300 ${
                                 isActive 
-                                  ? 'bg-[#C48C5E] text-white shadow-md' 
+                                  ? 'bg-[#C48C5E] text-white shadow-sm' 
                                   : 'hover:bg-slate-50 text-slate-700 border border-transparent'
                               }`}
                             >
-                               <div className={`w-6 text-center font-bold text-xs md:text-sm ${isActive ? 'text-white' : 'text-slate-400'}`}>
-                                 {isActive && isPlaying ? <Play className="w-4 h-4 mx-auto fill-current animate-pulse"/> : `${i+1}`}
+                               <div className={`w-5 text-center font-bold text-xs ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                                 {isActive && isPlaying ? <Play className="w-3 h-3 mx-auto fill-current animate-pulse"/> : `${i+1}`}
                                </div>
                                <div className="flex-1">
-                                  <p className={`font-handwriting text-lg md:text-xl md:mt-0.5 ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title}</p>
+                                  <p className={`font-handwriting text-[17px] md:text-xl leading-none ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title}</p>
                                   {track.versions.length > 1 && !isActive && (
-                                     <p className="text-[10px] text-slate-400 md:font-medium mt-0.5">{track.versions.length} languages available</p>
+                                     <p className="text-[9px] text-slate-400 md:font-medium mt-0.5">{track.versions.length} versions</p>
                                   )}
                                </div>
-                               <div className={`text-xs font-medium ${isActive ? 'text-white/80' : 'text-slate-400'}`}>{track.duration}</div>
+                               <div className={`text-[10px] font-medium ${isActive ? 'text-white/80' : 'text-slate-400'}`}>{track.duration}</div>
                             </div>
                           )
                         })}
@@ -535,12 +535,12 @@ export default function MusicPage() {
                   </div>
 
                   {/* Credits Block */}
-                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm mt-auto">
-                     <div className="flex items-center gap-2 mb-5 text-[#C48C5E]">
-                        <Users className="w-4 h-4 md:w-5 md:h-5"/>
-                        <h3 className="text-sm md:text-base font-bold uppercase tracking-widest">Credits</h3>
+                  <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm mt-auto shrink-0">
+                     <div className="flex items-center gap-1.5 mb-3 text-[#C48C5E]">
+                        <Users className="w-3.5 h-3.5 md:w-4 md:h-4"/>
+                        <h3 className="text-xs md:text-sm font-bold uppercase tracking-widest">Credits</h3>
                      </div>
-                     <div className="flex flex-col gap-4">
+                     <div className="flex flex-col gap-2">
                         {activeTrack.credits.composer && (
                            <div className="flex flex-col gap-1">
                               <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Words & Music</span>
@@ -571,18 +571,18 @@ export default function MusicPage() {
              </div>
 
              {/* Modal Right Pane (Player & Lyrics) */}
-             <div className="md:w-7/12 lg:w-8/12 flex flex-col h-[60%] md:h-full relative overflow-hidden bg-white shadow-xl md:shadow-none z-10 rounded-t-[32px] md:rounded-t-none md:rounded-r-[40px] transition-transform duration-500">
+             <div className="md:w-7/12 lg:w-8/12 flex flex-col h-[70%] md:h-full relative overflow-hidden bg-white shadow-xl md:shadow-none z-10 rounded-t-[24px] md:rounded-t-none md:rounded-r-[40px] transition-transform duration-500">
                
                {/* Background Cover Blur Effect - Kept very subtle and soft */}
-               <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none mix-blend-multiply">
-                  <Image src={selectedAlbum.coverUrl} alt="bg" fill className="object-cover blur-[80px]" />
+               <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none mix-blend-multiply">
+                  <Image src={selectedAlbum.coverUrl} alt="bg" fill className="object-cover blur-[60px]" />
                </div>
                
                {/* Sticky Action Navigation (Player Controls + Tabs) */}
-               <div className="relative z-20 px-6 lg:px-12 py-5 lg:py-6 bg-white/80 backdrop-blur-xl border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-6">
+               <div className="relative z-20 px-4 md:px-8 py-3 md:py-5 bg-white/90 backdrop-blur-xl border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex-1 pr-12 md:pr-0">
-                     <span className="text-[#C48C5E] font-bold tracking-widest text-[10px] uppercase block mb-1">Now Playing</span>
-                     <h2 className="text-slate-900 font-bold text-2xl md:text-3xl lg:text-4xl line-clamp-2 leading-tight truncate font-handwriting">{currentVersion.title}</h2>
+                     <span className="text-[#C48C5E] font-bold tracking-widest text-[9px] uppercase block mb-0.5">Now Playing</span>
+                     <h2 className="text-slate-900 text-3xl md:text-4xl line-clamp-1 leading-tight truncate font-handwriting">{currentVersion.title}</h2>
                   </div>
                   
                   <div className="flex items-center gap-4 flex-wrap">
@@ -636,12 +636,12 @@ export default function MusicPage() {
                </div>
 
                {/* Scrollable Lyrics Area */}
-               <div className="relative z-10 flex-1 overflow-y-auto hide-scrollbar scroll-smooth p-6 lg:p-12 pb-32 pt-8 mask-image-y">
+               <div className="relative z-10 flex-1 overflow-y-auto hide-scrollbar scroll-smooth p-4 md:p-8 lg:p-12 pb-24 pt-6 mask-image-y">
                   <div 
                     className="text-slate-800 font-handwriting font-normal tracking-tighter antialiased transition-all duration-300 transform-gpu"
                     style={{ 
-                       fontSize: `${2.2 * lyricsScale}rem`, 
-                       lineHeight: 1.1,
+                       fontSize: `calc(${1.2 * lyricsScale}rem + 0.8vw)`, 
+                       lineHeight: 1.15,
                        letterSpacing: '-0.02em'
                     }}
                   >
