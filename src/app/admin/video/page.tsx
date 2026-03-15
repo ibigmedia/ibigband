@@ -20,10 +20,12 @@ export default function AdminVideoPage() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [featured, setFeatured] = useState(false);
   const [relatedLinks, setRelatedLinks] = useState<RelatedLink[]>([]);
   
   const [loading, setLoading] = useState(false);
+  const [isFetchingMeta, setIsFetchingMeta] = useState(false);
 
   useEffect(() => {
     fetchVideos();
@@ -68,8 +70,38 @@ export default function AdminVideoPage() {
         setFeatured(false);
         setRelatedLinks([]);
         setVideoFile(null);
+        setThumbnailFile(null);
     }
     setIsModalOpen(true);
+  };
+
+  const handleAutoFill = async () => {
+    if (!youtubeUrl) return;
+    setIsFetchingMeta(true);
+    try {
+      const res = await fetch('/api/video-meta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: youtubeUrl })
+      });
+      const data = await res.json();
+      if (data.title) setTitle(data.title);
+      if (data.description) setDescription(data.description);
+      if (data.image) setThumbnailUrl(data.image);
+    } catch (e) {
+      console.error('Metadata fetch failed:', e);
+    } finally {
+      setIsFetchingMeta(false);
+    }
+  };
+
+  const generateAIThumbnail = () => {
+    if (!title) {
+        alert("먼저 영상 제목을 입력해주세요!");
+        return;
+    }
+    const cleanTitle = encodeURIComponent(title.replace(/[\/\?&\\]/g, ' '));
+    setThumbnailUrl(`https://image.pollinations.ai/prompt/${cleanTitle}%20cinematic%20minimalist%20worship%20beautiful%20lighting?width=1280&height=720&nologo=true`);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -87,7 +119,11 @@ export default function AdminVideoPage() {
 
       // Automatically generate YouTube thumbnail if youtubeUrl is provided and thumbnail is empty
       let finalThumbnail = thumbnailUrl;
-      if (youtubeUrl && !finalThumbnail) {
+      if (thumbnailFile) {
+        const fileRef = ref(storage, `thumbnails/videos_${Date.now()}_${thumbnailFile.name}`);
+        const uploadResult = await uploadBytes(fileRef, thumbnailFile);
+        finalThumbnail = await getDownloadURL(uploadResult.ref);
+      } else if (youtubeUrl && !finalThumbnail) {
          const match = youtubeUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&]{11})/);
          if (match && match[1]) {
             finalThumbnail = `https://img.youtube.com/vi/${match[1]}/maxresdefault.jpg`;
@@ -208,9 +244,14 @@ export default function AdminVideoPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div>
                     <label className="block text-sm font-medium mb-1 text-gray-300">유튜브 링크 (우선)</label>
-                    <div className="flex relative items-center">
-                       <LinkIcon size={16} className="absolute left-3 text-[#78716A]" />
-                       <Input value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} placeholder="https://youtube.com/watch?..." className="bg-black/30 border-[#78716A]/20 text-white pl-9" />
+                    <div className="flex relative items-center gap-2">
+                       <div className="relative flex-1">
+                          <LinkIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" />
+                          <Input value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} placeholder="https://youtube.com/watch?..." className="bg-black/30 w-full border-[#78716A]/20 text-white pl-9" />
+                       </div>
+                       <Button type="button" onClick={handleAutoFill} disabled={isFetchingMeta} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E6C79C]">
+                          {isFetchingMeta ? '불러오는중..' : '자동 채우기'}
+                       </Button>
                     </div>
                  </div>
                  
@@ -220,11 +261,22 @@ export default function AdminVideoPage() {
                  </div>
               </div>
 
-              <div>
-                 <label className="block text-sm font-medium mb-1 text-gray-300">커스텀 썸네일 URL (비워두면 유튜브 자동추출)</label>
-                 <div className="flex relative items-center">
-                    <ImageIcon size={16} className="absolute left-3 text-[#78716A]" />
-                    <Input value={thumbnailUrl} onChange={e => setThumbnailUrl(e.target.value)} placeholder="https://..." className="bg-black/30 border-[#78716A]/20 text-white pl-9" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div>
+                    <label className="block text-sm font-medium mb-1 text-gray-300">커스텀 썸네일 직접 업로드</label>
+                    <Input type="file" accept="image/*" onChange={e => setThumbnailFile(e.target.files?.[0] || null)} className="bg-black/30 border-[#78716A]/20 text-white p-1 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#78716A]/20 file:text-white" />
+                 </div>
+                 <div>
+                    <label className="block text-sm font-medium mb-1 text-gray-300">썸네일 URL (비워두면 자동추출)</label>
+                    <div className="flex relative items-center gap-2">
+                       <div className="relative flex-1">
+                          <ImageIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" />
+                          <Input value={thumbnailUrl} onChange={e => setThumbnailUrl(e.target.value)} placeholder="https://..." className="bg-black/30 w-full border-[#78716A]/20 text-white pl-9" />
+                       </div>
+                       <Button type="button" onClick={generateAIThumbnail} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E6C79C]">
+                          AI생성
+                       </Button>
+                    </div>
                  </div>
               </div>
 

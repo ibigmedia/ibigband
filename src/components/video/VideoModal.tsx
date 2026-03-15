@@ -142,7 +142,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
                   rel="noopener noreferrer"
                   className="bg-red-600 text-white font-bold text-xs px-4 py-2 rounded-full hover:bg-red-700 transition-colors w-full"
                 >
-                  채널 구경가기
+                  유투브 채널 방문
                 </a>
               </div>
             </div>
