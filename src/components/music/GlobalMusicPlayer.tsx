@@ -222,14 +222,14 @@ export default function GlobalMusicPlayer() {
                   {/* Tracklist */}
                   <div className="mb-6 flex-1">
                      <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">Tracklist</h3>
-                     <div className="flex flex-col gap-1">
+                     <div className="flex flex-col gap-0">
                         {selectedAlbum.tracks.map((track, i) => {
                           const isActive = activeTrack.id === track.id;
                           return (
                             <div 
                               key={track.id} 
                               onClick={() => handleTrackSelect(track)}
-                              className={`flex items-center gap-2 md:gap-3 p-2 rounded-xl cursor-pointer transition-all duration-300 ${
+                              className={`flex items-center gap-2 md:gap-3 py-1 px-2 rounded-xl cursor-pointer transition-all duration-300 ${
                                 isActive 
                                   ? 'bg-[#C48C5E] text-white shadow-sm' 
                                   : 'hover:bg-slate-50 text-slate-700 border border-transparent'
@@ -239,7 +239,7 @@ export default function GlobalMusicPlayer() {
                                  {isActive && isPlaying ? <Play className="w-3 h-3 mx-auto fill-current animate-pulse"/> : `${i+1}`}
                                </div>
                                <div className="flex-1">
-                                  <p className={`font-handwriting font-normal text-[19px] md:text-2xl leading-none ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title?.normalize('NFC') || track.title}</p>
+                                  <p className={`font-handwriting font-normal text-[18px] md:text-[21px] leading-none tracking-tighter ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title?.normalize('NFC') || track.title}</p>
                                   {track.versions.length > 1 && !isActive && (
                                      <p className="text-[9px] text-slate-400 md:font-medium mt-0.5">{track.versions.length} versions</p>
                                   )}
@@ -347,7 +347,7 @@ export default function GlobalMusicPlayer() {
                   <div 
                     className="text-slate-800 font-handwriting font-normal tracking-tighter antialiased transition-all duration-300 transform-gpu"
                     style={{ 
-                       fontSize: `calc(${1.0 * lyricsScale}rem + 0.5vw)`, 
+                       fontSize: `calc(${1.1 * lyricsScale}rem + 0.6vw)`, 
                        lineHeight: 1.15,
                        letterSpacing: '-0.02em'
                     }}
@@ -372,12 +372,12 @@ export default function GlobalMusicPlayer() {
                      {[1, 2].map((i) => (
                        <div key={i} className="flex items-center gap-8 md:gap-12 shrink-0 pr-8 md:pr-12">
                           <div className="flex items-baseline gap-2 shrink-0">
-                            <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title}</h4>
+                            <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title?.normalize('NFC') || currentVersion.title}</h4>
                             <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold">앨범 보기 〉</span>
                           </div>
                           {activeTrackAlbum.description && (
                              <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
-                                {activeTrackAlbum.description}
+                                {activeTrackAlbum.description?.normalize('NFC') || activeTrackAlbum.description}
                              </span>
                           )}
                           {(activeTrack.credits.composer || activeTrack.credits.arranger || activeTrack.credits.producer || currentVersion.vocal) && (
@@ -387,7 +387,7 @@ export default function GlobalMusicPlayer() {
                                   activeTrack.credits.arranger ? `편곡: ${activeTrack.credits.arranger}` : null,
                                   activeTrack.credits.producer ? `프로듀서: ${activeTrack.credits.producer}` : null,
                                   currentVersion.vocal ? `보컬: ${currentVersion.vocal}` : null
-                                ].filter(Boolean).join(' • ')}
+                                ].filter(Boolean).join(' • ')?.normalize('NFC') || ''}
                              </span>
                           )}
                        </div>
