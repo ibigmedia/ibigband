@@ -343,9 +343,7 @@ export default function GlobalMusicPlayer() {
                             </span>
                          </div>
                          <h2 className="text-slate-900 text-3xl md:text-4xl lg:text-4xl leading-tight font-handwriting flex items-center lg:items-baseline flex-wrap gap-x-3 gap-y-1">
-                            <span className="text-slate-400 font-bold truncate max-w-[200px] xl:max-w-[280px]" title={selectedAlbum.title}>{selectedAlbum.title}</span>
-                            <span className="text-slate-300 hidden lg:inline-block font-sans text-2xl font-light">/</span>
-                            <span className="text-slate-900">{currentVersion.title.normalize('NFC')}</span>
+                            <span className="text-slate-900 truncate max-w-[300px] xl:max-w-[400px]" title={currentVersion.title.normalize('NFC')}>{currentVersion.title.normalize('NFC')}</span>
                          </h2>
                       </div>
                       
