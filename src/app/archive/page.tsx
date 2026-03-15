@@ -167,65 +167,66 @@ export default function ArchivePage() {
   }, {} as Record<string, ArchiveItem[]>);
 
   return (
-    <div className="pt-32 px-6 max-w-7xl mx-auto mb-20">
-      <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+    <div className="pt-24 md:pt-32 px-4 md:px-6 max-w-7xl mx-auto mb-16 md:mb-20">
+      <div className="flex flex-col md:flex-row justify-between items-end gap-4 md:gap-6 mb-8 md:mb-12">
         <div className="text-left w-full">
-          <h2 className="text-4xl md:text-5xl font-handwriting text-[#2D2926] mb-3">저장소 (Archive)</h2>
-          <p className="text-[#78716A]">모든 미디어와 인사이트를 한눈에 파악하고 검색하세요.</p>
+          <h2 className="text-3xl md:text-5xl font-handwriting text-[#2D2926] mb-2 md:mb-3">저장소 (Archive)</h2>
+          <p className="text-[13px] md:text-base text-[#78716A]">모든 미디어와 인사이트를 한눈에 파악하고 검색하세요.</p>
         </div>
       </div>
 
       {/* Control Bar */}
-      <div className="bg-white p-4 rounded-2xl shadow-sm border border-[#78716A]/10 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between sticky top-[80px] z-10">
-        <div className="flex gap-4 w-full md:w-auto overflow-x-auto pb-2 md:pb-0 scrollbar-hide shrink-0">
-          <div className="relative shrink-0 w-full md:w-64">
-            <Search className="absolute left-3.5 top-3 text-[#78716A]" size={16} />
+      <div className="bg-[#2D2926]/90 backdrop-blur-md p-3 md:p-4 rounded-[20px] md:rounded-2xl shadow-lg border border-white/10 mb-6 md:mb-8 flex flex-col md:flex-row gap-3 md:gap-4 items-stretch md:items-center justify-between sticky top-[70px] md:top-[80px] z-10">
+
+        <div className="flex gap-2 md:gap-4 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-hide shrink-0">
+          <div className="relative shrink-0 w-[120px] md:w-64">
+            <Search className="absolute left-3 top-2.5 text-white/50" size={14} />
             <input 
               type="text" 
               placeholder="제목, 내용 검색" 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-[#78716A]/20 rounded-full text-sm focus:outline-none focus:border-[#E6C79C] focus:ring-1 focus:ring-[#E6C79C]"
+              className="w-full pl-8 pr-3 py-2 bg-white/5 border border-white/10 rounded-full text-[13px] md:text-sm text-white/90 focus:outline-none focus:border-white/30 focus:bg-white/10 placeholder:text-white/40 transition-colors"
             />
           </div>
           <select 
-            className="px-4 py-2 bg-[#FAF9F6] border border-[#78716A]/10 rounded-full text-sm font-medium text-[#2D2926] outline-none cursor-pointer"
+            className="px-3 md:px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer shrink-0 transition-colors focus:bg-[#2D2926] hover:bg-white/10 appearance-none"
             value={filterType}
             onChange={(e) => setFilterType(e.target.value as any)}
           >
-            <option value="all">모든 형태</option>
-            <option value="video">영상</option>
-            <option value="blog">저널 (블로그)</option>
-            <option value="sheet">악보 및 음원</option>
+            <option value="all" className="bg-[#2D2926]">모든 형태</option>
+            <option value="video" className="bg-[#2D2926]">영상</option>
+            <option value="blog" className="bg-[#2D2926]">저널 (블로그)</option>
+            <option value="sheet" className="bg-[#2D2926]">악보 및 음원</option>
           </select>
           <select 
-            className="px-4 py-2 bg-[#FAF9F6] border border-[#78716A]/10 rounded-full text-sm font-medium text-[#2D2926] outline-none cursor-pointer"
+            className="px-3 md:px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer shrink-0 transition-colors focus:bg-[#2D2926] hover:bg-white/10 appearance-none"
             value={filterTag}
             onChange={(e) => setFilterTag(e.target.value)}
           >
-            <option value="all">모든 태그</option>
-            {allTags.map(tag => <option key={tag} value={tag}>#{tag}</option>)}
+            <option value="all" className="bg-[#2D2926]">모든 태그</option>
+            {allTags.map(tag => <option key={tag} value={tag} className="bg-[#2D2926]">#{tag}</option>)}
           </select>
         </div>
 
-        <div className="flex p-1 bg-[#FAF9F6] rounded-full shrink-0">
+        <div className="flex p-1 bg-white/5 rounded-full shrink-0 border border-white/5">
           <button 
             onClick={() => setViewMode('list')}
-            className={`p-2 rounded-full transition-colors ${viewMode === 'list' ? 'bg-white shadow-sm text-[#2D2926]' : 'text-[#78716A] hover:text-[#2D2926]'}`}
+            className={`p-2 rounded-full transition-colors ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white' : 'text-white/50 hover:text-white/90'}`}
             title="리스트 뷰"
           >
             <LayoutList size={18} />
           </button>
           <button 
             onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-full transition-colors ${viewMode === 'grid' ? 'bg-white shadow-sm text-[#2D2926]' : 'text-[#78716A] hover:text-[#2D2926]'}`}
+            className={`p-2 rounded-full transition-colors ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white' : 'text-white/50 hover:text-white/90'}`}
             title="그리드 뷰"
           >
             <LayoutGrid size={18} />
           </button>
           <button 
             onClick={() => setViewMode('category')}
-            className={`p-2 rounded-full transition-colors ${viewMode === 'category' ? 'bg-white shadow-sm text-[#2D2926]' : 'text-[#78716A] hover:text-[#2D2926]'}`}
+            className={`p-2 rounded-full transition-colors ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white' : 'text-white/50 hover:text-white/90'}`}
             title="카테고리 뷰"
           >
             <FolderTree size={18} />
@@ -240,45 +241,44 @@ export default function ArchivePage() {
       ) : (
         <>
           {viewMode === 'list' && (
-            <div className="flex flex-col gap-3">
-              <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 border-b border-[#78716A]/10 text-xs font-bold text-[#78716A] tracking-wider uppercase">
+            <div className="flex flex-col gap-3 md:gap-4 w-full">
+              <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 border-b border-[#78716A]/10 text-xs font-bold text-[#78716A] tracking-wider uppercase w-full">
                 <div className="col-span-6 lg:col-span-5">정보</div>
                 <div className="col-span-2 text-center">형식</div>
                 <div className="col-span-3 text-center">태그</div>
                 <div className="col-span-1 lg:col-span-2 text-right">링크</div>
               </div>
               {filteredItems.map(item => (
-                <Link key={item.id} href={item.link} className="block group">
-                  <div className="bg-white hover:bg-[#FAF9F6] border border-[#78716A]/5 rounded-2xl md:rounded-full p-4 md:px-6 transition-all shadow-sm group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative">
+                <Link key={item.id} href={item.link} className="block group w-full">
+                  <div className="bg-white hover:bg-[#FAF9F6] border border-[#78716A]/5 rounded-2xl md:rounded-[32px] p-3 md:p-4 md:px-6 transition-all shadow-sm group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative w-full overflow-hidden">
                     
                     {/* ======== 모바일 뷰 최적화 레이아웃 ======== */}
-                    <div className="flex gap-4 md:hidden w-full">
-                      <div className="w-24 h-24 rounded-xl bg-[#2D2926] overflow-hidden shrink-0 relative">
+                    <div className="flex gap-3 md:hidden w-full items-stretch">
+                      <div className="w-[100px] h-20 rounded-xl bg-[#2D2926] overflow-hidden shrink-0 relative flex-none">
                         {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                           <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-gray-100 text-[#78716A] text-[10px] italic">No Img</div>
                         )}
-                        <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-sm p-1 rounded-full shadow-sm text-[#2D2926]">
+                        <div className="absolute top-1 left-1 bg-white/90 backdrop-blur-sm p-1 rounded-full shadow-sm text-[#2D2926]">
                           {getTypeIcon(item.type)}
                         </div>
                       </div>
-                      <div className="flex-1 min-w-0 flex flex-col py-0.5 justify-between">
-                        <div>
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <h3 className="font-bold text-[#2D2926] text-[15px] leading-tight line-clamp-2 pr-4">{item.title}</h3>
-                            <ArrowUpRight size={16} className="text-[#C48C5E] shrink-0 font-bold" />
-                          </div>
-                          <p className="text-[11px] text-[#78716A] line-clamp-1 mb-1.5">{item.description}</p>
+                      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                        <div className="mb-1">
+                          <h3 className="font-bold text-[#2D2926] text-[14px] leading-tight line-clamp-2 pr-6 relative">
+                            {item.title}
+                            <ArrowUpRight size={14} className="absolute right-0 top-0 text-[#C48C5E] shrink-0 font-bold" />
+                          </h3>
                         </div>
                         <div className="flex flex-wrap items-center gap-1.5 mt-auto">
-                          <span className="text-[10px] font-bold text-[#2D2926] uppercase bg-[#FAF9F6] border border-[#78716A]/10 px-2 py-0.5 rounded-sm">
+                          <span className="text-[9px] font-bold text-[#2D2926] uppercase bg-[#FAF9F6] border border-[#78716A]/10 px-2 py-0.5 rounded-md">
                             {getTypeName(item.type)}
                           </span>
-                          {item.tags.slice(0, 2).map(tag => (
-                            <span key={tag} className="text-[10px] text-[#78716A] truncate max-w-[60px]">#{tag}</span>
-                          ))}
-                          {item.tags.length > 2 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 2}</span>}
+                          {item.tags.length > 0 && <span className="text-[10px] text-[#78716A] truncate max-w-[80px]">#{item.tags[0]}</span>}
+                          {item.tags.length > 1 && <span className="text-[10px] text-[#78716A] hidden sm:inline truncate max-w-[60px]">#{item.tags[1]}</span>}
+                          {item.tags.length > 1 && <span className="text-[10px] text-[#78716A] sm:hidden">+{item.tags.length - 1}</span>}
+                          {item.tags.length > 2 && <span className="text-[10px] text-[#78716A] hidden sm:inline">+{item.tags.length - 2}</span>}
                         </div>
                       </div>
                     </div>
