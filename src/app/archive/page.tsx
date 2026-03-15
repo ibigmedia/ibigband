@@ -130,7 +130,7 @@ export default function ArchivePage() {
             thumbnailUrl: album.coverUrl || '/default-music.jpg',
             createdAt: album.createdAt || (album.releaseDate ? new Date(album.releaseDate).getTime() : Date.now()),
             tags: album.type ? [album.type.toLowerCase()] : [],
-            link: `/music?a=${album.id}`,
+            link: `/music?albumId=${album.id}`,
           });
         });
 
