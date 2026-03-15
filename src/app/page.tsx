@@ -112,8 +112,8 @@ export default function Home() {
       </section>
 
       {/* Featured Music Section */}
-      <section className="pt-12 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
+      <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">새로운 음반</h2>
             <p className="text-xs md:text-sm text-[#78716A]">가장 최근에 발매된 음반들을 들어보세요</p>
@@ -186,8 +186,8 @@ export default function Home() {
       </section>
 
       {/* Featured Video Section */}
-      <section className="pt-12 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10 mt-12 md:mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
+      <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10 mt-8 md:mt-16">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">iBigMedia 비주얼</h2>
             <p className="text-xs md:text-sm text-[#78716A]">공식 비디오, 라이브 워십, 강좌 및 다양한 영상들</p>
@@ -237,8 +237,8 @@ export default function Home() {
       </section>
 
       {/* Featured Sheet Music Section */}
-      <section className="pt-12 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-12 md:mb-20 border-t border-[#78716A]/10 mt-12 md:mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
+      <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-8 md:mb-16 border-t border-[#78716A]/10 mt-8 md:mt-16">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">악보 라이브러리</h2>
             <p className="text-xs md:text-sm text-[#78716A]">최신 등록된 고해상도 악보와 음원자료</p>
@@ -297,8 +297,8 @@ export default function Home() {
       </section>
 
       {/* Featured Blog Section */}
-      <section className="pt-12 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto pb-8 md:pb-24 border-t border-[#78716A]/10 mt-12 md:mt-20">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
+      <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto pb-6 md:pb-16 border-t border-[#78716A]/10 mt-8 md:mt-16">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
             <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">ibiGband Journal</h2>
             <p className="text-xs md:text-sm text-[#78716A]">찬양은 삶의 고백이자 예술의 완성입니다</p>
@@ -353,7 +353,7 @@ export default function Home() {
       </section>
 
       {/* Minimal Archive CTA Section */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-12 md:mb-24">
+      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-10 md:mb-16">
         <div className="bg-gradient-to-br from-[#FAF9F6] to-[#F2EFE9] border border-[#78716A]/10 rounded-[32px] md:rounded-[40px] px-6 py-10 md:py-12 md:px-12 lg:px-16 flex flex-col md:flex-row items-center justify-between text-center md:text-left relative overflow-hidden group gap-6 md:gap-8 shadow-sm">
           <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#E6C79C]/20 rounded-full blur-[80px] group-hover:bg-[#E6C79C]/30 transition-colors z-0 pointer-events-none"></div>
           <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#2D2926]/5 rounded-full blur-[80px] group-hover:bg-[#2D2926]/10 transition-colors z-0 pointer-events-none"></div>
