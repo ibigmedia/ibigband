@@ -249,38 +249,74 @@ export default function ArchivePage() {
               </div>
               {filteredItems.map(item => (
                 <Link key={item.id} href={item.link} className="block group">
-                  <div className="bg-white hover:bg-[#FAF9F6] border border-[#78716A]/5 rounded-xl md:rounded-full p-4 md:px-6 transition-all shadow-sm group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center">
-                    <div className="col-span-6 lg:col-span-5 flex items-center gap-4 mb-3 md:mb-0">
-                      <div className="w-16 h-12 rounded-lg bg-[#2D2926] overflow-hidden shrink-0 relative">
+                  <div className="bg-white hover:bg-[#FAF9F6] border border-[#78716A]/5 rounded-2xl md:rounded-full p-4 md:px-6 transition-all shadow-sm group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative">
+                    
+                    {/* ======== 모바일 뷰 최적화 레이아웃 ======== */}
+                    <div className="flex gap-4 md:hidden w-full">
+                      <div className="w-24 h-24 rounded-xl bg-[#2D2926] overflow-hidden shrink-0 relative">
                         {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                           <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center bg-gray-100 text-[#78716A] text-[10px] italic">No Img</div>
                         )}
+                        <div className="absolute top-1.5 left-1.5 bg-white/90 backdrop-blur-sm p-1 rounded-full shadow-sm text-[#2D2926]">
+                          {getTypeIcon(item.type)}
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-[#2D2926] text-[15px] truncate">{item.title}</h3>
-                        <p className="text-xs text-[#78716A] truncate mt-0.5">{item.description}</p>
+                      <div className="flex-1 min-w-0 flex flex-col py-0.5 justify-between">
+                        <div>
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <h3 className="font-bold text-[#2D2926] text-[15px] leading-tight line-clamp-2 pr-4">{item.title}</h3>
+                            <ArrowUpRight size={16} className="text-[#C48C5E] shrink-0 font-bold" />
+                          </div>
+                          <p className="text-[11px] text-[#78716A] line-clamp-1 mb-1.5">{item.description}</p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1.5 mt-auto">
+                          <span className="text-[10px] font-bold text-[#2D2926] uppercase bg-[#FAF9F6] border border-[#78716A]/10 px-2 py-0.5 rounded-sm">
+                            {getTypeName(item.type)}
+                          </span>
+                          {item.tags.slice(0, 2).map(tag => (
+                            <span key={tag} className="text-[10px] text-[#78716A] truncate max-w-[60px]">#{tag}</span>
+                          ))}
+                          {item.tags.length > 2 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 2}</span>}
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="col-span-2 hidden md:flex items-center justify-center gap-1.5 px-3 py-1 bg-[#FAF9F6] rounded-full w-fit mx-auto border border-[#78716A]/10">
-                      {getTypeIcon(item.type)}
-                      <span className="text-[11px] font-bold text-[#2D2926] uppercase">{getTypeName(item.type)}</span>
                     </div>
 
-                    <div className="col-span-3 hidden md:flex flex-wrap items-center justify-center gap-1">
-                      {item.tags.slice(0, 3).map(tag => (
-                        <span key={tag} className="text-[10px] text-[#78716A] bg-white border border-[#78716A]/10 px-2 py-0.5 rounded-full">
-                          #{tag}
-                        </span>
-                      ))}
-                      {item.tags.length > 3 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 3}</span>}
-                    </div>
+                    {/* ======== 데스크탑 뷰 레이아웃 ======== */}
+                    <div className="hidden md:contents">
+                      <div className="col-span-6 lg:col-span-5 flex items-center gap-4">
+                        <div className="w-16 h-12 rounded-lg bg-[#2D2926] overflow-hidden shrink-0 relative">
+                          {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
+                            <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-gray-100 text-[#78716A] text-[10px] italic">No Img</div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-bold text-[#2D2926] text-[15px] truncate">{item.title}</h3>
+                          <p className="text-xs text-[#78716A] truncate mt-0.5">{item.description}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-1 bg-[#FAF9F6] rounded-full w-fit mx-auto border border-[#78716A]/10">
+                        {getTypeIcon(item.type)}
+                        <span className="text-[11px] font-bold text-[#2D2926] uppercase">{getTypeName(item.type)}</span>
+                      </div>
 
-                    <div className="col-span-1 lg:col-span-2 flex justify-end">
-                      <div className="w-8 h-8 rounded-full bg-[#FAF9F6] border border-[#78716A]/10 flex items-center justify-center group-hover:bg-[#E6C79C] group-hover:text-white transition-colors text-[#2D2926]">
-                        <ArrowUpRight size={16} />
+                      <div className="col-span-3 flex flex-wrap items-center justify-center gap-1">
+                        {item.tags.slice(0, 3).map(tag => (
+                          <span key={tag} className="text-[10px] text-[#78716A] bg-white border border-[#78716A]/10 px-2 py-0.5 rounded-full">
+                            #{tag}
+                          </span>
+                        ))}
+                        {item.tags.length > 3 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 3}</span>}
+                      </div>
+
+                      <div className="col-span-1 lg:col-span-2 flex justify-end">
+                        <div className="w-8 h-8 rounded-full bg-[#FAF9F6] border border-[#78716A]/10 flex items-center justify-center group-hover:bg-[#E6C79C] group-hover:text-white transition-colors text-[#2D2926]">
+                          <ArrowUpRight size={16} />
+                        </div>
                       </div>
                     </div>
                   </div>
