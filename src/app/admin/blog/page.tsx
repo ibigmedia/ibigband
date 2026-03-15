@@ -125,7 +125,7 @@ export default function AdminBlogPage() {
       const blogData: Omit<BlogPost, 'id'> = {
         title,
         content,
-        authorId: user?.uid || 'admin',
+        authorId: 'ibiGband', // Updated to save as 'ibiGband' instead of UID
         tags: tags.split(',').map(tag => tag.trim()).filter(Boolean),
         imageUrl: imageUrl || undefined,
         createdAt: currentId ? undefined! : Date.now(),

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { Music, FileText, List, ArrowRight, Play, PlayCircle, Heart, Download, BookOpen } from 'lucide-react';
+import { Music, FileText, List, ArrowRight, Play, PlayCircle, Heart, Download, BookOpen, LayoutList } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -348,6 +348,19 @@ export default function Home() {
           {latestBlogs.length === 0 && (
             <div className="col-span-full text-center py-20 text-[#78716A]">아직 작성된 저널이 없습니다</div>
           )}
+        </div>
+      </section>
+
+      {/* Archive CTA Section */}
+      <section className="py-24 px-6 bg-[#2D2926] text-white mt-20 mb-32 rounded-3xl max-w-[95%] mx-auto">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-handwriting text-[#E6C79C] mb-6">모든 컨텐츠를 한곳에서</h2>
+          <p className="text-[#FAF9F6] text-lg md:text-xl mb-10 font-light max-w-2xl mx-auto leading-relaxed opacity-90">
+            음악, 영상, 악보, 저널 그리고 다양한 자료들까지.<br/>ibiGband의 모든 미디어와 리소스를 아카이브에서 한눈에 찾아보세요.
+          </p>
+          <Link href="/archive" className="inline-flex items-center gap-2 px-8 py-4 bg-[#E6C79C] text-[#2D2926] rounded-full font-bold hover:bg-white hover:scale-105 transition-all shadow-lg hover:shadow-xl">
+            <LayoutList size={20} /> 저장소 입장하기 <ArrowRight size={20} className="ml-2" />
+          </Link>
         </div>
       </section>
 

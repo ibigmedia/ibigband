@@ -61,6 +61,8 @@ export default function BlogDetailPage() {
     );
   }
 
+  const displayAuthorName = blog.authorId && blog.authorId.length < 20 && blog.authorId !== 'admin' ? blog.authorId : 'ibiGband';
+
   return (
     <div className="flex-1 flex flex-col bg-[#FAF9F6]">
       {/* Hero Section */}
@@ -95,7 +97,7 @@ export default function BlogDetailPage() {
               </div>
               <div className="flex items-center text-xs text-[#78716A] gap-2 font-medium">
                 <User size={14} />
-                <span>{blog.authorId || 'admin'}</span>
+                <span>{displayAuthorName}</span>
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-handwriting text-[#2D2926] leading-tight mb-4 break-keep">
@@ -143,7 +145,7 @@ export default function BlogDetailPage() {
             "dateModified": new Date(blog.createdAt).toISOString(),
             "author": [{
               "@type": "Person",
-              "name": blog.authorId || "admin"
+              "name": displayAuthorName
             }],
             "publisher": {
               "@type": "Organization",
