@@ -40,11 +40,6 @@ export default function GlobalMusicPlayer() {
   } = useMusicStore();
 
   const audioRef = useRef<HTMLAudioElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const animationRef = useRef<number | undefined>(undefined);
 
   // Global fetch for albums
   useEffect(() => {
@@ -186,88 +181,12 @@ export default function GlobalMusicPlayer() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isPlaying, selectedAlbum, togglePlay]);
 
-  // Web Audio API Setup
-  useEffect(() => {
-    if (isPlaying && audioRef.current && !audioContextRef.current) {
-      try {
-        const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
-        const analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 64; 
-        
-        const source = audioCtx.createMediaElementSource(audioRef.current);
-        source.connect(analyser);
-        analyser.connect(audioCtx.destination);
-        
-        audioContextRef.current = audioCtx;
-        analyserRef.current = analyser;
-        sourceRef.current = source;
-      } catch (e) {
-        console.error("Web Audio API setup failed (possibly CORS):", e);
-      }
-    }
-
-    if (isPlaying && audioContextRef.current && audioContextRef.current.state === 'suspended') {
-      audioContextRef.current.resume();
-    }
-  }, [isPlaying]);
-
-  // Spectrum Drawing Loop
-  useEffect(() => {
-    if (isPlaying && canvasRef.current && analyserRef.current) {
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-      
-      const analyser = analyserRef.current;
-      const bufferLength = analyser.frequencyBinCount;
-      const dataArray = new Uint8Array(bufferLength);
-
-      const draw = () => {
-        animationRef.current = requestAnimationFrame(draw);
-        analyser.getByteFrequencyData(dataArray);
-        
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        const numBars = 5;
-        const barWidth = 6;
-        const gap = 4;
-        const totalWidth = (numBars * barWidth) + ((numBars - 1) * gap);
-        const startX = (canvas.width - totalWidth) / 2;
-        
-        for (let i = 0; i < numBars; i++) {
-          const binIndex = Math.min(Math.floor((i + 1) * (bufferLength / (numBars + 2))), bufferLength - 1);
-          const value = dataArray[binIndex];
-          
-          const percent = value / 255;
-          const minHeight = 4;
-          const barHeight = Math.max(minHeight, Math.pow(percent, 0.8) * canvas.height);
-          
-          const x = startX + i * (barWidth + gap);
-          const y = (canvas.height - barHeight) / 2;
-          
-          ctx.fillStyle = i % 2 === 0 ? 'rgba(255, 255, 255, 0.95)' : '#C48C5E';
-          ctx.beginPath();
-          ctx.roundRect(x, y, barWidth, barHeight, 3);
-          ctx.fill();
-        }
-      };
-      draw();
-    }
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [isPlaying, selectedAlbum]);
-
   return (
     <>
       <audio 
          ref={audioRef} 
          onTimeUpdate={handleTimeUpdate}
          onEnded={() => setIsPlaying(false)}
-         crossOrigin="anonymous"
       >
         {currentVersion && <source src={currentVersion.audioUrl} />}
       </audio>
@@ -305,10 +224,13 @@ export default function GlobalMusicPlayer() {
                             <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-40 lg:h-40 aspect-square rounded-[24px] overflow-hidden shadow-lg relative shrink-0 mx-auto sm:mx-0 group">
                                <Image src={selectedAlbum.coverUrl} alt={selectedAlbum.title} fill className="object-cover" sizes="(max-width: 768px) 128px, 160px" />
                                
-                               {/* Real-time Waveform Overlay when playing */}
+                               {/* Waveform Overlay when playing */}
                                {isPlaying && (
-                                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-10 animate-in fade-in duration-300">
-                                   <canvas ref={canvasRef} width={80} height={40} className="w-[80px] h-[40px]" />
+                                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center gap-1.5 z-10 animate-in fade-in duration-300">
+                                   <div className="w-1.5 h-6 bg-white/90 rounded-full animate-waveform-1"></div>
+                                   <div className="w-1.5 h-10 bg-[#C48C5E] rounded-full animate-waveform-2"></div>
+                                   <div className="w-1.5 h-5 bg-white/90 rounded-full animate-waveform-3"></div>
+                                   <div className="w-1.5 h-8 bg-[#C48C5E] rounded-full animate-waveform-4"></div>
                                  </div>
                                )}
                             </div>
@@ -630,6 +552,14 @@ export default function GlobalMusicPlayer() {
           animation-play-state: paused;
         }
 
+        @keyframes waveform {
+          0%, 100% { transform: scaleY(0.4); }
+          50% { transform: scaleY(1.2); }
+        }
+        .animate-waveform-1 { animation: waveform 1.0s ease-in-out infinite; }
+        .animate-waveform-2 { animation: waveform 1.1s ease-in-out infinite 0.2s; }
+        .animate-waveform-3 { animation: waveform 0.9s ease-in-out infinite 0.4s; }
+        .animate-waveform-4 { animation: waveform 1.2s ease-in-out infinite 0.1s; }
       `}} />
     </>
   );
