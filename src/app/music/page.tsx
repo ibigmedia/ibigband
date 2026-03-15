@@ -165,6 +165,22 @@ export default function MusicPage() {
     }
   }, [selectedAlbum]);
 
+  // Handle auto-opening album from URL
+  useEffect(() => {
+    if (albums.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const albumId = params.get('albumId');
+      if (albumId && !selectedAlbum) {
+        const targetAlbum = albums.find(a => a.id === albumId);
+        if (targetAlbum) {
+          openAlbumModal(targetAlbum);
+          // Optional: clear the URL so it doesn't re-trigger on refresh
+          window.history.replaceState({}, '', '/music');
+        }
+      }
+    }
+  }, [albums]);
+
   let currentVersion = activeTrack?.versions.find(v => v.lang === activeLang);
   if (!currentVersion && activeTrack) {
     currentVersion = activeTrack.versions[0];
@@ -199,16 +215,27 @@ export default function MusicPage() {
   };
 
   const openAlbumModal = (album: MusicAlbum, defaultLang?: 'ko'|'en'|'es') => {
-    setSelectedAlbum(album);
-    setActiveTrack(album.tracks[0]);
-    // If opening from global section, try to default to the selected language context
-    let selectedLang = defaultLang || album.tracks[0].versions[0].lang;
-    if (!album.tracks[0].versions.some(v => v.lang === selectedLang)) {
-       selectedLang = album.tracks[0].versions[0].lang;
+    // Check if we are already playing/viewing a track from this album
+    const isPlayingThisAlbum = activeTrack && album.tracks.some(t => t.id === activeTrack.id);
+    
+    if (!isPlayingThisAlbum && isPlaying) {
+      const proceed = window.confirm("현재 재생 중인 곡이 있습니다. 재생을 중지하고 새 음반을 보시겠습니까?");
+      if (!proceed) return;
     }
-    setActiveLang(selectedLang);
-    setProgress(0);
-    setIsPlaying(false);
+
+    setSelectedAlbum(album);
+    
+    if (!isPlayingThisAlbum) {
+      setActiveTrack(album.tracks[0]);
+      // If opening from global section, try to default to the selected language context
+      let selectedLang = defaultLang || album.tracks[0].versions[0].lang;
+      if (!album.tracks[0].versions.some(v => v.lang === selectedLang)) {
+         selectedLang = album.tracks[0].versions[0].lang;
+      }
+      setActiveLang(selectedLang);
+      setProgress(0);
+      setIsPlaying(true);
+    }
   };
 
   const closeAlbumModal = () => {
@@ -233,6 +260,10 @@ export default function MusicPage() {
     if (activeTrack?.id === track.id) {
        togglePlay();
        return;
+    }
+    if (isPlaying) {
+      const proceed = window.confirm("현재 재생 중인 곡이 있습니다. 재생을 중지하고 다른 곡을 재생하시겠습니까?");
+      if (!proceed) return;
     }
     setActiveTrack(track);
     // Try to keep the same language if the new track supports it
@@ -657,17 +688,41 @@ export default function MusicPage() {
       {/* MINI PLAYER (Visible when modal is closed but track is active) */}
       {!selectedAlbum && activeTrack && currentVersion && activeTrackAlbum && (
          <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 md:px-8 py-4 z-[90] flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.08)] animate-in slide-in-from-bottom-full duration-500">
-            <div className="flex items-center gap-4 cursor-pointer group" onClick={() => openAlbumModal(activeTrackAlbum, currentVersion.lang)}>
+            <div className="flex items-center gap-4 cursor-pointer group flex-1 min-w-0" onClick={() => openAlbumModal(activeTrackAlbum, currentVersion.lang)}>
                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden relative shadow-sm shrink-0">
                   <Image src={activeTrackAlbum.coverUrl} alt="cover" fill className="object-cover group-hover:scale-110 transition-transform duration-300" sizes="56px" />
                </div>
-               <div className="flex flex-col">
-                  <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title}</h4>
-                  <span className="text-[10px] md:text-xs uppercase tracking-widest text-[#C48C5E] font-bold mt-1">앨범 보기 〉</span>
+               <div className="flex flex-col min-w-0 flex-1 relative overflow-hidden h-[45px] md:h-[50px] justify-center mask-image-x">
+                  <div className="animate-marquee flex items-center gap-8 md:gap-12 pt-1 h-full">
+                     <div className="flex items-baseline gap-2 shrink-0">
+                       <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title}</h4>
+                       <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold">앨범 보기 〉</span>
+                     </div>
+                     {activeTrackAlbum.description && (
+                        <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
+                           {activeTrackAlbum.description}
+                        </span>
+                     )}
+                     {(activeTrack.credits.composer || activeTrack.credits.arranger || activeTrack.credits.producer || currentVersion.vocal) && (
+                        <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
+                           {[
+                             activeTrack.credits.composer ? `작곡: ${activeTrack.credits.composer}` : null,
+                             activeTrack.credits.arranger ? `편곡: ${activeTrack.credits.arranger}` : null,
+                             activeTrack.credits.producer ? `프로듀서: ${activeTrack.credits.producer}` : null,
+                             currentVersion.vocal ? `보컬: ${currentVersion.vocal}` : null
+                           ].filter(Boolean).join(' • ')}
+                        </span>
+                     )}
+                     {currentVersion.lyrics && (
+                        <span className="text-slate-400 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
+                           {currentVersion.lyrics.replace(/(\r\n|\n|\r|<br\s*\/?>)/gmi, "  /  ")}
+                        </span>
+                     )}
+                  </div>
                </div>
             </div>
 
-            <div className="flex items-center gap-3 md:gap-4 shrink-0">
+            <div className="flex items-center gap-3 md:gap-4 shrink-0 pl-3 md:pl-5 border-l border-slate-200 ml-2">
                <button onClick={togglePlay} className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#C48C5E] text-white flex items-center justify-center hover:scale-105 transition-transform shadow-[0_4px_15px_rgba(196,140,94,0.4)]">
                  {isPlaying ? <Pause className="w-5 h-5 md:w-6 md:h-6 fill-current" /> : <Play className="w-5 h-5 md:w-6 md:h-6 fill-current ml-1" />}
                </button>
@@ -689,6 +744,26 @@ export default function MusicPage() {
         .mask-image-y {
           -webkit-mask-image: linear-gradient(to bottom, transparent, white 10%, white 90%, transparent);
           mask-image: linear-gradient(to bottom, transparent, white 10%, white 90%, transparent);
+        }
+        .mask-image-x {
+          -webkit-mask-image: linear-gradient(to right, transparent, white 2%, white 98%, transparent);
+          mask-image: linear-gradient(to right, transparent, white 2%, white 98%, transparent);
+        }
+        
+        @keyframes marquee {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-100%); }
+        }
+        .animate-marquee {
+          display: flex;
+          align-items: center;
+          white-space: nowrap;
+          padding-left: 100%;
+          animation: marquee 35s linear infinite;
+          will-change: transform;
+        }
+        .animate-marquee:hover {
+          animation-play-state: paused;
         }
       `}} />
     </div>

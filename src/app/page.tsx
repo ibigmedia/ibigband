@@ -13,6 +13,7 @@ export default function Home() {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [latestSheets, setLatestSheets] = useState<any[]>([]);
   const [latestBlogs, setLatestBlogs] = useState<any[]>([]);
+  const [latestMusic, setLatestMusic] = useState<any[]>([]);
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   useEffect(() => {
@@ -36,6 +37,11 @@ export default function Home() {
         const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(2));
         const snapBlogs = await getDocs(qBlogs);
         setLatestBlogs(snapBlogs.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+
+        // 3. Fetch latest 4 music albums
+        const qMusic = query(collection(db, 'music'), orderBy('createdAt', 'desc'), limit(4));
+        const snapMusic = await getDocs(qMusic);
+        setLatestMusic(snapMusic.docs.map(doc => ({ id: doc.id, ...doc.data() })));
       } catch (error) {
         console.error('Error fetching latest content', error);
       }
@@ -75,11 +81,74 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Sheet Music Section */}
-      <section className="pt-32 px-6 max-w-7xl mx-auto mb-20 border-t border-[#78716A]/10">
+      {/* Featured Music Section */}
+      <section className="pt-24 px-6 max-w-7xl mx-auto border-t border-[#78716A]/10">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
           <div className="text-center md:text-left">
-            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">명품 라이브러리</h2>
+            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">새로운 음반</h2>
+            <p className="text-sm text-[#78716A]">가장 최근에 발매된 음반들을 들어보세요</p>
+          </div>
+          <div className="flex gap-2 w-full md:w-auto">
+            <Link href="/music" className="px-5 py-3 bg-[#2D2926] text-white rounded-full hover:bg-[#E6C79C] hover:text-[#2D2926] flex items-center justify-center font-bold text-sm transition-all">전체 듣기</Link>
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+            {latestMusic.map((album) => (
+              <div 
+                key={album.id} 
+                className="group flex flex-col transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
+                onClick={() => router.push(`/music?albumId=${album.id}`)}
+              >
+                <div className="w-full aspect-square rounded-[24px] overflow-hidden mb-4 relative shadow-md border border-[#2D2926]/15 bg-white">
+                  {album.coverUrl ? (
+                    <Image 
+                      src={album.coverUrl} 
+                      alt={album.title} 
+                      fill 
+                      className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                      sizes="(max-width: 768px) 50vw, 25vw"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center text-[#78716A]/50">
+                       <Music size={40} className="mb-2" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-center items-center backdrop-blur-sm">
+                    <div className="w-14 h-14 rounded-full bg-white text-[#C48C5E] flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 shadow-md">
+                      <PlayCircle className="w-8 h-8 fill-current text-white" />
+                    </div>
+                  </div>
+                  <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+                     <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[#2D2926] shadow-sm">
+                        {album.type || 'Album'}
+                     </span>
+                  </div>
+                </div>
+                <h3 className="font-bold text-lg text-[#2D2926] leading-tight mb-1 group-hover:text-[#E6C79C] transition-colors line-clamp-1">{album.title}</h3>
+                <p className="font-handwriting text-[#78716A] text-[17px] mb-4 flex-1 line-clamp-2">{album.description}</p>
+                <button 
+                  className="mt-auto self-start bg-[#FAF9F6] hover:bg-[#E6C79C]/20 border border-[#78716A]/10 text-[#2D2926] text-xs font-bold uppercase px-4 py-2 rounded-full transition-colors flex items-center gap-1.5 shadow-sm"
+                  onClick={(e) => {
+                     e.stopPropagation();
+                     router.push(`/music?albumId=${album.id}`);
+                  }}
+                >
+                  음반 들어보기 <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+            {latestMusic.length === 0 && (
+              <div className="col-span-full text-center py-20 text-[#78716A]">아직 등록된 음반이 없습니다</div>
+            )}
+        </div>
+      </section>
+
+      {/* Featured Sheet Music Section */}
+      <section className="pt-24 px-6 max-w-7xl mx-auto mb-20 border-t border-[#78716A]/10 mt-20">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">악보 라이브러리</h2>
             <p className="text-sm text-[#78716A]">최신 등록된 고해상도 악보와 음원자료</p>
           </div>
           <div className="flex gap-2 w-full md:w-auto">
