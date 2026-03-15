@@ -198,9 +198,15 @@ export default function AdminMusicPage() {
            jsmediatags.read(file, {
              onSuccess: function(tag: any) {
                if (tag.tags.title) {
-                 updateTrack(trackIndex, 'title', tag.tags.title);
-                 updateVersion(trackIndex, versionIndex, 'title', tag.tags.title);
-                 setTitle(prev => prev || tag.tags.title || ''); // Update Album Title if empty
+                 const normalizedTitle = tag.tags.title.normalize('NFC');
+                 updateTrack(trackIndex, 'title', normalizedTitle);
+                 updateVersion(trackIndex, versionIndex, 'title', normalizedTitle);
+                 setTitle(prev => prev || normalizedTitle || ''); // Update Album Title if empty
+               } else if (file.name) {
+                 const fallbackTitle = file.name.replace(/\.[^/.]+$/, "").normalize('NFC');
+                 updateTrack(trackIndex, 'title', fallbackTitle);
+                 updateVersion(trackIndex, versionIndex, 'title', fallbackTitle);
+                 setTitle(prev => prev || fallbackTitle || '');
                }
                if (tag.tags.picture && !existingCoverUrl && !coverFile) {
                  const data = tag.tags.picture.data;
@@ -214,6 +220,12 @@ export default function AdminMusicPage() {
              },
              onError: function(error: any) {
                console.log('jsmediatags error:', error);
+               if (file.name) {
+                 const fallbackTitle = file.name.replace(/\.[^/.]+$/, "").normalize('NFC');
+                 updateTrack(trackIndex, 'title', fallbackTitle);
+                 updateVersion(trackIndex, versionIndex, 'title', fallbackTitle);
+                 setTitle(prev => prev || fallbackTitle || '');
+               }
              }
            });
            
