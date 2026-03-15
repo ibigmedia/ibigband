@@ -701,31 +701,30 @@ export default function MusicPage() {
                   <Image src={activeTrackAlbum.coverUrl} alt="cover" fill className="object-cover group-hover:scale-110 transition-transform duration-300" sizes="56px" />
                </div>
                <div className="flex flex-col min-w-0 flex-1 relative overflow-hidden h-[45px] md:h-[50px] justify-center mask-image-x">
-                  <div className="animate-marquee w-max flex items-center gap-8 md:gap-12 pt-1 h-full">
-                     <div className="flex items-baseline gap-2 shrink-0">
-                       <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title}</h4>
-                       <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold">앨범 보기 〉</span>
-                     </div>
-                     {activeTrackAlbum.description && (
-                        <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
-                           {activeTrackAlbum.description}
-                        </span>
-                     )}
-                     {(activeTrack.credits.composer || activeTrack.credits.arranger || activeTrack.credits.producer || currentVersion.vocal) && (
-                        <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
-                           {[
-                             activeTrack.credits.composer ? `작곡: ${activeTrack.credits.composer}` : null,
-                             activeTrack.credits.arranger ? `편곡: ${activeTrack.credits.arranger}` : null,
-                             activeTrack.credits.producer ? `프로듀서: ${activeTrack.credits.producer}` : null,
-                             currentVersion.vocal ? `보컬: ${currentVersion.vocal}` : null
-                           ].filter(Boolean).join(' • ')}
-                        </span>
-                     )}
-                     {currentVersion.lyrics && (
-                        <span className="text-slate-400 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
-                           {currentVersion.lyrics.replace(/(\r\n|\n|\r|<br\s*\/?>)/gmi, "  /  ")}
-                        </span>
-                     )}
+                  <div className="animate-marquee w-max flex items-center h-full">
+                     {[1, 2].map((i) => (
+                       <div key={i} className="flex items-center gap-8 md:gap-12 shrink-0 pr-8 md:pr-12">
+                          <div className="flex items-baseline gap-2 shrink-0">
+                            <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title}</h4>
+                            <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold">앨범 보기 〉</span>
+                          </div>
+                          {activeTrackAlbum.description && (
+                             <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
+                                {activeTrackAlbum.description}
+                             </span>
+                          )}
+                          {(activeTrack.credits.composer || activeTrack.credits.arranger || activeTrack.credits.producer || currentVersion.vocal) && (
+                             <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
+                                {[
+                                  activeTrack.credits.composer ? `작곡: ${activeTrack.credits.composer}` : null,
+                                  activeTrack.credits.arranger ? `편곡: ${activeTrack.credits.arranger}` : null,
+                                  activeTrack.credits.producer ? `프로듀서: ${activeTrack.credits.producer}` : null,
+                                  currentVersion.vocal ? `보컬: ${currentVersion.vocal}` : null
+                                ].filter(Boolean).join(' • ')}
+                             </span>
+                          )}
+                       </div>
+                     ))}
                   </div>
                </div>
             </div>
@@ -760,19 +759,18 @@ export default function MusicPage() {
         
         @keyframes marquee {
           0% { transform: translateX(0); }
-          100% { transform: translateX(-100%); }
+          100% { transform: translateX(-50%); }
         }
         .animate-marquee {
           display: flex;
           align-items: center;
           white-space: nowrap;
-          padding-left: 100%;
-          animation: marquee 15s linear infinite;
+          animation: marquee 25s linear infinite;
           will-change: transform;
         }
         @media (max-width: 768px) {
           .animate-marquee {
-            animation: marquee 6s linear infinite;
+            animation: marquee 12s linear infinite;
           }
         }
         .animate-marquee:hover {

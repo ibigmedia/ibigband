@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { Music, FileText, List, ArrowRight, PlayCircle, Heart, Download, BookOpen } from 'lucide-react';
+import { Music, FileText, List, ArrowRight, Play, PlayCircle, Heart, Download, BookOpen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -115,8 +115,8 @@ export default function Home() {
                     </div>
                   )}
                   <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-center items-center backdrop-blur-sm">
-                    <div className="w-14 h-14 rounded-full bg-white text-[#C48C5E] flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 shadow-md">
-                      <PlayCircle className="w-8 h-8 fill-current text-white" />
+                    <div className="w-14 h-14 rounded-full bg-white/90 text-[#C48C5E] flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 shadow-[0_8px_20px_rgba(0,0,0,0.1)]">
+                       <Play className="w-6 h-6 fill-current ml-1" />
                     </div>
                   </div>
                   <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
