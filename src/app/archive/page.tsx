@@ -5,6 +5,7 @@ import { Search, LayoutList, LayoutGrid, FolderTree, Tag as TagIcon, Play, FileT
 import { getCollectionDocs } from '@/lib/firebase/firestore';
 import { BlogPost, SheetMusic } from '@/lib/firebase/firestore';
 import { Video } from '@/types/video';
+import { MusicAlbum } from '@/types/music';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -43,10 +44,11 @@ export default function ArchivePage() {
     const fetchAllData = async () => {
       setLoading(true);
       try {
-        const [blogs, videos] = await Promise.all([
-          getCollectionDocs<BlogPost>('blogs'),
-          getCollectionDocs<Video>('videos')
-          // Assuming 'sheets' and 'music' don't exist yet, we only load blogs and videos to prevent errors.
+        const [blogs, videos, sheets, musicAlbums] = await Promise.all([
+          getCollectionDocs<BlogPost>('blogs').catch(() => [] as BlogPost[]),
+          getCollectionDocs<Video>('videos').catch(() => [] as Video[]),
+          getCollectionDocs<SheetMusic>('sheets').catch(() => [] as SheetMusic[]),
+          getCollectionDocs<MusicAlbum>('music').catch(() => [] as MusicAlbum[])
         ]);
 
         const formattedItems: ArchiveItem[] = [];
@@ -80,6 +82,36 @@ export default function ArchivePage() {
             createdAt: video.createdAt,
             tags: [], // Could add default tags like 'youtube', 'video'
             link: `/video?v=${video.id}`, // Custom link logic if needed, or open modal
+          });
+        });
+
+        // Format Sheets
+        sheets.forEach(sheet => {
+          sheet.moodTags?.forEach(t => tagsSet.add(t));
+          formattedItems.push({
+            id: sheet.id!,
+            type: 'sheet',
+            title: sheet.title,
+            description: `Key: ${sheet.key || '-'} | BPM: ${sheet.bpm || '-'}`,
+            thumbnailUrl: sheet.thumbnailUrl || '/default-sheet.jpg',
+            createdAt: sheet.createdAt || Date.now(),
+            tags: sheet.moodTags || [],
+            link: `/sheets?s=${sheet.id}`,
+            metadata: { key: sheet.key, bpm: sheet.bpm, isPremium: sheet.isPremiumOnly }
+          });
+        });
+
+        // Format Music
+        musicAlbums.forEach(album => {
+          formattedItems.push({
+            id: album.id!,
+            type: 'music',
+            title: album.title,
+            description: album.description || `${album.type || 'Album'}`,
+            thumbnailUrl: album.coverUrl || '/default-music.jpg',
+            createdAt: album.createdAt || (album.releaseDate ? new Date(album.releaseDate).getTime() : Date.now()),
+            tags: album.type ? [album.type.toLowerCase()] : [],
+            link: `/music?a=${album.id}`,
           });
         });
 
