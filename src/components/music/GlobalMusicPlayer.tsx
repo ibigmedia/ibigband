@@ -123,7 +123,7 @@ export default function GlobalMusicPlayer() {
   const albumIndex = activeTrackAlbum ? albums.findIndex(a => a.id === activeTrackAlbum.id) : -1;
   const trackIndex = (activeTrackAlbum && activeTrack) ? activeTrackAlbum.tracks.findIndex(t => t.id === activeTrack.id) : -1;
   const hasPrevTrack = albumIndex !== -1 && trackIndex !== -1 && (trackIndex > 0 || albumIndex > 0);
-  const hasNextTrack = albumIndex !== -1 && trackIndex !== -1 && (trackIndex < (activeTrackAlbum.tracks.length - 1) || albumIndex < (albums.length - 1));
+  const hasNextTrack = albumIndex !== -1 && trackIndex !== -1 && activeTrackAlbum && (trackIndex < (activeTrackAlbum.tracks.length - 1) || albumIndex < (albums.length - 1));
 
   const playNextTrack = () => {
     if (!activeTrackAlbum) return;
