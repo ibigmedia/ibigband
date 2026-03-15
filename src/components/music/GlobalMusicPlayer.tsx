@@ -219,16 +219,32 @@ export default function GlobalMusicPlayer() {
                    <div className="flex flex-col w-full h-full lg:overflow-y-auto hide-scrollbar">
                       
                       {/* Album Info Section */}
-                      <div className="p-6 md:p-8 flex flex-col sm:flex-row lg:flex-col gap-6 items-start">
-                         <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-full lg:max-w-[220px] aspect-square rounded-[24px] overflow-hidden shadow-lg relative shrink-0 mx-auto sm:mx-0">
-                            <Image src={selectedAlbum.coverUrl} alt={selectedAlbum.title} fill className="object-cover" sizes="(max-width: 768px) 128px, 220px" />
+                      <div className="p-6 md:p-10 flex flex-col sm:flex-row lg:flex-col gap-6 lg:gap-8 items-start">
+                         <div className="flex flex-col lg:flex-row gap-6 w-full items-center lg:items-end">
+                            <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-40 lg:h-40 aspect-square rounded-[24px] overflow-hidden shadow-lg relative shrink-0 mx-auto sm:mx-0">
+                               <Image src={selectedAlbum.coverUrl} alt={selectedAlbum.title} fill className="object-cover" sizes="(max-width: 768px) 128px, 160px" />
+                            </div>
+                            
+                            {/* PC Only: Track Credits */}
+                            <div className="hidden lg:flex flex-col flex-1 mb-2 bg-slate-50 border border-slate-100 p-4 rounded-2xl w-full">
+                               <h4 className="font-bold text-[10px] text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-2 mb-2">Track Credits</h4>
+                               {activeTrack.credits && Object.values(activeTrack.credits).some(v => v) ? (
+                                 <div className="flex flex-col gap-1.5 text-xs">
+                                   {activeTrack.credits.producer && <div className="flex justify-between gap-2"><span className="text-slate-400 shrink-0">Producer</span><span className="text-right text-slate-700 truncate font-semibold">{activeTrack.credits.producer}</span></div>}
+                                   {activeTrack.credits.composer && <div className="flex justify-between gap-2"><span className="text-slate-400 shrink-0">Composer</span><span className="text-right text-slate-700 truncate font-semibold">{activeTrack.credits.composer}</span></div>}
+                                   {activeTrack.credits.arranger && <div className="flex justify-between gap-2"><span className="text-slate-400 shrink-0">Arranger</span><span className="text-right text-slate-700 truncate font-semibold">{activeTrack.credits.arranger}</span></div>}
+                                 </div>
+                               ) : (
+                                 <span className="text-xs text-slate-400 italic">No credits provided.</span>
+                               )}
+                            </div>
                          </div>
                          <div className="flex-1 text-center sm:text-left lg:text-left flex flex-col w-full">
-                            <span className="text-[#C48C5E] text-[10px] font-bold uppercase tracking-widest block mb-1.5 border border-[#C48C5E]/30 bg-[#C48C5E]/5 px-2 py-0.5 rounded-full w-max mx-auto sm:mx-0">
+                            <span className="text-[#C48C5E] text-[10px] font-bold uppercase tracking-widest block mb-2 border border-[#C48C5E]/30 bg-[#C48C5E]/5 px-3 py-1 rounded-full w-max mx-auto sm:mx-0">
                                {selectedAlbum.type}
                             </span>
-                            <h2 className="text-3xl md:text-5xl font-handwriting text-slate-900 leading-tight mb-2">{selectedAlbum.title}</h2>
-                            <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 md:line-clamp-none mb-4 lg:mb-0">{selectedAlbum.description}</p>
+                            <h2 className="text-3xl md:text-5xl lg:text-4xl font-handwriting text-slate-900 leading-tight mb-3">{selectedAlbum.title}</h2>
+                            <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 md:line-clamp-none mb-4 lg:mb-0 lg:leading-loose">{selectedAlbum.description}</p>
                             
                             {/* Mobile Play/Pause & Language Controls */}
                             <div className="flex flex-col w-full lg:hidden mt-2 gap-4">
@@ -317,16 +333,20 @@ export default function GlobalMusicPlayer() {
                    </div>
                    
                    {/* Now Playing Header (Sticky on mobile) */}
-                   <div className="sticky top-0 z-30 px-6 py-5 md:px-10 md:py-8 bg-white/95 backdrop-blur-xl border-b border-slate-100 flex flex-col md:flex-row justify-between gap-6 shadow-sm lg:shadow-none">
-                      <div className="flex-1 min-w-0 pr-8">
-                         <div className="flex items-center gap-2 mb-1.5">
+                   <div className="sticky top-0 z-30 px-6 py-5 md:px-10 md:py-8 bg-white/95 backdrop-blur-xl border-b border-slate-100 flex flex-col lg:flex-row justify-between lg:items-center gap-6 shadow-sm lg:shadow-none">
+                      <div className="flex-1 min-w-0">
+                         <div className="flex items-center gap-2 mb-2">
                             <span className="text-[#C48C5E] font-bold tracking-widest text-[10px] uppercase">Now Playing</span>
                             <span className="hidden lg:flex items-center gap-1 text-[10px] font-medium text-slate-500 bg-slate-100/80 px-2 py-0.5 rounded-md border border-slate-200/60">
-                               <kbd className="font-sans font-bold border border-slate-200 rounded shadow-[0_1px_0_rgba(0,0,0,0.1)] px-1.5 pb-[1px] bg-white text-slate-600 leading-none">Space</kbd>
+                               <kbd className="font-sans font-bold border border-slate-200 rounded shadow-[0_1px_0_rgba(0,0,0,0.1)] px-1.5 pb-[2px] bg-white text-slate-600 leading-none">Space</kbd>
                                스페이스바로 재생
                             </span>
                          </div>
-                         <h2 className="text-slate-900 text-4xl md:text-5xl line-clamp-2 leading-tight font-handwriting font-normal">{currentVersion.title.normalize('NFC')}</h2>
+                         <h2 className="text-slate-900 text-3xl md:text-4xl lg:text-4xl leading-tight font-handwriting flex items-center lg:items-baseline flex-wrap gap-x-3 gap-y-1">
+                            <span className="text-slate-400 font-bold truncate max-w-[200px] xl:max-w-[280px]" title={selectedAlbum.title}>{selectedAlbum.title}</span>
+                            <span className="text-slate-300 hidden lg:inline-block font-sans text-2xl font-light">/</span>
+                            <span className="text-slate-900">{currentVersion.title.normalize('NFC')}</span>
+                         </h2>
                       </div>
                       
                       <div className="flex items-center gap-4 flex-wrap pb-2 md:pb-0">
