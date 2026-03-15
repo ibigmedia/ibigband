@@ -204,11 +204,10 @@ export default function Home() {
               >
                 <div className="aspect-video relative overflow-hidden bg-black/5">
                   {video.thumbnailUrl ? (
-                    <Image 
+                    <img 
                       src={video.thumbnailUrl} 
                       alt={video.title} 
-                      fill 
-                      className="object-cover group-hover:scale-105 transition-transform duration-700" 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-[#78716A]/20">
