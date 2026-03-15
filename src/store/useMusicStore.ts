@@ -47,9 +47,8 @@ export const useMusicStore = create<MusicState>((set, get) => ({
 
     set({ selectedAlbum: album });
 
-    // Only auto-play the first track if NOTHING is currently playing remotely or locally.
-    // If something is playing, just open the modal (set selectedAlbum) and let it continue.
-    if (!state.activeTrack && album.tracks.length > 0) {
+    // Always auto-play the first track of the album when opened unless a track from THIS album is already playing.
+    if (!isPlayingThisAlbum && album.tracks.length > 0) {
       let selectedLang = defaultLang || album.tracks[0].versions[0].lang;
       if (!album.tracks[0].versions.some(v => v.lang === selectedLang)) {
         selectedLang = album.tracks[0].versions[0].lang;
@@ -57,7 +56,7 @@ export const useMusicStore = create<MusicState>((set, get) => ({
 
       set({ 
         activeTrack: album.tracks[0],
-        activeLang: selectedLang,
+        activeLang: selectedLang as 'ko' | 'en' | 'es',
         progress: 0,
         isPlaying: true
       });
