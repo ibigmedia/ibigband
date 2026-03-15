@@ -4,12 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { getCollectionDocs, addDocument, createOrUpdateDoc, deleteDocument, SheetMusic } from '@/lib/firebase/firestore';
 import { uploadFile } from '@/lib/firebase/storage';
-import { Plus, Edit, Trash2, FileText, Music, Loader2, Video, Save, LayoutGrid, CheckCircle, Search, Activity, Hash, TagIcon, UploadCloud, PlayCircle, ChevronRight } from 'lucide-react';
+import { Plus, Edit, Trash2, FileText, Music, Loader2, Video, Save, LayoutGrid, CheckCircle, Search, Activity, Hash, TagIcon, UploadCloud, PlayCircle, ChevronRight, Disc3 } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
+import { MusicAlbum } from '@/types/music';
 
 export default function AdminSheetsPage() {
   const { user } = useAuth();
   const [sheets, setSheets] = useState<SheetMusic[]>([]);
+  const [albums, setAlbums] = useState<MusicAlbum[]>([]);
   const [loading, setLoading] = useState(true);
   
   // Selection
@@ -24,6 +26,8 @@ export default function AdminSheetsPage() {
   const [moodTags, setMoodTags] = useState('');
   const [isPremiumOnly, setIsPremiumOnly] = useState(false);
   const [price, setPrice] = useState('');
+  const [albumId, setAlbumId] = useState('');
+  const [trackId, setTrackId] = useState('');
   
   // Media Files
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -46,7 +50,18 @@ export default function AdminSheetsPage() {
 
   useEffect(() => {
     fetchSheets();
+    fetchAlbums();
   }, []);
+
+  const fetchAlbums = async () => {
+    try {
+      const data = await getCollectionDocs<MusicAlbum>('albums', []);
+      data.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      setAlbums(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const fetchSheets = async () => {
     setLoading(true);
@@ -131,6 +146,8 @@ export default function AdminSheetsPage() {
     setMoodTags('');
     setIsPremiumOnly(false);
     setPrice('');
+    setAlbumId('');
+    setTrackId('');
     setPdfFile(null);
     setAudioFile(null);
     setThumbnailFile(null);
@@ -151,6 +168,8 @@ export default function AdminSheetsPage() {
     setMoodTags(sheet.moodTags?.join(', ') || '');
     setIsPremiumOnly(sheet.isPremiumOnly || false);
     setPrice(sheet.price || '');
+    setAlbumId(sheet.albumId || '');
+    setTrackId(sheet.trackId || '');
     
     setExistingPdfUrl(sheet.pdfUrl || '');
     setExistingAudioUrl(sheet.audioUrl || '');
@@ -203,6 +222,8 @@ export default function AdminSheetsPage() {
         moodTags: moodTags.split(',').map(t => t.trim()).filter(Boolean),
         isPremiumOnly,
         price,
+        albumId,
+        trackId,
       };
 
       if (pdfUrl) sheetData.pdfUrl = pdfUrl;
@@ -327,6 +348,22 @@ export default function AdminSheetsPage() {
                     <div>
                       <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">아티스트 / 편곡자</label>
                       <input value={artistId} onChange={e => setArtistId(e.target.value)} placeholder="예: 아이빅밴드" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] focus:ring-1 focus:ring-[#E6C79C] transition-all"/>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2 flex justify-between">연관 음반 <Disc3 className="w-3 h-3"/></label>
+                        <select value={albumId} onChange={e => { setAlbumId(e.target.value); setTrackId(''); }} className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] transition-all appearance-none cursor-pointer">
+                          <option value="">선택 안함</option>
+                          {albums.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">연관 곡 (트랙)</label>
+                        <select value={trackId} onChange={e => setTrackId(e.target.value)} disabled={!albumId} className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white disabled:opacity-50 focus:outline-none focus:border-[#E6C79C] transition-all appearance-none cursor-pointer">
+                          <option value="">선택 안함</option>
+                          {albums.find(a => a.id === albumId)?.tracks.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                        </select>
+                      </div>
                     </div>
                  </div>
                  <div className="space-y-4">
