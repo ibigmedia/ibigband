@@ -24,6 +24,8 @@ export interface SheetMusic {
   isPremiumOnly: boolean;
   level?: string;
   price?: string;
+  albumId?: string;
+  trackId?: string;
   createdAt: number;
 }
 

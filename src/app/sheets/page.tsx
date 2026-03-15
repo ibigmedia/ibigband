@@ -6,6 +6,9 @@ import { db } from '@/lib/firebase/config';
 import { Search, Music, PlayCircle, FileText, Activity, Hash, Tag as TagIcon, LayoutGrid, X, Download } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { useMusicStore } from '@/store/useMusicStore';
+import { MusicAlbum } from '@/types/music';
+import { getDocById } from '@/lib/firebase/firestore';
 
 interface Sheet {
   id: string;
@@ -20,6 +23,8 @@ interface Sheet {
   moodTags?: string[];
   isPremiumOnly?: boolean;
   price?: string;
+  albumId?: string;
+  trackId?: string;
   createdAt: number;
 }
 
@@ -60,6 +65,20 @@ export default function SheetsGalleryPage() {
     }
   };
 
+  useEffect(() => {
+    if (sheets.length > 0 && !previewSheet) {
+      const params = new URLSearchParams(window.location.search);
+      const sheetId = params.get('sheetId') || params.get('id');
+      if (sheetId) {
+        const targetSheet = sheets.find(s => s.id === sheetId);
+        if (targetSheet) {
+          setPreviewSheet(targetSheet);
+          window.history.replaceState({}, '', '/sheets');
+        }
+      }
+    }
+  }, [sheets, previewSheet]);
+
   // Extract all unique tags
   const allTags = Array.from(
     new Set(
@@ -78,6 +97,26 @@ export default function SheetsGalleryPage() {
     const matchesTag = selectedTag ? (sheet.moodTags || []).includes(selectedTag) : true;
     return matchesSearch && matchesTag;
   });
+
+  const handlePlayLinkedMusic = async (albumId: string, trackId: string) => {
+    try {
+      const album = await getDocById<MusicAlbum>('albums', albumId);
+      if (album) {
+        // Open the album modal (from useMusicStore) which also sets up the player
+        useMusicStore.getState().openAlbumModal(album, 'ko');
+        
+        // Then specifically select the linked track
+        const track = album.tracks?.find(t => t.id === trackId) || album.tracks?.[0];
+        if (track) {
+          useMusicStore.getState().setActiveTrack(track);
+          useMusicStore.getState().setIsPlaying(true);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      alert('음원을 불러오는데 실패했습니다.');
+    }
+  };
 
   return (
     <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-12 pb-16">
@@ -238,7 +277,7 @@ export default function SheetsGalleryPage() {
                         e.stopPropagation(); 
                         setPreviewSheet(sheet);
                       }}
-                      className="bg-[#E6C79C] text-[#0F0F0F] hover:bg-[#C9A675] rounded-full px-5 transition-all text-sm font-bold"
+                      className="bg-[#E6C79C] text-black hover:bg-[#C9A675] rounded-full px-5 transition-all text-sm font-black shadow-lg shadow-[#E6C79C]/20"
                     >
                       상세 정보
                     </Button>
@@ -273,59 +312,78 @@ export default function SheetsGalleryPage() {
             </div>
             
             {/* Modal Content - Scrolling Area */}
-            <div className="overflow-y-auto p-4 md:p-8 flex-1 custom-scrollbar">
+            <div className="overflow-y-auto flex-1 custom-scrollbar bg-[#0A0A0A]">
               
-              <div className="flex flex-col md:flex-row gap-8 xl:gap-12 max-w-7xl mx-auto">
-                 {/* Left Column: Visuals */}
-                 <div className="w-full md:w-[180px] lg:w-[220px] shrink-0 space-y-6 mx-auto md:mx-0">
-                    {/* Main Thumbnail or YouTube */}
-                    <div className={`w-full ${previewSheet.thumbnailUrl ? 'aspect-[1/1.414]' : 'aspect-video'} rounded-2xl overflow-hidden bg-[#0A0A0A] border border-[#27272A] shadow-xl relative flex items-center justify-center`}>
-                      {previewSheet.thumbnailUrl ? (
-                         <img src={previewSheet.thumbnailUrl} alt={previewSheet.title} className="w-full h-full object-contain opacity-95 hover:opacity-100 transition-opacity" />
-                      ) : previewSheet.youtubeId ? (
-                         <img src={`https://img.youtube.com/vi/${previewSheet.youtubeId}/hqdefault.jpg`} className="w-full h-full object-cover" />
-                      ) : (
-                         <div className="w-full h-full flex flex-col items-center justify-center text-[#71717A]">
-                            <LayoutGrid className="w-16 h-16 mb-4 opacity-50" />
-                            <span className="text-sm font-bold tracking-widest uppercase">No Visuals</span>
-                         </div>
-                      )}
-                    </div>
+              {/* Large Sheet Preview at Top */}
+              {previewSheet.thumbnailUrl && (
+                <div className="w-full bg-[#141414] border-b border-[#27272A] relative flex justify-center items-center overflow-hidden py-10 px-4 min-h-[40vh] md:min-h-[60vh]">
+                  <img 
+                    src={previewSheet.thumbnailUrl} 
+                    alt={previewSheet.title} 
+                    className="max-w-full lg:max-w-4xl max-h-[70vh] object-contain shadow-2xl border border-white/10" 
+                  />
+                </div>
+              )}
 
+              <div className="p-4 md:p-8 max-w-6xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 mt-4">
+                 {/* Left Column: Info */}
+                 <div className="w-full lg:w-[320px] shrink-0 space-y-6">
                     {/* Meta Basic Info */}
                     <div className="bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A]">
                       <h3 className="text-sm font-bold text-[#A1A1AA] uppercase tracking-wider mb-4 border-b border-[#27272A] pb-2">기본 정보</h3>
-                      <div className="space-y-3">
-                         <div className="flex justify-between">
-                            <span className="text-[#71717A]">아티스트/편곡자</span>
+                      <div className="space-y-4">
+                         <div className="flex justify-between items-center">
+                            <span className="text-[#71717A] text-sm">아티스트/편곡자</span>
                             <span className="text-white font-medium">{previewSheet.artistId || '-'}</span>
                          </div>
-                         <div className="flex justify-between">
-                            <span className="text-[#71717A]">BPM</span>
+                         <div className="flex justify-between items-center">
+                            <span className="text-[#71717A] text-sm">BPM</span>
                             <span className="text-white font-medium">{previewSheet.bpm || '-'}</span>
                          </div>
-                         <div className="flex justify-between">
-                            <span className="text-[#71717A]">Key</span>
+                         <div className="flex justify-between items-center">
+                            <span className="text-[#71717A] text-sm">Key</span>
                             <span className="text-white font-medium">{previewSheet.key || '-'}</span>
                          </div>
-                         <div className="flex justify-between">
-                            <span className="text-[#71717A]">가격</span>
-                            <span className="text-[#E6C79C] font-black">{previewSheet.price === '0' || !previewSheet.price ? '무료' : `$${previewSheet.price}`}</span>
+                         <div className="flex justify-between items-center">
+                            <span className="text-[#71717A] text-sm">가격</span>
+                            <span className="text-[#E6C79C] font-black tracking-wider">{previewSheet.price === '0' || !previewSheet.price ? '무료' : `$${previewSheet.price}`}</span>
                          </div>
                       </div>
                       
                       {previewSheet.moodTags && previewSheet.moodTags.length > 0 && (
                          <div className="mt-6 flex flex-wrap gap-2">
                            {previewSheet.moodTags.map(tag => (
-                              <span key={tag} className="px-3 py-1 bg-[#27272A] text-[#A1A1AA] rounded-md text-xs font-medium border border-[#3F3F46]">#{tag.trim()}</span>
+                              <span key={tag} className="px-3 py-1.5 bg-[#27272A] text-[#A1A1AA] rounded-md text-xs font-medium border border-[#3F3F46] hover:text-white transition-colors cursor-default">#{tag.trim()}</span>
                            ))}
                          </div>
                       )}
                     </div>
+
+                    {/* Play Linked Audio */}
+                    {previewSheet.albumId && previewSheet.trackId && (
+                       <div className="bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A] text-center">
+                         <div className="w-12 h-12 bg-[#E6C79C]/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-[#E6C79C]/20">
+                            <Music className="w-6 h-6 text-[#E6C79C]"/>
+                         </div>
+                         <h4 className="text-white font-bold mb-2">공식 음원 연결됨</h4>
+                         <p className="text-xs text-[#A1A1AA] mb-4">음반 페이지와 연동되어<br/>이 곡의 반주 및 가사를 들을 수 있습니다.</p>
+                         <Button 
+                           onClick={() => {
+                             setPreviewSheet(null);
+                             handlePlayLinkedMusic(previewSheet.albumId!, previewSheet.trackId!);
+                           }}
+                           className="w-full bg-[#E6C79C] text-black hover:bg-[#C9A675] font-bold py-3 lg:py-4 tracking-wide shadow-lg shadow-[#E6C79C]/20"
+                         >
+                           <PlayCircle className="w-5 h-5 mr-2"/>
+                           연결된 음원 재생하기
+                         </Button>
+                       </div>
+                    )}
                  </div>
 
                  {/* Right Column: Files & Playback */}
                  <div className="flex-1 min-w-0 space-y-6">
+                    {/* YouTube Preview */}
                     {previewSheet.youtubeId && (
                       <div className="bg-black border border-[#27272A] rounded-2xl overflow-hidden shadow-lg">
                         <div className="px-4 py-3 bg-[#1A1A1A] border-b border-[#27272A] flex items-center gap-2">
@@ -345,32 +403,32 @@ export default function SheetsGalleryPage() {
                     )}
 
                     {/* PDF Sheet Box */}
-                    <div className="bg-[#1A1A1A] p-6 rounded-2xl border-l-4 border-[#1A1A1A] border-l-green-500 shadow-lg flex items-center gap-6">
+                    <div className="bg-[#1A1A1A] p-6 rounded-2xl border-l-4 border-[#1A1A1A] border-l-green-500 shadow-lg flex flex-col sm:flex-row items-start sm:items-center gap-6">
                       <div className="w-16 h-16 rounded-full bg-green-500/10 flex shrink-0 items-center justify-center">
                          <FileText className="w-8 h-8 text-green-400"/>
                       </div>
                        <div className="flex-1">
                          <h4 className="text-white font-bold text-lg mb-1">PDF 악보</h4>
-                         <p className="text-xs text-[#A1A1AA]">인쇄 가능한 고화질 악보</p>
+                         <p className="text-xs text-[#A1A1AA]">인쇄 가능한 고화질 악보 파일</p>
                       </div>
                       <Button 
                         disabled={!previewSheet.pdfUrl}
                         onClick={() => window.open(previewSheet.pdfUrl, '_blank')} 
-                        className="bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30 rounded-xl px-4 shrink-0 transition-colors font-bold flex gap-2"
+                        className="w-full sm:w-auto mt-4 sm:mt-0 bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/30 rounded-xl px-6 py-4 sm:py-2 transition-colors font-bold flex gap-2"
                       >
-                         {previewSheet.pdfUrl ? <><Download className="w-4 h-4"/> 열기 / 저장</> : '준비 중'}
+                         {previewSheet.pdfUrl ? <><Download className="w-5 h-5 sm:w-4 sm:h-4"/> 열기 / 저장</> : '준비 중'}
                       </Button>
                     </div>
 
                     {/* MR Audio Box */}
                     <div className="bg-[#1A1A1A] p-6 rounded-2xl border-l-4 border-[#1A1A1A] border-l-blue-500 shadow-lg">
-                      <div className="flex items-center gap-6 mb-4">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-4">
                         <div className="w-16 h-16 rounded-full bg-blue-500/10 flex shrink-0 items-center justify-center">
                            <Music className="w-8 h-8 text-blue-400"/>
                         </div>
                         <div className="flex-1">
-                           <h4 className="text-white font-bold text-lg mb-1">MR 음원</h4>
-                           <p className="text-xs text-[#A1A1AA]">고음질 반주 음원 파일</p>
+                           <h4 className="text-white font-bold text-lg mb-1">MR 반주 음원</h4>
+                           <p className="text-xs text-[#A1A1AA]">다운로드 가능한 고음질 반주 음원</p>
                         </div>
                         <Button 
                           disabled={!previewSheet.audioUrl}
@@ -383,16 +441,16 @@ export default function SheetsGalleryPage() {
                               a.click();
                             }
                           }}
-                          className="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30 rounded-xl px-4 shrink-0 transition-colors font-bold flex gap-2"
+                          className="w-full sm:w-auto mt-4 sm:mt-0 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30 rounded-xl px-6 py-4 sm:py-2 transition-colors font-bold flex gap-2"
                         >
-                           {previewSheet.audioUrl ? <><Download className="w-4 h-4"/> 음원 다운로드</> : '준비 중'}
+                           {previewSheet.audioUrl ? <><Download className="w-5 h-5 sm:w-4 sm:h-4"/> 소스 다운로드</> : '준비 중'}
                         </Button>
                       </div>
 
                       {/* Explicit Audio Player for MR */}
                       {previewSheet.audioUrl && (
-                        <div className="bg-[#0A0A0A] border border-[#27272A] p-3 rounded-xl">
-                          <audio controls className="w-full h-10 outline-none" controlsList="nodownload">
+                        <div className="bg-[#0A0A0A] border border-[#27272A] p-4 rounded-xl mt-4">
+                          <audio controls className="w-full h-12 outline-none" controlsList="nodownload">
                             <source src={previewSheet.audioUrl} type="audio/mpeg" />
                             Your browser does not support the audio element.
                           </audio>

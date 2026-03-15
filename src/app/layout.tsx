@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/firebase/auth";
+import GlobalMusicPlayer from "@/components/music/GlobalMusicPlayer";
 
 
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           <main className="pt-20 flex flex-col bg-[#FAF9F6]">
             {children}
           </main>
+          <GlobalMusicPlayer />
           <Footer />
         </AuthProvider>
       </body>

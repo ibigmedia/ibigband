@@ -28,6 +28,8 @@ export default function Home() {
           return {
             id: doc.id,
             ...data,
+            title: data.title ? data.title.normalize('NFC') : data.title,
+            artist: data.artist ? data.artist.normalize('NFC') : data.artist,
             // Convert timestamp to string or date object as needed for display
             releaseDate: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString()
           };
@@ -36,12 +38,28 @@ export default function Home() {
         // 2. Fetch latest 2 blogs
         const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(2));
         const snapBlogs = await getDocs(qBlogs);
-        setLatestBlogs(snapBlogs.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLatestBlogs(snapBlogs.docs.map(doc => {
+          const data = doc.data();
+          return { 
+            id: doc.id, 
+            ...data,
+            title: data.title ? data.title.normalize('NFC') : data.title,
+            excerpt: data.excerpt ? data.excerpt.normalize('NFC') : data.excerpt
+          };
+        }));
 
         // 3. Fetch latest 4 music albums
         const qMusic = query(collection(db, 'music'), orderBy('createdAt', 'desc'), limit(4));
         const snapMusic = await getDocs(qMusic);
-        setLatestMusic(snapMusic.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+        setLatestMusic(snapMusic.docs.map(doc => {
+          const data = doc.data();
+          return { 
+            id: doc.id, 
+            ...data,
+            title: data.title ? data.title.normalize('NFC') : data.title,
+            description: data.description ? data.description.normalize('NFC') : data.description
+          };
+        }));
       } catch (error) {
         console.error('Error fetching latest content', error);
       }
@@ -186,8 +204,24 @@ export default function Home() {
                 <h4 className="text-2xl font-handwriting mb-2 text-[#2D2926] line-clamp-1 truncate relative z-10">{sheet.title}</h4>
                 <p className="text-xs text-[#78716A] mb-8 font-light italic truncate relative z-10">{sheet.artist || 'ibiGband'} | {sheet.key ? `${sheet.key} Key` : 'N/A'} | {sheet.bpm ? `${sheet.bpm} BPM` : 'N/A'}</p>
                 <div className="flex gap-3 mt-auto relative z-10">
-                  <button className="flex-1 py-4 bg-[#2D2926] text-white rounded-2xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-[#78716A] transition-all shadow-md"><Download size={14}/> 자세히 보기</button>
-                  <button className="w-14 h-14 shrink-0 bg-[#FAF9F6] rounded-2xl flex items-center justify-center hover:bg-[#E6C79C]/20 transition-all text-[#2D2926]"><ArrowRight size={20}/></button>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/sheets?sheetId=${sheet.id}`);
+                    }}
+                    className="flex-1 py-4 bg-[#2D2926] text-white rounded-2xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-[#78716A] transition-all shadow-md"
+                  >
+                    <BookOpen size={14}/> 악보보기
+                  </button>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/sheets?sheetId=${sheet.id}`);
+                    }}
+                    className="w-14 h-14 shrink-0 bg-[#FAF9F6] rounded-2xl flex items-center justify-center hover:bg-[#E6C79C]/20 transition-all text-[#2D2926]"
+                  >
+                    <ArrowRight size={20}/>
+                  </button>
                 </div>
               </div>
             ))}
