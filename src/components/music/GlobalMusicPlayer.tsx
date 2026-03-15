@@ -184,7 +184,7 @@ export default function GlobalMusicPlayer() {
                                  {isActive && isPlaying ? <Play className="w-3 h-3 mx-auto fill-current animate-pulse"/> : `${i+1}`}
                                </div>
                                <div className="flex-1">
-                                  <p className={`font-handwriting text-[17px] md:text-xl leading-none ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title}</p>
+                                  <p className={`font-handwriting font-normal text-[17px] md:text-xl leading-none ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title}</p>
                                   {track.versions.length > 1 && !isActive && (
                                      <p className="text-[9px] text-slate-400 md:font-medium mt-0.5">{track.versions.length} versions</p>
                                   )}
@@ -241,7 +241,7 @@ export default function GlobalMusicPlayer() {
                <div className="relative z-20 px-4 md:px-8 py-3 md:py-5 bg-white/90 backdrop-blur-xl border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="flex-1 pr-12 md:pr-0">
                      <span className="text-[#C48C5E] font-bold tracking-widest text-[9px] uppercase block mb-0.5">Now Playing</span>
-                     <h2 className="text-slate-900 text-3xl md:text-4xl line-clamp-1 leading-tight truncate font-handwriting">{currentVersion.title}</h2>
+                     <h2 className="text-slate-900 text-3xl md:text-4xl line-clamp-1 leading-tight truncate font-handwriting font-normal">{currentVersion.title}</h2>
                   </div>
                   
                   <div className="flex items-center gap-4 flex-wrap">

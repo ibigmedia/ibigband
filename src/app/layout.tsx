@@ -16,7 +16,7 @@ const inter = Inter({
 const nanumPen = Nanum_Pen_Script({
   weight: "400",
   variable: "--font-nanum-pen",
-  subsets: ["latin"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
