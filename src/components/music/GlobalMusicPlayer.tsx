@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { Play, Pause, X, Globe2, ChevronRight, Users, Mic2, Disc, Languages } from 'lucide-react';
+import { Play, Pause, X, Globe2, ChevronRight, Users, Mic2, Disc, Languages, SkipBack, SkipForward } from 'lucide-react';
 import { useMusicStore } from '@/store/useMusicStore';
 import { Track, MusicAlbum } from '@/types/music';
 import { getCollectionDocs } from '@/lib/firebase/firestore';
@@ -119,6 +119,61 @@ export default function GlobalMusicPlayer() {
   };
 
   const activeTrackAlbum = activeTrack ? albums.find(a => a.tracks.some(t => t.id === activeTrack.id)) : null;
+
+  const playNextTrack = () => {
+    if (!activeTrackAlbum) return;
+    const albumIndex = albums.findIndex(a => a.id === activeTrackAlbum.id);
+    if (albumIndex === -1) return;
+    
+    const trackIndex = activeTrackAlbum.tracks.findIndex(t => t.id === activeTrack?.id);
+    
+    // Next track in same album
+    if (trackIndex < activeTrackAlbum.tracks.length - 1) {
+      handleTrackSelect(activeTrackAlbum.tracks[trackIndex + 1]);
+    } 
+    // First track of next album (next in the list is an older album)
+    else if (albumIndex < albums.length - 1) {
+      const nextAlbum = albums[albumIndex + 1];
+      if (nextAlbum.tracks.length > 0) {
+        handleTrackSelect(nextAlbum.tracks[0]);
+      }
+    }
+  };
+
+  const playPrevTrack = () => {
+    if (!activeTrackAlbum) return;
+    const albumIndex = albums.findIndex(a => a.id === activeTrackAlbum.id);
+    if (albumIndex === -1) return;
+    
+    const trackIndex = activeTrackAlbum.tracks.findIndex(t => t.id === activeTrack?.id);
+    
+    // Prev track in same album
+    if (trackIndex > 0) {
+      handleTrackSelect(activeTrackAlbum.tracks[trackIndex - 1]);
+    } 
+    // Last track of previous album (prev in the list is a newer album)
+    else if (albumIndex > 0) {
+      const prevAlbum = albums[albumIndex - 1];
+      if (prevAlbum.tracks.length > 0) {
+        handleTrackSelect(prevAlbum.tracks[prevAlbum.tracks.length - 1]);
+      }
+    }
+  };
+
+  // Spacebar playback control
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignore if typing in an input or textarea
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return;
+      // Only toggle if player modal is open
+      if (e.code === 'Space' && selectedAlbum !== null) {
+        e.preventDefault();
+        togglePlay();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isPlaying, selectedAlbum, togglePlay]);
 
   return (
     <>
@@ -341,10 +396,17 @@ export default function GlobalMusicPlayer() {
                </div>
             </div>
 
-            <div className="flex items-center gap-3 md:gap-4 shrink-0 pl-3 md:pl-5 border-l border-slate-200 ml-2">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0 pl-3 md:pl-5 border-l border-slate-200 ml-2">
+               <button onClick={(e) => { e.stopPropagation(); playPrevTrack(); }} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-[#C48C5E] hover:text-white transition-colors">
+                 <SkipBack className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+               </button>
                <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#C48C5E] text-white flex items-center justify-center hover:scale-105 transition-transform shadow-[0_4px_15px_rgba(196,140,94,0.4)]">
                  {isPlaying ? <Pause className="w-5 h-5 md:w-6 md:h-6 fill-current" /> : <Play className="w-5 h-5 md:w-6 md:h-6 fill-current ml-1" />}
                </button>
+               <button onClick={(e) => { e.stopPropagation(); playNextTrack(); }} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-50 text-slate-500 flex items-center justify-center hover:bg-[#C48C5E] hover:text-white transition-colors">
+                 <SkipForward className="w-4 h-4 md:w-5 md:h-5 fill-current" />
+               </button>
+               <div className="w-px h-6 bg-slate-200 mx-1"></div>
                <button onClick={(e) => { e.stopPropagation(); stopPlayback(); }} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 hover:text-slate-800 transition-colors">
                  <X className="w-5 h-5" />
                </button>

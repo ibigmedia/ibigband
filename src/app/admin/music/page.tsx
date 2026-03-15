@@ -328,6 +328,9 @@ export default function AdminMusicPage() {
                    </div>
                    <h2 className="text-xl lg:text-2xl font-black text-white">{currentId === 'new' ? '새 음반 추가' : '음반 정보 수정'}</h2>
                  </div>
+                 <Button type="button" onClick={handleSave} disabled={saving} variant="secondary" className="hover:bg-[#D4A373] font-black px-4 md:px-6 rounded-xl shadow-lg shadow-[#E6C79C]/20 text-xs md:text-sm h-10 ml-4 shrink-0">
+                    {saving ? <><Loader2 className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2 animate-spin"/> 저장 중...</> : <><Save className="w-4 h-4 md:w-5 md:h-5 mr-1 md:mr-2"/> 상단 저장하기</>}
+                 </Button>
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 lg:p-8 hide-scrollbar space-y-8 pb-32">
@@ -344,7 +347,7 @@ export default function AdminMusicPage() {
                     {tracks.length === 0 ? (
                        <p className="text-center text-[#71717A] py-8 text-sm">등록된 트랙이 없습니다. 트랙을 추가해주세요.</p>
                     ) : (
-                       <div className="space-y-12">
+                       <div className="flex flex-col-reverse gap-12">
                           {tracks.map((track, trackIdx) => (
                              <div key={trackIdx} className="bg-[#0A0A0A] border border-[#3F3F46] rounded-xl p-5 relative">
                                 {/* Track Header */}
@@ -355,9 +358,9 @@ export default function AdminMusicPage() {
                                 
                                 {/* Audio File Upload (Moved to top) for the first version */}
                                 <div className="mb-6 p-4 border border-dashed border-[#E6C79C]/30 rounded-lg bg-[#E6C79C]/5">
-                                   <label className="block text-xs font-bold text-[#E6C79C] uppercase mb-2">음원 파일 업로드 (MP3)</label>
-                                   <div className="flex items-center gap-2">
-                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, 0, e.target.files?.[0] as File)} className="text-xs file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-[#27272A] file:text-white cursor-pointer"/>
+                                   <label className="block text-xs font-bold text-[#E6C79C] uppercase mb-3">음원 파일 업로드 (MP3)</label>
+                                   <div className="flex flex-col md:flex-row md:items-center gap-3">
+                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, 0, e.target.files?.[0] as File)} className="text-sm file:mr-4 file:py-2.5 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-black file:bg-[#E6C79C] file:text-[#0A0A0A] hover:file:bg-[#D4A373] transition-colors cursor-pointer text-slate-300"/>
                                       {track.versions[0]?.audioUrl ? (
                                          <span className="text-[10px] text-green-400 flex items-center bg-green-400/10 px-2 py-0.5 rounded-full"><CheckCircle className="w-3 h-3 mr-1"/> 업로드됨</span>
                                       ) : (
@@ -413,9 +416,9 @@ export default function AdminMusicPage() {
 
                                             {verIdx !== 0 && (
                                                 <div className="mb-3">
-                                                   <label className="block text-[10px] text-[#A1A1AA] mb-1">오디오 음원 (MP3)</label>
-                                                   <div className="flex items-center gap-2">
-                                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, verIdx, e.target.files?.[0] as File)} className="text-xs file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-[#27272A] file:text-white cursor-pointer"/>
+                                                   <label className="block text-xs font-bold text-[#A1A1AA] mb-2">오디오 음원 (MP3)</label>
+                                                   <div className="flex flex-col md:flex-row md:items-center gap-3">
+                                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, verIdx, e.target.files?.[0] as File)} className="text-sm file:mr-4 file:py-2.5 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-black file:bg-[#3F3F46] file:text-white hover:file:bg-[#52525B] transition-colors cursor-pointer text-slate-400"/>
                                                       {version.audioUrl ? (
                                                          <span className="text-[10px] text-green-400 flex items-center bg-green-400/10 px-2 py-0.5 rounded-full"><CheckCircle className="w-3 h-3 mr-1"/> 업로드됨</span>
                                                       ) : (
