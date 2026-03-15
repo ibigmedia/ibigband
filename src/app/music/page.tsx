@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Play, Globe2, ChevronRight, Music } from 'lucide-react';
+import { Play, Globe2, ChevronRight, Music, ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
 import { MusicAlbum } from '@/types/music';
@@ -196,10 +196,13 @@ export default function MusicPage() {
       </p>
 
       <button 
-        onClick={() => openAlbumModal(album, defaultLang)}
-        className="mt-auto self-start bg-slate-50 hover:bg-[#C48C5E] hover:text-white text-slate-600 text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-full transition-colors flex items-center gap-1.5 shadow-sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          openAlbumModal(album, defaultLang);
+        }}
+        className="mt-auto self-start bg-transparent hover:bg-[#2D2926]/5 border border-[#78716A]/15 text-[#78716A] text-[11px] font-medium uppercase px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
       >
-        자세히 보기 <ChevronRight className="w-3.5 h-3.5" />
+        음반 듣기 <ArrowRight className="w-3 h-3" />
       </button>
     </div>
   );
