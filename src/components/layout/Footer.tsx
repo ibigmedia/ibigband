@@ -18,7 +18,7 @@ export default function Footer() {
                 <path d="M85 80 Q95 80 95 65 L95 35 Q95 20 85 20" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" />
               </svg>
             </div>
-            <span className="text-3xl md:text-4xl font-handwriting font-bold tracking-tight mt-1">ibigband</span>
+            <span className="text-3xl md:text-4xl font-handwriting font-bold tracking-tight mt-1">ibiGband</span>
           </div>
           <p className="text-sm md:text-base leading-relaxed font-light mb-4 md:mb-0">예술로 복음을 전하는 컨템포러리 아카이브. <br className="hidden md:block"/>하나님이 주신 재능으로 세상을 아름답게 만듭니다.</p>
         </div>
@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto mt-12 md:mt-20 pt-8 md:pt-10 border-t border-white/5 flex flex-col-reverse md:flex-row justify-between gap-6 text-[10px] md:text-xs uppercase tracking-widest font-bold text-center md:text-left">
-        <span className="opacity-70">&copy; {new Date().getFullYear()} ibigband. Built with Soul & Art.</span>
+        <span className="opacity-70">&copy; {new Date().getFullYear()} ibiGband. Built with Soul & Art.</span>
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-center justify-center md:justify-end">
           <span className="text-[#E6C79C]">Available on PWA</span>
           <span>Global HQ: New Jersey, USA</span>

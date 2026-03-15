@@ -13,7 +13,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ibigband",
+  title: "ibiGband",
   description: "Contemporary Warmth Archive for CCM and Artists",
 };
 

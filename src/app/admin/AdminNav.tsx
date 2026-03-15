@@ -18,7 +18,7 @@ export function AdminSideNav() {
   return (
     <aside className="w-64 bg-black/20 p-6 hidden lg:block border-r border-white/5">
       <h2 className="text-2xl font-handwriting text-[#E6C79C] mb-10 leading-relaxed">
-        ibigband<br />Admin Space
+        ibiGband<br />Admin Space
       </h2>
       <nav className="space-y-2">
         {navItems.map((item) => {

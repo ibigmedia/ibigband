@@ -35,7 +35,7 @@ export default function Navigation() {
               <path d="M85 80 Q95 80 95 65 L95 35 Q95 20 85 20" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" />
             </svg>
           </div>
-          <span className="text-3xl md:text-4xl font-handwriting font-bold tracking-tight mt-1">ibigband</span>
+          <span className="text-3xl md:text-4xl font-handwriting font-bold tracking-tight mt-1">ibiGband</span>
         </Link>
         <div className="hidden lg:flex flex-1 justify-end items-center gap-1 xl:gap-2 text-[15px] xl:text-base font-semibold">
           {navItems.map(item => {

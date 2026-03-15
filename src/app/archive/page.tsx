@@ -35,7 +35,7 @@ export default function Archive() {
               <Heart size={18} className="text-[#78716A] hover:text-red-400 cursor-pointer transition-colors" />
             </div>
             <h4 className="text-2xl font-handwriting mb-2 relative z-10">은혜로운 찬양 제 {i}집</h4>
-            <p className="text-xs text-[#78716A] mb-8 font-light italic relative z-10">ibigband Live | Key of G | 110 BPM</p>
+            <p className="text-xs text-[#78716A] mb-8 font-light italic relative z-10">ibiGband Live | Key of G | 110 BPM</p>
             <div className="flex gap-3 relative z-10">
               <Button variant="primary" className="flex-1 text-xs gap-2 rounded-2xl py-4" size="md">
                 <Download size={14}/> PDF 받기

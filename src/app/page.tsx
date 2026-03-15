@@ -57,7 +57,7 @@ export default function Home() {
         <div className="-mt-10 md:-mt-16 mb-8 md:mb-12 w-full max-w-[320px] md:max-w-[480px] lg:max-w-[600px] h-auto relative z-10 mx-auto opacity-90 transform transition-transform hover:scale-105 duration-500">
           <Image 
             src="/hero-band.png" 
-            alt="ibigband outline art" 
+            alt="ibiGband outline art" 
             width={600} 
             height={400} 
             className="w-full h-auto object-contain mix-blend-multiply" 
@@ -124,8 +124,17 @@ export default function Home() {
                         {album.type || 'Album'}
                      </span>
                   </div>
+                  {album.type === 'Single' && (
+                     <div className="absolute bottom-3 left-3 right-3 flex justify-start">
+                        <span className="bg-black/40 backdrop-blur-md text-white/80 text-[10px] md:text-xs font-medium px-2 py-1 rounded max-w-full truncate shadow-sm">
+                           {album.title}
+                        </span>
+                     </div>
+                  )}
                 </div>
-                <h3 className="font-bold text-lg text-[#2D2926] leading-tight mb-1 group-hover:text-[#E6C79C] transition-colors line-clamp-1">{album.title}</h3>
+                <h3 className="font-bold text-lg text-[#2D2926] leading-tight mb-1 group-hover:text-[#E6C79C] transition-colors line-clamp-1">
+                   {album.type === 'Single' && album.tracks?.[0] ? ((album.tracks[0].versions || []).find((v: {lang: string, title: string}) => v.lang === 'ko')?.title || album.tracks[0].title) : album.title}
+                </h3>
                 <p className="font-handwriting text-[#78716A] text-[17px] mb-4 flex-1 line-clamp-2">{album.description}</p>
                 <button 
                   className="mt-auto self-start bg-[#FAF9F6] hover:bg-[#E6C79C]/20 border border-[#78716A]/10 text-[#2D2926] text-xs font-bold uppercase px-4 py-2 rounded-full transition-colors flex items-center gap-1.5 shadow-sm"
@@ -175,7 +184,7 @@ export default function Home() {
                   )}
                 </div>
                 <h4 className="text-2xl font-handwriting mb-2 text-[#2D2926] line-clamp-1 truncate relative z-10">{sheet.title}</h4>
-                <p className="text-xs text-[#78716A] mb-8 font-light italic truncate relative z-10">{sheet.artist || 'ibigband'} | {sheet.key ? `${sheet.key} Key` : 'N/A'} | {sheet.bpm ? `${sheet.bpm} BPM` : 'N/A'}</p>
+                <p className="text-xs text-[#78716A] mb-8 font-light italic truncate relative z-10">{sheet.artist || 'ibiGband'} | {sheet.key ? `${sheet.key} Key` : 'N/A'} | {sheet.bpm ? `${sheet.bpm} BPM` : 'N/A'}</p>
                 <div className="flex gap-3 mt-auto relative z-10">
                   <button className="flex-1 py-4 bg-[#2D2926] text-white rounded-2xl text-xs font-bold flex items-center justify-center gap-2 hover:bg-[#78716A] transition-all shadow-md"><Download size={14}/> 자세히 보기</button>
                   <button className="w-14 h-14 shrink-0 bg-[#FAF9F6] rounded-2xl flex items-center justify-center hover:bg-[#E6C79C]/20 transition-all text-[#2D2926]"><ArrowRight size={20}/></button>

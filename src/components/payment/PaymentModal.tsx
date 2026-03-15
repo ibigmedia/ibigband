@@ -53,7 +53,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
             <CheckCircle size={60} className="mx-auto text-green-500 mb-6" />
             <h3 className="text-3xl font-handwriting mb-2">결제 및 권한 승격 완료!</h3>
             <p className="text-sm text-[#78716A] mb-8">
-              이제 모든 프리미엄 혜택을 이용하실 수 있습니다.<br/> ibigband와 함께 찬양을 나누세요.
+              이제 모든 프리미엄 혜택을 이용하실 수 있습니다.<br/> ibiGband와 함께 찬양을 나누세요.
             </p>
             <button 
               className="bg-[#2D2926] text-white w-full py-3 rounded-lg font-bold"

@@ -327,9 +327,17 @@ export default function MusicPage() {
               </span>
            )}
         </div>
+        {album.type === 'Single' && (
+            <div className="absolute bottom-3 left-3 right-3 flex justify-start">
+               <span className="bg-black/40 backdrop-blur-md text-white/80 text-[10px] md:text-xs font-medium px-2 py-1 rounded max-w-full truncate shadow-sm">
+                  {album.title}
+               </span>
+            </div>
+         )}
       </div>
-      <h3 className="font-bold text-base md:text-lg text-slate-900 leading-tight mb-1 shrink-0 group-hover:text-[#C48C5E] transition-colors line-clamp-1">{album.title}</h3>
-      <p className="text-slate-400 text-xs md:text-sm font-medium mb-3 shrink-0">{album.releaseDate}</p>
+      <h3 className="font-bold text-base md:text-lg text-slate-900 leading-tight mb-1 shrink-0 group-hover:text-[#C48C5E] transition-colors line-clamp-1">
+         {album.type === 'Single' && album.tracks?.[0] ? ((album.tracks[0].versions || []).find((v: {lang: string, title: string}) => v.lang === 'ko')?.title || album.tracks[0].title) : album.title}
+      </h3>
       
       <p className="font-handwriting text-slate-600 text-[17px] md:text-[19px] leading-relaxed line-clamp-2 md:line-clamp-3 mb-4 flex-1">
         {album.description}
@@ -761,6 +769,11 @@ export default function MusicPage() {
           padding-left: 100%;
           animation: marquee 35s linear infinite;
           will-change: transform;
+        }
+        @media (max-width: 768px) {
+          .animate-marquee {
+            animation: marquee 15s linear infinite;
+          }
         }
         .animate-marquee:hover {
           animation-play-state: paused;
