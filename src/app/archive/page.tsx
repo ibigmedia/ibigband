@@ -241,94 +241,97 @@ export default function ArchivePage() {
       ) : (
         <>
           {viewMode === 'list' && (
-            <div className="flex flex-col gap-3 md:gap-4 w-full">
+            <div className="flex flex-col md:gap-4 w-full">
               <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 border-b border-[#78716A]/10 text-xs font-bold text-[#78716A] tracking-wider uppercase w-full">
                 <div className="col-span-6 lg:col-span-5">정보</div>
                 <div className="col-span-2 text-center">형식</div>
                 <div className="col-span-3 text-center">태그</div>
                 <div className="col-span-1 lg:col-span-2 text-right">링크</div>
               </div>
-              {filteredItems.map(item => (
-                <Link key={item.id} href={item.link} className="block group w-full">
-                  <div className="bg-white hover:bg-[#FAF9F6] border border-[#78716A]/5 rounded-2xl md:rounded-[32px] p-3 md:p-4 md:px-6 transition-all shadow-sm group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative w-full overflow-hidden">
-                    
-                    {/* ======== 모바일 뷰 최적화 레이아웃 ======== */}
-                    <div className="flex gap-3 md:hidden w-full items-stretch">
-                      <div className="w-[100px] h-20 rounded-xl bg-[#2D2926] overflow-hidden shrink-0 relative flex-none">
-                        {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
-                          <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-[#78716A] text-[10px] italic">No Img</div>
-                        )}
-                        <div className="absolute top-1 left-1 bg-white/90 backdrop-blur-sm p-1 rounded-full shadow-sm text-[#2D2926]">
-                          {getTypeIcon(item.type)}
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
-                        <div className="mb-1">
-                          <h3 className="font-bold text-[#2D2926] text-[14px] leading-tight line-clamp-2 pr-6 relative">
-                            {item.title}
-                            <ArrowUpRight size={14} className="absolute right-0 top-0 text-[#C48C5E] shrink-0 font-bold" />
-                          </h3>
-                        </div>
-                        <div className="flex flex-wrap items-center gap-1.5 mt-auto">
-                          <span className="text-[9px] font-bold text-[#2D2926] uppercase bg-[#FAF9F6] border border-[#78716A]/10 px-2 py-0.5 rounded-md">
-                            {getTypeName(item.type)}
-                          </span>
-                          {item.tags.length > 0 && <span className="text-[10px] text-[#78716A] truncate max-w-[80px]">#{item.tags[0]}</span>}
-                          {item.tags.length > 1 && <span className="text-[10px] text-[#78716A] hidden sm:inline truncate max-w-[60px]">#{item.tags[1]}</span>}
-                          {item.tags.length > 1 && <span className="text-[10px] text-[#78716A] sm:hidden">+{item.tags.length - 1}</span>}
-                          {item.tags.length > 2 && <span className="text-[10px] text-[#78716A] hidden sm:inline">+{item.tags.length - 2}</span>}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* ======== 데스크탑 뷰 레이아웃 ======== */}
-                    <div className="hidden md:contents">
-                      <div className="col-span-6 lg:col-span-5 flex items-center gap-4">
-                        <div className="w-16 h-12 rounded-lg bg-[#2D2926] overflow-hidden shrink-0 relative">
+              <div className="flex flex-col divide-y divide-[#78716A]/10 md:divide-none md:gap-4">
+                {filteredItems.map(item => (
+                  <Link key={item.id} href={item.link} className="block group w-full">
+                    <div className="py-4 md:py-4 px-1 md:px-6 md:bg-white md:hover:bg-[#FAF9F6] md:border md:border-[#78716A]/5 md:rounded-[32px] transition-all md:shadow-sm md:group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative w-full">
+                      
+                      {/* ======== 모바일 뷰 최적화 레이아웃 ======== */}
+                      <div className="flex gap-3.5 md:hidden w-full items-start">
+                        <div className="w-[100px] h-[70px] rounded-[10px] bg-[#2D2926] overflow-hidden shrink-0 relative flex-none shadow-sm">
                           {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                             <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-gray-100 text-[#78716A] text-[10px] italic">No Img</div>
+                            <div className="w-full h-full flex items-center justify-center bg-[#FAF9F6] border border-[#78716A]/10 text-[#78716A] text-[10px] italic">No Img</div>
                           )}
+                          <div className="absolute top-1 left-1 bg-white/90 backdrop-blur-sm p-1 rounded-md shadow-sm text-[#2D2926]">
+                            {getTypeIcon(item.type)}
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="font-bold text-[#2D2926] text-[15px] truncate">{item.title}</h3>
-                          <p className="text-xs text-[#78716A] truncate mt-0.5">{item.description}</p>
+                        <div className="flex-1 min-w-0 flex flex-col justify-start">
+                          <div className="flex justify-between items-start gap-2 mb-1">
+                            <h3 className="font-bold text-[#2D2926] text-[15px] leading-snug line-clamp-2">
+                              {item.title}
+                            </h3>
+                            <ArrowUpRight size={15} className="text-[#C48C5E] shrink-0 mt-0.5" />
+                          </div>
+                          <p className="text-[12px] text-[#78716A] line-clamp-1 mb-2 w-[90%]">{item.description}</p>
+                          <div className="flex flex-wrap items-center gap-1.5 mt-auto">
+                            <span className="text-[9px] font-bold text-[#2D2926] uppercase bg-white border border-[#78716A]/10 shadow-sm px-1.5 py-0.5 rounded">
+                              {getTypeName(item.type)}
+                            </span>
+                            {item.tags.slice(0, 2).map(tag => (
+                              <span key={tag} className="text-[10px] text-[#78716A] truncate max-w-[60px]">#{tag}</span>
+                            ))}
+                            {item.tags.length > 2 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 2}</span>}
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-1 bg-[#FAF9F6] rounded-full w-fit mx-auto border border-[#78716A]/10">
-                        {getTypeIcon(item.type)}
-                        <span className="text-[11px] font-bold text-[#2D2926] uppercase">{getTypeName(item.type)}</span>
                       </div>
 
-                      <div className="col-span-3 flex flex-wrap items-center justify-center gap-1">
-                        {item.tags.slice(0, 3).map(tag => (
-                          <span key={tag} className="text-[10px] text-[#78716A] bg-white border border-[#78716A]/10 px-2 py-0.5 rounded-full">
-                            #{tag}
-                          </span>
-                        ))}
-                        {item.tags.length > 3 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 3}</span>}
-                      </div>
+                      {/* ======== 데스크탑 뷰 레이아웃 ======== */}
+                      <div className="hidden md:contents">
+                        <div className="col-span-6 lg:col-span-5 flex items-center gap-4">
+                          <div className="w-16 h-12 rounded-lg bg-[#2D2926] overflow-hidden shrink-0 relative">
+                            {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
+                              <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-gray-100 text-[#78716A] text-[10px] italic">No Img</div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-bold text-[#2D2926] text-[15px] truncate">{item.title}</h3>
+                            <p className="text-xs text-[#78716A] truncate mt-0.5">{item.description}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-1 bg-[#FAF9F6] rounded-full w-fit mx-auto border border-[#78716A]/10">
+                          {getTypeIcon(item.type)}
+                          <span className="text-[11px] font-bold text-[#2D2926] uppercase">{getTypeName(item.type)}</span>
+                        </div>
 
-                      <div className="col-span-1 lg:col-span-2 flex justify-end">
-                        <div className="w-8 h-8 rounded-full bg-[#FAF9F6] border border-[#78716A]/10 flex items-center justify-center group-hover:bg-[#E6C79C] group-hover:text-white transition-colors text-[#2D2926]">
-                          <ArrowUpRight size={16} />
+                        <div className="col-span-3 flex flex-wrap items-center justify-center gap-1">
+                          {item.tags.slice(0, 3).map(tag => (
+                            <span key={tag} className="text-[10px] text-[#78716A] bg-white border border-[#78716A]/10 px-2 py-0.5 rounded-full">
+                              #{tag}
+                            </span>
+                          ))}
+                          {item.tags.length > 3 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 3}</span>}
+                        </div>
+
+                        <div className="col-span-1 lg:col-span-2 flex justify-end">
+                          <div className="w-8 h-8 rounded-full bg-[#FAF9F6] border border-[#78716A]/10 flex items-center justify-center group-hover:bg-[#E6C79C] group-hover:text-white transition-colors text-[#2D2926]">
+                            <ArrowUpRight size={16} />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              ))}
+                  </Link>
+                ))}
+              </div>
             </div>
           )}
 
           {viewMode === 'grid' && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {filteredItems.map(item => (
-                <Link key={item.id} href={item.link} className="group flex flex-col bg-white rounded-2xl shadow-sm border border-[#78716A]/5 overflow-hidden hover:shadow-md transition-all h-full">
+                <Link key={item.id} href={item.link} className="group flex flex-col bg-white rounded-2xl md:rounded-[24px] shadow-sm border border-[#78716A]/5 overflow-hidden hover:shadow-md transition-all h-full">
                   <div className="relative aspect-video w-full bg-[#FAF9F6]">
                     {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                       <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -340,19 +343,19 @@ export default function ArchivePage() {
                       <span className="text-[10px] font-bold text-[#2D2926] uppercase">{getTypeName(item.type)}</span>
                     </div>
                   </div>
-                  <div className="p-5 flex-1 flex flex-col">
-                    <h3 className="font-bold text-[#2D2926] text-lg leading-tight mb-2 line-clamp-2 group-hover:text-[#C48C5E] transition-colors">{item.title}</h3>
-                    <p className="text-xs text-[#78716A] line-clamp-2 mb-4 flex-1">{item.description}</p>
+                  <div className="p-4 md:p-5 flex-1 flex flex-col">
+                    <h3 className="font-bold text-[#2D2926] text-[15px] md:text-lg leading-tight mb-1.5 md:mb-2 line-clamp-2 group-hover:text-[#C48C5E] transition-colors">{item.title}</h3>
+                    <p className="text-xs text-[#78716A] line-clamp-2 mb-3 md:mb-4 flex-1">{item.description}</p>
                     {item.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-3">
                         {item.tags.slice(0, 3).map(tag => (
-                          <span key={tag} className="text-[10px] text-[#78716A] bg-[#FAF9F6] px-1.5 py-0.5 rounded-sm">#{tag}</span>
+                          <span key={tag} className="text-[10px] text-[#78716A] bg-[#FAF9F6] border border-[#78716A]/10 px-1.5 py-0.5 rounded-sm">#{tag}</span>
                         ))}
                       </div>
                     )}
-                    <div className="flex justify-between items-center pt-3 border-t border-[#78716A]/5 mt-auto">
+                    <div className="flex justify-between items-center pt-2 md:pt-3 border-t border-[#78716A]/5 mt-auto">
                       <span className="text-[10px] text-[#78716A]">{new Date(item.createdAt).toLocaleDateString('ko-KR')}</span>
-                      <ArrowUpRight size={16} className="text-[#78716A] group-hover:text-[#2D2926]" />
+                      <ArrowUpRight size={14} className="text-[#78716A] group-hover:text-[#2D2926]" />
                     </div>
                   </div>
                 </Link>
@@ -361,21 +364,25 @@ export default function ArchivePage() {
           )}
 
           {viewMode === 'category' && (
-            <div className="space-y-12">
+            <div className="space-y-6 md:space-y-12">
               {Object.keys(groupedItems).map(type => (
-                <div key={type} className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-[#78716A]/5">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#78716A]/10">
-                    <div className="p-3 bg-[#FAF9F6] rounded-xl">{getTypeIcon(type as MediaType)}</div>
-                    <h3 className="text-2xl font-bold text-[#2D2926]">{getTypeName(type as MediaType)} <span className="text-sm font-normal text-[#78716A] ml-2">{groupedItems[type].length}개</span></h3>
+                <div key={type} className="bg-white p-4 md:p-8 rounded-[20px] md:rounded-3xl shadow-sm border border-[#78716A]/5">
+                  <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-6 pb-3 md:pb-4 border-b border-[#78716A]/10">
+                    <div className="p-2 md:p-3 bg-[#FAF9F6] rounded-lg md:rounded-xl">{getTypeIcon(type as MediaType)}</div>
+                    <h3 className="text-xl md:text-2xl font-bold text-[#2D2926]">{getTypeName(type as MediaType)} <span className="text-xs md:text-sm font-normal text-[#78716A] ml-2">{groupedItems[type].length}개</span></h3>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     {groupedItems[type].map(item => (
-                      <Link key={item.id} href={item.link} className="flex gap-4 items-center group p-3 rounded-2xl hover:bg-[#FAF9F6] border border-transparent hover:border-[#78716A]/10 transition-all">
-                        <div className="w-20 h-14 rounded-lg overflow-hidden bg-[#2D2926] shrink-0">
-                          <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
+                      <Link key={item.id} href={item.link} className="flex gap-3 md:gap-4 items-center group p-2 md:p-3 rounded-2xl hover:bg-[#FAF9F6] border border-transparent hover:border-[#78716A]/10 transition-all">
+                        <div className="w-[80px] h-[55px] md:w-20 md:h-14 rounded-lg overflow-hidden bg-[#2D2926] shrink-0 border border-[#78716A]/10">
+                          {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
+                            <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-[#FAF9F6] text-[#78716A] text-[8px] italic">No Img</div>
+                          )}
                         </div>
-                        <div className="min-w-0 pr-2">
-                          <h4 className="font-bold text-sm text-[#2D2926] truncate group-hover:text-[#C48C5E] transition-colors">{item.title}</h4>
+                        <div className="min-w-0 flex-1 pr-1">
+                          <h4 className="font-bold text-[13px] md:text-sm text-[#2D2926] truncate group-hover:text-[#C48C5E] transition-colors">{item.title}</h4>
                           <p className="text-[11px] text-[#78716A] truncate mt-0.5">{item.description}</p>
                         </div>
                       </Link>
