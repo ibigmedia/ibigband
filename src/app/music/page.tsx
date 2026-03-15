@@ -767,12 +767,12 @@ export default function MusicPage() {
           align-items: center;
           white-space: nowrap;
           padding-left: 100%;
-          animation: marquee 35s linear infinite;
+          animation: marquee 15s linear infinite;
           will-change: transform;
         }
         @media (max-width: 768px) {
           .animate-marquee {
-            animation: marquee 15s linear infinite;
+            animation: marquee 6s linear infinite;
           }
         }
         .animate-marquee:hover {
