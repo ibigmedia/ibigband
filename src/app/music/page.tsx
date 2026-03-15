@@ -701,7 +701,7 @@ export default function MusicPage() {
                   <Image src={activeTrackAlbum.coverUrl} alt="cover" fill className="object-cover group-hover:scale-110 transition-transform duration-300" sizes="56px" />
                </div>
                <div className="flex flex-col min-w-0 flex-1 relative overflow-hidden h-[45px] md:h-[50px] justify-center mask-image-x">
-                  <div className="animate-marquee flex items-center gap-8 md:gap-12 pt-1 h-full">
+                  <div className="animate-marquee w-max flex items-center gap-8 md:gap-12 pt-1 h-full">
                      <div className="flex items-baseline gap-2 shrink-0">
                        <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title}</h4>
                        <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold">앨범 보기 〉</span>
