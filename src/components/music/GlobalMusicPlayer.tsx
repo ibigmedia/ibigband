@@ -99,10 +99,6 @@ export default function GlobalMusicPlayer() {
        togglePlay();
        return;
     }
-    if (isPlaying) {
-      const proceed = window.confirm("현재 재생 중인 곡이 있습니다. 재생을 중지하고 다른 곡을 재생하시겠습니까?");
-      if (!proceed) return;
-    }
     setActiveTrack(track);
     if (!track.versions.some(v => v.lang === activeLang)) {
        setActiveLang(track.versions[0].lang);

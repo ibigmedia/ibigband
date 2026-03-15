@@ -258,8 +258,8 @@ export default function MusicPage() {
                          더보기 <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
-                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                      {albums.filter(a => a.type === 'Album').slice(0, 5).map(a => renderAlbumCard(a))}
+                   <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
+                      {albums.filter(a => a.type === 'Album').slice(0, 7).map(a => renderAlbumCard(a))}
                    </div>
                 </section>
              )}
@@ -273,8 +273,8 @@ export default function MusicPage() {
                          더보기 <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
-                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                      {albums.filter(a => a.type === 'EP').slice(0, 5).map(a => renderAlbumCard(a))}
+                   <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
+                      {albums.filter(a => a.type === 'EP').slice(0, 7).map(a => renderAlbumCard(a))}
                    </div>
                 </section>
              )}
@@ -288,8 +288,8 @@ export default function MusicPage() {
                          더보기 <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
-                   <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-                      {albums.filter(a => a.type === 'Single').slice(0, 5).map(a => renderAlbumCard(a))}
+                   <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
+                      {albums.filter(a => a.type === 'Single').slice(0, 7).map(a => renderAlbumCard(a))}
                    </div>
                 </section>
              )}
@@ -298,7 +298,7 @@ export default function MusicPage() {
 
         {/* ALBUMS / EP / SINGLES SPECIFIC VIEWS */}
         {['Album', 'EP', 'Single'].includes(activeTab) && (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-8 gap-y-10 animate-in fade-in duration-500">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-5 md:gap-8 gap-y-10 animate-in fade-in duration-500">
              {albums.filter(a => a.type === activeTab).map(a => renderAlbumCard(a))}
              
              {albums.filter(a => a.type === activeTab).length === 0 && (
@@ -331,7 +331,7 @@ export default function MusicPage() {
                 ))}
              </div>
 
-             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-8 gap-y-10">
+             <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-5 md:gap-8 gap-y-10">
                 {getGlobalAlbums().map(album => 
                    // When filtering by a specific language, clicking the card will default to that language!
                    renderAlbumCard(album, globalLangFilter === 'All' ? undefined : globalLangFilter)

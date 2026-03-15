@@ -55,8 +55,8 @@ export default function Home() {
           };
         }));
 
-        // 3. Fetch latest 4 music albums
-        const qMusic = query(collection(db, 'music'), orderBy('createdAt', 'desc'), limit(4));
+        // 3. Fetch latest 5 music albums
+        const qMusic = query(collection(db, 'music'), orderBy('createdAt', 'desc'), limit(5));
         const snapMusic = await getDocs(qMusic);
         setLatestMusic(snapMusic.docs.map(doc => {
           const data = doc.data();
@@ -123,21 +123,21 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-8">
             {latestMusic.map((album) => (
               <div 
                 key={album.id} 
                 className="group flex flex-col transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
                 onClick={() => router.push(`/music?albumId=${album.id}`)}
               >
-                <div className="w-[85%] mx-auto aspect-square rounded-[24px] overflow-hidden mb-4 relative shadow-md border border-[#2D2926]/15 bg-white">
+                <div className="w-full aspect-square rounded-[24px] overflow-hidden mb-4 relative shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#2D2926]/15 bg-white">
                   {album.coverUrl ? (
                     <Image 
                       src={album.coverUrl} 
                       alt={album.title} 
                       fill 
                       className="object-cover transition-transform duration-700 group-hover:scale-110" 
-                      sizes="(max-width: 768px) 50vw, 25vw"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                     />
                   ) : (
                     <div className="w-full h-full bg-slate-50 flex flex-col items-center justify-center text-[#78716A]/50">

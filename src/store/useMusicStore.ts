@@ -45,18 +45,11 @@ export const useMusicStore = create<MusicState>((set, get) => ({
     // Check if we are already playing/viewing a track from this album
     const isPlayingThisAlbum = state.activeTrack && album.tracks.some(t => t.id === state.activeTrack?.id);
 
-    if (!isPlayingThisAlbum && state.isPlaying) {
-       // Ideally we could confirm here but browser `confirm` in store is acceptable or we just override
-       // If confirmation is needed, we should probably do it at component level before calling openAlbumModal,
-       // However since it's an action, let's keep it simple: just play the new album.
-       if (!window.confirm("현재 재생 중인 곡이 있습니다. 재생을 중지하고 새 음반을 보시겠습니까?")) {
-         return;
-       }
-    }
-
     set({ selectedAlbum: album });
 
-    if (!isPlayingThisAlbum && album.tracks.length > 0) {
+    // Only auto-play the first track if NOTHING is currently playing remotely or locally.
+    // If something is playing, just open the modal (set selectedAlbum) and let it continue.
+    if (!state.activeTrack && album.tracks.length > 0) {
       let selectedLang = defaultLang || album.tracks[0].versions[0].lang;
       if (!album.tracks[0].versions.some(v => v.lang === selectedLang)) {
         selectedLang = album.tracks[0].versions[0].lang;
