@@ -214,8 +214,8 @@ export default function GlobalMusicPlayer() {
                         <span className="text-[#C48C5E] text-[10px] font-bold uppercase tracking-widest block mb-1 border border-[#C48C5E]/30 bg-[#C48C5E]/5 px-2 py-0.5 rounded-full w-max">
                            {selectedAlbum.type}
                         </span>
-                        <h2 className="text-2xl md:text-3xl font-handwriting text-slate-900 leading-tight mb-1">{selectedAlbum.title}</h2>
-                        <p className="text-slate-500 text-[11px] md:text-xs leading-snug hidden md:block line-clamp-3">{selectedAlbum.description}</p>
+                        <h2 className="text-3xl md:text-4xl font-handwriting text-slate-900 leading-tight mb-1">{selectedAlbum.title}</h2>
+                        <p className="text-slate-500 text-xs md:text-sm leading-relaxed hidden md:block line-clamp-3">{selectedAlbum.description}</p>
                      </div>
                   </div>
 
@@ -239,7 +239,7 @@ export default function GlobalMusicPlayer() {
                                  {isActive && isPlaying ? <Play className="w-3 h-3 mx-auto fill-current animate-pulse"/> : `${i+1}`}
                                </div>
                                <div className="flex-1">
-                                  <p className={`font-handwriting font-normal text-[17px] md:text-xl leading-none ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title?.normalize('NFC') || track.title}</p>
+                                  <p className={`font-handwriting font-normal text-[19px] md:text-2xl leading-none ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title?.normalize('NFC') || track.title}</p>
                                   {track.versions.length > 1 && !isActive && (
                                      <p className="text-[9px] text-slate-400 md:font-medium mt-0.5">{track.versions.length} versions</p>
                                   )}
@@ -347,7 +347,7 @@ export default function GlobalMusicPlayer() {
                   <div 
                     className="text-slate-800 font-handwriting font-normal tracking-tighter antialiased transition-all duration-300 transform-gpu"
                     style={{ 
-                       fontSize: `calc(${1.2 * lyricsScale}rem + 0.8vw)`, 
+                       fontSize: `calc(${1.0 * lyricsScale}rem + 0.5vw)`, 
                        lineHeight: 1.15,
                        letterSpacing: '-0.02em'
                     }}

@@ -8,12 +8,14 @@ import { MusicAlbum, Track, TrackVersion, TrackCredit } from '@/types/music';
 import { Plus, Trash2, Save, Music, ChevronRight, CheckCircle, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 import Image from 'next/image';
+import { useMusicStore } from '@/store/useMusicStore';
 // @ts-ignore
 const jsmediatags = typeof window !== 'undefined' ? require('jsmediatags/dist/jsmediatags.min.js') : null;
 
 export default function AdminMusicPage() {
   useAuth();
   const [albums, setAlbums] = useState<MusicAlbum[]>([]);
+  const setGlobalAlbums = useMusicStore(state => state.setAlbums);
   const [loading, setLoading] = useState(true);
 
   // Editor State
@@ -42,6 +44,7 @@ export default function AdminMusicPage() {
       const data = await getCollectionDocs<MusicAlbum>('music', []);
       data.sort((a, b) => new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime());
       setAlbums(data);
+      setGlobalAlbums(data);
     } catch (e) {
       console.error(e);
       alert('데이터를 불러오지 못했습니다. 관리자 권한을 확인해주세요.');
