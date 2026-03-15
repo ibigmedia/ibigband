@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Play, Pause, X, Globe2, ChevronRight, Users, Mic2, Disc, Languages, SkipBack, SkipForward } from 'lucide-react';
 import { useMusicStore } from '@/store/useMusicStore';
@@ -19,6 +19,7 @@ function activeLanguage(track: Track, lang: 'ko' | 'en' | 'es'): 'ko' | 'en' | '
 }
 
 export default function GlobalMusicPlayer() {
+  const [showLyricsMobile, setShowLyricsMobile] = useState(false);
   const {
     albums,
     selectedAlbum,
@@ -363,8 +364,18 @@ export default function GlobalMusicPlayer() {
                       <div className="h-full bg-[#C48C5E] transition-all duration-300 ease-linear rounded-r-full" style={{ width: `${progress}%` }}></div>
                    </div>
 
+                   {/* Mobile Lyrics Toggle */}
+                   <div className="lg:hidden flex justify-center py-3 bg-white border-b border-slate-100 sticky top-[108px] md:top-[128px] z-20">
+                     <button 
+                       onClick={() => setShowLyricsMobile(!showLyricsMobile)}
+                       className="px-6 py-2 rounded-full border border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-widest hover:bg-slate-50 transition-colors flex items-center gap-2"
+                     >
+                        {showLyricsMobile ? '가사 닫기 ▲' : '가사 보기 ▼'}
+                     </button>
+                   </div>
+
                    {/* Lyrics Text */}
-                   <div className="relative z-10 flex-1 overflow-y-auto hide-scrollbar scroll-smooth p-6 md:p-10 lg:p-14 pb-32 mask-image-y min-h-[300px]">
+                   <div className={`relative z-10 flex-1 overflow-y-auto hide-scrollbar scroll-smooth p-6 md:p-10 lg:p-14 pb-32 mask-image-y ${!showLyricsMobile ? 'hidden lg:block' : 'block'} min-h-[300px]`}>
                       <div 
                         className="text-slate-800 font-handwriting font-normal tracking-wide antialiased transition-all duration-300 transform-gpu"
                         style={{ 
@@ -394,15 +405,15 @@ export default function GlobalMusicPlayer() {
                        <div key={i} className="flex items-center gap-8 md:gap-12 shrink-0 pr-8 md:pr-12">
                           <div className="flex items-baseline gap-2 shrink-0">
                             <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title?.normalize('NFC') || currentVersion.title}</h4>
-                            <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold">앨범 보기 〉</span>
+                            <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold hidden md:inline-block">앨범 보기 〉</span>
                           </div>
                           {activeTrackAlbum.description && (
-                             <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
+                             <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
                                 {activeTrackAlbum.description?.normalize('NFC') || activeTrackAlbum.description}
                              </span>
                           )}
                           {(activeTrack.credits.composer || activeTrack.credits.arranger || activeTrack.credits.producer || currentVersion.vocal) && (
-                             <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1">
+                             <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
                                 {[
                                   activeTrack.credits.composer ? `작곡: ${activeTrack.credits.composer}` : null,
                                   activeTrack.credits.arranger ? `편곡: ${activeTrack.credits.arranger}` : null,
@@ -479,12 +490,7 @@ export default function GlobalMusicPlayer() {
           animation: marquee 25s linear infinite;
           will-change: transform;
         }
-        @media (max-width: 768px) {
-          .animate-marquee {
-            animation: none !important;
-            transform: none !important;
-          }
-        }
+
         .animate-marquee:hover {
           animation-play-state: paused;
         }
