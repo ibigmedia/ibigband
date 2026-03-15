@@ -179,7 +179,12 @@ export default function GlobalMusicPlayer() {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isPlaying, selectedAlbum, togglePlay]);
+  }, [isPlaying, selectedAlbum]);
+
+  const hasExtraMarqueeInfo = activeTrackAlbum && activeTrack && currentVersion ? 
+    (activeTrackAlbum.description || activeTrack.credits?.composer || activeTrack.credits?.arranger || activeTrack.credits?.producer || currentVersion.vocal) : false;
+  const marqueeRepeatCount = hasExtraMarqueeInfo ? 6 : 24;
+  const marqueeDuration = hasExtraMarqueeInfo ? '60s' : '30s';
 
   return (
     <>
@@ -345,13 +350,13 @@ export default function GlobalMusicPlayer() {
                    {/* Now Playing Header (Sticky on mobile) */}
                    <div className="sticky top-0 z-30 px-6 py-5 md:px-10 md:py-8 bg-white/95 backdrop-blur-xl border-b border-slate-100 flex flex-col lg:flex-row justify-between lg:items-center gap-6 shadow-sm lg:shadow-none">
                       <div className="flex-1 min-w-0">
-                         <div className="flex items-center gap-2 mb-2">
-                            <span className="text-[#C48C5E] font-bold tracking-widest text-[10px] uppercase">Now Playing</span>
-                            <span className="hidden lg:flex items-center gap-1 text-[10px] font-medium text-slate-500 bg-slate-100/80 px-2 py-0.5 rounded-md border border-slate-200/60">
-                               <kbd className="font-sans font-bold border border-slate-200 rounded shadow-[0_1px_0_rgba(0,0,0,0.1)] px-1.5 pb-[2px] bg-white text-slate-600 leading-none">Space</kbd>
-                               스페이스바로 재생
-                            </span>
-                         </div>
+                          <div className="flex items-center gap-3 mb-2">
+                             <span className="text-[#C48C5E] font-bold tracking-widest text-xs uppercase">Now Playing</span>
+                             <span className="hidden lg:flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100/80 px-2.5 py-1 rounded-md border border-slate-200/60">
+                                <kbd className="font-sans font-bold border border-slate-200 rounded shadow-[0_1px_0_rgba(0,0,0,0.1)] px-1.5 pb-[2px] bg-white text-slate-600 leading-none">Space</kbd>
+                                스페이스바로 재생
+                             </span>
+                          </div>
                          <h2 className="text-slate-900 text-3xl md:text-4xl lg:text-4xl leading-tight font-handwriting flex items-center lg:items-baseline flex-wrap gap-x-3 gap-y-1">
                             <span className="text-slate-900 truncate max-w-[300px] xl:max-w-[400px]" title={currentVersion.title.normalize('NFC')}>{currentVersion.title.normalize('NFC')}</span>
                          </h2>
@@ -457,24 +462,26 @@ export default function GlobalMusicPlayer() {
                   <Image src={activeTrackAlbum.coverUrl} alt="cover" fill className="object-cover group-hover:scale-110 transition-transform duration-300" sizes="56px" />
                </div>
                <div className="flex flex-col min-w-0 flex-1 relative overflow-hidden h-[45px] md:h-[50px] justify-center mask-image-x">
-                  <div className="animate-marquee w-max flex items-center h-full">
-                     {[1, 2].map((i) => (
+                  <div className="animate-marquee w-max flex items-center h-full" style={{ animationDuration: marqueeDuration }}>
+                     {Array.from({ length: marqueeRepeatCount }).map((_, i) => (
                        <div key={i} className="flex items-center gap-8 md:gap-12 shrink-0 pr-8 md:pr-12">
                           <div className="flex items-baseline gap-2 shrink-0">
                             <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title?.normalize('NFC') || currentVersion.title}</h4>
-                            <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold hidden md:inline-block">앨범 보기 〉</span>
+                            <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold hidden md:inline-block">
+                               {activeTrackAlbum.type === 'Album' ? '앨범 보기 〉' : `${activeTrackAlbum.type} 보기 〉`}
+                            </span>
                           </div>
                           {activeTrackAlbum.description && (
                              <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
                                 {activeTrackAlbum.description?.normalize('NFC') || activeTrackAlbum.description}
                              </span>
                           )}
-                          {(activeTrack.credits.composer || activeTrack.credits.arranger || activeTrack.credits.producer || currentVersion.vocal) && (
+                          {(activeTrack.credits?.composer || activeTrack.credits?.arranger || activeTrack.credits?.producer || currentVersion.vocal) && (
                              <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
                                 {[
-                                  activeTrack.credits.composer ? `작곡: ${activeTrack.credits.composer}` : null,
-                                  activeTrack.credits.arranger ? `편곡: ${activeTrack.credits.arranger}` : null,
-                                  activeTrack.credits.producer ? `프로듀서: ${activeTrack.credits.producer}` : null,
+                                  activeTrack.credits?.composer ? `작곡: ${activeTrack.credits?.composer}` : null,
+                                  activeTrack.credits?.arranger ? `편곡: ${activeTrack.credits?.arranger}` : null,
+                                  activeTrack.credits?.producer ? `프로듀서: ${activeTrack.credits?.producer}` : null,
                                   currentVersion.vocal ? `보컬: ${currentVersion.vocal}` : null
                                 ].filter(Boolean).join(' • ')?.normalize('NFC') || ''}
                              </span>
