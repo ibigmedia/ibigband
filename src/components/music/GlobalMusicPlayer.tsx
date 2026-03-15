@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Play, Pause, X, Globe2, ChevronRight, Users, Mic2, Disc, Languages, SkipBack, SkipForward } from 'lucide-react';
+import { Play, Pause, X, Globe2, ChevronRight, Users, Mic2, Disc, Languages, SkipBack, SkipForward, FileText } from 'lucide-react';
 import { useMusicStore } from '@/store/useMusicStore';
 import { Track, MusicAlbum } from '@/types/music';
 import { getCollectionDocs } from '@/lib/firebase/firestore';
@@ -228,7 +228,40 @@ export default function GlobalMusicPlayer() {
                                {selectedAlbum.type}
                             </span>
                             <h2 className="text-3xl md:text-5xl font-handwriting text-slate-900 leading-tight mb-2">{selectedAlbum.title}</h2>
-                            <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 md:line-clamp-none">{selectedAlbum.description}</p>
+                            <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 md:line-clamp-none mb-4 lg:mb-0">{selectedAlbum.description}</p>
+                            
+                            {/* Mobile Play/Pause & Language Controls */}
+                            <div className="flex flex-col w-full lg:hidden mt-2 gap-4">
+                               <div className="flex items-center gap-4">
+                                  <button 
+                                    onClick={togglePlay}
+                                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#C48C5E] text-white flex items-center justify-center active:scale-95 transition-all shadow-[0_4px_15px_rgba(196,140,94,0.4)] shrink-0"
+                                  >
+                                    {isPlaying ? <Pause className="w-6 h-6 sm:w-7 sm:h-7 fill-current" /> : <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-1" />}
+                                  </button>
+                                  
+                                  <div className="flex flex-col min-w-0 flex-1 opacity-90">
+                                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Now Playing</span>
+                                     <h3 className="font-handwriting text-2xl sm:text-3xl text-slate-900 truncate">{currentVersion.title.normalize('NFC')}</h3>
+                                  </div>
+                               </div>
+
+                               {activeTrack.versions.length > 1 && (
+                                  <div className="flex bg-slate-100/80 p-1 rounded-2xl w-fit">
+                                    {activeTrack.versions.map((ver) => (
+                                      <button
+                                        key={ver.lang}
+                                        onClick={() => { setActiveLang(ver.lang); setProgress(0); }}
+                                        className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all ${
+                                          activeLang === ver.lang ? 'bg-white text-[#C48C5E] shadow-sm' : 'text-slate-500'
+                                        }`}
+                                      >
+                                         {langNames[ver.lang]}
+                                      </button>
+                                    ))}
+                                  </div>
+                               )}
+                            </div>
                          </div>
                       </div>
 
@@ -264,45 +297,21 @@ export default function GlobalMusicPlayer() {
                          </div>
                       </div>
 
-                      {/* Credits Section */}
-                      <div className="mx-4 md:mx-8 mb-8 bg-white rounded-3xl p-5 border border-slate-100 shadow-sm shrink-0">
-                         <div className="flex items-center gap-2 mb-4 text-[#C48C5E]">
-                            <Users className="w-4 h-4"/>
-                            <h3 className="text-sm font-bold uppercase tracking-widest">Credits</h3>
-                         </div>
-                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
-                            {activeTrack.credits.composer && (
-                               <div className="flex flex-col gap-1">
-                                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Words & Music</span>
-                                  <span className="text-slate-800 text-sm font-medium">{activeTrack.credits.composer}</span>
-                               </div>
-                            )}
-                            {currentVersion.vocal && (
-                               <div className="flex flex-col gap-1">
-                                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider flex items-center gap-1"><Mic2 className="w-3 h-3"/> Vocals</span>
-                                  <span className="text-slate-800 text-sm font-medium">{currentVersion.vocal}</span>
-                               </div>
-                            )}
-                            {activeTrack.credits.arranger && (
-                               <div className="flex flex-col gap-1">
-                                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Arrangement</span>
-                                  <span className="text-slate-800 text-sm font-medium">{activeTrack.credits.arranger}</span>
-                               </div>
-                            )}
-                            {activeTrack.credits.producer && (
-                               <div className="flex flex-col gap-1 sm:col-span-2 lg:col-span-1 mt-1">
-                                  <span className="text-[10px] text-[#C48C5E] uppercase font-bold tracking-widest flex items-center gap-1"><Disc className="w-3 h-3"/> Executive Producer</span>
-                                  <span className="text-[#C48C5E] text-sm font-bold">{activeTrack.credits.producer}</span>
-                               </div>
-                            )}
-                         </div>
+                      {/* Mobile View Lyrics Button (Replaces Credits entirely) */}
+                      <div className="px-6 md:px-8 pb-8 lg:hidden shrink-0">
+                         <button 
+                           onClick={() => setShowLyricsMobile(true)}
+                           className="w-full py-4 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-2xl flex items-center justify-center gap-2 transition-colors border border-slate-200 shadow-sm"
+                         >
+                            <FileText className="w-5 h-5 text-[#C48C5E]"/> 가사 보기 (Lyrics)
+                         </button>
                       </div>
 
                    </div>
                 </div>
 
-                {/* RIGHT: Now Playing & Lyrics */}
-                <div className="lg:w-7/12 flex flex-col lg:h-full relative overflow-hidden bg-white z-10">
+                {/* RIGHT: Now Playing & Lyrics (Desktop Only) */}
+                <div className="hidden lg:flex w-7/12 flex-col h-full relative overflow-hidden bg-white z-10">
                    <div className="absolute inset-0 z-0 opacity-[0.02] pointer-events-none">
                       <Image src={selectedAlbum.coverUrl} alt="bg" fill className="object-cover blur-[80px]" />
                    </div>
@@ -364,18 +373,8 @@ export default function GlobalMusicPlayer() {
                       <div className="h-full bg-[#C48C5E] transition-all duration-300 ease-linear rounded-r-full" style={{ width: `${progress}%` }}></div>
                    </div>
 
-                   {/* Mobile Lyrics Toggle */}
-                   <div className="lg:hidden flex justify-center py-3 bg-white border-b border-slate-100 sticky top-[108px] md:top-[128px] z-20">
-                     <button 
-                       onClick={() => setShowLyricsMobile(!showLyricsMobile)}
-                       className="px-6 py-2 rounded-full border border-slate-200 text-xs font-bold text-slate-500 uppercase tracking-widest hover:bg-slate-50 transition-colors flex items-center gap-2"
-                     >
-                        {showLyricsMobile ? '가사 닫기 ▲' : '가사 보기 ▼'}
-                     </button>
-                   </div>
-
                    {/* Lyrics Text */}
-                   <div className={`relative z-10 flex-1 overflow-y-auto hide-scrollbar scroll-smooth p-6 md:p-10 lg:p-14 pb-32 mask-image-y ${!showLyricsMobile ? 'hidden lg:block' : 'block'} min-h-[300px]`}>
+                   <div className="relative z-10 flex-1 overflow-y-auto hide-scrollbar scroll-smooth p-10 lg:p-14 pb-32 mask-image-y min-h-[300px]">
                       <div 
                         className="text-slate-800 font-handwriting font-normal tracking-wide antialiased transition-all duration-300 transform-gpu"
                         style={{ 
@@ -388,6 +387,44 @@ export default function GlobalMusicPlayer() {
                    </div>
                 </div>
              </div>
+             
+             {/* 📱 MOBILE LYRICS OVERLAY */}
+             {showLyricsMobile && (
+               <div 
+                 className="fixed inset-0 z-[120] lg:hidden bg-black/60 backdrop-blur-sm flex items-end justify-center animate-in fade-in duration-300"
+                 onClick={() => setShowLyricsMobile(false)}
+               >
+                 <div 
+                   className="w-full h-[85vh] bg-[#FDFCFB] rounded-t-[32px] flex flex-col shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 transform-gpu"
+                   onClick={e => e.stopPropagation()}
+                 >
+                    <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white/80 backdrop-blur-md rounded-t-[32px]">
+                       <div>
+                          <p className="text-[10px] font-bold text-[#C48C5E] tracking-widest uppercase mb-0.5">가사 (Lyrics)</p>
+                          <h3 className="text-2xl font-handwriting text-slate-900 leading-none">{currentVersion.title.normalize('NFC')}</h3>
+                       </div>
+                       <button onClick={() => setShowLyricsMobile(false)} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+                          <X className="w-5 h-5"/>
+                       </button>
+                    </div>
+                    
+                    {/* Lyrics Font Scale Control */}
+                    <div className="flex justify-center py-3 bg-white/50 border-b border-slate-100 shrink-0">
+                       <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200 shadow-sm">
+                          <button onClick={() => setLyricsScale(Math.max(0.6, lyricsScale - 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-[10px] transition-colors">A-</button>
+                          <div className="w-px h-4 bg-slate-200"></div>
+                          <button onClick={() => setLyricsScale(Math.min(2.0, lyricsScale + 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-[10px] transition-colors">A+</button>
+                       </div>
+                    </div>
+
+                    <div className="flex-1 overflow-y-auto hide-scrollbar p-6 md:p-8 pb-20 scroll-smooth">
+                       <div className="text-slate-800 font-handwriting font-normal" style={{ fontSize: `calc(${1.2 * lyricsScale}rem + 1vw)`, lineHeight: 1.35 }}>
+                          {renderLyrics(currentVersion.lyrics)}
+                       </div>
+                    </div>
+                 </div>
+               </div>
+             )}
           </div>
         </div>
       )}
