@@ -1,154 +1,121 @@
-'use client';
+"use client";
 
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { Calendar, User, ArrowRight, Loader2 } from 'lucide-react';
-import Link from 'next/link';
+import { FileText, ArrowRight, BookOpen } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
-interface Blog {
-  id: string;
-  title: string;
-  excerpt: string;
-  content: string;
-  author: string;
-  imageUrl: string;
-  createdAt: { toDate?: () => Date } | Date | string | number | null;
-}
-
-export default function BlogListingPage() {
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+export default function BlogPage() {
+  const router = useRouter();
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'));
+        const snapBlogs = await getDocs(qBlogs);
+        setBlogs(snapBlogs.docs.map(doc => {
+          const data = doc.data();
+          return { 
+            id: doc.id, 
+            ...data,
+            title: data.title ? data.title.normalize('NFC') : data.title,
+            excerpt: data.excerpt ? data.excerpt.normalize('NFC') : data.excerpt
+          };
+        }));
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchBlogs();
   }, []);
 
-  const fetchBlogs = async () => {
-    try {
-      const q = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'));
-      const snapshot = await getDocs(q);
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Blog));
-      setBlogs(data);
-    } catch (error) {
-      console.error('Error fetching blogs:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (timestamp: { toDate?: () => Date } | Date | string | number | null | undefined) => {
-    if (!timestamp) return '';
-    const date = 
-      typeof timestamp === 'object' && timestamp !== null && 'toDate' in timestamp && typeof timestamp.toDate === 'function' 
-        ? timestamp.toDate() 
-        : new Date(timestamp as string | number | Date);
-    return date.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
-
-  if (loading) {
-    return (
-      <div className="flex-1 py-20 flex items-center justify-center bg-[#FAF9F6]">
-        <Loader2 className="w-12 h-12 text-[#E6C79C] animate-spin" />
-      </div>
-    );
-  }
-
   return (
-    <div className="flex-1 bg-[#FAF9F6] pt-12 pb-20">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        
-        {/* Magazine Header */}
-        <div className="text-center mb-24 space-y-6">
-          <h1 className="text-5xl md:text-7xl font-handwriting font-bold text-[#2D2926]">
-            iBigMedia <span className="text-[#E6C79C]">Journal</span>
-          </h1>
-          <h2 className="text-6xl font-handwriting text-[#2D2926]">아티스트 저널</h2>
-          <p className="text-[#78716A] italic font-light">&quot;찬양은 삶의 고백이자 예술의 완성입니다.&quot;</p>
-          <div className="w-20 h-1 bg-[#E6C79C] mx-auto rounded-full mt-8"></div>
-        </div>
+    <div className="flex-1 flex flex-col bg-[#FAF9F6]">
+      {/* Header Section */}
+      <section className="pt-32 pb-16 px-6 text-center border-b border-[#78716A]/10 bg-white">
+        <h1 className="text-5xl md:text-7xl font-handwriting mb-4 text-[#2D2926]">ibiGmedia Journal</h1>
+        <p className="text-[#78716A] text-lg font-light italic max-w-2xl mx-auto">
+          찬양과 예배, 그리고 음악에 대한 깊이 있는 통찰과 이야기
+        </p>
+      </section>
 
-        {/* Featured / Grid Loop */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {blogs.length === 0 ? (
-            <div className="col-span-12 text-center py-20 text-[#78716A]">
-              No posts found. Start writing in the admin panel!
-            </div>
-          ) : (
-            <>
-              {/* Top Featured Post (Latest) */}
-              <div className="col-span-1 lg:col-span-12">
-                <Link href={`/blog/${blogs[0].id}`} className="group block">
-                  <div className="relative rounded-[2rem] overflow-hidden aspect-[16/9] md:aspect-[21/9] bg-[#2D2926] shadow-2xl">
-                    {blogs[0].imageUrl && (
-                      <img 
-                        src={blogs[0].imageUrl} 
-                        alt={blogs[0].title}
-                        className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
-                    
-                    <div className="absolute bottom-8 left-8 right-8 md:bottom-16 md:left-16 md:right-16 text-white">
-                      <div className="flex items-center gap-4 text-sm font-medium text-[#E6C79C] mb-4 uppercase tracking-widest">
-                        <span className="flex items-center gap-1.5"><Calendar size={14} /> {formatDate(blogs[0].createdAt)}</span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1.5"><User size={14} /> {blogs[0].author || 'Admin'}</span>
-                      </div>
-                      <h2 className="text-3xl md:text-5xl font-bold mb-4 leading-tight group-hover:text-[#E6C79C] transition-colors line-clamp-2">
-                        {blogs[0].title}
-                      </h2>
-                      <p className="text-[#D4D4D8] md:text-lg line-clamp-2 max-w-3xl font-light">
-                        {blogs[0].excerpt || blogs[0].content.replace(/<[^>]+>/g, '')}
-                      </p>
+      {/* Blog List Section */}
+      <section className="pt-16 pb-32 px-6 max-w-7xl mx-auto w-full">
+        {loading ? (
+          <div className="flex justify-center items-center py-40">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#E6C79C]"></div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogs.map((blog) => (
+              <article 
+                key={blog.id} 
+                className="bg-white rounded-[24px] overflow-hidden shadow-sm border border-[#78716A]/5 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col group"
+                onClick={() => router.push(`/blog/${blog.id}`)}
+              >
+                <div className="aspect-[4/3] relative overflow-hidden bg-slate-100">
+                  {blog.imageUrl ? (
+                    <Image 
+                      src={blog.imageUrl} 
+                      alt={blog.title} 
+                      fill 
+                      className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                      unoptimized 
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-[#78716A]/30">
+                      <FileText size={48} />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent transition-opacity opacity-0 group-hover:opacity-100" />
+                </div>
+                <div className="p-8 flex flex-col flex-1">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-xs font-bold text-[#2D2926] bg-[#E6C79C]/20 px-3 py-1 rounded-full uppercase tracking-wider">
+                      {blog.category || 'Journal'}
+                    </span>
+                    {blog.tags && blog.tags.slice(0, 2).map((tag: string, index: number) => (
+                      <span key={index} className="text-xs text-[#78716A] bg-gray-100 px-2 py-1 rounded-sm">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                  <h3 className="font-bold text-2xl text-[#2D2926] leading-tight line-clamp-2 mb-4 group-hover:text-[#E6C79C] transition-colors">
+                    {blog.title}
+                  </h3>
+                  <p className="text-[#78716A] line-clamp-3 font-light leading-relaxed mb-6 flex-1">
+                    {blog.excerpt || blog.content?.replace(/<[^>]+>/g, '') || ''}
+                  </p>
+                  <div className="flex items-center justify-between mt-auto pt-6 border-t border-[#78716A]/10">
+                    <div className="flex items-center text-xs text-[#78716A] gap-2 font-medium">
+                      <span>{new Date(blog.createdAt).toLocaleDateString('ko-KR')}</span>
+                      <span>•</span>
+                      <span>By {blog.authorId || 'admin'}</span>
+                    </div>
+                    <div className="text-[#2D2926] bg-[#FAF9F6] p-2 rounded-full group-hover:bg-[#E6C79C]/20 transition-colors">
+                      <ArrowRight size={16} />
                     </div>
                   </div>
-                </Link>
-              </div>
-
-              {/* Remaining Posts Grid */}
-              {blogs.slice(1).map((blog) => (
-                <div key={blog.id} className="col-span-1 md:col-span-6 lg:col-span-4">
-                  <Link href={`/blog/${blog.id}`} className="group block h-full flex flex-col">
-                    <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#2D2926] shadow-lg mb-6">
-                      {blog.imageUrl ? (
-                        <img 
-                          src={blog.imageUrl} 
-                          alt={blog.title}
-                          className="w-full h-full object-cover opacity-90 group-hover:scale-110 group-hover:opacity-100 transition-all duration-500"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-tr from-[#2D2926] to-[#78716A] flex items-center justify-center">
-                           <h3 className="text-white/30 font-handwriting text-3xl px-4 text-center line-clamp-2">{blog.title}</h3>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="flex-1 flex flex-col">
-                      <div className="flex items-center gap-3 text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-3">
-                        <span>{formatDate(blog.createdAt)}</span>
-                      </div>
-                      
-                      <h3 className="text-2xl font-bold text-[#2D2926] mb-3 line-clamp-2 group-hover:text-[#E6C79C] transition-colors">
-                        {blog.title}
-                      </h3>
-                      
-                      <p className="text-[#78716A] line-clamp-3 mb-6 font-light leading-relaxed flex-1">
-                        {blog.excerpt || blog.content.replace(/<[^>]+>/g, '')}
-                      </p>
-                      
-                      <div className="flex items-center text-[#E6C79C] font-bold text-sm uppercase tracking-wide group-hover:translate-x-2 transition-transform self-start">
-                        Read Story <ArrowRight className="w-4 h-4 ml-2" />
-                      </div>
-                    </div>
-                  </Link>
                 </div>
-              ))}
-            </>
-          )}
-        </div>
-
-      </div>
+              </article>
+            ))}
+            {blogs.length === 0 && (
+              <div className="col-span-full flex flex-col items-center justify-center py-32 text-[#78716A]">
+                <BookOpen size={64} className="mb-6 opacity-20" />
+                <p className="text-xl font-handwriting">아직 작성된 저널이 없습니다.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

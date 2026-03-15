@@ -38,8 +38,8 @@ export default function Home() {
           };
         }));
 
-        // 2. Fetch latest 2 blogs
-        const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(2));
+        // 2. Fetch latest 4 blogs
+        const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(4));
         const snapBlogs = await getDocs(qBlogs);
         setLatestBlogs(snapBlogs.docs.map(doc => {
           const data = doc.data();
@@ -235,37 +235,62 @@ export default function Home() {
       </section>
 
       {/* Featured Blog Section */}
-      <section className="pt-32 px-6 max-w-5xl mx-auto pb-12 md:pb-24">
-        <div className="text-center mb-20 space-y-4">
-          <h2 className="text-6xl font-handwriting text-[#2D2926]">묵상과 예술</h2>
-          <p className="text-[#78716A] italic font-light">&quot;찬양은 삶의 고백이자 예술의 완성입니다.&quot;</p>
-          <div className="w-20 h-1 bg-[#E6C79C] mx-auto rounded-full mt-8"></div>
+      <section className="pt-24 px-6 max-w-7xl mx-auto pb-12 md:pb-24 border-t border-[#78716A]/10 mt-20">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12 mt-10">
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl font-handwriting mb-2 text-[#2D2926]">ibiGmedia Journal</h2>
+            <p className="text-sm text-[#78716A]">찬양은 삶의 고백이자 예술의 완성입니다</p>
+          </div>
+          <div className="flex gap-2 w-full md:w-auto">
+            <Link href="/blog" className="px-5 py-3 bg-[#FAF9F6] border border-[#78716A]/10 text-[#2D2926] rounded-full hover:bg-[#E6C79C]/20 flex items-center justify-center font-bold text-sm transition-all">
+              더 보기 <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
+          </div>
         </div>
-        <div className="space-y-32">
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {latestBlogs.map((blog) => (
-            <article key={blog.id} className="group relative">
-              <div className="aspect-[21/10] rounded-ibig overflow-hidden mb-10 shadow-2xl bg-[#2D2926] relative cursor-pointer" onClick={() => router.push(`/blog/${blog.id}`)}>
+            <article 
+              key={blog.id} 
+              className="bg-white rounded-[24px] overflow-hidden shadow-sm border border-[#78716A]/5 hover:-translate-y-2 transition-transform duration-300 cursor-pointer flex flex-col group"
+              onClick={() => router.push(`/blog/${blog.id}`)}
+            >
+              <div className="aspect-[4/3] relative overflow-hidden bg-slate-100">
                 {blog.imageUrl ? (
-                    <Image src={blog.imageUrl} alt={blog.title} fill className="object-cover group-hover:scale-110 transition-transform duration-[2s]" unoptimized />
+                  <Image 
+                    src={blog.imageUrl} 
+                    alt={blog.title} 
+                    fill 
+                    className="object-cover transition-transform duration-700 group-hover:scale-110" 
+                    unoptimized 
+                  />
                 ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-black/40"><BookOpen size={48} className="text-white/20"/></div>
+                  <div className="absolute inset-0 flex items-center justify-center text-[#78716A]/30">
+                    <FileText size={48} />
+                  </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-                <div className="absolute bottom-10 left-6 md:left-10 text-white right-6">
-                  <span className="text-[10px] font-bold tracking-[0.3em] uppercase mb-2 block text-[#E6C79C]">{blog.category || 'Artist Note'}</span>
-                  <h3 className="text-3xl md:text-5xl font-handwriting line-clamp-2 leading-tight">{blog.title}</h3>
-                </div>
+                <div className="absolute inset-0 bg-black/10 transition-opacity opacity-0 group-hover:opacity-100" />
               </div>
-              <div className="max-w-3xl mx-auto text-center md:text-left">
-                <p className="text-lg text-[#78716A] leading-relaxed font-light mb-8 line-clamp-3">
-                   {blog.excerpt || blog.content.replace(/<[^>]+>/g, '')}
+              <div className="p-6 flex flex-col flex-1">
+                <span className="text-[10px] font-bold text-[#C48C5E] uppercase tracking-wider mb-2">
+                  {blog.category || 'Journal'}
+                </span>
+                <h3 className="font-bold text-lg text-[#2D2926] leading-tight line-clamp-2 mb-3 group-hover:text-[#C48C5E] transition-colors">
+                  {blog.title}
+                </h3>
+                <p className="text-sm text-[#78716A] line-clamp-3 font-light leading-relaxed mb-4 flex-1">
+                  {blog.excerpt || blog.content.replace(/<[^>]+>/g, '')}
                 </p>
-                <button onClick={() => router.push(`/blog/${blog.id}`)} className="px-8 py-3 bg-transparent border border-[#2D2926] text-[#2D2926] rounded-full text-sm font-bold hover:bg-[#2D2926] hover:text-white transition-all">더 읽어보기</button>
+                <div className="flex items-center text-xs text-[#78716A] gap-2 mt-auto">
+                  <span>{new Date(blog.createdAt).toLocaleDateString('ko-KR')}</span>
+                  <span>•</span>
+                  <span>{blog.authorId || 'admin'}</span>
+                </div>
               </div>
             </article>
           ))}
           {latestBlogs.length === 0 && (
-             <div className="text-center py-20 text-[#78716A]">아직 작성된 저널이 없습니다</div>
+            <div className="col-span-full text-center py-20 text-[#78716A]">아직 작성된 저널이 없습니다</div>
           )}
         </div>
       </section>

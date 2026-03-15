@@ -9,7 +9,8 @@ const navItems = [
   { href: '/admin/sheets', label: 'Sheets', icon: Music },
   { href: '/admin/music', label: '음반 관리', icon: Music },
   { href: '/admin/blog', label: 'Blog', icon: FileText },
-  { href: '/admin/users', label: 'Users', icon: Users },
+  { href: '/admin/analytics', label: 'Analytics (SEO)', icon: FileText },
+  { href: '/admin/users', label: '회원 관리', icon: Users },
 ];
 
 export function AdminSideNav() {
