@@ -26,8 +26,8 @@ export default function Home() {
   useEffect(() => {
     const fetchLatestContent = async () => {
       try {
-        // 1. Fetch latest 6 premium/free sheets
-        const qSheets = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'), limit(6));
+        // 1. Fetch latest 8 premium/free sheets
+        const qSheets = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'), limit(8));
         const snapSheets = await getDocs(qSheets);
         
         setLatestSheets(snapSheets.docs.map(doc => {
@@ -68,8 +68,8 @@ export default function Home() {
           };
         }));
 
-        // 4. Fetch latest 3 featured/latest videos
-        const qVideos = query(collection(db, 'videos'), orderBy('createdAt', 'desc'), limit(3));
+        // 4. Fetch latest 4 featured/latest videos
+        const qVideos = query(collection(db, 'videos'), orderBy('createdAt', 'desc'), limit(4));
         const snapVideos = await getDocs(qVideos);
         setLatestVideos(snapVideos.docs.map(doc => ({ id: doc.id, ...doc.data() } as VideoType)));
       } catch (error) {
@@ -248,7 +248,7 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
             {latestSheets.map((sheet) => (
               <div key={sheet.id} className="bg-white p-4 md:p-8 rounded-2xl md:rounded-ibig shadow-sm border border-[#78716A]/5 group hover:shadow-md transition-all relative flex flex-col cursor-pointer" onClick={() => setPreviewSheet(sheet)}>
                 <div className="absolute top-0 right-0 p-3 md:p-4 opacity-5 group-hover:opacity-10 transition-opacity">
