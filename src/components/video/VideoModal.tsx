@@ -75,7 +75,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
         <div className="w-full md:w-2/3 bg-black flex flex-col relative aspect-video md:aspect-auto min-h-[300px] md:min-h-full">
           {youtubeId ? (
             <iframe
-              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0`}
+              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&rel=0`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               className="w-full h-full border-0 absolute inset-0"

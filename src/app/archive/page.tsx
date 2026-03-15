@@ -8,6 +8,9 @@ import { Video } from '@/types/video';
 import { MusicAlbum } from '@/types/music';
 import Image from 'next/image';
 import Link from 'next/link';
+import VideoModal from '@/components/video/VideoModal';
+import SheetModal from '@/components/sheets/SheetModal';
+import { Sheet } from '@/types/sheet';
 
 type MediaType = 'blog' | 'video' | 'sheet' | 'music' | 'seeker';
 
@@ -20,6 +23,7 @@ interface ArchiveItem {
   createdAt: number;
   tags: string[];
   link: string;
+  rawItem?: any;
   metadata?: {
     bpm?: number | string;
     key?: string;
@@ -37,8 +41,21 @@ export default function ArchivePage() {
   const [filterType, setFilterType] = useState<MediaType | 'all'>('all');
   const [filterTag, setFilterTag] = useState<string>('all');
   
+  const [previewVideo, setPreviewVideo] = useState<Video | null>(null);
+  const [previewSheet, setPreviewSheet] = useState<SheetMusic | null>(null);
+
   // To collect all unique tags across items
   const [allTags, setAllTags] = useState<string[]>([]);
+
+  const handleItemClick = (e: React.MouseEvent, item: ArchiveItem) => {
+    if (item.type === 'video' && item.rawItem) {
+      e.preventDefault();
+      setPreviewVideo(item.rawItem);
+    } else if (item.type === 'sheet' && item.rawItem) {
+      e.preventDefault();
+      setPreviewSheet(item.rawItem);
+    }
+  };
 
   useEffect(() => {
     const fetchAllData = async () => {
@@ -82,6 +99,7 @@ export default function ArchivePage() {
             createdAt: video.createdAt,
             tags: [], // Could add default tags like 'youtube', 'video'
             link: `/video?v=${video.id}`, // Custom link logic if needed, or open modal
+            rawItem: video
           });
         });
 
@@ -97,6 +115,7 @@ export default function ArchivePage() {
             createdAt: sheet.createdAt || Date.now(),
             tags: sheet.moodTags || [],
             link: `/sheets?s=${sheet.id}`,
+            rawItem: sheet,
             metadata: { key: sheet.key, bpm: sheet.bpm, isPremium: sheet.isPremiumOnly }
           });
         });
@@ -292,7 +311,12 @@ export default function ArchivePage() {
               </div>
               <div className="flex flex-col divide-y divide-[#78716A]/10 md:divide-none md:gap-4">
                 {filteredItems.map(item => (
-                  <Link key={item.id} href={item.link} className="block group w-full">
+                  <Link 
+                    key={item.id} 
+                    href={item.link} 
+                    className="block group h-full"
+                    onClick={(e) => handleItemClick(e, item)}
+                  >
                     <div className="py-4 md:py-4 px-1 md:px-6 md:bg-white md:hover:bg-[#FAF9F6] md:border md:border-[#78716A]/5 md:rounded-[32px] transition-all md:shadow-sm md:group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative w-full">
                       
                       {/* ======== 모바일 뷰 최적화 레이아웃 ======== */}
@@ -435,6 +459,19 @@ export default function ArchivePage() {
             </div>
           )}
         </>
+      )}
+      {previewVideo && (
+        <VideoModal 
+          video={previewVideo} 
+          onClose={() => setPreviewVideo(null)} 
+        />
+      )}
+
+      {previewSheet && previewSheet.id && (
+        <SheetModal 
+          sheet={previewSheet as unknown as Sheet} 
+          onClose={() => setPreviewSheet(null)} 
+        />
       )}
     </div>
   );

@@ -8,6 +8,8 @@ import { MusicAlbum, Track, TrackVersion, TrackCredit } from '@/types/music';
 import { Plus, Trash2, Save, Music, ChevronRight, CheckCircle, Image as ImageIcon, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 import Image from 'next/image';
+// @ts-ignore
+const jsmediatags = typeof window !== 'undefined' ? require('jsmediatags/dist/jsmediatags.min.js') : null;
 
 export default function AdminMusicPage() {
   useAuth();
@@ -55,7 +57,13 @@ export default function AdminMusicPage() {
     setDescription('');
     setCoverFile(null);
     setExistingCoverUrl('');
-    setTracks([]);
+    setTracks([{
+      id: `tr-${Date.now()}`,
+      title: '',
+      duration: '',
+      credits: { composer: '', arranger: '', instruments: '', producer: '' },
+      versions: [{ lang: 'ko', title: '', audioUrl: '', lyrics: '', vocal: '' }]
+    }]);
   };
 
   const selectAlbum = (album: MusicAlbum) => {
@@ -134,7 +142,7 @@ export default function AdminMusicPage() {
 
   // --- Track Operations ---
   const addTrack = () => {
-    setTracks([...tracks, {
+    setTracks(prev => [...prev, {
       id: `tr-${Date.now()}`,
       title: '',
       duration: '',
@@ -144,39 +152,88 @@ export default function AdminMusicPage() {
   };
 
   const updateTrack = (trackIndex: number, field: string, value: string | number) => {
-    const updated = [...tracks];
-    updated[trackIndex] = { ...updated[trackIndex], [field]: value };
-    setTracks(updated);
+    setTracks(prev => {
+      const updated = [...prev];
+      updated[trackIndex] = { ...updated[trackIndex], [field]: value };
+      return updated;
+    });
   };
 
   const updateTrackCredit = (trackIndex: number, field: keyof TrackCredit, value: string) => {
-    const updated = [...tracks];
-    updated[trackIndex].credits = { ...updated[trackIndex].credits, [field]: value };
-    setTracks(updated);
+    setTracks(prev => {
+      const updated = [...prev];
+      updated[trackIndex].credits = { ...updated[trackIndex].credits, [field]: value };
+      return updated;
+    });
   };
 
   const removeTrack = (trackIndex: number) => {
     if (!confirm('이 트랙을 삭제하시겠습니까?')) return;
-    setTracks(tracks.filter((_, i) => i !== trackIndex));
+    setTracks(prev => prev.filter((_, i) => i !== trackIndex));
   };
 
   // --- Version Operations ---
   const addVersion = (trackIndex: number) => {
-    const updated = [...tracks];
-    updated[trackIndex].versions.push({ lang: 'en', title: '', audioUrl: '', lyrics: '', vocal: '' });
-    setTracks(updated);
+    setTracks(prev => {
+      const updated = JSON.parse(JSON.stringify(prev));
+      updated[trackIndex].versions.push({ lang: 'en', title: '', audioUrl: '', lyrics: '', vocal: '' });
+      return updated;
+    });
   };
 
   const updateVersion = (trackIndex: number, versionIndex: number, field: keyof TrackVersion, value: string) => {
-    const updated = [...tracks];
-    updated[trackIndex].versions[versionIndex] = { ...updated[trackIndex].versions[versionIndex], [field]: value };
-    setTracks(updated);
+    setTracks(prev => {
+      const updated = JSON.parse(JSON.stringify(prev));
+      updated[trackIndex].versions[versionIndex][field] = value;
+      return updated;
+    });
   };
 
   const handleAudioUpload = async (trackIndex: number, versionIndex: number, file: File) => {
      if (!file) return;
-     // Show uploading state...
      try {
+       // Extract metadata
+       if (file.type.includes('audio') && jsmediatags) {
+         try {
+           jsmediatags.read(file, {
+             onSuccess: function(tag: any) {
+               if (tag.tags.title) {
+                 updateTrack(trackIndex, 'title', tag.tags.title);
+                 updateVersion(trackIndex, versionIndex, 'title', tag.tags.title);
+                 setTitle(prev => prev || tag.tags.title || ''); // Update Album Title if empty
+               }
+               if (tag.tags.picture && !existingCoverUrl && !coverFile) {
+                 const data = tag.tags.picture.data;
+                 const format = tag.tags.picture.format || 'image/jpeg';
+                 let base64String = "";
+                 for (let i = 0; i < data.length; i++) {
+                   base64String += String.fromCharCode(data[i]);
+                 }
+                 setCoverFile(new File([new Blob([new Uint8Array(data)], { type: format })], `cover_${Date.now()}.${format.split('/')[1] || 'jpeg'}`, { type: format }));
+               }
+             },
+             onError: function(error: any) {
+               console.log('jsmediatags error:', error);
+             }
+           });
+           
+           const objectUrl = URL.createObjectURL(file);
+           const audio = new Audio(objectUrl);
+           audio.onloadedmetadata = () => {
+             const d = audio.duration;
+             if (!isNaN(d)) {
+               const min = Math.floor(d / 60);
+               const sec = Math.floor(d % 60);
+               const durationStr = `${min}:${sec.toString().padStart(2, '0')}`;
+               updateTrack(trackIndex, 'duration', durationStr);
+             }
+             URL.revokeObjectURL(objectUrl);
+           };
+         } catch(e) {
+             console.error('Metadata extraction failed', e);
+         }
+       }
+
        const audioUrl = await uploadFile(file, `public/music_audio/${Date.now()}_${file.name}`);
        updateVersion(trackIndex, versionIndex, 'audioUrl', audioUrl);
        alert('음원이 업로드 되었습니다.');
@@ -187,9 +244,11 @@ export default function AdminMusicPage() {
   };
 
   const removeVersion = (trackIndex: number, versionIndex: number) => {
-    const updated = [...tracks];
-    updated[trackIndex].versions = updated[trackIndex].versions.filter((_, i) => i !== versionIndex);
-    setTracks(updated);
+    setTracks(prev => {
+      const updated = JSON.parse(JSON.stringify(prev));
+      updated[trackIndex].versions = updated[trackIndex].versions.filter((_: any, i: number) => i !== versionIndex);
+      return updated;
+    });
   };
 
 
@@ -261,9 +320,127 @@ export default function AdminMusicPage() {
 
               <div className="flex-1 overflow-y-auto p-4 lg:p-8 hide-scrollbar space-y-8 pb-32">
                  
+                 {/* TRACKS INFO */}
+                 <div className="bg-[#1A1A1A] border border-[#27272A] rounded-2xl p-6">
+                    <div className="flex items-center justify-between border-b border-[#27272A] pb-3 mb-6">
+                       <h3 className="text-lg font-bold text-white">1. 트랙 관리</h3>
+                       <Button size="sm" onClick={addTrack} variant="secondary" className="h-8 text-xs font-bold rounded-lg px-3">
+                          <Plus className="w-3 h-3 mr-1"/> 트랙 추가
+                       </Button>
+                    </div>
+
+                    {tracks.length === 0 ? (
+                       <p className="text-center text-[#71717A] py-8 text-sm">등록된 트랙이 없습니다. 트랙을 추가해주세요.</p>
+                    ) : (
+                       <div className="space-y-12">
+                          {tracks.map((track, trackIdx) => (
+                             <div key={trackIdx} className="bg-[#0A0A0A] border border-[#3F3F46] rounded-xl p-5 relative">
+                                {/* Track Header */}
+                                <div className="flex items-center justify-between mb-4">
+                                   <h4 className="text-[#E6C79C] font-bold">Track {trackIdx + 1}</h4>
+                                   <button onClick={() => removeTrack(trackIdx)} className="text-[#71717A] hover:text-red-400"><Trash2 className="w-4 h-4"/></button>
+                                </div>
+                                
+                                {/* Audio File Upload (Moved to top) for the first version */}
+                                <div className="mb-6 p-4 border border-dashed border-[#E6C79C]/30 rounded-lg bg-[#E6C79C]/5">
+                                   <label className="block text-xs font-bold text-[#E6C79C] uppercase mb-2">음원 파일 업로드 (MP3)</label>
+                                   <div className="flex items-center gap-2">
+                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, 0, e.target.files?.[0] as File)} className="text-xs file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-[#27272A] file:text-white cursor-pointer"/>
+                                      {track.versions[0]?.audioUrl ? (
+                                         <span className="text-[10px] text-green-400 flex items-center bg-green-400/10 px-2 py-0.5 rounded-full"><CheckCircle className="w-3 h-3 mr-1"/> 업로드됨</span>
+                                      ) : (
+                                         <span className="text-[10px] text-red-400">음원 없음</span>
+                                      )}
+                                   </div>
+                                   <p className="text-[10px] text-[#A1A1AA] mt-2">파일을 업로드하면 제목, 길이, 커버 이미지가 자동입력됩니다.</p>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                   <div>
+                                      <label className="block text-[10px] text-[#A1A1AA] uppercase mb-1">트랙 기본 제목</label>
+                                      <input value={track.title} onChange={e => updateTrack(trackIdx, 'title', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E6C79C]"/>
+                                   </div>
+                                   <div>
+                                      <label className="block text-[10px] text-[#A1A1AA] uppercase mb-1">길이 (예: 5:30)</label>
+                                      <input value={track.duration} onChange={e => updateTrack(trackIdx, 'duration', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E6C79C]"/>
+                                   </div>
+                                </div>
+
+                                {/* Track Credits */}
+                                <div className="mb-6 bg-[#1A1A1A] rounded-lg p-4 border border-[#27272A]">
+                                   <label className="block text-[10px] text-white font-bold uppercase mb-3">크레딧 (옵션)</label>
+                                   <div className="grid grid-cols-2 gap-3">
+                                      <input placeholder="작사/작곡 (Words & Music)" value={track.credits.composer || ''} onChange={e => updateTrackCredit(trackIdx, 'composer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
+                                      <input placeholder="편곡 (Arranger)" value={track.credits.arranger || ''} onChange={e => updateTrackCredit(trackIdx, 'arranger', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
+                                      <input placeholder="연주 (Instruments)" value={track.credits.instruments || ''} onChange={e => updateTrackCredit(trackIdx, 'instruments', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
+                                      <input placeholder="제작 (Producer)" value={track.credits.producer || ''} onChange={e => updateTrackCredit(trackIdx, 'producer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
+                                   </div>
+                                </div>
+
+                                {/* Track Versions */}
+                                <div>
+                                   <div className="flex items-center justify-between mb-3">
+                                      <h5 className="text-xs font-bold text-white uppercase">버전 및 음원 (언어별)</h5>
+                                      <button type="button" onClick={() => addVersion(trackIdx)} className="text-[10px] flex items-center text-[#E6C79C] hover:underline"><Plus className="w-3 h-3 mr-0.5"/> 언어 추가</button>
+                                   </div>
+                                   
+                                   <div className="space-y-4">
+                                      {track.versions.map((version, verIdx) => (
+                                         <div key={verIdx} className="bg-[#1A1A1A] border-l-2 border-[#E6C79C] pl-4 py-3 pr-3 relative">
+                                            {track.versions.length > 1 && (
+                                               <button onClick={() => removeVersion(trackIdx, verIdx)} className="absolute top-2 right-2 text-[#71717A] hover:text-red-400"><XIcon className="w-3 h-3"/></button>
+                                            )}
+                                            <div className="grid grid-cols-3 gap-3 mb-3 pr-4">
+                                               <select value={version.lang} onChange={e => updateVersion(trackIdx, verIdx, 'lang', e.target.value)} className="col-span-1 px-2 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none">
+                                                  <option value="ko">한국어 (ko)</option>
+                                                  <option value="en">English (en)</option>
+                                                  <option value="es">Español (es)</option>
+                                               </select>
+                                               <input placeholder="버전별 곡 제목" value={version.title} onChange={e => updateVersion(trackIdx, verIdx, 'title', e.target.value)} className="col-span-2 px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
+                                            </div>
+
+                                            {verIdx !== 0 && (
+                                                <div className="mb-3">
+                                                   <label className="block text-[10px] text-[#A1A1AA] mb-1">오디오 음원 (MP3)</label>
+                                                   <div className="flex items-center gap-2">
+                                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, verIdx, e.target.files?.[0] as File)} className="text-xs file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-[#27272A] file:text-white cursor-pointer"/>
+                                                      {version.audioUrl ? (
+                                                         <span className="text-[10px] text-green-400 flex items-center bg-green-400/10 px-2 py-0.5 rounded-full"><CheckCircle className="w-3 h-3 mr-1"/> 업로드됨</span>
+                                                      ) : (
+                                                         <span className="text-[10px] text-red-400">음원 없음</span>
+                                                      )}
+                                                   </div>
+                                                </div>
+                                            )}
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                               <div>
+                                                  <label className="block text-[10px] text-[#A1A1AA] mb-1">가사 (Lyrics)</label>
+                                                  <textarea value={version.lyrics} onChange={e => updateVersion(trackIdx, verIdx, 'lyrics', e.target.value)} rows={4} className="w-full px-3 py-2 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C] resize-none" placeholder="엔터로 단락을 구분하세요"/>
+                                               </div>
+                                               <div>
+                                                  <label className="block text-[10px] text-[#A1A1AA] mb-1">해당 버전 보컬 (Vocal)</label>
+                                                  <input value={version.vocal || ''} onChange={e => updateVersion(trackIdx, verIdx, 'vocal', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C] mb-2"/>
+                                                  
+                                                  <div className="text-[10px] text-[#A1A1AA] bg-[#27272A]/50 p-2 rounded-md leading-relaxed mt-2">
+                                                     <strong>가사 입력 팁:</strong> 단락 구분을 위해 엔터를 두 번 입력하세요. 곡 안에서 줄바꿈은 엔터 한 번입니다.
+                                                  </div>
+                                               </div>
+                                            </div>
+                                         </div>
+                                      ))}
+                                   </div>
+                                </div>
+
+                             </div>
+                          ))}
+                       </div>
+                    )}
+                 </div>
+
                  {/* ALBUM INFO */}
                  <div className="bg-[#1A1A1A] border border-[#27272A] rounded-2xl p-6">
-                    <h3 className="text-lg font-bold text-white mb-6 border-b border-[#27272A] pb-3">1. 앨범 기본 정보</h3>
+                    <h3 className="text-lg font-bold text-white mb-6 border-b border-[#27272A] pb-3">2. 앨범 기본 정보</h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                        <div className="col-span-1 lg:col-span-2 space-y-4">
@@ -314,107 +491,6 @@ export default function AdminMusicPage() {
                     </div>
                  </div>
 
-                 {/* TRACKS INFO */}
-                 <div className="bg-[#1A1A1A] border border-[#27272A] rounded-2xl p-6">
-                    <div className="flex items-center justify-between border-b border-[#27272A] pb-3 mb-6">
-                       <h3 className="text-lg font-bold text-white">2. 트랙 관리</h3>
-                       <Button size="sm" onClick={addTrack} variant="secondary" className="h-8 text-xs font-bold rounded-lg px-3">
-                          <Plus className="w-3 h-3 mr-1"/> 트랙 추가
-                       </Button>
-                    </div>
-
-                    {tracks.length === 0 ? (
-                       <p className="text-center text-[#71717A] py-8 text-sm">등록된 트랙이 없습니다. 트랙을 추가해주세요.</p>
-                    ) : (
-                       <div className="space-y-12">
-                          {tracks.map((track, trackIdx) => (
-                             <div key={trackIdx} className="bg-[#0A0A0A] border border-[#3F3F46] rounded-xl p-5 relative">
-                                {/* Track Header */}
-                                <div className="flex items-center justify-between mb-4">
-                                   <h4 className="text-[#E6C79C] font-bold">Track {trackIdx + 1}</h4>
-                                   <button onClick={() => removeTrack(trackIdx)} className="text-[#71717A] hover:text-red-400"><Trash2 className="w-4 h-4"/></button>
-                                </div>
-                                
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                   <div>
-                                      <label className="block text-[10px] text-[#A1A1AA] uppercase mb-1">트랙 기본 제목</label>
-                                      <input value={track.title} onChange={e => updateTrack(trackIdx, 'title', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E6C79C]"/>
-                                   </div>
-                                   <div>
-                                      <label className="block text-[10px] text-[#A1A1AA] uppercase mb-1">길이 (예: 5:30)</label>
-                                      <input value={track.duration} onChange={e => updateTrack(trackIdx, 'duration', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E6C79C]"/>
-                                   </div>
-                                </div>
-
-                                {/* Track Credits */}
-                                <div className="mb-6 bg-[#1A1A1A] rounded-lg p-4 border border-[#27272A]">
-                                   <label className="block text-[10px] text-white font-bold uppercase mb-3">크레딧 (옵션)</label>
-                                   <div className="grid grid-cols-2 gap-3">
-                                      <input placeholder="작사/작곡 (Words & Music)" value={track.credits.composer || ''} onChange={e => updateTrackCredit(trackIdx, 'composer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                      <input placeholder="편곡 (Arranger)" value={track.credits.arranger || ''} onChange={e => updateTrackCredit(trackIdx, 'arranger', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                      <input placeholder="연주 (Instruments)" value={track.credits.instruments || ''} onChange={e => updateTrackCredit(trackIdx, 'instruments', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                      <input placeholder="제작 (Producer)" value={track.credits.producer || ''} onChange={e => updateTrackCredit(trackIdx, 'producer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                   </div>
-                                </div>
-
-                                {/* Track Versions */}
-                                <div>
-                                   <div className="flex items-center justify-between mb-3">
-                                      <h5 className="text-xs font-bold text-white uppercase">버전 및 음원 (언어별)</h5>
-                                      <button type="button" onClick={() => addVersion(trackIdx)} className="text-[10px] flex items-center text-[#E6C79C] hover:underline"><Plus className="w-3 h-3 mr-0.5"/> 언어 추가</button>
-                                   </div>
-                                   
-                                   <div className="space-y-4">
-                                      {track.versions.map((version, verIdx) => (
-                                         <div key={verIdx} className="bg-[#1A1A1A] border-l-2 border-[#E6C79C] pl-4 py-3 pr-3 relative">
-                                            {track.versions.length > 1 && (
-                                               <button onClick={() => removeVersion(trackIdx, verIdx)} className="absolute top-2 right-2 text-[#71717A] hover:text-red-400"><XIcon className="w-3 h-3"/></button>
-                                            )}
-                                            <div className="grid grid-cols-3 gap-3 mb-3 pr-4">
-                                               <select value={version.lang} onChange={e => updateVersion(trackIdx, verIdx, 'lang', e.target.value)} className="col-span-1 px-2 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none">
-                                                  <option value="ko">한국어 (ko)</option>
-                                                  <option value="en">English (en)</option>
-                                                  <option value="es">Español (es)</option>
-                                               </select>
-                                               <input placeholder="버전별 곡 제목" value={version.title} onChange={e => updateVersion(trackIdx, verIdx, 'title', e.target.value)} className="col-span-2 px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                            </div>
-
-                                            <div className="mb-3">
-                                               <label className="block text-[10px] text-[#A1A1AA] mb-1">오디오 음원 (MP3)</label>
-                                               <div className="flex items-center gap-2">
-                                                  <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, verIdx, e.target.files?.[0] as File)} className="text-xs file:mr-2 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-semibold file:bg-[#27272A] file:text-white cursor-pointer"/>
-                                                  {version.audioUrl ? (
-                                                     <span className="text-[10px] text-green-400 flex items-center bg-green-400/10 px-2 py-0.5 rounded-full"><CheckCircle className="w-3 h-3 mr-1"/> 업로드됨</span>
-                                                  ) : (
-                                                     <span className="text-[10px] text-red-400">음원 없음</span>
-                                                  )}
-                                               </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                               <div>
-                                                  <label className="block text-[10px] text-[#A1A1AA] mb-1">가사 (Lyrics)</label>
-                                                  <textarea value={version.lyrics} onChange={e => updateVersion(trackIdx, verIdx, 'lyrics', e.target.value)} rows={4} className="w-full px-3 py-2 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C] resize-none" placeholder="엔터로 단락을 구분하세요"/>
-                                               </div>
-                                               <div>
-                                                  <label className="block text-[10px] text-[#A1A1AA] mb-1">해당 버전 보컬 (Vocal)</label>
-                                                  <input value={version.vocal || ''} onChange={e => updateVersion(trackIdx, verIdx, 'vocal', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C] mb-2"/>
-                                                  
-                                                  <div className="text-[10px] text-[#A1A1AA] bg-[#27272A]/50 p-2 rounded-md leading-relaxed mt-2">
-                                                     <strong>가사 입력 팁:</strong> 단락 구분을 위해 엔터를 두 번 입력하세요. 곡 안에서 줄바꿈은 엔터 한 번입니다.
-                                                  </div>
-                                               </div>
-                                            </div>
-                                         </div>
-                                      ))}
-                                   </div>
-                                </div>
-
-                             </div>
-                          ))}
-                       </div>
-                    )}
-                 </div>
 
               </div>
 

@@ -130,7 +130,7 @@ export default function Home() {
                 className="group flex flex-col transition-transform duration-300 hover:-translate-y-2 cursor-pointer"
                 onClick={() => router.push(`/music?albumId=${album.id}`)}
               >
-                <div className="w-full aspect-square rounded-[24px] overflow-hidden mb-4 relative shadow-md border border-[#2D2926]/15 bg-white">
+                <div className="w-[85%] mx-auto aspect-square rounded-[24px] overflow-hidden mb-4 relative shadow-md border border-[#2D2926]/15 bg-white">
                   {album.coverUrl ? (
                     <Image 
                       src={album.coverUrl} 

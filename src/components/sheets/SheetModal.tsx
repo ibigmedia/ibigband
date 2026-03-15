@@ -145,16 +145,17 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
               <div className="flex-1 min-w-0 space-y-6">
                 {/* YouTube Preview */}
                 {sheet.youtubeId && (
-                  <div className={`bg-black border ${t.borderColor} rounded-2xl overflow-hidden shadow-lg`}>
+                  <div className={`bg-black border ${t.borderColor} rounded-2xl overflow-hidden shadow-lg mb-6`}>
                     <div className={`px-4 py-3 ${isLight ? 'bg-[#2D2926]' : 'bg-[#1A1A1A]'} border-b ${t.borderColor} flex items-center gap-2`}>
                         <PlayCircle className="w-4 h-4 text-red-500" />
                         <span className="text-sm font-bold text-white uppercase tracking-wider">영상 미리보기</span>
                     </div>
                     <div className="aspect-video w-full relative">
                         <iframe
-                          src={`https://www.youtube.com/embed/${sheet.youtubeId}?rel=0`}
+                          src={`https://www.youtube.com/embed/${sheet.youtubeId}?autoplay=1&playsinline=1&rel=0`}
                           title="YouTube Preview"
                           frameBorder="0"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                           allowFullScreen
                           className="absolute inset-0 w-full h-full"
                         ></iframe>
