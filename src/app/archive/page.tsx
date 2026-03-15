@@ -175,62 +175,104 @@ export default function ArchivePage() {
         </div>
       </div>
 
-      {/* Control Bar */}
-      <div className="bg-[#2D2926]/90 backdrop-blur-md p-3 md:p-4 rounded-[20px] md:rounded-2xl shadow-lg border border-white/10 mb-6 md:mb-8 flex flex-col md:flex-row gap-3 md:gap-4 items-stretch md:items-center justify-between sticky top-[70px] md:top-[80px] z-10">
-
-        <div className="flex gap-2 md:gap-4 w-full md:w-auto overflow-x-auto pb-1 md:pb-0 scrollbar-hide shrink-0">
-          <div className="relative shrink-0 w-[120px] md:w-64">
-            <Search className="absolute left-3 top-2.5 text-white/50" size={14} />
+      {/* Control Bar - Mobile Optimized Material 3 Layout */}
+      <div className="bg-[#2D2926]/95 backdrop-blur-xl p-3 md:p-4 rounded-[24px] shadow-lg border border-white/10 mb-6 md:mb-8 flex flex-col md:flex-row gap-3 md:gap-4 sticky top-[70px] md:top-[80px] z-10 w-full overflow-hidden items-center justify-between">
+        
+        {/* Mobile Top Row / Desktop Left Side: Search & View Modes */}
+        <div className="flex gap-3 justify-between items-center w-full md:w-auto md:flex-1">
+          <div className="relative flex-1 md:max-w-md lg:max-w-lg">
+            <Search className="absolute left-3 top-2.5 text-white/50" size={16} />
             <input 
               type="text" 
-              placeholder="제목, 내용 검색" 
+              placeholder="제목, 내용 검색..." 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-8 pr-3 py-2 bg-white/5 border border-white/10 rounded-full text-[13px] md:text-sm text-white/90 focus:outline-none focus:border-white/30 focus:bg-white/10 placeholder:text-white/40 transition-colors"
+              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-full text-[14px] md:text-sm text-white/90 focus:outline-none focus:border-white/30 focus:bg-[#2D2926] placeholder:text-white/40 transition-colors shadow-inner"
             />
           </div>
-          <select 
-            className="px-3 md:px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer shrink-0 transition-colors focus:bg-[#2D2926] hover:bg-white/10 appearance-none"
-            value={filterType}
-            onChange={(e) => setFilterType(e.target.value as any)}
-          >
-            <option value="all" className="bg-[#2D2926]">모든 형태</option>
-            <option value="video" className="bg-[#2D2926]">영상</option>
-            <option value="blog" className="bg-[#2D2926]">저널 (블로그)</option>
-            <option value="sheet" className="bg-[#2D2926]">악보 및 음원</option>
-          </select>
-          <select 
-            className="px-3 md:px-4 py-2 bg-white/5 border border-white/10 rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer shrink-0 transition-colors focus:bg-[#2D2926] hover:bg-white/10 appearance-none"
-            value={filterTag}
-            onChange={(e) => setFilterTag(e.target.value)}
-          >
-            <option value="all" className="bg-[#2D2926]">모든 태그</option>
-            {allTags.map(tag => <option key={tag} value={tag} className="bg-[#2D2926]">#{tag}</option>)}
-          </select>
+          
+          <div className="flex p-1 bg-white/5 rounded-full shrink-0 border border-white/5 self-center md:hidden">
+            <button 
+              onClick={() => setViewMode('list')}
+              className={`p-1.5 rounded-full transition-all ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              title="리스트 뷰"
+            >
+              <LayoutList size={16} />
+            </button>
+            <button 
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-full transition-all ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              title="그리드 뷰"
+            >
+              <LayoutGrid size={16} />
+            </button>
+            <button 
+              onClick={() => setViewMode('category')}
+              className={`p-1.5 rounded-full transition-all ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              title="카테고리 뷰"
+            >
+              <FolderTree size={16} />
+            </button>
+          </div>
         </div>
 
-        <div className="flex p-1 bg-white/5 rounded-full shrink-0 border border-white/5">
-          <button 
-            onClick={() => setViewMode('list')}
-            className={`p-2 rounded-full transition-colors ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white' : 'text-white/50 hover:text-white/90'}`}
-            title="리스트 뷰"
-          >
-            <LayoutList size={18} />
-          </button>
-          <button 
-            onClick={() => setViewMode('grid')}
-            className={`p-2 rounded-full transition-colors ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white' : 'text-white/50 hover:text-white/90'}`}
-            title="그리드 뷰"
-          >
-            <LayoutGrid size={18} />
-          </button>
-          <button 
-            onClick={() => setViewMode('category')}
-            className={`p-2 rounded-full transition-colors ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white' : 'text-white/50 hover:text-white/90'}`}
-            title="카테고리 뷰"
-          >
-            <FolderTree size={18} />
-          </button>
+        {/* Mobile Bottom Row / Desktop Right Side: Filters & View Modes */}
+        <div className="flex gap-2.5 md:gap-4 w-full md:w-auto justify-between md:justify-end items-center shrink-0">
+          <div className="flex gap-2 w-full md:w-auto">
+            <div className="relative flex-1 md:w-40">
+              <select 
+                className="w-full px-3 py-2 bg-[#2D2926]/50 border border-white/10 rounded-xl md:rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer transition-colors focus:bg-[#2D2926] focus:border-white/30 hover:bg-white/10 appearance-none pr-8 truncate shadow-sm"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value as any)}
+              >
+                <option value="all" className="bg-[#2D2926]">모든 형태</option>
+                <option value="video" className="bg-[#2D2926]">🎵 영상</option>
+                <option value="blog" className="bg-[#2D2926]">📝 저널</option>
+                <option value="sheet" className="bg-[#2D2926]">🎼 악보/음원</option>
+              </select>
+              <div className="absolute right-3 top-2.5 pointer-events-none text-white/40">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+            
+            <div className="relative flex-1 md:w-40">
+              <select 
+                className="w-full px-3 py-2 bg-[#2D2926]/50 border border-white/10 rounded-xl md:rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer transition-colors focus:bg-[#2D2926] focus:border-white/30 hover:bg-white/10 appearance-none pr-8 truncate shadow-sm"
+                value={filterTag}
+                onChange={(e) => setFilterTag(e.target.value)}
+              >
+                <option value="all" className="bg-[#2D2926]">태그 전체</option>
+                {allTags.map(tag => <option key={tag} value={tag} className="bg-[#2D2926]">#{tag}</option>)}
+              </select>
+              <div className="absolute right-3 top-2.5 pointer-events-none text-white/40">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden md:flex p-1 bg-white/5 rounded-full shrink-0 border border-white/5 ml-2">
+            <button 
+              onClick={() => setViewMode('list')}
+              className={`p-2 rounded-full transition-all ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              title="리스트 뷰"
+            >
+              <LayoutList size={18} />
+            </button>
+            <button 
+              onClick={() => setViewMode('grid')}
+              className={`p-2 rounded-full transition-all ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              title="그리드 뷰"
+            >
+              <LayoutGrid size={18} />
+            </button>
+            <button 
+              onClick={() => setViewMode('category')}
+              className={`p-2 rounded-full transition-all ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              title="카테고리 뷰"
+            >
+              <FolderTree size={18} />
+            </button>
+          </div>
         </div>
       </div>
 
