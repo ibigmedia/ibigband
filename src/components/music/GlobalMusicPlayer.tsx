@@ -408,14 +408,6 @@ export default function GlobalMusicPlayer() {
                        </button>
                     </div>
                     
-                    {/* Lyrics Font Scale Control */}
-                    <div className="flex justify-center py-3 bg-white/50 border-b border-slate-100 shrink-0">
-                       <div className="flex items-center gap-1 bg-white p-1 rounded-2xl border border-slate-200 shadow-sm">
-                          <button onClick={() => setLyricsScale(Math.max(0.6, lyricsScale - 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-[10px] transition-colors">A-</button>
-                          <div className="w-px h-4 bg-slate-200"></div>
-                          <button onClick={() => setLyricsScale(Math.min(2.0, lyricsScale + 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-50 rounded-[10px] transition-colors">A+</button>
-                       </div>
-                    </div>
 
                     <div className="flex-1 overflow-y-auto hide-scrollbar p-6 md:p-8 pb-20 scroll-smooth">
                        <div className="text-slate-800 font-handwriting font-normal" style={{ fontSize: `calc(${1.2 * lyricsScale}rem + 1vw)`, lineHeight: 1.35 }}>
