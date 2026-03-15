@@ -398,7 +398,7 @@ export default function GlobalMusicPlayer() {
                       <div 
                         className="text-slate-800 font-handwriting font-normal tracking-wide antialiased transition-all duration-300 transform-gpu"
                         style={{ 
-                           fontSize: `calc(${1.2 * lyricsScale}rem + 0.8vw)`, 
+                           fontSize: `calc(${1.0 * lyricsScale}rem + 0.8vw)`, 
                            lineHeight: 1.25
                         }}
                       >

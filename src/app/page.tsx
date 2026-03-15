@@ -300,7 +300,7 @@ export default function Home() {
       <section className="pt-12 md:pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto pb-8 md:pb-24 border-t border-[#78716A]/10 mt-12 md:mt-20">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-8 md:mb-12 mt-6 md:mt-10">
           <div className="text-center md:text-left">
-            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">ibiGmedia Journal</h2>
+            <h2 className="text-3xl md:text-4xl font-handwriting mb-1 md:mb-2 text-[#2D2926]">ibiGband Journal</h2>
             <p className="text-xs md:text-sm text-[#78716A]">찬양은 삶의 고백이자 예술의 완성입니다</p>
           </div>
           <div className="flex w-full md:w-auto">

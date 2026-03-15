@@ -186,7 +186,7 @@ export default function ArchivePage() {
   }, {} as Record<string, ArchiveItem[]>);
 
   return (
-    <div className="pt-24 md:pt-32 px-4 md:px-6 max-w-7xl mx-auto mb-16 md:mb-20">
+    <div className="pt-6 px-4 md:px-6 max-w-7xl mx-auto mb-16 md:mb-20">
       <div className="flex flex-col md:flex-row justify-between items-end gap-4 md:gap-6 mb-8 md:mb-12">
         <div className="text-left w-full">
           <h2 className="text-3xl md:text-5xl font-handwriting text-[#2D2926] mb-2 md:mb-3">저장소 (Archive)</h2>

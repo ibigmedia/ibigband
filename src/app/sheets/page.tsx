@@ -103,13 +103,13 @@ export default function SheetsGalleryPage() {
   };
 
   return (
-    <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-12 pb-16">
+    <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-6 pb-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E6C79C] to-[#C9A675] mb-4">
-              프리미엄 악보
+            <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E6C79C] to-[#C9A675] mb-4">
+              아이빅밴드 악보
             </h1>
             <p className="text-lg text-[#A1A1AA] max-w-2xl">
               다음 연주를 위한 전문적인 악보를 찾아보세요. 
