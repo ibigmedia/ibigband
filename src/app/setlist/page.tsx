@@ -14,6 +14,7 @@ import dynamic from 'next/dynamic';
 import { useAuth } from '@/lib/firebase/auth';
 import { collection, query, orderBy, getDocs, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import useDrivePicker from 'react-google-drive-picker';
 
 const PdfViewer = dynamic(() => import('@/components/setlist/PdfViewer'), { ssr: false });
 
@@ -95,6 +96,7 @@ export default function SetListPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { user, loading, signInWithGoogle } = useAuth();
+  const [openPicker, authResponse] = useDrivePicker();
 
   useEffect(() => {
     setIsMounted(true);
@@ -330,11 +332,37 @@ export default function SetListPage() {
   };
 
   const importFromIbigMusic = () => {
-    alert("준비 중인 기능입니다. 추후 아이빅 뮤직과 정식 연동될 예정입니다.");
+    alert("준비 중인 기능입니다. 현재 아이빅 뮤직 앱에서 API 제공을 준비하고 있습니다.");
   };
 
   const importFromGoogleDrive = () => {
-    alert("준비 중인 기능입니다. 구글 드라이브 인증 승인 대기 중입니다.");
+    openPicker({
+      clientId: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
+      developerKey: process.env.NEXT_PUBLIC_GOOGLE_DRIVE_API_KEY || '',
+      viewId: "DOCS",
+      showUploadView: true,
+      showUploadFolders: true,
+      setSelectFolderEnabled: false,
+      supportDrives: true,
+      multiselect: true,
+      callbackFunction: (data) => {
+        if (data.action === 'picked') {
+          const files = data.docs.map(doc => ({
+            id: `gdrive-${doc.id}`,
+            type: (doc.mimeType && doc.mimeType.includes('pdf')) ? 'sheet' 
+                : (doc.mimeType && doc.mimeType.includes('audio') ? 'mr' : 'transcript') as ItemType,
+            title: doc.name,
+            duration: '',
+            note: '구글 드라이브에서 가져옴',
+            hasAudio: doc.mimeType ? doc.mimeType.includes('audio') : false,
+            hasPdf: doc.mimeType ? doc.mimeType.includes('pdf') : false,
+            fileUrl: doc.url, 
+          }));
+          
+          setLibraryItems(prev => [...files, ...prev]);
+        }
+      },
+    });
   };
 
   const togglePlay = (item: SetListItem) => {
@@ -391,7 +419,15 @@ export default function SetListPage() {
     setIsExporting(true);
     try {
       const element = printRef.current;
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false });
+      // Scroll to top to ensure complete capture
+      window.scrollTo(0, 0);
+      
+      const canvas = await html2canvas(element, { 
+        scale: 2, 
+        useCORS: true, 
+        allowTaint: true,
+        backgroundColor: '#ffffff'
+      });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -399,9 +435,9 @@ export default function SetListPage() {
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
       pdf.save('ibigband_setlist.pdf');
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert("출력 중 오류가 발생했습니다.");
+      alert("출력 중 오류가 발생했습니다: " + e.message);
     } finally {
       setIsExporting(false);
     }
