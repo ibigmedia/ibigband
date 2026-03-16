@@ -12,7 +12,7 @@ import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 import dynamic from 'next/dynamic';
 import { useAuth } from '@/lib/firebase/auth';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 
 const PdfViewer = dynamic(() => import('@/components/setlist/PdfViewer'), { ssr: false });
@@ -29,7 +29,15 @@ interface SetListItem {
   author?: string;
   hasAudio?: boolean;
   hasPdf?: boolean;
-  fileUrl?: string;
+  fileUrl?: string; // used for PDF viewer
+  audioUrl?: string; // used for audio tag
+  youtubeUrl?: string;
+}
+
+interface SavedSetlist {
+  id: string;
+  title: string;
+  items: SetListItem[];
 }
 
 interface ScheduleItem {
@@ -58,11 +66,10 @@ export default function SetListPage() {
   const [isMounted, setIsMounted] = useState(false);
   
   // Setlist State
-  const [items, setItems] = useState<SetListItem[]>([
-    { id: '1', type: 'bgm', title: '입례 송 (건반 배경)', duration: '2:00', note: '인도자 등단 전 잔잔하게', hasAudio: true },
-    { id: '2', type: 'guide', title: '인도자 멘트 및 환영', duration: '1:30', note: '환영합니다! 축복합니다!', hasAudio: false },
-    { id: '3', type: 'sheet', title: '놀라운 주의 사랑', author: '제이어스', duration: '4:30', note: 'G code', hasAudio: true, hasPdf: true },
-  ]);
+  const [setlistTitle, setSetlistTitle] = useState('2026. 3. 22. 찬양팀 셋리스트');
+  const [currentSetlistId, setCurrentSetlistId] = useState<string | null>(null);
+  const [items, setItems] = useState<SetListItem[]>([]);
+  const [savedSetlists, setSavedSetlists] = useState<SavedSetlist[]>([]);
 
   // UI State
   const [activeTab, setActiveTab] = useState<'library' | 'ai-search' | 'upload' | 'schedule'>('library');
@@ -91,6 +98,15 @@ export default function SetListPage() {
   useEffect(() => {
     setIsMounted(true);
 
+    const fetchSetlists = async () => {
+      if (!user) return;
+      try {
+        const q = query(collection(db, 'setlists'), orderBy('createdAt', 'desc'));
+        const sn = await getDocs(q);
+        setSavedSetlists(sn.docs.map(doc => ({ id: doc.id, ...doc.data() } as SavedSetlist)));
+      } catch (e) { console.error('Failed to load setlists:', e); }
+    };
+
     const fetchSheetsFromDB = async () => {
       if (!user) return; // Only fetch if authenticated
 
@@ -107,9 +123,11 @@ export default function SetListPage() {
             author: data.artist || '미상',
             duration: '',
             note: '악보 데이터베이스',
-            hasAudio: !!data.youtubeUrl,
+            hasAudio: !!data.audioUrl || !!data.youtubeUrl,
             hasPdf: !!data.pdfUrl || !!data.imageUrl,
             fileUrl: data.pdfUrl || data.imageUrl || '',
+            audioUrl: data.audioUrl || '',
+            youtubeUrl: data.youtubeUrl || '',
           };
         });
 
@@ -126,6 +144,7 @@ export default function SetListPage() {
     };
 
     fetchSheetsFromDB();
+    fetchSetlists();
   }, [user]);
 
   if (loading || !isMounted) {
@@ -185,7 +204,8 @@ export default function SetListPage() {
       note: '직접 업로드된 파일',
       hasAudio: isAudio,
       hasPdf: isPdf,
-      fileUrl: fileUrl,
+      fileUrl: isPdf ? fileUrl : '',
+      audioUrl: isAudio ? fileUrl : '',
     };
     
     setLibraryItems([...libraryItems, newItem]);
@@ -217,6 +237,49 @@ export default function SetListPage() {
     setIsViewerOpen(true);
   };
 
+  const saveSetlist = async () => {
+    if (!user) return;
+    try {
+      const data = {
+        title: setlistTitle,
+        items,
+        updatedAt: serverTimestamp(),
+      };
+      if (currentSetlistId) {
+        await updateDoc(doc(db, 'setlists', currentSetlistId), data);
+        alert('셋리스트가 저장되었습니다.');
+      } else {
+        const docRef = await addDoc(collection(db, 'setlists'), { ...data, createdAt: serverTimestamp() });
+        setCurrentSetlistId(docRef.id);
+        alert('새 셋리스트가 생성되었습니다.');
+      }
+      // Refresh list
+      const q = query(collection(db, 'setlists'), orderBy('createdAt', 'desc'));
+      const sn = await getDocs(q);
+      setSavedSetlists(sn.docs.map(doc => ({ id: doc.id, ...doc.data() } as SavedSetlist)));
+    } catch (e) {
+      console.error(e);
+      alert('저장 중 오류가 발생했습니다.');
+    }
+  };
+
+  const loadSetlist = (setlistId: string) => {
+    const list = savedSetlists.find(s => s.id === setlistId);
+    if (list) {
+      setItems(list.items);
+      setSetlistTitle(list.title || '제목 없음');
+      setCurrentSetlistId(list.id);
+    }
+  };
+
+  const createNewSetlist = () => {
+    if (confirm('현재 작성 중인 내용이 초기화됩니다. 계속하시겠습니까?')) {
+      setItems([]);
+      setSetlistTitle('새로운 셋리스트');
+      setCurrentSetlistId(null);
+    }
+  };
+
   const doAiSearch = () => {
     if (!searchQuery) return;
     setIsAiSearching(true);
@@ -228,32 +291,21 @@ export default function SetListPage() {
   };
 
   const importFromIbigMusic = () => {
-    const confirmImport = confirm("IBIG Music 서버에서 내 트랙들을 라이브러리로 가져오시겠습니까?");
-    if (confirmImport) {
-       const newItem: SetListItem = {
-          id: `lib-ibig-${Date.now()}`,
-          type: 'mr',
-          title: '주기도문 (IBIG Music 원본)',
-          author: 'IBIG BAND',
-          duration: '4:20',
-          note: 'IBIG Music 연동 곡',
-          hasAudio: true,
-          hasPdf: true,
-       };
-       setLibraryItems([newItem, ...libraryItems]);
-       alert("IBIG Music에서 '주기도문' 곡을 성공적으로 가져왔습니다.");
-       setActiveTab('library');
-    }
+    alert("준비 중인 기능입니다. 추후 아이빅 뮤직과 정식 연동될 예정입니다.");
   };
 
   const importFromGoogleDrive = () => {
-    alert("Google Drive API 파일 피커가 열립니다. (현재 데모 버전 구글 인증 연동 필요)");
+    alert("준비 중인 기능입니다. 구글 드라이브 인증 승인 대기 중입니다.");
   };
 
   const togglePlay = (item: SetListItem) => {
-    // 만약 샘플 데이터(URL 없음)라면 로컬 샘플 오디오를 제공하거나 경고
-    if (!item.fileUrl && item.hasAudio) {
-      alert("이 샘플 항목에는 연결된 실제 음원 파일이 없습니다. 직접 업로드 탭(오른쪽 하단)에서 원하시는 음원(MP3)을 추가해보세요.");
+    if (!item.audioUrl && item.youtubeUrl) {
+      window.open(item.youtubeUrl, '_blank');
+      return;
+    }
+    
+    if (!item.audioUrl) {
+      alert("이 항목에는 연결된 실제 음원 파일이 없습니다. 유튜브 링크도 등록되지 않았습니다.");
       return;
     }
 
@@ -269,7 +321,7 @@ export default function SetListPage() {
       setIsPlaying(true);
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.src = item.fileUrl || '';
+        audioRef.current.src = item.audioUrl || '';
         audioRef.current.load();
         audioRef.current.play().catch(e => console.log(e));
       }
@@ -631,27 +683,49 @@ export default function SetListPage() {
 
       {/* 2. Main Content: Setlist / Cue Sheet Builder */}
       <main className="flex-1 flex flex-col min-w-0">
-        <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full">
+        <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full" ref={printRef}>
           
           {/* 헤더 */}
-          <header className="p-8 md:p-10 border-b border-black/5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6" ref={printRef}>
+          <header className="p-8 md:p-10 border-b border-black/5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
              <div>
                <div className="flex items-center gap-3 mb-2">
                  <span className="bg-[#2D2926] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">IBIG Smart Cue</span>
                  <span className="text-[#78716A] text-sm flex items-center gap-1"><Calendar size={14}/> 주일 예배 1부</span>
                  <span className="text-[#8C6B1C] bg-[#E6C79C]/30 text-xs font-bold px-2 py-0.5 rounded-full">예상 시간: {calculateTotalDuration()}</span>
                </div>
-               <h1 className="text-4xl md:text-5xl font-handwriting tracking-tight text-[#2D2926]">2026. 3. 22. 찬양팀 셋리스트</h1>
+               <input 
+                 value={setlistTitle}
+                 onChange={(e) => setSetlistTitle(e.target.value)}
+                 className="text-4xl md:text-5xl font-handwriting tracking-tight text-[#2D2926] bg-transparent border-none outline-none hover:bg-black/5 p-2 rounded-lg"
+                 placeholder="셋리스트 제목"
+               />
              </div>
              
-             {/* 공유 및 제어 버튼 */}
-             <div className="flex gap-2 shrink-0">
-                <button className="flex items-center gap-2 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 text-[#2D2926] px-5 py-3 rounded-full text-sm font-bold transition-all border border-black/5">
-                  <Smartphone size={18} /> 팀원 앱 초대
-                </button>
-                <button onClick={exportPDF} title="PDF 추출" className="p-3 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 text-[#2D2926] rounded-full transition-all border border-black/5">
-                  <Printer size={20} />
-                </button>
+             {/* 상태 및 제어 버튼 */}
+             <div className="flex flex-col gap-2 shrink-0 items-end">
+                <div className="flex gap-2 items-center">
+                  <select 
+                    className="bg-[#FAF9F6] text-[#2D2926] border border-black/10 px-3 py-2 rounded-xl text-sm font-bold outline-none"
+                    onChange={(e) => {
+                      if (e.target.value === 'new') createNewSetlist();
+                      else if (e.target.value !== '') loadSetlist(e.target.value);
+                    }}
+                    value={currentSetlistId || 'new'}
+                  >
+                    <option value="new">+ 새 셋리스트 작성</option>
+                    {savedSetlists.map(sl => (
+                      <option key={sl.id} value={sl.id}>{sl.title}</option>
+                    ))}
+                  </select>
+                  <button onClick={saveSetlist} className="bg-[#2D2926] text-[#E6C79C] px-4 py-2 rounded-xl text-sm font-bold hover:bg-[#78716A] transition-colors">
+                    저장하기
+                  </button>
+                </div>
+                <div className="flex gap-2">
+                  <button onClick={exportPDF} title="PDF 추출 (현재 화면 스크린샷 캡처)" className="flex items-center gap-2 p-2 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 text-[#2D2926] rounded-xl transition-all border border-black/5 font-bold text-sm">
+                    <Printer size={16} /> PDF 생성
+                  </button>
+                </div>
              </div>
           </header>
 
