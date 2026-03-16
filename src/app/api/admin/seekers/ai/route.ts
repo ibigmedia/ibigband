@@ -23,11 +23,20 @@ export async function POST(req: Request) {
 
 요구 응답 포맷 (반드시 JSON 형태만 반환할 것):
 {
+  "category": "분류 (존재와 우주, 역사와 문서, 과학과 신앙, 고통과 공의, 교회와 종교, 개인과 신앙 중 하나를 선택하여, 각각 existence, history, science, pain, church, personal 중 하나의 id 값을 반환하세요)",
   "question": "구도자의 시선에서 던지는 질문 (한글)",
   "questionEn": "위 질문의 자연스러운 영어 번역",
   "keywords": "검색용 띄어쓰기 구분 키워드 (예: ${topic.replace(/\s+/g, ' ')} god evidence bible)",
   "shortAnswer": "답변을 1-2문장으로 요약한 핵심 문구 (강조하고 싶은 부분에 <br/> 태그 사용 가능)",
-  "fullAnswer": "<p class=\\"mb-4\\">로 시작하는 HTML 태그를 포함한 3-4문단의 상세하고 깊이 있는 답변 본문. 중요 키워드는 <strong class=\\"text-[#2D2926] font-normal\\">키워드</strong>로 강조하세요."
+  "fullAnswer": "<p class=\\"mb-4\\">로 시작하는 HTML 태그를 포함한 3-4문단의 상세하고 깊이 있는 답변 본문. 중요 키워드는 <strong class=\\"text-[#2D2926] font-normal\\">키워드</strong>로 강조하세요.",
+  "media": [
+    {
+      "type": "video",
+      "title": "관련 추천 영상 제목",
+      "subtitle": "추천 영상 설명 (짧게)",
+      "link": "https://www.youtube.com/watch?v=xxx (유튜브 예시 링크 또는 관련 링크)"
+    }
+  ]
 }
 `;
 
