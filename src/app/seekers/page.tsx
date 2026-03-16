@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronRight, Play, BookOpen, Headphones, Video } from 'lucide-react';
 import { db } from '@/lib/firebase/config';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
 
 const CATEGORIES = [
   { id: 'all', label: '전체' },
@@ -21,6 +21,8 @@ export default function SeekersPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
   const [data, setData] = useState<any[]>([]);
+  const [settings, setSettings] = useState<any>(null);
+  const [playlist, setPlaylist] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,8 +30,24 @@ export default function SeekersPage() {
       try {
         const q = query(collection(db, 'seekers'), orderBy('order', 'asc'));
         const snapshot = await getDocs(q);
-        const items = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        const items = snapshot.docs.map(doc => {
+          const docData = doc.data();
+          return { id: doc.id, ...docData, category: docData.category || 'existence' };
+        });
         setData(items);
+
+        const settingsDoc = await getDoc(doc(db, 'pages', 'seekers'));
+        if (settingsDoc.exists()) {
+          const s = settingsDoc.data();
+          setSettings(s);
+
+          if (s.playlists && s.playlists.length > 0) {
+            const mSnap = await getDocs(collection(db, 'music'));
+            const matches = mSnap.docs.map(d => ({id: d.id, ...d.data()}));
+            const filtered = s.playlists.map((pid: string) => matches.find(m => m.id === pid)).filter(Boolean);
+            setPlaylist(filtered);
+          }
+        }
       } catch (err) {
         console.error('Failed to fetch seekers data:', err);
       } finally {
@@ -93,15 +111,9 @@ export default function SeekersPage() {
 
       {/* Hero */}
       <section className="pt-[7rem] md:pt-[9rem] px-5 md:px-10 pb-[3rem] md:pb-[5rem] max-w-[900px] mx-auto text-center">
-        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200">
-          Seekers / 구도자
-        </p>
-        <h1 className="font-serif text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#2D2926] mb-8 animate-fade-up delay-400">
-          Questions<br />worth <em className="italic text-[#C48C5E]">asking.</em>
-        </h1>
-        <p className="text-[1.05rem] text-[#78716A] max-w-[540px] mx-auto mb-12 animate-fade-up delay-600">
-          믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.
-        </p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200" dangerouslySetInnerHTML={{ __html: settings?.heroLabel || 'Seekers / 구도자' }} />
+        <h1 className="font-serif text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#2D2926] mb-8 animate-fade-up delay-400" dangerouslySetInnerHTML={{ __html: settings?.heroTitle || 'Questions<br />worth <em class="italic text-[#C48C5E]">asking.</em>' }} />
+        <p className="text-[1.05rem] text-[#78716A] max-w-[540px] mx-auto mb-12 animate-fade-up delay-600" dangerouslySetInnerHTML={{ __html: settings?.heroSubtitle || '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.' }} />
         <div className="w-[1px] h-[60px] bg-gradient-to-b from-[#C48C5E] to-transparent mx-auto animate-fade-up delay-800"></div>
       </section>
 
@@ -109,11 +121,8 @@ export default function SeekersPage() {
       <div className="max-w-[700px] mx-auto px-5 md:px-10 pt-6 pb-[3rem] md:pb-[4rem] text-center">
         <blockquote className="font-handwriting text-[clamp(1.6rem,4vw,2.5rem)] leading-[1.4] text-[#2D2926] relative p-0 m-0">
           <span className="absolute top-6 md:top-10 -left-2 md:-left-6 text-[6rem] md:text-[8rem] leading-none text-[#C48C5E] opacity-20 font-serif">"</span>
-          우리는 노래를 만드는 사람들입니다.<br />
-          음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에.
-          <cite className="block mt-6 text-[0.95rem] md:text-[1rem] tracking-[0.15em] text-[#C48C5E] not-italic uppercase">
-            — ibigband
-          </cite>
+          <span dangerouslySetInnerHTML={{ __html: settings?.quote || "우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에." }} />
+          <cite className="block mt-6 text-[0.95rem] md:text-[1rem] tracking-[0.15em] text-[#C48C5E] not-italic uppercase" dangerouslySetInnerHTML={{ __html: settings?.quoteAuthor || "— ibigband" }} />
         </blockquote>
       </div>
 
@@ -268,6 +277,37 @@ export default function SeekersPage() {
           </div>
         )}
       </section>
+
+      {/* Music Playlist */}
+      {!loading && playlist.length > 0 && (
+        <section className="bg-white py-[4rem] px-5 md:px-10">
+          <div className="max-w-[900px] mx-auto">
+            <h2 className="text-2xl font-bold mb-6 text-center text-[#2D2926]">함께 들으면 좋은 추천 음악</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {playlist.map((music: any) => (
+                <div key={music.id} className="bg-[#FAF9F6] border border-[#2D2926]/10 p-4 flex items-center gap-4 rounded-xl hover:bg-[#F2EFE9] transition-colors shadow-sm">
+                  {music.thumbnailUrl ? (
+                    <img src={music.thumbnailUrl} alt={music.title} className="w-16 h-16 object-cover rounded shadow-sm border border-[#2D2926]/5" />
+                  ) : (
+                    <div className="w-16 h-16 bg-white border border-[#2D2926]/10 rounded flex items-center justify-center text-[#C48C5E]">
+                      <Headphones size={24} />
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-[#2D2926] truncate">{music.title}</p>
+                    <p className="text-sm text-[#78716A] truncate">{music.artist}</p>
+                  </div>
+                  {music.fileUrl && (
+                    <a href={music.fileUrl} target="_blank" rel="noopener noreferrer" className="shrink-0 w-10 h-10 rounded-full bg-white border border-[rgba(45,41,38,0.1)] flex items-center justify-center text-[#C48C5E] shadow-sm hover:scale-105 transition-transform">
+                      <Play className="w-4 h-4 ml-1" />
+                    </a>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
       <div className="border-t border-[rgba(45,41,38,0.1)] py-[4rem] md:py-[6rem] px-5 md:px-10 text-center max-w-[700px] mx-auto">

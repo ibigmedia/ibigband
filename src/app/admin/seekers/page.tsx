@@ -2,8 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { db } from '@/lib/firebase/config';
-import { collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
-import { Edit2, Trash2, Plus, Sparkles, X, LayoutDashboard, Search, GripVertical } from 'lucide-react';
+import { collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, getDocs, setDoc } from 'firebase/firestore';
+import { Edit2, Trash2, Plus, Sparkles, X, LayoutDashboard, Search, GripVertical, Check } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import 'react-quill-new/dist/quill.snow.css';
+
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 
 export interface SeekerMedia {
   type: 'video' | 'audio' | 'book' | 'podcast';
@@ -46,18 +50,64 @@ export default function AdminSeekersPage() {
   const [aiLoading, setAiLoading] = useState(false);
   const [aiTopic, setAiTopic] = useState('');
 
+  const [activeTab, setActiveTab] = useState<'list' | 'settings'>('list');
+  const [settings, setSettings] = useState<any>({
+    heroLabel: 'Seekers / 구도자',
+    heroTitle: 'Questions<br />worth <em className="italic text-[#C48C5E]">asking.</em>',
+    heroSubtitle: '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.',
+    quote: '"우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에."',
+    quoteAuthor: '— ibigband',
+    playlists: []
+  });
+  const [settingsLoading, setSettingsLoading] = useState(true);
+  const [musicList, setMusicList] = useState<any[]>([]);
+
   useEffect(() => {
     const q = query(collection(db, 'seekers'), orderBy('order', 'asc'));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const result: SeekerItem[] = [];
       snapshot.forEach(doc => {
-        result.push({ id: doc.id, ...doc.data() } as SeekerItem);
+        const docData = doc.data();
+        result.push({ id: doc.id, ...docData, category: docData.category || 'existence' } as SeekerItem);
       });
       setItems(result);
       setLoading(false);
+    }, (error) => {
+      console.error("Firestore Error:", error);
+      alert("데이터를 불러오는 중 오류가 발생했습니다: " + error.message);
+      setLoading(false);
     });
-    return () => unsubscribe();
+
+    const qSettings = doc(db, 'pages', 'seekers');
+    const unsubSettings = onSnapshot(qSettings, (docSnap) => {
+      if (docSnap.exists()) {
+         setSettings((prev: any) => ({ ...prev, ...docSnap.data() }));
+      }
+      setSettingsLoading(false);
+    });
+
+    getDocs(collection(db, 'music')).then(snap => {
+       setMusicList(snap.docs.map(d => ({id: d.id, ...d.data()})));
+    }).catch(console.error);
+
+    return () => {
+       unsubscribe();
+       unsubSettings();
+    };
   }, []);
+
+  const handleSaveSettings = async () => {
+    setIsSaving(true);
+    try {
+      await setDoc(doc(db, 'pages', 'seekers'), settings, { merge: true });
+      alert('설정이 저장되었습니다.');
+    } catch (e) {
+      console.error('Error saving settings:', e);
+      alert('저장 중 오류가 발생했습니다.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleCreateNew = () => {
     setEditingItem({
@@ -142,11 +192,13 @@ export default function AdminSeekersPage() {
         if (!prev) return prev;
         return {
           ...prev,
+          category: data.category || prev.category,
           question: data.question,
           questionEn: data.questionEn,
           keywords: data.keywords,
           shortAnswer: data.shortAnswer,
-          fullAnswer: data.fullAnswer
+          fullAnswer: data.fullAnswer,
+          media: data.media || []
         };
       });
     } catch (error) {
@@ -186,17 +238,35 @@ export default function AdminSeekersPage() {
               <h1 className="text-2xl font-bold">Seekers (구도자) 관리</h1>
               <p className="text-sm text-[#78716A] mt-1">FAQ 항목, 답변, 추천 미디어(음악, 영상 등)를 편집하세요.</p>
             </div>
-            <button
-              onClick={handleCreateNew}
-              className="flex items-center gap-2 bg-[#2D2926] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#2D2926]/80 transition-colors"
+            {activeTab === 'list' && (
+              <button
+                onClick={handleCreateNew}
+                className="flex items-center gap-2 bg-[#2D2926] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#2D2926]/80 transition-colors"
+              >
+                <Plus size={18} />
+                새 질문 추가
+              </button>
+            )}
+          </div>
+
+          <div className="flex gap-4 border-b border-[rgba(45,41,38,0.1)] mb-6 px-4">
+            <button 
+              onClick={() => setActiveTab('list')} 
+              className={`pb-3 px-2 transition-colors ${activeTab === 'list' ? 'border-b-2 border-[#C48C5E] font-bold text-[#2D2926]' : 'text-[#78716A] hover:text-[#2D2926]'}`}
             >
-              <Plus size={18} />
-              새 질문 추가
+              질문 목록
+            </button>
+            <button 
+              onClick={() => setActiveTab('settings')} 
+              className={`pb-3 px-2 transition-colors ${activeTab === 'settings' ? 'border-b-2 border-[#C48C5E] font-bold text-[#2D2926]' : 'text-[#78716A] hover:text-[#2D2926]'}`}
+            >
+              페이지 설정 (히어로 & 추가 콘텐츠)
             </button>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm border border-[#2D2926]/10 overflow-hidden">
-            {loading ? (
+          {activeTab === 'list' ? (
+            <div className="bg-white rounded-2xl shadow-sm border border-[#2D2926]/10 overflow-hidden">
+              {loading ? (
               <div className="p-8 text-center text-[#78716A]">로딩 중...</div>
             ) : items.length === 0 ? (
               <div className="p-8 text-center text-[#78716A]">등록된 질문이 없습니다.</div>
@@ -233,7 +303,128 @@ export default function AdminSeekersPage() {
               </div>
             )}
           </div>
-        </div>
+        ) : (
+          <div className="bg-white rounded-2xl shadow-sm border border-[#2D2926]/10 p-6 space-y-8">
+            {settingsLoading ? (
+               <div className="text-center text-[#78716A] p-8">로딩 중...</div>
+            ) : (
+              <>
+                <div>
+                  <h2 className="text-xl font-bold mb-4">히어로 섹션 설정</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">작은 제목 (Label)</label>
+                      <input
+                        type="text"
+                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        value={settings.heroLabel || ''}
+                        onChange={e => setSettings({ ...settings, heroLabel: e.target.value })}
+                        placeholder="Seekers / 구도자"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">메인 타이틀 (Title) * HTML 태그(br, em 등) 사용 가능</label>
+                      <input
+                        type="text"
+                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        value={settings.heroTitle || ''}
+                        onChange={e => setSettings({ ...settings, heroTitle: e.target.value })}
+                        placeholder="Questions<br />worth <em className='italic text-[#C48C5E]'>asking.</em>"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">서브 타이틀 (Subtitle)</label>
+                      <input
+                        type="text"
+                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        value={settings.heroSubtitle || ''}
+                        onChange={e => setSettings({ ...settings, heroSubtitle: e.target.value })}
+                        placeholder="믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요."
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h2 className="text-xl font-bold mb-4">인용구 (Quotes) 설정</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">인용구 내용 * HTML 태그(br 등) 사용 가능</label>
+                      <textarea
+                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm h-24"
+                        value={settings.quote || ''}
+                        onChange={e => setSettings({ ...settings, quote: e.target.value })}
+                        placeholder={"\"우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에.\""}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">글쓴이</label>
+                      <input
+                        type="text"
+                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        value={settings.quoteAuthor || ''}
+                        onChange={e => setSettings({ ...settings, quoteAuthor: e.target.value })}
+                        placeholder="— ibigband"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold">배경 음악 플레이리스트 연동</h2>
+                    <p className="text-sm text-[#78716A]">음악 관리 메뉴에 등록된 음원 중 표시할 항목을 선택하세요.</p>
+                  </div>
+                  
+                  {musicList.length === 0 ? (
+                    <div className="text-sm text-[#78716A] p-4 bg-[#FAF9F6] rounded-xl border border-[rgba(45,41,38,0.1)]">
+                      등록된 음악이 없습니다. &apos;음악 관리&apos; 메뉴에서 먼저 음원을 등록해주세요.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {musicList.map(music => (
+                        <div 
+                          key={music.id} 
+                          onClick={() => {
+                            const isSelected = (settings.playlists || []).includes(music.id);
+                            setSettings({
+                              ...settings,
+                              playlists: isSelected 
+                                ? (settings.playlists || []).filter((id: string) => id !== music.id)
+                                : [...(settings.playlists || []), music.id]
+                            });
+                          }}
+                          className={`p-4 rounded-xl cursor-pointer border transition-colors ${(settings.playlists || []).includes(music.id) ? 'bg-[#F2EFE9] border-[#C48C5E]' : 'bg-[#FAF9F6] border-[rgba(45,41,38,0.1)] hover:border-[#C48C5E]/50'}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border ${(settings.playlists || []).includes(music.id) ? 'bg-[#C48C5E] border-[#C48C5E] text-white' : 'bg-white border-[#2D2926]/20'}`}>
+                              {(settings.playlists || []).includes(music.id) && <Check size={14} />}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="font-bold text-sm truncate">{music.title}</p>
+                              {music.artist && <p className="text-xs text-[#78716A] truncate">{music.artist}</p>}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="pt-6 border-t border-[rgba(45,41,38,0.1)] flex justify-end">
+                  <button
+                    onClick={handleSaveSettings}
+                    disabled={isSaving}
+                    className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#2D2926] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
+                  >
+                    {isSaving ? '저장 중...' : '설정 저장'}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
 
         {/* Edit Modal */}
         {isModalOpen && editingItem && (
@@ -336,14 +527,24 @@ export default function AdminSeekersPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-[#2D2926] mb-1.5">상세 답변 (HTML 지원)</label>
-                  <textarea
-                    rows={5}
-                    className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] shadow-sm text-sm font-mono leading-relaxed"
-                    value={editingItem.fullAnswer}
-                    onChange={(e) => setEditingItem({ ...editingItem, fullAnswer: e.target.value })}
-                    placeholder="<p class=\&quot;mb-4\&quot;>여기에 내용 작성...</p>"
-                  />
+                  <label className="block text-sm font-bold text-[#2D2926] mb-1.5">상세 답변 (워드프레스형 에디터)</label>
+                  <div className="bg-white rounded-xl overflow-hidden border border-[rgba(45,41,38,0.1)] focus-within:border-[#C48C5E] shadow-sm">
+                    <ReactQuill 
+                      theme="snow"
+                      value={editingItem.fullAnswer}
+                      onChange={(content) => setEditingItem({ ...editingItem, fullAnswer: content })}
+                      className="h-[250px] mb-10"
+                      modules={{
+                        toolbar: [
+                          [{ 'header': [1, 2, 3, false] }],
+                          ['bold', 'italic', 'underline', 'strike'],
+                          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                          ['link', 'video', 'image'],
+                          ['clean']
+                        ]
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <div className="border-t border-[rgba(45,41,38,0.1)] pt-6">
