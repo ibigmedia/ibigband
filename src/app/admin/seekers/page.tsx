@@ -84,6 +84,9 @@ export default function AdminSeekersPage() {
          setSettings((prev: any) => ({ ...prev, ...docSnap.data() }));
       }
       setSettingsLoading(false);
+    }, (error) => {
+      console.error("Firestore Settings Error:", error);
+      setSettingsLoading(false);
     });
 
     getDocs(collection(db, 'music')).then(snap => {
