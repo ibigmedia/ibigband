@@ -110,7 +110,14 @@ export default function SeekersPage() {
       `}} />
 
       {/* Hero */}
-      <section className="pt-[7rem] md:pt-[9rem] px-5 md:px-10 pb-[3rem] md:pb-[5rem] max-w-[900px] mx-auto text-center">
+      <section 
+        className="px-5 md:px-10 max-w-[900px] mx-auto pt-[7rem] md:pt-0 pb-[3rem] md:pb-0"
+        style={{
+          paddingTop: settings?.heroPaddingTop || undefined,
+          paddingBottom: settings?.heroPaddingBottom || undefined,
+          textAlign: (settings?.heroTextAlign as any) || 'center'
+        }}
+      >
         <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200" dangerouslySetInnerHTML={{ __html: settings?.heroLabel || 'Seekers / 구도자' }} />
         <h1 className="font-serif text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#2D2926] mb-8 animate-fade-up delay-400" dangerouslySetInnerHTML={{ __html: settings?.heroTitle || 'Questions<br />worth <em class="italic text-[#C48C5E]">asking.</em>' }} />
         <p className="text-[1.05rem] text-[#78716A] max-w-[540px] mx-auto mb-12 animate-fade-up delay-600" dangerouslySetInnerHTML={{ __html: settings?.heroSubtitle || '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.' }} />
@@ -118,7 +125,14 @@ export default function SeekersPage() {
       </section>
 
       {/* Opening Quote */}
-      <div className="max-w-[700px] mx-auto px-5 md:px-10 pt-6 pb-[3rem] md:pb-[4rem] text-center">
+      <div 
+        className="max-w-[700px] mx-auto px-5 md:px-10 pt-6 pb-[3rem] md:pb-0"
+        style={{
+          paddingTop: settings?.quotePaddingTop || undefined,
+          paddingBottom: settings?.quotePaddingBottom || undefined,
+          textAlign: (settings?.quoteTextAlign as any) || 'center'
+        }}
+      >
         <blockquote className="font-handwriting text-[clamp(1.6rem,4vw,2.5rem)] leading-[1.4] text-[#2D2926] relative p-0 m-0">
           <span className="absolute top-6 md:top-10 -left-2 md:-left-6 text-[6rem] md:text-[8rem] leading-none text-[#C48C5E] opacity-20 font-serif">"</span>
           <span dangerouslySetInnerHTML={{ __html: settings?.quote || "우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에." }} />

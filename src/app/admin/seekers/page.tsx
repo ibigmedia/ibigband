@@ -55,8 +55,14 @@ export default function AdminSeekersPage() {
     heroLabel: 'Seekers / 구도자',
     heroTitle: 'Questions<br />worth <em className="italic text-[#C48C5E]">asking.</em>',
     heroSubtitle: '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.',
+    heroPaddingTop: '9rem',
+    heroPaddingBottom: '5rem',
+    heroTextAlign: 'center',
     quote: '"우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에."',
     quoteAuthor: '— ibigband',
+    quotePaddingTop: '1.5rem',
+    quotePaddingBottom: '4rem',
+    quoteTextAlign: 'center',
     playlists: []
   });
   const [settingsLoading, setSettingsLoading] = useState(true);
