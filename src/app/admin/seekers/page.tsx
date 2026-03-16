@@ -351,6 +351,41 @@ export default function AdminSeekersPage() {
                         placeholder="믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요."
                       />
                     </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[rgba(45,41,38,0.1)]">
+                      <div>
+                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">상단 여백 (Padding Top)</label>
+                        <input
+                          type="text"
+                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          value={settings.heroPaddingTop || ''}
+                          onChange={e => setSettings({ ...settings, heroPaddingTop: e.target.value })}
+                          placeholder="예: 9rem, 144px"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">하단 여백 (Padding Bottom)</label>
+                        <input
+                          type="text"
+                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          value={settings.heroPaddingBottom || ''}
+                          onChange={e => setSettings({ ...settings, heroPaddingBottom: e.target.value })}
+                          placeholder="예: 5rem, 80px"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">글 정렬 (Text Align)</label>
+                        <select
+                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          value={settings.heroTextAlign || 'center'}
+                          onChange={e => setSettings({ ...settings, heroTextAlign: e.target.value })}
+                        >
+                          <option value="left">왼쪽 정렬</option>
+                          <option value="center">가운데 정렬</option>
+                          <option value="right">오른쪽 정렬</option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -375,6 +410,41 @@ export default function AdminSeekersPage() {
                         onChange={e => setSettings({ ...settings, quoteAuthor: e.target.value })}
                         placeholder="— ibigband"
                       />
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[rgba(45,41,38,0.1)]">
+                      <div>
+                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">상단 여백 (Padding Top)</label>
+                        <input
+                          type="text"
+                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          value={settings.quotePaddingTop || ''}
+                          onChange={e => setSettings({ ...settings, quotePaddingTop: e.target.value })}
+                          placeholder="예: 1.5rem, 24px"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">하단 여백 (Padding Bottom)</label>
+                        <input
+                          type="text"
+                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          value={settings.quotePaddingBottom || ''}
+                          onChange={e => setSettings({ ...settings, quotePaddingBottom: e.target.value })}
+                          placeholder="예: 4rem, 64px"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">글 정렬 (Text Align)</label>
+                        <select
+                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          value={settings.quoteTextAlign || 'center'}
+                          onChange={e => setSettings({ ...settings, quoteTextAlign: e.target.value })}
+                        >
+                          <option value="left">왼쪽 정렬</option>
+                          <option value="center">가운데 정렬</option>
+                          <option value="right">오른쪽 정렬</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
                 </div>
