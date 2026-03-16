@@ -15,6 +15,7 @@ const navItems = [
   { href: '/admin/music', label: '음반 관리', icon: Music },
   { href: '/admin/video', label: '영상 관리', icon: Video },
   { href: '/admin/blog', label: 'Blog 컨텐츠', icon: FileText },
+  { href: '/admin/seekers', label: 'Seekers 관리', icon: FileText },
   { href: '/admin/analytics', label: 'Analytics', icon: FileText },
 ];
 
