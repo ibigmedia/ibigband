@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import { verifyAdmin, isErrorResponse } from '@/lib/api-auth';
 
 export async function POST(req: Request) {
   try {
+    const authResult = await verifyAdmin(req);
+    if (isErrorResponse(authResult)) return authResult;
+
     const { topic, keywords } = await req.json();
 
     if (!topic) {
@@ -14,8 +18,7 @@ export async function POST(req: Request) {
     }
 
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-    
-    // Blog content generation prompt
+
     const prompt = `당신은 기독교 음악(CCM)과 예배 인도자를 위한 전문적인 영적 블로그 에디터입니다.
 주제: ${topic}
 키워드: ${keywords}
@@ -39,8 +42,8 @@ export async function POST(req: Request) {
 }
 `;
 
-    const response = await ai.models.generateContent({ 
-      model: 'gemini-2.5-flash', 
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
       contents: prompt,
       config: {
         responseMimeType: "application/json",
@@ -50,8 +53,9 @@ export async function POST(req: Request) {
     const parsedData = JSON.parse(response.text || '{}');
 
     return NextResponse.json({ success: true, data: parsedData });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Server Error';
     console.error("Gemini Blog Gen Error:", error);
-    return NextResponse.json({ error: error.message || 'Server Error' }, { status: 500 });
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

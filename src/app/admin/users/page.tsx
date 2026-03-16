@@ -6,8 +6,10 @@ import { Button } from '@/components/ui/Button';
 import { Mail, Search, Trash2, Edit, ShieldAlert, CheckCircle, Shield } from 'lucide-react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
+import { useAuth } from '@/lib/firebase/auth';
 
 export default function UsersManagementPage() {
+  const { user } = useAuth();
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -177,10 +179,12 @@ export default function UsersManagementPage() {
                  <button 
                    onClick={async () => {
                      try {
+                        const idToken = await user?.getIdToken();
                         const response = await fetch('/api/admin/send-email', {
                           method: 'POST',
                           headers: {
                             'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${idToken}`,
                           },
                           body: JSON.stringify({
                             to: inviteEmail,

@@ -13,17 +13,22 @@ export default function AdminDashboard() {
     if (!user) return alert("로그인 먼저 해주세요.");
     setLoadingPromote(true);
     try {
+      const idToken = await user.getIdToken();
       const res = await fetch('/api/make-me-admin', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
         body: JSON.stringify({ uid: user.uid }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       alert("관리자로 승급되었습니다! 홈페이지를 새로고침(F5) 해주세요.");
       window.location.reload();
-    } catch (e: any) {
-      alert("승급 실패: " + e.message);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : 'Unknown error';
+      alert("승급 실패: " + message);
     } finally {
       setLoadingPromote(false);
     }

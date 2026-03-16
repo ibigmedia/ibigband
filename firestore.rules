@@ -22,9 +22,12 @@ service cloud.firestore {
     }
 
     match /sheets/{sheetId} {
-      // Sheet metadata is public; only Admins can create/edit
       allow read: if true;
       allow write: if isAdmin();
+    }
+    
+    match /schedules/{scheduleId} {
+      allow read, write: if isAuthenticated();
     }
     
     match /artists/{artistId} {
@@ -54,6 +57,11 @@ service cloud.firestore {
     }
 
     match /seekers/{seekerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /pages/{pageId} {
       allow read: if true;
       allow write: if isAdmin();
     }

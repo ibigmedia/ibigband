@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronRight, Play, BookOpen, Headphones, Video } from 'lucide-react';
+import DOMPurify from 'isomorphic-dompurify';
 import { db } from '@/lib/firebase/config';
 import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
 
@@ -24,6 +25,14 @@ export default function SeekersPage() {
   const [settings, setSettings] = useState<any>(null);
   const [playlist, setPlaylist] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  /** HTML sanitizer — br, em, strong, a 등 기본 서식만 허용 */
+  const clean = (dirty: string) => {
+    return DOMPurify.sanitize(dirty, {
+      ALLOWED_TAGS: ['br', 'em', 'strong', 'b', 'i', 'a', 'p', 'span', 'ul', 'ol', 'li', 'h2', 'h3', 'h4', 'blockquote'],
+      ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
+    });
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -118,9 +127,9 @@ export default function SeekersPage() {
           textAlign: (settings?.heroTextAlign as any) || 'center'
         }}
       >
-        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200" dangerouslySetInnerHTML={{ __html: settings?.heroLabel || 'Seekers / 구도자' }} />
-        <h1 className="font-serif text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#2D2926] mb-8 animate-fade-up delay-400" dangerouslySetInnerHTML={{ __html: settings?.heroTitle || 'Questions<br />worth <em class="italic text-[#C48C5E]">asking.</em>' }} />
-        <p className="text-[1.05rem] text-[#78716A] max-w-[540px] mx-auto mb-12 animate-fade-up delay-600" dangerouslySetInnerHTML={{ __html: settings?.heroSubtitle || '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.' }} />
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200" dangerouslySetInnerHTML={{ __html: clean(settings?.heroLabel || 'Seekers / 구도자') }} />
+        <h1 className="font-serif text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#2D2926] mb-8 animate-fade-up delay-400" dangerouslySetInnerHTML={{ __html: clean(settings?.heroTitle || 'Questions<br />worth <em class="italic text-[#C48C5E]">asking.</em>') }} />
+        <p className="text-[1.05rem] text-[#78716A] max-w-[540px] mx-auto mb-12 animate-fade-up delay-600" dangerouslySetInnerHTML={{ __html: clean(settings?.heroSubtitle || '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.') }} />
         <div className="w-[1px] h-[60px] bg-gradient-to-b from-[#C48C5E] to-transparent mx-auto animate-fade-up delay-800"></div>
       </section>
 
@@ -135,8 +144,8 @@ export default function SeekersPage() {
       >
         <blockquote className="font-handwriting text-[clamp(1.6rem,4vw,2.5rem)] leading-[1.4] text-[#2D2926] relative p-0 m-0">
           <span className="absolute top-6 md:top-10 -left-2 md:-left-6 text-[6rem] md:text-[8rem] leading-none text-[#C48C5E] opacity-20 font-serif">"</span>
-          <span dangerouslySetInnerHTML={{ __html: settings?.quote || "우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에." }} />
-          <cite className="block mt-6 text-[0.95rem] md:text-[1rem] tracking-[0.15em] text-[#C48C5E] not-italic uppercase" dangerouslySetInnerHTML={{ __html: settings?.quoteAuthor || "— ibigband" }} />
+          <span dangerouslySetInnerHTML={{ __html: clean(settings?.quote || "우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에.") }} />
+          <cite className="block mt-6 text-[0.95rem] md:text-[1rem] tracking-[0.15em] text-[#C48C5E] not-italic uppercase" dangerouslySetInnerHTML={{ __html: clean(settings?.quoteAuthor || "— ibigband") }} />
         </blockquote>
       </div>
 
@@ -217,11 +226,11 @@ export default function SeekersPage() {
                         <div>
                           <div 
                             className="font-handwriting text-[1.4rem] md:text-[1.6rem] text-[#2D2926] leading-[1.6] py-5 px-6 border-l-2 border-[#C48C5E] bg-[rgba(196,140,94,0.05)] rounded-r-sm mb-6"
-                            dangerouslySetInnerHTML={{ __html: item.shortAnswer || '' }}
+                            dangerouslySetInnerHTML={{ __html: clean(item.shortAnswer || '') }}
                           />
-                          <div 
+                          <div
                             className="text-[1.05rem] md:text-[1.1rem] font-medium leading-[1.85] text-[#4a4845] prose-p:mb-4 prose-strong:text-[#2D2926] prose-strong:font-normal"
-                            dangerouslySetInnerHTML={{ __html: item.fullAnswer || '' }}
+                            dangerouslySetInnerHTML={{ __html: clean(item.fullAnswer || '') }}
                           />
                         </div>
                         <div className="flex flex-col gap-4">
