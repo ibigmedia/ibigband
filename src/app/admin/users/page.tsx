@@ -11,6 +11,8 @@ export default function UsersManagementPage() {
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState('');
   /* eslint-enable @typescript-eslint/no-explicit-any */
 
   useEffect(() => {
@@ -37,9 +39,17 @@ export default function UsersManagementPage() {
           <h1 className="text-3xl font-bold font-handwriting text-[#E6C79C]">회원 관리 및 서포트 (CRM)</h1>
           <p className="text-gray-400 mt-2">웹사이트 가입 회원 현황 파악 및 이메일 마케팅 서포트 관리</p>
         </div>
-        <Button className="flex items-center gap-2">
-          <Mail size={16} /> 전체 회원 뉴스레터 발송
-        </Button>
+        <div className="flex gap-4">
+          <Button 
+            onClick={() => setShowInviteModal(true)}
+            className="flex items-center gap-2 bg-[#E6C79C] text-[#1A1817] hover:bg-[#D4B384]"
+          >
+            + 새 멤버 초대
+          </Button>
+          <Button className="flex items-center gap-2 border border-white/20 bg-transparent hover:bg-white/10 text-white">
+            <Mail size={16} /> 뉴스레터 발송
+          </Button>
+        </div>
       </div>
 
       <Card className="bg-[#2D2926]/50 border border-[#78716A]/20 p-6 flex flex-col md:flex-row gap-4 items-center justify-between">
@@ -124,6 +134,82 @@ export default function UsersManagementPage() {
           </table>
         </div>
       </Card>
+
+      {/* Invite Member Modal Mockup */}
+      {showInviteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+          <div className="bg-[#2D2926] p-8 rounded-2xl w-full max-w-md border border-white/10 relative">
+            <button 
+              onClick={() => setShowInviteModal(false)}
+              className="absolute top-4 right-4 text-white/50 hover:text-white"
+            >
+              ✕
+            </button>
+            <h2 className="text-2xl font-bold text-[#E6C79C] mb-2">새 멤버 초대</h2>
+            <p className="text-white/60 mb-6">팀원의 이메일 주소를 입력하여, 셑리스트 및 라이브러리 접근 권한을 부여하세요.</p>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-white/60 font-medium block mb-2">이메일 주소</label>
+                <input 
+                  type="email" 
+                  placeholder="member@ibigband.com"
+                  className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E6C79C]"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-sm text-white/60 font-medium block mb-2">초대할 권한/역할</label>
+                <select className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E6C79C]">
+                  <option value="user">일반 멤버 (셑리스트 조회 및 연습 기능)</option>
+                  <option value="admin">관리자 (셑리스트 등록/수정, 예산 관리)</option>
+                </select>
+              </div>
+
+              <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-6">
+                 <button 
+                   onClick={() => setShowInviteModal(false)}
+                   className="px-4 py-2 rounded-lg text-white/60 hover:text-white font-medium"
+                 >
+                   취소
+                 </button>
+                 <button 
+                   onClick={async () => {
+                     try {
+                        const response = await fetch('/api/admin/send-email', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify({
+                            to: inviteEmail,
+                            subject: 'IBIG Band 멤버로 초대합니다.',
+                            html: `<p>안녕하세요,</p><p>IBIG Band 멤버로 초대합니다.</p><p>다음 링크를 클릭하여 가입해주세요: <a href="https://ibighome.com/setlist">ibighome.com/setlist</a></p>`,
+                          }),
+                        });
+                        
+                        if (response.ok) {
+                          alert(`${inviteEmail} 님에게 초대 메일을 발송했습니다.`);
+                          setShowInviteModal(false);
+                          setInviteEmail('');
+                        } else {
+                          alert('초대 메일 발송에 실패했습니다.');
+                        }
+                     } catch (error) {
+                        console.error('Email sending error:', error);
+                        alert('오류가 발생했습니다.');
+                     }
+                   }}
+                   className="bg-[#E6C79C] text-[#1A1817] px-6 py-2 rounded-lg font-bold hover:bg-[#D4B384] transition-colors"
+                 >
+                   초대 발송
+                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

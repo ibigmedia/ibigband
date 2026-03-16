@@ -27,7 +27,7 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
         <div className="bg-[#F2EFE9] border border-[rgba(45,41,38,0.1)] rounded-lg overflow-hidden cursor-pointer transition-colors duration-200 hover:border-[#C48C5E] group mb-4">
           <div className="relative aspect-video bg-[white] flex items-center justify-center overflow-hidden" style={{ background: 'linear-gradient(135deg, #1a1810 0%, #FAF9F6 100%)' }}>
             <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 z-10">
@@ -39,8 +39,8 @@ const QA_DATA = [
             </div>
           </div>
           <div className="p-4 flex justify-between items-center">
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#2D2926]">One Question ep.01</span>
-            <span className="text-[0.9rem] md:text-[0.95rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">3:24</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#2D2926]">One Question ep.01</span>
+            <span className="text-[1rem] md:text-[1.05rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">3:24</span>
           </div>
         </div>
         <div className="bg-[#F2EFE9] border border-[rgba(45,41,38,0.1)] rounded-lg p-4 flex items-center gap-3 cursor-pointer transition-colors duration-200 hover:border-[#C48C5E]">
@@ -48,26 +48,26 @@ const QA_DATA = [
             <Headphones className="w-4 h-4 text-[#C48C5E]" />
           </div>
           <div className="flex-1">
-            <div className="text-[0.9rem] md:text-[0.95rem] text-[#2D2926]">Before the Beginning</div>
-            <div className="text-[0.9rem] md:text-[0.95rem] md:text-[0.85rem] text-[#A19D98]">ibigband — 관련 수록곡</div>
+            <div className="text-[1rem] md:text-[1.05rem] text-[#2D2926]">Before the Beginning</div>
+            <div className="text-[1rem] md:text-[1.05rem] md:text-[0.85rem] text-[#A19D98]">ibigband — 관련 수록곡</div>
           </div>
           <Play className="w-4 h-4 text-[#C48C5E]" />
         </div>
         <div className="mt-4 border-t border-[rgba(45,41,38,0.1)] pt-4">
-          <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
+          <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
           <a href="#" className="flex items-center gap-3 py-2 border-b border-[rgba(45,41,38,0.1)] hover:text-[#C48C5E] transition-colors group">
             <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
               <BookOpen className="w-3 h-3" />
             </div>
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">Mere Christianity — C.S. 루이스</span>
-            <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">Mere Christianity — C.S. 루이스</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
           </a>
           <a href="#" className="flex items-center gap-3 py-2 hover:text-[#C48C5E] transition-colors group">
             <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
               <Video className="w-3 h-3" />
             </div>
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">Does God Exist? — BibleProject</span>
-            <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Video</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">Does God Exist? — BibleProject</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Video</span>
           </a>
         </div>
       </>
@@ -93,7 +93,7 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
         <div className="bg-[#F2EFE9] border border-[rgba(45,41,38,0.1)] rounded-lg overflow-hidden cursor-pointer transition-colors duration-200 hover:border-[#C48C5E] group mb-4">
           <div className="relative aspect-video bg-[#F2EFE9] flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 z-10">
@@ -105,18 +105,18 @@ const QA_DATA = [
             </div>
           </div>
           <div className="p-4 flex justify-between items-center">
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#2D2926]">One Question ep.02</span>
-            <span className="text-[0.9rem] md:text-[0.95rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">2:58</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#2D2926]">One Question ep.02</span>
+            <span className="text-[1rem] md:text-[1.05rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">2:58</span>
           </div>
         </div>
         <div className="mt-4 border-t border-[rgba(45,41,38,0.1)] pt-4">
-          <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
+          <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
           <a href="#" className="flex items-center gap-3 py-2 hover:text-[#C48C5E] transition-colors group">
             <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
               <BookOpen className="w-3 h-3" />
             </div>
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">The Case for Christ — 리 스트로벨</span>
-            <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">The Case for Christ — 리 스트로벨</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
           </a>
         </div>
       </>
@@ -142,32 +142,32 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
         <div className="bg-[#F2EFE9] border border-[rgba(45,41,38,0.1)] rounded-lg p-4 flex items-center gap-3 cursor-pointer transition-colors duration-200 hover:border-[#C48C5E] mb-4">
           <div className="w-10 h-10 rounded bg-[white] border border-[rgba(45,41,38,0.1)] flex items-center justify-center shrink-0">
              <Headphones className="w-4 h-4 text-[#C48C5E]" />
           </div>
           <div className="flex-1">
-            <div className="text-[0.9rem] md:text-[0.95rem] text-[#2D2926]">Ancient Words</div>
-            <div className="text-[0.9rem] md:text-[0.95rem] md:text-[0.85rem] text-[#A19D98]">ibigband — 관련 수록곡</div>
+            <div className="text-[1rem] md:text-[1.05rem] text-[#2D2926]">Ancient Words</div>
+            <div className="text-[1rem] md:text-[1.05rem] md:text-[0.85rem] text-[#A19D98]">ibigband — 관련 수록곡</div>
           </div>
           <Play className="w-4 h-4 text-[#C48C5E]" />
         </div>
         <div className="mt-4 border-t border-[rgba(45,41,38,0.1)] pt-4">
-          <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
+          <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
           <a href="#" className="flex items-center gap-3 py-2 border-b border-[rgba(45,41,38,0.1)] hover:text-[#C48C5E] transition-colors group">
             <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
               <Video className="w-3 h-3" />
             </div>
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">The Story of the Bible — BibleProject</span>
-            <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Video</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">The Story of the Bible — BibleProject</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Video</span>
           </a>
           <a href="#" className="flex items-center gap-3 py-2 hover:text-[#C48C5E] transition-colors group">
             <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
               <Headphones className="w-3 h-3" />
             </div>
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">Alpha Podcast — 성경의 신뢰성</span>
-            <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Podcast</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">Alpha Podcast — 성경의 신뢰성</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Podcast</span>
           </a>
         </div>
       </>
@@ -194,7 +194,7 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
         <div className="bg-[#F2EFE9] border border-[rgba(45,41,38,0.1)] rounded-lg overflow-hidden cursor-pointer transition-colors duration-200 hover:border-[#C48C5E] group">
           <div className="relative aspect-video bg-[#F2EFE9] flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 z-10">
@@ -206,8 +206,8 @@ const QA_DATA = [
             </div>
           </div>
           <div className="p-4 flex justify-between items-center">
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#2D2926]">One Question ep.04</span>
-            <span className="text-[0.9rem] md:text-[0.95rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">4:12</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#2D2926]">One Question ep.04</span>
+            <span className="text-[1rem] md:text-[1.05rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">4:12</span>
           </div>
         </div>
       </>
@@ -234,7 +234,7 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
         <div className="bg-[#F2EFE9] border border-[rgba(45,41,38,0.1)] rounded-lg overflow-hidden cursor-pointer transition-colors duration-200 hover:border-[#C48C5E] group mb-4">
           <div className="relative aspect-video bg-[#F2EFE9] flex items-center justify-center overflow-hidden">
             <div className="absolute inset-0 flex items-center justify-center flex-col gap-2 z-10">
@@ -246,8 +246,8 @@ const QA_DATA = [
             </div>
           </div>
           <div className="p-4 flex justify-between items-center">
-            <span className="text-[0.9rem] md:text-[0.95rem] text-[#2D2926]">One Question ep.05</span>
-            <span className="text-[0.9rem] md:text-[0.95rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">3:47</span>
+            <span className="text-[1rem] md:text-[1.05rem] text-[#2D2926]">One Question ep.05</span>
+            <span className="text-[1rem] md:text-[1.05rem] md:text-[0.85rem] text-[#A19D98] tracking-[0.05em]">3:47</span>
           </div>
         </div>
         <div className="bg-[#F2EFE9] border border-[rgba(45,41,38,0.1)] rounded-lg p-4 flex items-center gap-3 cursor-pointer transition-colors duration-200 hover:border-[#C48C5E]">
@@ -255,8 +255,8 @@ const QA_DATA = [
              <Headphones className="w-4 h-4 text-[#C48C5E]" />
           </div>
           <div className="flex-1">
-            <div className="text-[0.9rem] md:text-[0.95rem] text-[#2D2926]">Even Then</div>
-            <div className="text-[0.9rem] md:text-[0.95rem] md:text-[0.85rem] text-[#A19D98]">ibigband — 관련 수록곡</div>
+            <div className="text-[1rem] md:text-[1.05rem] text-[#2D2926]">Even Then</div>
+            <div className="text-[1rem] md:text-[1.05rem] md:text-[0.85rem] text-[#A19D98]">ibigband — 관련 수록곡</div>
           </div>
           <Play className="w-4 h-4 text-[#C48C5E]" />
         </div>
@@ -283,20 +283,20 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
         <a href="#" className="flex items-center gap-3 py-2 border-b border-[rgba(45,41,38,0.1)] hover:text-[#C48C5E] transition-colors group">
           <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
             <BookOpen className="w-3 h-3" />
           </div>
-          <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">The Reason for God — Tim Keller</span>
-          <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">The Reason for God — Tim Keller</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
         </a>
         <a href="#" className="flex items-center gap-3 py-2 hover:text-[#C48C5E] transition-colors group">
           <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
             <Video className="w-3 h-3" />
           </div>
-          <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">Why I Left the Church — Alpha</span>
-          <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Video</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">Why I Left the Church — Alpha</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Video</span>
         </a>
       </>
     )
@@ -321,13 +321,13 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
         <a href="#" className="flex items-center gap-3 py-2 hover:text-[#C48C5E] transition-colors group">
           <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
             <BookOpen className="w-3 h-3" />
           </div>
-          <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">The Intolerance of Tolerance — D.A. Carson</span>
-          <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">The Intolerance of Tolerance — D.A. Carson</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
         </a>
       </>
     )
@@ -352,7 +352,7 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">직접 해보기</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">직접 해보기</p>
         <div className="bg-[#F2EFE9] border border-[rgba(196,140,94,0.2)] rounded-lg p-5">
           <p className="font-serif text-[1rem] italic text-[#C48C5E] mb-3 leading-[1.5]">"기도가 뭔지 모르지만<br />부탁하고 싶은 게 있어요"</p>
           <p className="text-[0.8rem] text-[#78716A] leading-[1.6]">아래로 내려가서 이야기를 나눠보세요. 판단 없이 들을게요.</p>
@@ -380,13 +380,13 @@ const QA_DATA = [
     ),
     media: (
       <>
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">더 읽어보기</p>
         <a href="#" className="flex items-center gap-3 py-2 hover:text-[#C48C5E] transition-colors group">
           <div className="w-7 h-7 rounded bg-[white] flex items-center justify-center shrink-0 text-[#78716A] group-hover:text-[#C48C5E]">
             <BookOpen className="w-3 h-3" />
           </div>
-          <span className="text-[0.9rem] md:text-[0.95rem] text-[#78716A] group-hover:text-[#C48C5E]">Surprised by Joy — C.S. 루이스</span>
-          <span className="text-[0.8rem] md:text-[0.85rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#78716A] group-hover:text-[#C48C5E]">Surprised by Joy — C.S. 루이스</span>
+          <span className="text-[1rem] md:text-[1.05rem] text-[#A19D98] ml-auto tracking-[0.05em]">Book</span>
         </a>
       </>
     )
@@ -461,8 +461,8 @@ export default function SeekersPage() {
       `}} />
 
       {/* Hero */}
-      <section className="pt-[9rem] md:pt-[11rem] px-5 md:px-10 pb-[3rem] md:pb-[5rem] max-w-[900px] mx-auto text-center">
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200">
+      <section className="pt-[7rem] md:pt-[9rem] px-5 md:px-10 pb-[3rem] md:pb-[5rem] max-w-[900px] mx-auto text-center">
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200">
           Seekers / 구도자
         </p>
         <h1 className="font-serif text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#2D2926] mb-8 animate-fade-up delay-400">
@@ -480,7 +480,7 @@ export default function SeekersPage() {
           <span className="absolute top-6 md:top-10 -left-2 md:-left-6 text-[6rem] md:text-[8rem] leading-none text-[#C48C5E] opacity-20 font-serif">"</span>
           우리는 노래를 만드는 사람들입니다.<br />
           음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에.
-          <cite className="block mt-6 text-[0.85rem] md:text-[0.9rem] tracking-[0.15em] text-[#C48C5E] not-italic uppercase">
+          <cite className="block mt-6 text-[0.95rem] md:text-[1rem] tracking-[0.15em] text-[#C48C5E] not-italic uppercase">
             — ibigband
           </cite>
         </blockquote>
@@ -499,8 +499,8 @@ export default function SeekersPage() {
 
       {/* Filter Pills */}
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pb-[2rem] md:pb-[3rem]">
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.2em] text-[#A19D98] uppercase mb-5">주제별로 보기</p>
-        <div className="flex flex-wrap gap-2.5">
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.2em] text-[#A19D98] uppercase mb-5">주제별로 보기</p>
+        <div className="flex flex-wrap gap-2.5 mb-4">
           {CATEGORIES.map(cat => (
             <button
               key={cat.id}
@@ -515,6 +515,7 @@ export default function SeekersPage() {
             </button>
           ))}
         </div>
+        <p className="text-[0.95rem] md:text-[1rem] text-[#78716A] text-center mt-6">질문(?)을 터치하시면 답글(!)을 보실 수 있습니다.</p>
       </div>
 
       {/* Q&A List */}
@@ -527,7 +528,7 @@ export default function SeekersPage() {
           return (
             <div key={cat.id} className="mb-8">
               <div className="flex items-center gap-4 mt-14 mb-6 after:content-[''] after:flex-1 after:h-[1px] after:bg-[rgba(45,41,38,0.1)]">
-                <span className="text-[0.8rem] md:text-[0.85rem] tracking-[0.2em] text-[#C48C5E] uppercase">{cat.label}</span>
+                <span className="text-[1rem] md:text-[1.05rem] tracking-[0.2em] text-[#C48C5E] uppercase">{cat.label}</span>
               </div>
 
               {catItems.map(item => {
@@ -542,7 +543,7 @@ export default function SeekersPage() {
                         <div className={`font-bold text-[1.2rem] md:text-[1.3rem] leading-[1.3] transition-colors duration-300 ${isOpen ? 'text-[#C48C5E]' : 'text-[#2D2926] group-hover/item:text-[#C48C5E]'}`}>
                           {item.question}
                         </div>
-                        <div className="text-[0.9rem] md:text-[0.95rem] tracking-[0.05em] text-[#78716A] font-medium mt-1.5 font-sans">
+                        <div className="text-[1rem] md:text-[1.05rem] tracking-[0.05em] text-[#78716A] font-medium mt-1.5 font-sans">
                           {item.questionEn}
                         </div>
                       </div>
@@ -588,11 +589,11 @@ export default function SeekersPage() {
 
       {/* CTA Section */}
       <div className="border-t border-[rgba(45,41,38,0.1)] py-[4rem] md:py-[6rem] px-5 md:px-10 text-center max-w-[700px] mx-auto">
-        <p className="text-[0.8rem] md:text-[0.85rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8">Next Step</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8">Next Step</p>
         <h2 className="font-handwriting text-[clamp(2.4rem,6vw,3.5rem)] leading-[1.2] mb-5 text-[#2D2926]">
           더 이야기하고<br />싶으신가요?
         </h2>
-        <p className="text-[0.95rem] text-[#78716A] mb-12">
+        <p className="text-[1.05rem] text-[#78716A] mb-12">
           질문이 더 있거나, 누군가와 직접 이야기하고 싶다면 편하게 연락하세요. 판단 없이 듣겠습니다.
         </p>
         <div className="flex flex-wrap gap-4 justify-center">

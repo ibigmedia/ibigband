@@ -1,74 +1,302 @@
 "use client";
 
-import { Share2, Printer, Plus, Edit3, Trash2, Menu, Play, FileText, Calendar, X, Type } from 'lucide-react';
+import { 
+  Share2, Printer, Plus, Menu, Play, FileText, Calendar, 
+  X, Type, Search, UploadCloud, Library, Mic, FileAudio, 
+  Music, Sparkles, Smartphone, ChevronRight, LayoutDashboard,
+  MoreVertical, FileVideo, Download, Pause, Clock, Cloud, HardDrive
+} from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import dynamic from 'next/dynamic';
+import { useAuth } from '@/lib/firebase/auth';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase/config';
+
+const PdfViewer = dynamic(() => import('@/components/setlist/PdfViewer'), { ssr: false });
+
+// --- Types ---
+type ItemType = 'sheet' | 'mr' | 'bgm' | 'transcript' | 'guide';
 
 interface SetListItem {
   id: string;
-  type: 'music' | 'guide';
+  type: ItemType;
   title: string;
   duration: string;
   note: string;
+  author?: string;
+  hasAudio?: boolean;
+  hasPdf?: boolean;
+  fileUrl?: string;
 }
 
-export default function SetList() {
+interface ScheduleItem {
+  id: string;
+  type: 'event' | 'practice' | 'travel' | 'rehearsal';
+  time: string;
+  title: string;
+}
+
+// --- Sample Data ---
+const initialLibraryItems: SetListItem[] = [
+  { id: 'lib-1', type: 'sheet', title: '놀라운 주의 사랑', author: '제이어스', duration: '4:30', note: 'G code, 원곡 템포', hasAudio: true, hasPdf: true },
+  { id: 'lib-2', type: 'sheet', title: '내 영혼이 은총 입어', author: '어노인팅', duration: '5:15', note: '찬송가 편곡', hasAudio: true, hasPdf: true },
+  { id: 'lib-3', type: 'mr', title: '예배 전 BGM 모음', author: 'IBIG BAND', duration: '15:00', note: '잔잔한 피아노 모음', hasAudio: true, hasPdf: false },
+  { id: 'lib-4', type: 'transcript', title: '대표 기도문 (3월)', duration: '3:00', note: '장로님 기도 순서', hasAudio: false, hasPdf: false },
+];
+
+const initialSchedules: ScheduleItem[] = [
+  { id: 'sch-1', type: 'travel', time: '08:00', title: '교회로 집결' },
+  { id: 'sch-2', type: 'rehearsal', time: '09:00', title: '음향 세팅 및 리허설' },
+  { id: 'sch-3', type: 'practice', time: '10:00', title: '찬양팀 최종 연습' },
+  { id: 'sch-4', type: 'event', time: '11:00', title: '주일 예배 1부' },
+];
+
+export default function SetListPage() {
   const [isMounted, setIsMounted] = useState(false);
+  
+  // Setlist State
   const [items, setItems] = useState<SetListItem[]>([
-    { id: '1', type: 'music', title: '내 영혼이 은총 입어', duration: '5:00', note: 'Verse-Chorus-Bridge-Chorus' },
-    { id: '2', type: 'guide', title: '예배 안내 및 대표 기도', duration: '3:00', note: 'Pad Pad 배경음악' }
+    { id: '1', type: 'bgm', title: '입례 송 (건반 배경)', duration: '2:00', note: '인도자 등단 전 잔잔하게', hasAudio: true },
+    { id: '2', type: 'guide', title: '인도자 멘트 및 환영', duration: '1:30', note: '환영합니다! 축복합니다!', hasAudio: false },
+    { id: '3', type: 'sheet', title: '놀라운 주의 사랑', author: '제이어스', duration: '4:30', note: 'G code', hasAudio: true, hasPdf: true },
   ]);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<SetListItem | null>(null);
-  const [teleprompterItem, setTeleprompterItem] = useState<SetListItem | null>(null);
+  // UI State
+  const [activeTab, setActiveTab] = useState<'library' | 'ai-search' | 'upload' | 'schedule'>('library');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const [activeItem, setActiveItem] = useState<SetListItem | null>(null);
+  const [isAiSearching, setIsAiSearching] = useState(false);
+  const [libraryItems, setLibraryItems] = useState<SetListItem[]>(initialLibraryItems);
+  
+  // Schedule State
+  const [schedules, setSchedules] = useState<ScheduleItem[]>(initialSchedules);
+  const [newSchedule, setNewSchedule] = useState<Partial<ScheduleItem>>({ type: 'event', time: '09:00', title: '' });
+  
+  // Audio Player State
+  const [playingItem, setPlayingItem] = useState<SetListItem | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [audioCurrentTime, setAudioCurrentTime] = useState('0:00');
+  const audioRef = useRef<HTMLAudioElement>(null);
+
   const printRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { user, loading, signInWithGoogle } = useAuth();
 
   useEffect(() => {
     setIsMounted(true);
-  }, []);
 
+    const fetchSheetsFromDB = async () => {
+      if (!user) return; // Only fetch if authenticated
+
+      try {
+        const q = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        
+        const sheetsData: SetListItem[] = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: `db-sheet-${doc.id}`,
+            type: 'sheet',
+            title: data.title || '제목 없음',
+            author: data.artist || '미상',
+            duration: '',
+            note: '악보 데이터베이스',
+            hasAudio: !!data.youtubeUrl,
+            hasPdf: !!data.pdfUrl || !!data.imageUrl,
+            fileUrl: data.pdfUrl || data.imageUrl || '',
+          };
+        });
+
+        setLibraryItems(prev => {
+          // Avoid duplicates if called multiple times
+          const existingIds = new Set(prev.map(p => p.id));
+          const newItems = sheetsData.filter(item => !existingIds.has(item.id));
+          // Put DB items first, then sample items
+          return [...newItems, ...prev];
+        });
+      } catch (error) {
+        console.error("Error fetching sheets:", error);
+      }
+    };
+
+    fetchSheetsFromDB();
+  }, [user]);
+
+  if (loading || !isMounted) {
+    return <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center font-bold text-xl text-[#2D2926]">Loading...</div>;
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center p-6 text-center">
+        <h1 className="text-3xl font-handwriting text-[#E6C79C] mb-6">ibiGband</h1>
+        <h2 className="text-2xl font-bold text-[#2D2926] mb-4">밴드 멤버 전용 페이지입니다</h2>
+        <p className="text-[#78716A] mb-8 max-w-md">
+          셑리스트 작성, 악보 및 미디어 다운로드, 연습 모드 등은 밴드 멤버로 로그인한 후 사용할 수 있습니다.
+        </p>
+        <button 
+          onClick={signInWithGoogle}
+          className="bg-[#2D2926] text-white px-8 py-4 rounded-full font-bold hover:bg-[#8C6B1C] transition-colors"
+        >
+          Google 계정으로 로그인 (멤버 인증)
+        </button>
+      </div>
+    );
+  }
+
+  const calculateTotalDuration = () => {
+    let totalSeconds = 0;
+    items.forEach(item => {
+      if (item.duration) {
+        const parts = item.duration.split(':');
+        if (parts.length === 2) {
+          totalSeconds += parseInt(parts[0]) * 60 + parseInt(parts[1]);
+        }
+      }
+    });
+    const mins = Math.floor(totalSeconds / 60);
+    const secs = totalSeconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Simulate saving and getting URL (Phase 1)
+    const fileUrl = URL.createObjectURL(file);
+    const isAudio = file.type.startsWith('audio/');
+    const isPdf = file.type === 'application/pdf';
+    
+    // Add fake duration for demo purposes
+    const fakeDuration = isAudio ? '3:30' : '';
+    
+    const newItem: SetListItem = {
+      id: `lib-new-${Date.now()}`,
+      type: isPdf ? 'sheet' : isAudio ? 'mr' : 'transcript',
+      title: file.name.replace(/\.[^/.]+$/, ""),
+      duration: fakeDuration,
+      note: '직접 업로드된 파일',
+      hasAudio: isAudio,
+      hasPdf: isPdf,
+      fileUrl: fileUrl,
+    };
+    
+    setLibraryItems([...libraryItems, newItem]);
+    alert(`${file.name} 업로드 완료! 라이브러리에 추가되었습니다.`);
+    setActiveTab('library');
+  };
+
+  // --- Functions ---
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
-    
     const newItems = Array.from(items);
     const [reorderedItem] = newItems.splice(result.source.index, 1);
     newItems.splice(result.destination.index, 0, reorderedItem);
-    
     setItems(newItems);
   };
 
-  const deleteItem = (id: string) => {
-    if (confirm("정말 이 항목을 삭제하시겠습니까?")) {
-      setItems(items.filter(item => item.id !== id));
+  const removeItem = (id: string) => {
+    setItems(items.filter(item => item.id !== id));
+  };
+
+  const addToSetlist = (item: SetListItem) => {
+    // Generate unique ID for the setlist
+    const newItem = { ...item, id: `set-${Date.now()}` };
+    setItems([...items, newItem]);
+  };
+
+  const openViewer = (item: SetListItem) => {
+    setActiveItem(item);
+    setIsViewerOpen(true);
+  };
+
+  const doAiSearch = () => {
+    if (!searchQuery) return;
+    setIsAiSearching(true);
+    // Simulate AI Search delay
+    setTimeout(() => {
+      setIsAiSearching(false);
+      alert(`'${searchQuery}'에 대한 AI 검색을 완료했습니다. (임시 결과 연결 필요)`);
+    }, 1500);
+  };
+
+  const importFromIbigMusic = () => {
+    const confirmImport = confirm("IBIG Music 서버에서 내 트랙들을 라이브러리로 가져오시겠습니까?");
+    if (confirmImport) {
+       const newItem: SetListItem = {
+          id: `lib-ibig-${Date.now()}`,
+          type: 'mr',
+          title: '주기도문 (IBIG Music 원본)',
+          author: 'IBIG BAND',
+          duration: '4:20',
+          note: 'IBIG Music 연동 곡',
+          hasAudio: true,
+          hasPdf: true,
+       };
+       setLibraryItems([newItem, ...libraryItems]);
+       alert("IBIG Music에서 '주기도문' 곡을 성공적으로 가져왔습니다.");
+       setActiveTab('library');
     }
   };
 
-  const openModal = (item?: SetListItem) => {
-    if (item) {
-      setEditingItem(item);
-    } else {
-      setEditingItem({ id: Date.now().toString(), type: 'music', title: '', duration: '', note: '' });
-    }
-    setIsModalOpen(true);
+  const importFromGoogleDrive = () => {
+    alert("Google Drive API 파일 피커가 열립니다. (현재 데모 버전 구글 인증 연동 필요)");
   };
 
-  const saveItem = () => {
-    if (!editingItem) return;
-    if (items.find(i => i.id === editingItem.id)) {
-      setItems(items.map(i => i.id === editingItem.id ? editingItem : i));
-    } else {
-      setItems([...items, editingItem]);
+  const togglePlay = (item: SetListItem) => {
+    // 만약 샘플 데이터(URL 없음)라면 로컬 샘플 오디오를 제공하거나 경고
+    if (!item.fileUrl && item.hasAudio) {
+      alert("이 샘플 항목에는 연결된 실제 음원 파일이 없습니다. 직접 업로드 탭(오른쪽 하단)에서 원하시는 음원(MP3)을 추가해보세요.");
+      return;
     }
-    setIsModalOpen(false);
-    setEditingItem(null);
+
+    if (playingItem?.id === item.id) {
+      if (isPlaying) {
+        audioRef.current?.pause();
+      } else {
+        audioRef.current?.play().catch(e => console.log(e));
+      }
+      setIsPlaying(!isPlaying);
+    } else {
+      setPlayingItem(item);
+      setIsPlaying(true);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = item.fileUrl || '';
+        audioRef.current.load();
+        audioRef.current.play().catch(e => console.log(e));
+      }
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (audioRef.current) {
+      const current = audioRef.current.currentTime;
+      const duration = audioRef.current.duration;
+      if (duration) {
+        setAudioProgress((current / duration) * 100);
+      }
+      
+      const mins = Math.floor(current / 60);
+      const secs = Math.floor(current % 60);
+      setAudioCurrentTime(`${mins}:${secs.toString().padStart(2, '0')}`);
+    }
+  };
+
+  const handleAudioEnded = () => {
+    setIsPlaying(false);
+    setAudioProgress(0);
   };
 
   const exportPDF = async () => {
     if (!printRef.current) return;
-    
     try {
       const element = printRef.current;
       const canvas = await html2canvas(element, { scale: 2, useCORS: true });
@@ -78,263 +306,575 @@ export default function SetList() {
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('setlist.pdf');
+      pdf.save('ibigband_setlist.pdf');
     } catch (e) {
-      console.error("PDF Export failed", e);
-      alert("PDF 출력 중 문제가 발생했습니다.");
+      console.error(e);
+      alert("출력 중 오류가 발생했습니다.");
     }
   };
 
-  if (!isMounted) return <div className="min-h-screen" />;
+  // --- Helper Renderers ---
+  const getTypeIcon = (type: ItemType, className: string = "w-5 h-5") => {
+    switch(type) {
+      case 'sheet': return <Music className={className} />;
+      case 'mr': return <FileAudio className={className} />;
+      case 'bgm': return <Play className={className} />;
+      case 'transcript': return <FileText className={className} />;
+      case 'guide': return <Mic className={className} />;
+      default: return <FileText className={className} />;
+    }
+  };
+
+  const getTypeLabel = (type: ItemType) => {
+    switch(type) {
+      case 'sheet': return '악보';
+      case 'mr': return 'MR / 트랙';
+      case 'bgm': return 'BGM';
+      case 'transcript': return '멘트/원고';
+      case 'guide': return '진행/가이드';
+      default: return '기타';
+    }
+  };
+
+  const getTypeColor = (type: ItemType) => {
+    switch(type) {
+      case 'sheet': return 'bg-[#2D2926] text-white';
+      case 'mr': return 'bg-[#78716A] text-white';
+      case 'bgm': return 'bg-[#E6C79C] text-[#2D2926]';
+      case 'transcript': return 'bg-white border border-[#2D2926]/20 text-[#2D2926]';
+      case 'guide': return 'bg-blue-50 text-blue-700';
+      default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  if (!isMounted) return <div className="min-h-screen bg-[#FAF9F6]" />;
 
   return (
-    <div className="pt-32 px-6 max-w-7xl mx-auto mb-20">
-      {/* 텔레프롬프터 뷰 (전체화면 오버레이) */}
-      {teleprompterItem && (
-        <div className="fixed inset-0 z-50 bg-[#2D2926] text-[#F9F8F6] flex flex-col p-10 overflow-y-auto">
-           <div className="flex justify-between items-center mb-10 shrink-0">
-             <div className="flex items-center gap-4">
-               <span className="px-4 py-1.5 rounded-full bg-[#E6C79C] text-[#2D2926] font-bold text-sm uppercase">
-                 {teleprompterItem.type}
-               </span>
-               <h1 className="text-3xl font-handwriting">{teleprompterItem.title}</h1>
-             </div>
-             <button onClick={() => setTeleprompterItem(null)} className="p-4 hover:bg-white/10 rounded-full transition-colors">
-               <X size={32} />
-             </button>
-           </div>
-           
-           <div className="flex-1 flex items-center justify-center">
-             <div className="max-w-4xl text-center space-y-8">
-               <p className="text-4xl md:text-6xl font-light leading-snug">
-                 {teleprompterItem.note || '내용이 없습니다.'}
-               </p>
-               <div className="text-xl md:text-2xl text-white/50 pt-10">
-                 Duration: {teleprompterItem.duration || 'N/A'}
-               </div>
-             </div>
-           </div>
+    <div className="pt-24 pb-12 px-4 md:px-8 max-w-screen-2xl mx-auto min-h-screen flex flex-col lg:flex-row gap-6">
+      
+      {/* 1. Left Sidebar: Media Pool (미디어 풀) */}
+      <aside className="w-full lg:w-[400px] flex flex-col gap-6 shrink-0 h-[calc(100vh-8rem)] sticky top-24">
+        
+        {/* 모드 선택 탭 */}
+        <div className="bg-white rounded-3xl p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-3 gap-2 border border-[#78716A]/10 shrink-0">
+          <button 
+            onClick={() => setActiveTab('library')}
+            className={`py-2 rounded-2xl flex flex-col items-center justify-center gap-1 text-[11px] font-bold transition-all ${activeTab === 'library' || activeTab === 'upload' ? 'bg-[#2D2926] text-white shadow-md' : 'text-[#78716A] hover:bg-black/5'}`}
+          >
+            <Library size={18} /> 라이브러리
+          </button>
+          <button 
+            onClick={() => setActiveTab('ai-search')}
+            className={`py-2 rounded-2xl flex flex-col items-center justify-center gap-1 text-[11px] font-bold transition-all ${activeTab === 'ai-search' ? 'bg-[#E6C79C] text-[#2D2926] shadow-md' : 'text-[#78716A] hover:bg-black/5'}`}
+          >
+            <Sparkles size={18} /> AI 검색
+          </button>
+          <button 
+            onClick={() => setActiveTab('schedule')}
+            className={`py-2 rounded-2xl flex flex-col items-center justify-center gap-1 text-[11px] font-bold transition-all ${activeTab === 'schedule' ? 'bg-[#E6C79C] text-[#2D2926] shadow-md' : 'text-[#78716A] hover:bg-black/5'}`}
+          >
+            <Calendar size={18} /> 일정 타임라인
+          </button>
         </div>
-      )}
 
-      {/* 아이템 에디터 모달 */}
-      {isModalOpen && editingItem && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="bg-[#FAF9F6] w-full max-w-md rounded-3xl p-8 shadow-2xl relative animate-in fade-in zoom-in duration-200">
-            <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 p-2 rounded-full hover:bg-black/5 text-[#78716A]">
-              <X size={20} />
-            </button>
-            <h3 className="text-2xl font-handwriting mb-6 text-[#2D2926]">
-              {items.find(i => i.id === editingItem.id) ? '순서 편집' : '새 순서 추가'}
-            </h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-[#78716A] mb-1">타입</label>
-                <div className="flex gap-2">
-                  <button 
-                    onClick={() => setEditingItem({...editingItem, type: 'music'})}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-colors ${editingItem.type === 'music' ? 'bg-[#2D2926] text-white' : 'bg-black/5 text-[#78716A] hover:bg-black/10'}`}
-                  >Music</button>
-                  <button 
-                    onClick={() => setEditingItem({...editingItem, type: 'guide'})}
-                    className={`flex-1 py-3 rounded-xl text-sm font-bold transition-colors ${editingItem.type === 'guide' ? 'bg-[#E6C79C] text-[#2D2926]' : 'bg-black/5 text-[#78716A] hover:bg-black/10'}`}
-                  >Guide</button>
+        {/* 탭 내용 영역 */}
+        <div className="bg-white flex-1 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#78716A]/10 overflow-hidden flex flex-col">
+          
+          {/* 라이브러리 탭 */}
+          {activeTab === 'library' && (
+            <div className="flex flex-col h-full">
+              <div className="p-6 border-b border-black/5 shrink-0">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                  <LayoutDashboard className="text-[#E6C79C]" /> 내 미디어 풀
+                </h3>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" size={18} />
+                  <input 
+                    type="text" 
+                    placeholder="등록된 악보/음원 검색..." 
+                    className="w-full bg-[#FAF9F6] border border-black/10 rounded-2xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors"
+                  />
                 </div>
               </div>
               
-              <div>
-                <label className="block text-xs font-bold text-[#78716A] mb-1">제목</label>
-                <input 
-                  type="text" 
-                  value={editingItem.title} 
-                  onChange={e => setEditingItem({...editingItem, title: e.target.value})}
-                  className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E6C79C] transition-colors"
-                  placeholder="예) 놀라운 주의 사랑"
-                />
+              <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+                {libraryItems.map((item) => (
+                  <div key={item.id} className="bg-[#FAF9F6] border border-black/5 rounded-2xl p-4 hover:border-[#E6C79C] hover:shadow-md transition-all group flex items-start gap-3">
+                    <div className={`mt-1 shrink-0 p-2 rounded-xl ${getTypeColor(item.type)}`}>
+                      {getTypeIcon(item.type, "w-4 h-4")}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start">
+                        <p className="font-bold text-sm text-[#2D2926] truncate">{item.title}</p>
+                        <button 
+                          onClick={() => addToSetlist(item)}
+                          className="text-[#78716A] hover:bg-[#E6C79C] hover:text-[#2D2926] p-1.5 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                          title="셋리스트에 추가하기"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      </div>
+                      {item.author && <p className="text-xs text-[#78716A] mt-0.5">{item.author}</p>}
+                      <div className="flex gap-2 mt-2">
+                         {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 text-[#2D2926] px-2 py-0.5 rounded uppercase">PDF</span>}
+                         {item.hasAudio && (
+                           <button 
+                             onClick={(e) => { e.stopPropagation(); togglePlay(item); }}
+                             className="flex items-center gap-1 text-[10px] font-bold bg-[#E6C79C]/30 hover:bg-[#E6C79C]/60 text-[#8C6B1C] px-2 py-0.5 rounded uppercase transition-colors"
+                           >
+                             {playingItem?.id === item.id && isPlaying ? <Pause size={10} /> : <Play fill="currentColor" size={10} />} MP3
+                           </button>
+                         )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-[#78716A] mb-1">소요 시간</label>
-                <input 
-                  type="text" 
-                  value={editingItem.duration} 
-                  onChange={e => setEditingItem({...editingItem, duration: e.target.value})}
-                  className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E6C79C] transition-colors"
-                  placeholder="예) 5:00"
-                />
+              <div className="p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6]">
+                <button 
+                  onClick={() => setActiveTab('upload')}
+                  className="w-full py-4 border-2 border-dashed border-[#78716A]/30 rounded-2xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] hover:bg-white transition-all flex flex-col items-center justify-center gap-2 group"
+                >
+                  <UploadCloud size={24} className="group-hover:-translate-y-1 transition-transform" />
+                  <span className="text-sm font-bold">새 파일 임포트 (PDF, MP3)</span>
+                </button>
               </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#78716A] mb-1">메모 / 내용</label>
-                <textarea 
-                  value={editingItem.note} 
-                  onChange={e => setEditingItem({...editingItem, note: e.target.value})}
-                  className="w-full bg-white border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E6C79C] transition-colors h-24 resize-none"
-                  placeholder="진행 메모나 가사를 입력하세요"
-                />
-              </div>
-
-              <button 
-                onClick={saveItem}
-                disabled={!editingItem.title}
-                className="w-full mt-4 bg-[#2D2926] text-white rounded-xl py-4 font-bold text-sm hover:bg-black/80 transition-colors disabled:opacity-50"
-              >
-                저장하기
-              </button>
             </div>
-          </div>
+          )}
+
+          {/* AI 검색 탭 */}
+          {activeTab === 'ai-search' && (
+            <div className="p-6 flex flex-col h-full">
+               <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
+                 <Sparkles className="text-[#E6C79C]" /> AI 어시스턴트 검색
+               </h3>
+               <p className="text-xs text-[#78716A] mb-6">찾으시는 악보 제목이나 아티스트, 가사를 입력해주세요. AI가 웹에서 찾아 뷰어 및 다운로드를 준비합니다.</p>
+               
+               <div className="relative mb-4">
+                  <input 
+                    type="text" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && doAiSearch()}
+                    placeholder="'마커스 주는 완전합니다' 악보 찾아줘" 
+                    className="w-full bg-[#FAF9F6] border border-black/10 rounded-2xl px-4 py-4 pr-12 text-sm focus:outline-none focus:border-[#E6C79C] transition-colors shadow-inner"
+                  />
+                  <button 
+                    onClick={doAiSearch}
+                    disabled={isAiSearching || !searchQuery}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#2D2926] text-[#E6C79C] p-2 rounded-xl hover:bg-[#78716A] transition-colors disabled:opacity-50"
+                  >
+                    <Search size={16} />
+                  </button>
+               </div>
+
+               <div className="flex-1 flex flex-col items-center justify-center text-center opacity-50 px-4">
+                  {isAiSearching ? (
+                     <div className="animate-pulse flex flex-col items-center gap-4">
+                       <Sparkles size={32} className="text-[#E6C79C] animate-spin" />
+                       <p className="text-sm font-bold">인터넷 바다를 탐색 중입니다...</p>
+                     </div>
+                  ) : (
+                    <>
+                      <Music size={40} className="text-[#78716A] mb-4" />
+                      <p className="text-sm font-semibold mb-2">웹 기반 자동 검색</p>
+                      <p className="text-xs">CCM 악보, 유튜브 MR 트랙 등을<br/>자동으로 가져와 셋리스트에 추가할 수 있습니다.</p>
+                    </>
+                  )}
+               </div>
+            </div>
+          )}
+
+          {/* 일정 탭 */}
+          {activeTab === 'schedule' && (
+            <div className="p-6 flex flex-col h-full bg-[#FAF9F6]">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-bold text-lg flex items-center gap-2"><Clock className="text-[#E6C79C]" /> 타임라인 관리</h3>
+              </div>
+              
+              {/* 스케줄 입력 폼 */}
+              <div className="bg-white p-4 rounded-2xl border border-black/5 mb-4 shadow-sm shrink-0 flex flex-col gap-3">
+                <select 
+                  value={newSchedule.type} 
+                  onChange={(e) => setNewSchedule({...newSchedule, type: e.target.value as any})}
+                  className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl px-3 py-2 text-sm font-semibold focus:outline-none focus:border-[#2D2926]"
+                >
+                  <option value="event">본 집회 및 예배</option>
+                  <option value="practice">팀 연습</option>
+                  <option value="rehearsal">리허설 / 사운드체크</option>
+                  <option value="travel">이동 및 집결</option>
+                </select>
+                <div className="flex gap-2">
+                  <input 
+                    type="time" 
+                    value={newSchedule.time} 
+                    onChange={(e) => setNewSchedule({...newSchedule, time: e.target.value})}
+                    className="w-1/3 bg-[#FAF9F6] border border-black/10 rounded-xl px-2 py-2 text-sm font-bold text-center focus:outline-none focus:border-[#2D2926]"
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="일정 내용을 입력하세요" 
+                    value={newSchedule.title} 
+                    onChange={(e) => setNewSchedule({...newSchedule, title: e.target.value})}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && newSchedule.title && newSchedule.time) {
+                        setSchedules([...schedules, { ...newSchedule, id: `sch-${Date.now()}` } as ScheduleItem].sort((a,b) => a.time.localeCompare(b.time)));
+                        setNewSchedule({ type: 'event', time: '09:00', title: ''});
+                      }
+                    }}
+                    className="flex-1 bg-[#FAF9F6] border border-black/10 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-[#2D2926]"
+                  />
+                </div>
+                <button 
+                  onClick={() => {
+                    if(newSchedule.title && newSchedule.time) {
+                      setSchedules([...schedules, { ...newSchedule, id: `sch-${Date.now()}` } as ScheduleItem].sort((a,b) => a.time.localeCompare(b.time)));
+                      setNewSchedule({ type: 'event', time: '09:00', title: ''});
+                    }
+                  }}
+                  className="w-full py-2.5 bg-[#2D2926] text-white rounded-xl text-sm font-bold hover:bg-[#78716A] transition-colors mt-1"
+                >
+                  타임라인에 추가
+                </button>
+              </div>
+
+              {/* 스케줄 리스트 */}
+              <div className="flex-1 overflow-y-auto space-y-3 custom-scrollbar">
+                {schedules.map((sch, i) => (
+                  <div key={sch.id} className="relative flex items-center gap-3 bg-white p-3 pr-4 rounded-2xl border border-black/5 shadow-sm group">
+                    {/* 타임라인 연결 선 */}
+                    {i !== schedules.length - 1 && (
+                      <div className="absolute left-[34px] top-full h-3 border-l-2 border-dashed border-[#E6C79C]/50 z-0 content-['']" />
+                    )}
+                    
+                    <div className="z-10 text-[#8C6B1C] font-bold text-sm bg-[#E6C79C]/20 px-2 py-1 rounded-lg shrink-0 w-[54px] text-center shadow-inner">
+                      {sch.time}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-bold text-[13px] text-[#2D2926] truncate leading-tight">{sch.title}</p>
+                      <p className="text-[10px] font-bold text-[#78716A] mt-0.5">
+                        {sch.type === 'event' && <span className="text-blue-600">집회/예배</span>}
+                        {sch.type === 'practice' && <span className="text-orange-600">팀 연습</span>}
+                        {sch.type === 'rehearsal' && <span className="text-purple-600">사운드체크</span>}
+                        {sch.type === 'travel' && <span className="text-gray-500">이동/집결</span>}
+                      </p>
+                    </div>
+                    <button 
+                      onClick={() => setSchedules(schedules.filter(s => s.id !== sch.id))}
+                      className="text-red-400 hover:text-red-600 bg-red-50 hover:bg-red-100 opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-lg"
+                    >
+                      <X size={14} />
+                    </button>
+                  </div>
+                ))}
+                {schedules.length === 0 && (
+                  <p className="text-center text-sm text-[#78716A] py-10">등록된 일정이 없습니다.</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 업로드 탭 */}
+          {activeTab === 'upload' && (
+            <div className="p-6 flex flex-col h-full bg-[#FAF9F6] overflow-y-auto">
+              <div className="flex items-center justify-between mb-6 shrink-0">
+                 <h3 className="font-bold text-lg">새 미디어 가져오기</h3>
+                 <button onClick={() => setActiveTab('library')} className="p-2 hover:bg-black/5 rounded-full">
+                   <X size={20} />
+                 </button>
+              </div>
+              
+              <div className="flex flex-col gap-4">
+                {/* 1. 로컬 파일 업로드 */}
+                <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept=".pdf,audio/mpeg,audio/wav,text/plain" />
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-8 border border-black/10 rounded-3xl flex flex-col items-center justify-center bg-white hover:border-[#2D2926] hover:shadow-md transition-all cursor-pointer group"
+                >
+                    <div className="bg-[#2D2926]/5 p-4 rounded-full mb-3 group-hover:-translate-y-1 transition-transform">
+                      <HardDrive size={28} className="text-[#2D2926]" />
+                    </div>
+                    <p className="font-bold text-sm mb-1 text-[#2D2926]">내 PC에서 파일 업로드</p>
+                    <p className="text-[11px] text-[#78716A]">PDF, MP3, WAV 형식</p>
+                </div>
+
+                {/* 2. IBIG Music 연동 */}
+                <div 
+                  onClick={importFromIbigMusic}
+                  className="w-full py-8 border border-black/10 rounded-3xl flex flex-col items-center justify-center bg-white hover:border-[#E6C79C] hover:shadow-md transition-all cursor-pointer group"
+                >
+                    <div className="bg-[#E6C79C]/20 p-4 rounded-full mb-3 group-hover:-translate-y-1 transition-transform">
+                      <Music size={28} className="text-[#8C6B1C]" />
+                    </div>
+                    <p className="font-bold text-sm mb-1 text-[#2D2926]">IBIG Music 계정 연동</p>
+                    <p className="text-[11px] text-[#78716A]">등록된 악보 및 음원 가져오기</p>
+                </div>
+
+                {/* 3. 구글 드라이브 연동 */}
+                <div 
+                  onClick={importFromGoogleDrive}
+                  className="w-full py-8 border border-black/10 rounded-3xl flex flex-col items-center justify-center bg-white hover:border-blue-300 hover:shadow-md transition-all cursor-pointer group"
+                >
+                    <div className="bg-blue-50 p-4 rounded-full mb-3 group-hover:-translate-y-1 transition-transform">
+                      <Cloud size={28} className="text-blue-500" />
+                    </div>
+                    <p className="font-bold text-sm mb-1 text-[#2D2926]">Google Drive에서 불러오기</p>
+                    <p className="text-[11px] text-[#78716A]">클라우드 공유 폴더 접속</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
-      )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <div className="lg:col-span-8 space-y-8">
-          <div className="bg-white rounded-ibig p-10 shadow-sm border border-[#78716A]/10" ref={printRef}>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 print-header">
-              <h2 className="text-4xl font-handwriting">스마트 셋리스트</h2>
-              <div className="flex gap-2">
-                <button 
-                  onClick={() => alert("공유 링크가 클립보드에 복사되었습니다. (구현 예정)")}
-                  className="p-3 bg-[#FAF9F6] rounded-full hover:bg-[#E6C79C]/20 transition-all text-[#2D2926]" 
-                  title="공유하기"
-                >
-                  <Share2 size={20}/>
+      </aside>
+
+      {/* 2. Main Content: Setlist / Cue Sheet Builder */}
+      <main className="flex-1 flex flex-col min-w-0">
+        <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full">
+          
+          {/* 헤더 */}
+          <header className="p-8 md:p-10 border-b border-black/5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6" ref={printRef}>
+             <div>
+               <div className="flex items-center gap-3 mb-2">
+                 <span className="bg-[#2D2926] text-white text-[10px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">IBIG Smart Cue</span>
+                 <span className="text-[#78716A] text-sm flex items-center gap-1"><Calendar size={14}/> 주일 예배 1부</span>
+                 <span className="text-[#8C6B1C] bg-[#E6C79C]/30 text-xs font-bold px-2 py-0.5 rounded-full">예상 시간: {calculateTotalDuration()}</span>
+               </div>
+               <h1 className="text-4xl md:text-5xl font-handwriting tracking-tight text-[#2D2926]">2026. 3. 22. 찬양팀 셋리스트</h1>
+             </div>
+             
+             {/* 공유 및 제어 버튼 */}
+             <div className="flex gap-2 shrink-0">
+                <button className="flex items-center gap-2 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 text-[#2D2926] px-5 py-3 rounded-full text-sm font-bold transition-all border border-black/5">
+                  <Smartphone size={18} /> 팀원 앱 초대
                 </button>
-                <button 
-                  onClick={exportPDF}
-                  className="p-3 bg-[#FAF9F6] rounded-full hover:bg-[#E6C79C]/20 transition-all text-[#2D2926]" 
-                  title="출력하기"
-                >
-                  <Printer size={20}/>
+                <button onClick={exportPDF} title="PDF 추출" className="p-3 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 text-[#2D2926] rounded-full transition-all border border-black/5">
+                  <Printer size={20} />
                 </button>
-                <button 
-                  onClick={() => openModal()}
-                  className="bg-[#2D2926] text-white px-6 py-3 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-[#78716A] transition-colors"
-                >
-                  <Plus size={16}/> 새 순서 추가
-                </button>
-              </div>
-            </div>
-            
+             </div>
+          </header>
+
+          {/* 셋리스트 아이템 리스트 (D&D) */}
+          <div className="p-6 md:p-10 flex-1 bg-[#FAF9F6]/50">
             <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="setlist-items">
+              <Droppable droppableId="cue-sheet">
                 {(provided) => (
                   <div 
                     {...provided.droppableProps}
                     ref={provided.innerRef}
                     className="space-y-4"
                   >
-                    {items.map((item, idx) => (
-                      <Draggable key={item.id} draggableId={item.id} index={idx}>
+                    {items.map((item, index) => (
+                      <Draggable key={item.id} draggableId={item.id} index={index}>
                         {(provided, snapshot) => (
-                          <div 
+                          <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className={`flex items-center gap-6 bg-[#FAF9F6] p-6 rounded-2xl border transition-all group ${
-                              snapshot.isDragging ? 'shadow-lg border-[#E6C79C]' : 'border-transparent hover:border-black/5'
-                            }`}
+                            className={`group relative bg-white border border-[#78716A]/10 rounded-2xl p-4 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center transition-all ${snapshot.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'hover:shadow-md hover:border-[#2D2926]/30'}`}
                           >
-                            <div className="text-2xl font-handwriting text-[#E6C79C] w-8 shrink-0">{idx + 1}</div>
+                            {/* D&D Handle */}
+                            <div 
+                              {...provided.dragHandleProps}
+                              className="absolute left-2 top-1/2 -translate-y-1/2 p-2 text-black/20 hover:text-[#2D2926] cursor-grab active:cursor-grabbing md:static md:translate-y-0"
+                            >
+                              <MoreVertical size={20} />
+                            </div>
+
+                            {/* Number & Icon */}
+                            <div className="flex items-center gap-4 w-full md:w-auto ml-8 md:ml-0">
+                              <span className="text-3xl font-handwriting text-black/20 w-8 text-center">{index + 1}</span>
+                              <div className={`p-3 rounded-2xl flex items-center justify-center shrink-0 ${getTypeColor(item.type)}`}>
+                                {getTypeIcon(item.type)}
+                              </div>
+                            </div>
                             
-                            <div className="flex-1 cursor-pointer" onClick={() => openModal(item)}>
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className={`text-[10px] px-2 py-0.5 rounded-md font-bold uppercase shrink-0 ${item.type === 'music' ? 'bg-[#2D2926] text-white' : 'bg-[#E6C79C] text-[#2D2926]'}`}>
-                                  {item.type}
+                            {/* Content Info */}
+                            <div className="flex-1 min-w-0 pr-4">
+                              <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${getTypeColor(item.type)}`}>
+                                  {getTypeLabel(item.type)}
                                 </span>
-                                <span className="font-bold cursor-text line-clamp-1">{item.title}</span>
-                                <span className="text-[10px] text-[#78716A] ml-2 shrink-0">{item.duration}</span>
+                                <h3 className="font-bold text-lg truncate text-[#2D2926]">{item.title}</h3>
+                                {item.author && <span className="text-xs text-[#78716A]">· {item.author}</span>}
                               </div>
-                              <p className="text-xs text-[#78716A] italic font-light line-clamp-2">{item.note}</p>
+                              <p className="text-sm text-[#78716A] line-clamp-1">{item.note}</p>
                             </div>
-                            
-                            <div className="flex items-center gap-2 lg:gap-4 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
-                              <button 
-                                onClick={() => setTeleprompterItem(item)}
-                                className="p-2 text-[#E6C79C] hover:bg-[#E6C79C]/10 rounded-full transition-colors"
-                                title="프롬프터 뷰"
-                              >
-                                <Type size={18} />
-                              </button>
-                              <button 
-                                onClick={() => deleteItem(item.id)}
-                                className="p-2 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors"
-                              >
-                                <Trash2 size={18} />
-                              </button>
-                              <div 
-                                {...provided.dragHandleProps}
-                                className="p-2 text-[#78716A] hover:bg-black/5 rounded-full cursor-grab active:cursor-grabbing"
-                              >
-                                <Menu size={18} />
-                              </div>
+
+                            {/* Actions / Meta */}
+                            <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end mt-4 md:mt-0 pt-4 md:pt-0 border-t md:border-t-0 border-black/5">
+                               {/* 미디어 상태 */}
+                               <div className="flex gap-3 text-[#78716A]">
+                                 {item.hasAudio && (
+                                   <button 
+                                     onClick={() => togglePlay(item)}
+                                     className="flex items-center gap-1 text-[11px] font-bold hover:text-[#2D2926] transition-colors"
+                                   >
+                                     {playingItem?.id === item.id && isPlaying ? <Pause size={12} /> : <Play fill="currentColor" size={12}/>} AUDIO
+                                   </button>
+                                 )}
+                                 {item.hasPdf && <div className="flex items-center gap-1 text-[11px] font-bold"><FileText fill="currentColor" size={12}/> SHEET</div>}
+                                 {item.duration && <div className="text-xs font-semibold bg-[#FAF9F6] px-2 py-1 rounded-md">{item.duration}</div>}
+                               </div>
+
+                               {/* 호버 액션 버튼 */}
+                               <div className="flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+                                  <button 
+                                    onClick={() => openViewer(item)}
+                                    className="px-4 py-2 bg-[#2D2926] text-white rounded-xl text-xs font-bold hover:bg-[#78716A] flex items-center gap-1"
+                                  >
+                                    <Smartphone size={14} /> 뷰어
+                                  </button>
+                                  <button 
+                                    onClick={() => removeItem(item.id)}
+                                    className="p-2 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-xl"
+                                  >
+                                    <X size={18} />
+                                  </button>
+                               </div>
                             </div>
+
                           </div>
                         )}
                       </Draggable>
                     ))}
                     {provided.placeholder}
+                    
+                    {/* Empty State */}
+                    {items.length === 0 && (
+                      <div className="py-24 text-center text-[#78716A] border-2 border-dashed border-black/10 rounded-3xl">
+                        <p className="font-handwriting text-3xl mb-2">셋리스트가 비어있습니다.</p>
+                        <p className="text-sm">왼쪽 라이브러리에서 항목을 클릭하거나 끌어다 놓으세요.</p>
+                      </div>
+                    )}
                   </div>
                 )}
               </Droppable>
             </DragDropContext>
-            {items.length === 0 && (
-              <div className="py-20 text-center text-[#78716A]">
-                <p className="font-handwriting text-2xl mb-2">텅 비어있네요!</p>
-                <p className="text-sm">우측 상단의 버튼을 눌러 새 순서를 추가해보세요.</p>
-              </div>
-            )}
           </div>
-        </div>
 
-        <div className="lg:col-span-4 space-y-6">
-          <div className="bg-[#2D2926] text-white rounded-ibig p-8 shadow-2xl relative overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="font-handwriting text-2xl mb-2 text-[#E6C79C]">Worship Practice</h3>
-              <p className="text-xs text-white/50 mb-8 font-light">셋리스트의 음원들을 차례대로 연습하세요.</p>
-              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {items.filter(i => i.type === 'music').map(i => (
-                  <div key={i.id} className="flex items-center gap-4 bg-white/5 p-4 rounded-xl border border-white/10 hover:bg-white/10 cursor-pointer transition-all">
-                    <div className="w-10 h-10 shrink-0 rounded-full bg-[#E6C79C] flex items-center justify-center text-[#2D2926]">
-                      <Play size={16} fill="currentColor" className="ml-0.5"/>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold truncate">{i.title}</p>
-                      <p className="text-[10px] text-white/40 truncate">{i.note}</p>
-                    </div>
-                  </div>
-                ))}
-                {items.filter(i => i.type === 'music').length === 0 && (
-                  <p className="text-sm text-white/40 text-center py-4">연습할 음원이 없습니다.</p>
-                )}
-              </div>
+          {/* 푸터 플레이 바 */}
+          <div className="bg-[#2D2926] p-4 flex flex-col md:flex-row items-center justify-between gap-4 text-white rounded-b-[2rem] z-10 w-full">
+            <div className="flex items-center gap-4 w-full md:w-auto">
               <button 
-                disabled={items.filter(i => i.type === 'music').length === 0}
-                className="w-full mt-8 py-4 bg-white/10 rounded-2xl text-xs font-bold hover:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => playingItem ? togglePlay(playingItem) : null}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform shadow-lg shrink-0 ${playingItem ? 'bg-[#E6C79C] text-[#2D2926] hover:scale-105' : 'bg-white/10 text-white/30 cursor-not-allowed'}`}
               >
-                전체 자동 재생
+                {isPlaying ? <Pause className="w-5 h-5 mx-auto" /> : <Play fill="currentColor" className="ml-1 w-5 h-5" />}
+              </button>
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-[#E6C79C] font-bold mb-0.5">PRACTICE MODE</p>
+                <p className="text-sm font-semibold truncate leading-tight">{playingItem ? playingItem.title : '재생할 음원을 선택해주세요'}</p>
+              </div>
+            </div>
+            
+            <div className="flex-1 max-w-md hidden lg:flex items-center gap-3">
+              <span className="text-[10px] text-white/50 w-8 text-right">{playingItem ? audioCurrentTime : '0:00'}</span>
+              <div 
+                className={`h-1.5 flex-1 bg-white/10 rounded-full overflow-hidden relative ${playingItem ? 'cursor-pointer' : ''}`}
+                onClick={(e) => {
+                  if (!audioRef.current || !playingItem) return;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const percent = (e.clientX - rect.left) / rect.width;
+                  audioRef.current.currentTime = percent * audioRef.current.duration;
+                }}
+              >
+                <div className="h-full bg-[#E6C79C] transition-all duration-150 ease-linear" style={{ width: `${playingItem ? audioProgress : 0}%` }}></div>
+              </div>
+              <span className="text-[10px] text-white/50 w-8">{playingItem ? (playingItem.duration || '0:00') : '0:00'}</span>
+            </div>
+
+            <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-colors whitespace-nowrap">
+              <LayoutDashboard size={18} /> 프레젠터 뷰 실행
+            </button>
+          </div>
+
+          {/* 숨겨진 오디오 태그 요소 */}
+          <audio 
+            ref={audioRef} 
+            onTimeUpdate={handleTimeUpdate}
+            onEnded={handleAudioEnded}
+            className="hidden" 
+          />
+        </div>
+      </main>
+
+      {/* 3. iPad / Teleprompter Viewer Modal (아이패드용 뷰어 & 프롬프터) */}
+      {isViewerOpen && activeItem && (
+        <div className="fixed inset-0 z-[100] bg-[#2D2926] text-white flex flex-col animate-in fade-in duration-300">
+          <header className="p-6 flex justify-between items-center bg-[#1A1816] shadow-md z-10">
+            <div className="flex items-center gap-4">
+               <div className={`p-2 rounded-xl text-white ${getTypeColor(activeItem.type)}`}>
+                 {getTypeIcon(activeItem.type)}
+               </div>
+               <div>
+                  <h2 className="text-2xl font-bold">{activeItem.title}</h2>
+                  <p className="text-[#E6C79C] text-sm">{activeItem.author || getTypeLabel(activeItem.type)}</p>
+               </div>
+            </div>
+            <div className="flex gap-4">
+              <button className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-xl font-bold transition-colors">
+                <Download size={18}/> 파일 다운로드
+              </button>
+              <button onClick={() => setIsViewerOpen(false)} className="p-3 hover:bg-white/10 rounded-full transition-colors">
+                <X size={24} />
               </button>
             </div>
-            <svg className="absolute -bottom-10 -right-10 opacity-5" width="200" height="200" viewBox="0 0 100 100">
-              <path d="M0 50 Q25 0 50 50 T100 50" stroke="white" strokeWidth="2" fill="none" />
-            </svg>
-          </div>
+          </header>
 
-          <div className="bg-white rounded-ibig p-8 shadow-sm border border-[#78716A]/10">
-            <h3 className="font-handwriting text-xl mb-6">마스터 플랜 공유</h3>
-            <div className="space-y-3">
-               <button onClick={() => alert("공유 모달 오픈")} className="w-full p-4 bg-[#FAF9F6] rounded-2xl flex items-center gap-3 text-xs font-bold hover:bg-[#E6C79C]/10 transition-all text-[#78716A]">
-                 <Share2 size={16}/> 팀원에게 링크 보내기
-               </button>
-               <button onClick={exportPDF} className="w-full p-4 bg-[#FAF9F6] rounded-2xl flex items-center gap-3 text-xs font-bold hover:bg-[#E6C79C]/10 transition-all text-[#78716A]">
-                 <FileText size={16}/> 큐시트 PDF 내보내기
-               </button>
-               <button className="w-full p-4 bg-[#FAF9F6] rounded-2xl flex items-center gap-3 text-xs font-bold hover:bg-[#E6C79C]/10 transition-all text-[#78716A]">
-                 <Calendar size={16}/> 구글 캘린더 연동
-               </button>
-            </div>
+          <div className="flex-1 overflow-auto bg-[#2D2926] p-8 flex items-center justify-center">
+             {activeItem.type === 'sheet' ? (
+                // 악보 뷰어: fileUrl이 있으면 react-pdf 로 렌더링, 없으면 안내 문구
+                <div className="w-full max-w-3xl bg-white rounded-sm shadow-2xl flex flex-col items-center justify-center text-[#2D2926] min-h-[500px] overflow-hidden">
+                   {activeItem.fileUrl ? (
+                     <PdfViewer fileUrl={activeItem.fileUrl} />
+                   ) : (
+                     <>
+                       <FileText size={48} className="text-black/20 mb-4" />
+                       <p className="font-bold text-xl">PDF 뷰어 화면 (예제 파일 없음)</p>
+                       <p className="text-[#78716A] text-sm mt-2">왼쪽 미디어 풀에서 새로운 악보 PDF 파일을 업로드 해보세요!</p>
+                       
+                       <div className="w-3/4 mt-12 space-y-8 opacity-20 pointer-events-none">
+                         <div className="h-1 bg-black w-full relative"><div className="absolute right-0 top-1 h-1 bg-black w-full"></div><div className="absolute right-0 top-2 h-1 bg-black w-full"></div><div className="absolute right-0 top-3 h-1 bg-black w-full"></div></div>
+                       </div>
+                     </>
+                   )}
+                </div>
+             ) : (
+                // 프롬프터 / 가사 뷰어
+                <div className="max-w-4xl text-center space-y-6">
+                  <p className="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tight text-[#FAF9F6] whitespace-pre-wrap">
+                    {activeItem.note || '등록된 내용이 없습니다.'}
+                  </p>
+                  <p className="text-[#E6C79C] text-xl font-handwriting tracking-wider pt-10">
+                    -- 아이패드용 팀원 프롬프터 모드 --
+                  </p>
+                </div>
+             )}
+          </div>
+          
+          {/* 하단 컨트롤러 */}
+          <div className="bg-[#1A1816] p-6 flex justify-between items-center border-t border-white/5">
+             <div className="flex gap-4">
+                <button className="px-6 py-3 rounded-full bg-white/5 hover:bg-white/10 font-bold text-sm">이전</button>
+             </div>
+             
+             {activeItem.hasAudio && (
+               <div className="flex items-center gap-4 bg-white/5 pr-6 rounded-full border border-white/10">
+                 <button className="w-12 h-12 bg-[#E6C79C] text-[#2D2926] rounded-full flex items-center justify-center hover:scale-105 transition-transform shadow-lg shrink-0">
+                   <Play fill="currentColor" className="ml-1 w-5 h-5" />
+                 </button>
+                 <span className="text-sm font-bold min-w-[120px]">MR Track Playing...</span>
+               </div>
+             )}
+
+             <div className="flex gap-4">
+                <button className="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 font-bold text-sm flex items-center gap-2">다음 <ChevronRight size={16}/></button>
+             </div>
           </div>
         </div>
-      </div>
+      )}
+
     </div>
   );
 }

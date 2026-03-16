@@ -2,16 +2,20 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Music, FileText, Users, Video } from 'lucide-react';
+import { LayoutDashboard, Music, FileText, Users, Video, DollarSign, Calendar, Mail, Library } from 'lucide-react';
 
 const navItems = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/sheets', label: 'Sheets', icon: Music },
+  { href: '/admin/users', label: '회원/멤버 관리', icon: Users },
+  { href: '/admin/library', label: '라이브러리(공유)', icon: Library },
+  { href: '/admin/schedule', label: '일정 관리', icon: Calendar },
+  { href: '/admin/budget', label: '예산 및 플래닝', icon: DollarSign },
+  { href: '/admin/mail', label: '보고 및 이메일', icon: Mail },
+  { href: '/admin/sheets', label: 'Sheets DB', icon: Music },
   { href: '/admin/music', label: '음반 관리', icon: Music },
   { href: '/admin/video', label: '영상 관리', icon: Video },
-  { href: '/admin/blog', label: 'Blog', icon: FileText },
-  { href: '/admin/analytics', label: 'Analytics (SEO)', icon: FileText },
-  { href: '/admin/users', label: '회원 관리', icon: Users },
+  { href: '/admin/blog', label: 'Blog 컨텐츠', icon: FileText },
+  { href: '/admin/analytics', label: 'Analytics', icon: FileText },
 ];
 
 export function AdminSideNav() {
