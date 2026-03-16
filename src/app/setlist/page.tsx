@@ -77,6 +77,7 @@ export default function SetListPage() {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [activeItem, setActiveItem] = useState<SetListItem | null>(null);
   const [isAiSearching, setIsAiSearching] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [libraryItems, setLibraryItems] = useState<SetListItem[]>(initialLibraryItems);
   
   // Schedule State
@@ -143,8 +144,35 @@ export default function SetListPage() {
       }
     };
 
+    const fetchSchedulesFromDB = async () => {
+      if (!user) return;
+      try {
+        const q = query(collection(db, 'schedules'));
+        const sn = await getDocs(q);
+        const data = sn.docs.map(doc => ({ id: doc.id, ...doc.data() } as any));
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Find schedules from today onwards
+        const upcoming = data.filter(d => d.date >= today).sort((a,b) => (a.date + a.time).localeCompare(b.date + b.time));
+        if (upcoming.length > 0) {
+          // You might only want schedule for the soonest date
+          const targetDate = upcoming[0].date;
+          setSchedules(upcoming.filter(d => d.date === targetDate).map(d => ({
+            id: d.id,
+            type: d.type === 'service' ? 'event' : d.type,
+            time: d.time,
+            title: d.title
+          })));
+        } else {
+           // fallback to empty
+           setSchedules([]);
+        }
+      } catch (e) { console.error('Failed to load schedules:', e); }
+    };
+
     fetchSheetsFromDB();
     fetchSetlists();
+    fetchSchedulesFromDB();
   }, [user]);
 
   if (loading || !isMounted) {
@@ -240,9 +268,20 @@ export default function SetListPage() {
   const saveSetlist = async () => {
     if (!user) return;
     try {
+      // Remove any undefined values that Firestore rejects
+      const cleanItems = items.map(item => {
+        const cleanObj: any = {};
+        Object.keys(item).forEach(key => {
+          if ((item as any)[key] !== undefined) {
+            cleanObj[key] = (item as any)[key];
+          }
+        });
+        return cleanObj;
+      });
+
       const data = {
         title: setlistTitle,
-        items,
+        items: cleanItems,
         updatedAt: serverTimestamp(),
       };
       if (currentSetlistId) {
@@ -349,9 +388,10 @@ export default function SetListPage() {
 
   const exportPDF = async () => {
     if (!printRef.current) return;
+    setIsExporting(true);
     try {
       const element = printRef.current;
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true, logging: false });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -362,6 +402,8 @@ export default function SetListPage() {
     } catch (e) {
       console.error(e);
       alert("출력 중 오류가 발생했습니다.");
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -579,10 +621,22 @@ export default function SetListPage() {
                   />
                 </div>
                 <button 
-                  onClick={() => {
+                  onClick={async () => {
                     if(newSchedule.title && newSchedule.time) {
-                      setSchedules([...schedules, { ...newSchedule, id: `sch-${Date.now()}` } as ScheduleItem].sort((a,b) => a.time.localeCompare(b.time)));
-                      setNewSchedule({ type: 'event', time: '09:00', title: ''});
+                      const today = new Date().toISOString().split('T')[0];
+                      try {
+                        const docRef = await addDoc(collection(db, 'schedules'), {
+                          title: newSchedule.title,
+                          date: today,
+                          time: newSchedule.time,
+                          type: newSchedule.type,
+                          target: 'all',
+                          memo: '',
+                          createdAt: new Date().toISOString()
+                        });
+                        setSchedules([...schedules, { ...newSchedule, id: docRef.id } as ScheduleItem].sort((a,b) => a.time.localeCompare(b.time)));
+                        setNewSchedule({ type: 'event', time: '09:00', title: ''});
+                      } catch(e) { console.error(e); alert('일정 등록 실패'); }
                     }
                   }}
                   className="w-full py-2.5 bg-[#2D2926] text-white rounded-xl text-sm font-bold hover:bg-[#78716A] transition-colors mt-1"
@@ -613,7 +667,9 @@ export default function SetListPage() {
                       </p>
                     </div>
                     <button 
-                      onClick={() => setSchedules(schedules.filter(s => s.id !== sch.id))}
+                      onClick={async () => {
+                        alert("웹 프론트에서는 삭제되지 않으며 일정 관리 페이지에서 삭제해주세요.");
+                      }}
                       className="text-red-400 hover:text-red-600 bg-red-50 hover:bg-red-100 opacity-0 group-hover:opacity-100 transition-all p-1.5 rounded-lg"
                     >
                       <X size={14} />
@@ -722,8 +778,8 @@ export default function SetListPage() {
                   </button>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={exportPDF} title="PDF 추출 (현재 화면 스크린샷 캡처)" className="flex items-center gap-2 p-2 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 text-[#2D2926] rounded-xl transition-all border border-black/5 font-bold text-sm">
-                    <Printer size={16} /> PDF 생성
+                  <button onClick={exportPDF} disabled={isExporting} title="PDF 추출 (현재 화면 스크린샷 캡처)" className="flex items-center gap-2 p-2 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 text-[#2D2926] rounded-xl transition-all border border-black/5 font-bold text-sm disabled:opacity-50">
+                    <Printer size={16} /> {isExporting ? '생성 중...' : 'PDF 생성'}
                   </button>
                 </div>
              </div>
@@ -858,7 +914,10 @@ export default function SetListPage() {
               <span className="text-[10px] text-white/50 w-8">{playingItem ? (playingItem.duration || '0:00') : '0:00'}</span>
             </div>
 
-            <button className="hidden md:flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-colors whitespace-nowrap">
+            <button 
+              onClick={() => items.length > 0 ? openViewer(items[0]) : alert('셋리스트에 항목을 추가해주세요.')}
+              className="hidden md:flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-sm font-bold transition-colors whitespace-nowrap"
+            >
               <LayoutDashboard size={18} /> 프레젠터 뷰 실행
             </button>
           </div>
