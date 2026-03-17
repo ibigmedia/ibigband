@@ -680,10 +680,10 @@ export default function SetListPage() {
 
   // ==================== RENDER ====================
   return (
-    <div className="pt-16 md:pt-24 pb-20 md:pb-12 px-2 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-2 md:gap-6 overflow-x-hidden">
+    <div className="pt-14 md:pt-24 pb-20 md:pb-12 px-1 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-1.5 md:gap-6 overflow-x-hidden">
 
       {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
-      <div className="lg:hidden flex bg-white rounded-2xl p-1 shadow-sm border border-[#78716A]/10 shrink-0">
+      <div className="lg:hidden flex bg-white rounded-xl p-1 shadow-sm border border-[#78716A]/10 shrink-0">
         <button onClick={() => setMobileView('files')}
           className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'files' ? 'bg-[#2D2926] text-white shadow-md' : 'text-[#78716A]'}`}>
           <Library size={14} className="inline mr-1.5 -mt-0.5" />미디어풀
@@ -695,8 +695,8 @@ export default function SetListPage() {
       </div>
 
       {/* ===== LEFT: Library ===== */}
-      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-2 md:gap-5 lg:shrink-0 min-w-0 h-[calc(100vh-7rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
-        <div className="bg-white rounded-2xl md:rounded-3xl p-1 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-0.5 md:gap-2 border border-[#78716A]/10 shrink-0">
+      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-1.5 md:gap-5 lg:shrink-0 min-w-0 h-[calc(100vh-6.5rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
+        <div className="bg-white rounded-xl md:rounded-3xl p-1 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-0.5 md:gap-2 border border-[#78716A]/10 shrink-0">
           {[
             { key: 'library', icon: <Library size={18} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
             { key: 'archive', icon: <FolderOpen size={18} />, label: '아카이브', active: activeTab === 'archive' },
@@ -710,7 +710,7 @@ export default function SetListPage() {
           ))}
         </div>
 
-        <div className="bg-white flex-1 rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
+        <div className="bg-white flex-1 rounded-xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
@@ -962,7 +962,7 @@ export default function SetListPage() {
 
       {/* ===== RIGHT: Setlist Builder ===== */}
       <main className={`flex-1 flex flex-col min-w-0 w-full overflow-hidden ${mobileView !== 'setlist' ? 'hidden lg:flex' : 'flex'}`}>
-        <div className="bg-white rounded-2xl md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full overflow-hidden">
+        <div className="bg-white rounded-xl md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full overflow-hidden">
 
           {/* Header */}
           <header className="p-3 md:p-8 border-b border-black/5">
