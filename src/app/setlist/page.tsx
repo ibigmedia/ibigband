@@ -57,6 +57,7 @@ export default function SetListPage() {
 
   // UI
   const [activeTab, setActiveTab] = useState<'library' | 'ai-search' | 'upload' | 'schedule' | 'archive'>('library');
+  const [mobileView, setMobileView] = useState<'files' | 'setlist'>('setlist');
   const [librarySearchQuery, setLibrarySearchQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isAiSearching, setIsAiSearching] = useState(false);
@@ -681,8 +682,20 @@ export default function SetListPage() {
   return (
     <div className="pt-20 md:pt-24 pb-20 md:pb-12 px-3 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-4 md:gap-6">
 
+      {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
+      <div className="lg:hidden flex bg-white rounded-2xl p-1 shadow-sm border border-[#78716A]/10 shrink-0">
+        <button onClick={() => setMobileView('files')}
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'files' ? 'bg-[#2D2926] text-white shadow-md' : 'text-[#78716A]'}`}>
+          <Library size={14} className="inline mr-1.5 -mt-0.5" />미디어풀
+        </button>
+        <button onClick={() => setMobileView('setlist')}
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'setlist' ? 'bg-[#2D2926] text-white shadow-md' : 'text-[#78716A]'}`}>
+          <Music size={14} className="inline mr-1.5 -mt-0.5" />셋리스트 <span className="text-[10px] opacity-70">({items.length})</span>
+        </button>
+      </div>
+
       {/* ===== LEFT: Library ===== */}
-      <aside className="w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-3 md:gap-5 shrink-0 lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24">
+      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-3 md:gap-5 shrink-0 h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
         <div className="bg-white rounded-2xl md:rounded-3xl p-1.5 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-1 md:gap-2 border border-[#78716A]/10 shrink-0">
           {[
             { key: 'library', icon: <Library size={18} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
@@ -948,7 +961,7 @@ export default function SetListPage() {
       </aside>
 
       {/* ===== RIGHT: Setlist Builder ===== */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className={`flex-1 flex flex-col min-w-0 ${mobileView !== 'setlist' ? 'hidden lg:flex' : 'flex'}`}>
         <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full">
 
           {/* Header */}
