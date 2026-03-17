@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
-import { Search, Plus, Trash2, Edit3, Check, X, Archive, Music, FileText, Mic, Type, Loader2, Tag, CheckSquare, Square, Eye, Play, ChevronRight, Maximize2, Layers, Sparkles, BookOpen } from 'lucide-react';
+import { Search, Plus, Trash2, Edit3, Check, X, Archive, Music, FileText, Mic, Type, Loader2, Tag, CheckSquare, Square, Eye, Play, ChevronRight, Maximize2, Layers, Sparkles, BookOpen, ChevronDown } from 'lucide-react';
 import { collection, query, orderBy, onSnapshot, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import type { LibraryItem } from './ImportModal';
@@ -83,6 +83,9 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [batchAction, setBatchAction] = useState<'key' | 'lang' | 'category' | 'tag' | null>(null);
   const [batchValue, setBatchValue] = useState('');
+
+  // 토글 펼치기
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   // 가사 추출/수정
   const [extractingId, setExtractingId] = useState<string | null>(null);
@@ -313,139 +316,157 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
   };
 
   // 아이템 렌더링 함수 (그룹/비그룹 공통)
-  const renderItemContent = (item: ArchiveItem) => (
-    <div className="flex items-start gap-3">
-      {batchMode && (
-        <button onClick={() => toggleSelect(item.archiveId)} className="mt-1 shrink-0">
-          {selectedIds.has(item.archiveId)
-            ? <CheckSquare size={18} className="text-[#E6C79C]" />
-            : <Square size={18} className="text-[#78716A]" />}
-        </button>
-      )}
-      <div className="mt-0.5 p-2 rounded-lg bg-[#2D2926]/10 shrink-0">
-        {getTypeIcon(item.type)}
-      </div>
-      <div className="flex-1 min-w-0">
-        {editingId === item.archiveId ? (
-          <div className="flex items-center gap-1.5">
-            <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleRename(item.archiveId)}
-              className="flex-1 text-sm font-bold bg-white border border-[#E6C79C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
-            <button onClick={() => handleRename(item.archiveId)} className="p-1.5 text-green-600 hover:bg-green-50 rounded"><Check size={16} /></button>
-            <button onClick={() => setEditingId(null)} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded"><X size={16} /></button>
-          </div>
-        ) : (
-          <p className="font-bold text-sm text-[#2D2926] truncate">{item.title}</p>
+  const isExpanded = (id: string) => expandedId === id;
+
+  const renderItemContent = (item: ArchiveItem) => {
+    const expanded = isExpanded(item.archiveId);
+    return (
+    <div>
+      {/* 개요 헤더 — 항상 표시 */}
+      <div className="flex items-center gap-3 cursor-pointer" onClick={() => setExpandedId(expanded ? null : item.archiveId)}>
+        {batchMode && (
+          <button onClick={(e) => { e.stopPropagation(); toggleSelect(item.archiveId); }} className="shrink-0">
+            {selectedIds.has(item.archiveId)
+              ? <CheckSquare size={18} className="text-[#E6C79C]" />
+              : <Square size={18} className="text-[#78716A]" />}
+          </button>
         )}
-        <div className="flex items-center gap-2 mt-1 flex-wrap">
-          {editingAuthorId === item.archiveId ? (
-            <div className="flex items-center gap-1">
-              <input type="text" value={editAuthor} onChange={e => setEditAuthor(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleSaveAuthor(item.archiveId)}
-                placeholder="아티스트/작곡자" autoFocus
-                className="text-xs bg-white border border-[#E6C79C] rounded px-2 py-0.5 w-28 focus:outline-none" />
-              <button onClick={() => handleSaveAuthor(item.archiveId)} className="text-green-600"><Check size={12} /></button>
-              <button onClick={() => setEditingAuthorId(null)} className="text-[#78716A]"><X size={12} /></button>
-            </div>
-          ) : (
-            <button onClick={() => { setEditingAuthorId(item.archiveId); setEditAuthor(item.author || ''); }}
-              className="text-xs text-[#78716A] truncate hover:text-[#2D2926] hover:underline cursor-pointer" title="아티스트 수정">
-              {item.author || '미상'}
-            </button>
-          )}
-          <select value={item.category} onChange={e => handleChangeCategory(item.archiveId, e.target.value)}
-            className="text-[11px] font-bold bg-[#E6C79C]/20 text-[#8C6B1C] px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
-            {CATEGORIES.filter(c => c.id !== 'all').map(c => (
-              <option key={c.id} value={c.id}>{c.label}</option>
-            ))}
-          </select>
-          <select value={item.musicalKey || ''} onChange={e => handleChangeKey(item.archiveId, e.target.value)}
-            className="text-[11px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
-            <option value="">키</option>
-            {MUSICAL_KEYS.filter(k => k).map(k => <option key={k} value={k}>{k}</option>)}
-          </select>
-          <select value={item.lang || ''} onChange={e => handleChangeLang(item.archiveId, e.target.value)}
-            className="text-[11px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
-            {LANGUAGES.map(l => <option key={l.id || 'kr'} value={l.id}>{l.label}</option>)}
-          </select>
+        <div className="p-1.5 rounded-lg bg-[#2D2926]/10 shrink-0">
+          {getTypeIcon(item.type)}
         </div>
-        <div className="flex gap-1.5 mt-1.5 flex-wrap items-center">
-          {item.musicalKey && <span className="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{item.musicalKey}</span>}
-          {item.lang && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded">{item.lang}</span>}
-          {(item.tags || []).map(tag => (
-            <span key={tag} className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-0.5">
-              {tag}
-              <button onClick={() => handleRemoveTag(item.archiveId, tag)} className="hover:text-red-500 ml-0.5"><X size={10} /></button>
-            </span>
-          ))}
-          {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 px-2 py-0.5 rounded">PDF</span>}
-          {item.hasAudio && <span className="text-[10px] font-bold bg-[#E6C79C]/30 px-2 py-0.5 rounded">MP3</span>}
-          {tagInputId === item.archiveId ? (
-            <div className="flex items-center gap-1">
-              <input type="text" value={tagInputValue} onChange={e => setTagInputValue(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleAddTag(item.archiveId)}
-                placeholder="태그 입력" autoFocus
-                className="text-[11px] bg-white border border-green-300 rounded px-2 py-0.5 w-20 focus:outline-none" />
-              <button onClick={() => handleAddTag(item.archiveId)} className="text-green-600"><Check size={12} /></button>
-              <button onClick={() => { setTagInputId(null); setTagInputValue(''); }} className="text-[#78716A]"><X size={12} /></button>
-            </div>
-          ) : (
-            <button onClick={() => { setTagInputId(item.archiveId); setTagInputValue(''); }}
-              className="text-[10px] text-[#78716A] hover:text-green-600 flex items-center gap-0.5 transition-colors" title="태그 추가">
-              <Tag size={10} />+
-            </button>
-          )}
+        <div className="flex-1 min-w-0">
+          <p className="font-bold text-sm text-[#2D2926] truncate">{item.title}</p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-xs text-[#78716A] truncate max-w-[80px]">{item.author || '미상'}</span>
+          {item.musicalKey && <span className="text-[10px] font-bold bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">{item.musicalKey}</span>}
+          {item.lang && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">{item.lang}</span>}
+          {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 px-1.5 py-0.5 rounded">PDF</span>}
+          {item.hasAudio && <span className="text-[10px] font-bold bg-[#E6C79C]/30 px-1.5 py-0.5 rounded">MP3</span>}
+          <ChevronDown size={14} className={`text-[#78716A] transition-transform ${expanded ? 'rotate-180' : ''}`} />
         </div>
       </div>
-      {!batchMode && (
-        <div className="grid grid-cols-2 gap-1.5 shrink-0">
-          {(item.hasPdf || item.fileUrl || item.type === 'transcript' || item.type === 'guide') && onPreview && (
-            <button onClick={() => onPreview(item as LibraryItem)}
-              className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="미리보기">
-              <Eye size={16} />
-            </button>
-          )}
-          {item.hasAudio && onPlayAudio && (
-            <button onClick={() => onPlayAudio(item as LibraryItem)}
-              className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C]/50 rounded-lg transition-colors" title="재생">
-              <Play size={16} fill="currentColor" />
-            </button>
-          )}
-          {onAddToSetlist && (
-            <button onClick={() => onAddToSetlist(item as LibraryItem)}
-              className="p-2 bg-[#2D2926]/10 text-[#2D2926] hover:bg-[#2D2926] hover:text-white rounded-lg transition-colors" title="셋리스트에 추가">
-              <ChevronRight size={16} />
-            </button>
-          )}
-          <button onClick={() => handleAddToLibrary(item)}
-            disabled={existingLibraryIds.has(item.sourceId || '')}
-            className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-            title={existingLibraryIds.has(item.sourceId || '') ? '이미 추가됨' : '미디어풀에 추가'}>
-            <Plus size={16} />
-          </button>
-          <button onClick={() => { setEditingId(item.archiveId); setEditTitle(item.title); }}
-            className="p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경">
-            <Edit3 size={14} />
-          </button>
-          {/* AI 가사 추출 */}
-          {(item.hasPdf || item.fileUrl) && (
-            <button onClick={() => handleExtractLyrics(item)}
-              disabled={extractingId === item.archiveId}
-              className="p-2 bg-violet-50 text-violet-600 hover:bg-violet-100 rounded-lg transition-colors disabled:opacity-40" title="AI 가사 추출">
-              {extractingId === item.archiveId ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
-            </button>
-          )}
-          {/* 가사 보기 */}
-          {item.lyrics && (
-            <button onClick={() => setLyricsViewId(lyricsViewId === item.archiveId ? null : item.archiveId)}
-              className={`p-2 rounded-lg transition-colors ${lyricsViewId === item.archiveId ? 'bg-violet-500 text-white' : 'bg-violet-50 text-violet-600 hover:bg-violet-100'}`} title="가사 보기">
-              <BookOpen size={14} />
-            </button>
-          )}
-          <button onClick={() => handleDelete(item.archiveId)}
-            className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제">
-            <Trash2 size={14} />
-          </button>
+
+      {/* 펼침 상세 — 토글 */}
+      {expanded && (
+        <div className="mt-3 pt-3 border-t border-black/5">
+          <div className="flex items-start gap-3">
+            <div className="flex-1 min-w-0">
+              {editingId === item.archiveId ? (
+                <div className="flex items-center gap-1.5 mb-2">
+                  <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleRename(item.archiveId)}
+                    className="flex-1 text-sm font-bold bg-white border border-[#E6C79C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
+                  <button onClick={() => handleRename(item.archiveId)} className="p-1.5 text-green-600 hover:bg-green-50 rounded"><Check size={16} /></button>
+                  <button onClick={() => setEditingId(null)} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded"><X size={16} /></button>
+                </div>
+              ) : null}
+              <div className="flex items-center gap-2 flex-wrap">
+                {editingAuthorId === item.archiveId ? (
+                  <div className="flex items-center gap-1">
+                    <input type="text" value={editAuthor} onChange={e => setEditAuthor(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleSaveAuthor(item.archiveId)}
+                      placeholder="아티스트/작곡자" autoFocus
+                      className="text-xs bg-white border border-[#E6C79C] rounded px-2 py-0.5 w-28 focus:outline-none" />
+                    <button onClick={() => handleSaveAuthor(item.archiveId)} className="text-green-600"><Check size={12} /></button>
+                    <button onClick={() => setEditingAuthorId(null)} className="text-[#78716A]"><X size={12} /></button>
+                  </div>
+                ) : (
+                  <button onClick={() => { setEditingAuthorId(item.archiveId); setEditAuthor(item.author || ''); }}
+                    className="text-xs text-[#78716A] truncate hover:text-[#2D2926] hover:underline cursor-pointer" title="아티스트 수정">
+                    {item.author || '미상'}
+                  </button>
+                )}
+                <select value={item.category} onChange={e => handleChangeCategory(item.archiveId, e.target.value)}
+                  className="text-[11px] font-bold bg-[#E6C79C]/20 text-[#8C6B1C] px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+                  {CATEGORIES.filter(c => c.id !== 'all').map(c => (
+                    <option key={c.id} value={c.id}>{c.label}</option>
+                  ))}
+                </select>
+                <select value={item.musicalKey || ''} onChange={e => handleChangeKey(item.archiveId, e.target.value)}
+                  className="text-[11px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+                  <option value="">키</option>
+                  {MUSICAL_KEYS.filter(k => k).map(k => <option key={k} value={k}>{k}</option>)}
+                </select>
+                <select value={item.lang || ''} onChange={e => handleChangeLang(item.archiveId, e.target.value)}
+                  className="text-[11px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+                  {LANGUAGES.map(l => <option key={l.id || 'kr'} value={l.id}>{l.label}</option>)}
+                </select>
+              </div>
+              <div className="flex gap-1.5 mt-1.5 flex-wrap items-center">
+                {(item.tags || []).map(tag => (
+                  <span key={tag} className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-0.5">
+                    {tag}
+                    <button onClick={() => handleRemoveTag(item.archiveId, tag)} className="hover:text-red-500 ml-0.5"><X size={10} /></button>
+                  </span>
+                ))}
+                {tagInputId === item.archiveId ? (
+                  <div className="flex items-center gap-1">
+                    <input type="text" value={tagInputValue} onChange={e => setTagInputValue(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleAddTag(item.archiveId)}
+                      placeholder="태그 입력" autoFocus
+                      className="text-[11px] bg-white border border-green-300 rounded px-2 py-0.5 w-20 focus:outline-none" />
+                    <button onClick={() => handleAddTag(item.archiveId)} className="text-green-600"><Check size={12} /></button>
+                    <button onClick={() => { setTagInputId(null); setTagInputValue(''); }} className="text-[#78716A]"><X size={12} /></button>
+                  </div>
+                ) : (
+                  <button onClick={() => { setTagInputId(item.archiveId); setTagInputValue(''); }}
+                    className="text-[10px] text-[#78716A] hover:text-green-600 flex items-center gap-0.5 transition-colors" title="태그 추가">
+                    <Tag size={10} />+
+                  </button>
+                )}
+              </div>
+            </div>
+            {!batchMode && (
+              <div className="grid grid-cols-2 gap-1.5 shrink-0">
+                {(item.hasPdf || item.fileUrl || item.type === 'transcript' || item.type === 'guide') && onPreview && (
+                  <button onClick={() => onPreview(item as LibraryItem)}
+                    className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="미리보기">
+                    <Eye size={16} />
+                  </button>
+                )}
+                {item.hasAudio && onPlayAudio && (
+                  <button onClick={() => onPlayAudio(item as LibraryItem)}
+                    className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C]/50 rounded-lg transition-colors" title="재생">
+                    <Play size={16} fill="currentColor" />
+                  </button>
+                )}
+                {onAddToSetlist && (
+                  <button onClick={() => onAddToSetlist(item as LibraryItem)}
+                    className="p-2 bg-[#2D2926]/10 text-[#2D2926] hover:bg-[#2D2926] hover:text-white rounded-lg transition-colors" title="셋리스트에 추가">
+                    <ChevronRight size={16} />
+                  </button>
+                )}
+                <button onClick={() => handleAddToLibrary(item)}
+                  disabled={existingLibraryIds.has(item.sourceId || '')}
+                  className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  title={existingLibraryIds.has(item.sourceId || '') ? '이미 추가됨' : '미디어풀에 추가'}>
+                  <Plus size={16} />
+                </button>
+                <button onClick={() => { setEditingId(item.archiveId); setEditTitle(item.title); }}
+                  className="p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경">
+                  <Edit3 size={14} />
+                </button>
+                {(item.hasPdf || item.fileUrl) && (
+                  <button onClick={() => handleExtractLyrics(item)}
+                    disabled={extractingId === item.archiveId}
+                    className="p-2 bg-violet-50 text-violet-600 hover:bg-violet-100 rounded-lg transition-colors disabled:opacity-40" title="AI 가사 추출">
+                    {extractingId === item.archiveId ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+                  </button>
+                )}
+                {item.lyrics && (
+                  <button onClick={() => setLyricsViewId(lyricsViewId === item.archiveId ? null : item.archiveId)}
+                    className={`p-2 rounded-lg transition-colors ${lyricsViewId === item.archiveId ? 'bg-violet-500 text-white' : 'bg-violet-50 text-violet-600 hover:bg-violet-100'}`} title="가사 보기">
+                    <BookOpen size={14} />
+                  </button>
+                )}
+                <button onClick={() => handleDelete(item.archiveId)}
+                  className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제">
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       )}
       {/* 가사 인라인 미리보기/수정 */}
@@ -486,6 +507,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
       )}
     </div>
   );
+  };
 
   return (
     <div className="flex flex-col h-full">
