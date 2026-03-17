@@ -708,11 +708,11 @@ export default function SetListPage() {
                         {item.type === 'transcript' && <span className="text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">텍스트</span>}
                       </div>
                     </div>
-                    <div className="flex flex-col gap-1.5 shrink-0">
-                      <button onClick={() => addToSetlist(item)} className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={16} /></button>
-                      <button onClick={() => saveItemToArchive(item)} className="p-1.5 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-lg transition-colors" title="아카이브에 저장"><Archive size={13} /></button>
-                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={13} /></button>
-                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={13} /></button>
+                    <div className="grid grid-cols-2 gap-1 shrink-0">
+                      <button onClick={() => addToSetlist(item)} className="p-1.5 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-md transition-colors" title="셋리스트에 추가"><Plus size={14} /></button>
+                      <button onClick={() => saveItemToArchive(item)} className="p-1.5 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-md transition-colors" title="아카이브에 저장"><Archive size={13} /></button>
+                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded-md transition-colors" title="이름 변경"><Edit3 size={13} /></button>
+                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-md transition-colors" title="삭제"><Trash2 size={13} /></button>
                     </div>
                   </div>
                 ))}
