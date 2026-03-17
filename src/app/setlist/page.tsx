@@ -965,20 +965,20 @@ export default function SetListPage() {
         <div className="bg-white rounded-2xl md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full overflow-hidden">
 
           {/* Header */}
-          <header className="p-4 md:p-8 border-b border-black/5">
-            <div className="flex items-center justify-between gap-3 mb-2">
-              <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
-                <span className="bg-[#2D2926] text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full tracking-wider uppercase shrink-0">Smart Cue</span>
-                <span className="text-xs text-[#78716A]">{items.length}곡</span>
-                <span className="text-[#8C6B1C] bg-[#E6C79C]/30 text-[10px] font-bold px-2 py-0.5 rounded-full">{calculateTotalDuration()}</span>
+          <header className="p-3 md:p-8 border-b border-black/5">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <div className="flex items-center gap-1.5 md:gap-2 flex-wrap flex-1 min-w-0">
+                <span className="bg-[#2D2926] text-white text-[8px] md:text-[9px] font-bold px-2 md:px-2.5 py-0.5 rounded-full tracking-wider uppercase shrink-0">Smart Cue</span>
+                <span className="text-[10px] md:text-xs text-[#78716A]">{items.length}곡</span>
+                <span className="text-[#8C6B1C] bg-[#E6C79C]/30 text-[9px] md:text-[10px] font-bold px-1.5 md:px-2 py-0.5 rounded-full">{calculateTotalDuration()}</span>
               </div>
-              <div className="flex gap-1.5 md:gap-2 items-center shrink-0">
-                <button onClick={() => setIsManagerOpen(true)} className="p-2 bg-[#FAF9F6] border border-black/5 rounded-xl hover:bg-[#E6C79C]/20 transition-colors" title="셋리스트 관리"><FolderOpen size={16} /></button>
-                <button onClick={saveSetlist} className="bg-[#2D2926] text-[#E6C79C] px-3 md:px-4 py-2 rounded-xl text-xs md:text-sm font-bold hover:bg-[#78716A]">저장</button>
+              <div className="flex gap-1 md:gap-2 items-center shrink-0">
+                <button onClick={() => setIsManagerOpen(true)} className="p-1.5 md:p-2 bg-[#FAF9F6] border border-black/5 rounded-lg md:rounded-xl hover:bg-[#E6C79C]/20 transition-colors" title="셋리스트 관리"><FolderOpen size={15} /></button>
+                <button onClick={saveSetlist} className="bg-[#2D2926] text-[#E6C79C] px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[11px] md:text-sm font-bold hover:bg-[#78716A]">저장</button>
               </div>
             </div>
             <input value={setlistTitle} onChange={e => setSetlistTitle(e.target.value)}
-              className="text-2xl md:text-4xl font-handwriting text-[#2D2926] bg-transparent border-none outline-none hover:bg-black/5 p-1 rounded-lg w-full" placeholder="셋리스트 제목" />
+              className="text-xl md:text-4xl font-handwriting text-[#2D2926] bg-transparent border-none outline-none hover:bg-black/5 p-1 rounded-lg w-full" placeholder="셋리스트 제목" />
             <div className="flex gap-1.5 flex-wrap mt-2">
               <button onClick={handleExportCueSheet} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 rounded-lg border border-black/5 text-[10px] md:text-[11px] font-bold">
                 <FileText size={12} /> 큐시트
@@ -1002,40 +1002,39 @@ export default function SetListPage() {
                       <Draggable key={item.id} draggableId={item.id} index={index}>
                         {(prov, snap) => (
                           <div ref={prov.innerRef} {...prov.draggableProps}
-                            className={`group relative bg-white border rounded-2xl p-3 md:p-4 flex flex-row gap-2.5 md:gap-5 items-center transition-all overflow-hidden ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
-                            <div {...prov.dragHandleProps} className="p-1 md:p-1.5 text-black/20 hover:text-[#2D2926] cursor-grab shrink-0"><MoreVertical size={18} /></div>
-                            <div className="flex items-center gap-2 md:gap-3 shrink-0 cursor-pointer" onClick={() => handleItemClick(item)}>
-                              <span className="text-xl md:text-3xl font-handwriting text-black/15 w-6 md:w-8 text-center">{index + 1}</span>
-                              <div className={`p-2 md:p-3 rounded-xl shrink-0 ${getTypeColor(item.type)}`}>{getTypeIcon(item.type as ItemType, 18)}</div>
+                            className={`group relative bg-white border rounded-2xl p-2 md:p-4 flex flex-row gap-1.5 md:gap-5 items-center transition-all overflow-hidden ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
+                            <div {...prov.dragHandleProps} className="p-0.5 md:p-1.5 text-black/20 hover:text-[#2D2926] cursor-grab shrink-0"><MoreVertical size={16} /></div>
+                            <div className="flex items-center gap-1 md:gap-3 shrink-0 cursor-pointer" onClick={() => handleItemClick(item)}>
+                              <span className="text-lg md:text-3xl font-handwriting text-black/15 w-5 md:w-8 text-center">{index + 1}</span>
+                              <div className={`p-1.5 md:p-3 rounded-lg md:rounded-xl shrink-0 ${getTypeColor(item.type)}`}>{getTypeIcon(item.type as ItemType, 16)}</div>
                             </div>
                             <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleItemClick(item)}>
-                              <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-0.5 md:mb-1">
-                                <span className={`text-[9px] md:text-[10px] font-bold px-2 md:px-2.5 py-0.5 rounded-full uppercase ${getTypeColor(item.type)}`}>{getTypeLabel(item.type)}</span>
-                                <h3 className="font-bold text-sm md:text-lg truncate text-[#2D2926]">{item.title}</h3>
-                                {item.author && <span className="text-xs md:text-sm text-[#78716A] hidden sm:inline">· {item.author}</span>}
+                              <div className="flex flex-wrap items-center gap-1 md:gap-2 mb-0.5 md:mb-1">
+                                <span className={`text-[8px] md:text-[10px] font-bold px-1.5 md:px-2.5 py-0.5 rounded-full uppercase ${getTypeColor(item.type)}`}>{getTypeLabel(item.type)}</span>
+                                <h3 className="font-bold text-xs md:text-lg truncate text-[#2D2926]">{item.title}</h3>
+                                {item.author && <span className="text-[10px] md:text-sm text-[#78716A] hidden sm:inline">· {item.author}</span>}
                               </div>
-                              <p className="text-xs md:text-sm text-[#78716A] line-clamp-1">{item.note}</p>
+                              <p className="text-[10px] md:text-sm text-[#78716A] line-clamp-1">{item.note}</p>
                             </div>
-                            <div className="flex items-center gap-2 md:gap-4 shrink-0">
-                              <div className="flex gap-1 md:gap-3 text-[#78716A]">
+                            <div className="flex items-center gap-0.5 md:gap-4 shrink-0">
+                              <div className="flex gap-0 md:gap-3 text-[#78716A]">
                                 {item.hasAudio && (
-                                  <button onClick={() => togglePlay(item)} className="flex items-center gap-1 text-[11px] md:text-xs font-bold hover:text-[#2D2926] px-1.5 md:px-2 py-1 rounded-lg hover:bg-[#E6C79C]/20 transition-colors">
-                                    {playingItem?.id === item.id && isPlaying ? <Pause size={12} /> : <Play fill="currentColor" size={12} />} <span className="hidden sm:inline">재생</span>
+                                  <button onClick={() => togglePlay(item)} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#2D2926] hover:bg-[#E6C79C]/20 transition-colors">
+                                    {playingItem?.id === item.id && isPlaying ? <Pause size={14} /> : <Play fill="currentColor" size={14} />}
                                   </button>
                                 )}
                                 {item.hasPdf && item.fileUrl && (
-                                  <button onClick={() => setPreviewPdfUrl(item.fileUrl!)} className="flex items-center gap-1 text-[11px] md:text-xs font-bold hover:text-[#2D2926] px-1.5 md:px-2 py-1 rounded-lg hover:bg-blue-50 transition-colors">
-                                    <FileText size={12} /> <span className="hidden sm:inline">보기</span>
+                                  <button onClick={() => setPreviewPdfUrl(item.fileUrl!)} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#2D2926] hover:bg-blue-50 transition-colors">
+                                    <FileText size={14} />
                                   </button>
                                 )}
                                 {(item.type === 'transcript' || item.type === 'guide') && (
-                                  <button onClick={() => setPreviewText({ title: item.title, content: item.note || '(내용 없음)' })} className="flex items-center gap-1 text-[11px] md:text-xs font-bold hover:text-[#2D2926] px-1.5 md:px-2 py-1 rounded-lg hover:bg-amber-50 transition-colors">
-                                    <Eye size={12} /> <span className="hidden sm:inline">보기</span>
+                                  <button onClick={() => setPreviewText({ title: item.title, content: item.note || '(내용 없음)' })} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#2D2926] hover:bg-amber-50 transition-colors">
+                                    <Eye size={14} />
                                   </button>
                                 )}
-                                {item.duration && <span className="text-[10px] md:text-xs font-bold bg-[#FAF9F6] px-2 md:px-2.5 py-1 rounded-lg">{item.duration}</span>}
                               </div>
-                              <button onClick={() => removeFromSetlist(item.id)} className="p-1.5 md:p-2 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"><X size={16} /></button>
+                              <button onClick={() => removeFromSetlist(item.id)} className="p-1 md:p-2 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"><X size={14} /></button>
                             </div>
                           </div>
                         )}
