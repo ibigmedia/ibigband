@@ -695,8 +695,8 @@ export default function SetListPage() {
       </div>
 
       {/* ===== LEFT: Library ===== */}
-      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-3 md:gap-5 shrink-0 overflow-hidden h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
-        <div className="bg-white rounded-2xl md:rounded-3xl p-1.5 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-1 md:gap-2 border border-[#78716A]/10 shrink-0">
+      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-2 md:gap-5 shrink-0 min-w-0 h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
+        <div className="bg-white rounded-2xl md:rounded-3xl p-1 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-0.5 md:gap-2 border border-[#78716A]/10 shrink-0">
           {[
             { key: 'library', icon: <Library size={18} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
             { key: 'archive', icon: <FolderOpen size={18} />, label: '아카이브', active: activeTab === 'archive' },
@@ -710,14 +710,14 @@ export default function SetListPage() {
           ))}
         </div>
 
-        <div className="bg-white flex-1 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#78716A]/10 overflow-hidden flex flex-col">
+        <div className="bg-white flex-1 rounded-2xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
             <div className="flex flex-col h-full">
-              <div className="p-5 border-b border-black/5 shrink-0">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-lg flex items-center gap-2"><LayoutDashboard className="text-[#E6C79C]" size={22} /> 미디어 풀</h3>
+              <div className="p-3 md:p-5 border-b border-black/5 shrink-0">
+                <div className="flex items-center justify-between mb-2 md:mb-3">
+                  <h3 className="font-bold text-base md:text-lg flex items-center gap-2"><LayoutDashboard className="text-[#E6C79C]" size={20} /> 미디어 풀</h3>
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-[#78716A] font-bold">{libraryItems.length}개</span>
                     {libraryItems.length > 0 && (
@@ -728,14 +728,14 @@ export default function SetListPage() {
                   </div>
                 </div>
                 <div className="relative">
-                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" size={18} />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" size={16} />
                   <input type="text" value={librarySearchQuery} onChange={e => setLibrarySearchQuery(e.target.value)}
                     placeholder="악보/음원 검색..."
-                    className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-10 pr-4 py-3 text-[15px] focus:outline-none focus:border-[#2D2926]" />
+                    className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-9 pr-3 py-2.5 md:py-3 text-sm md:text-[15px] focus:outline-none focus:border-[#2D2926]" />
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
+              <div className="flex-1 overflow-y-auto p-2.5 md:p-4 space-y-2">
                 {filteredLibrary.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-[#78716A]">
                     <Library size={36} className="mb-3 opacity-30" />
@@ -743,7 +743,7 @@ export default function SetListPage() {
                   </div>
                 )}
                 {filteredLibrary.map(item => (
-                  <div key={item.id} className="bg-[#FAF9F6] border border-black/5 rounded-xl p-4 hover:border-[#E6C79C] transition-all group flex items-start gap-3">
+                  <div key={item.id} className="bg-[#FAF9F6] border border-black/5 rounded-xl p-2.5 md:p-4 hover:border-[#E6C79C] transition-all group flex items-start gap-2 md:gap-3">
                     <div className={`mt-0.5 shrink-0 p-2 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
                       {getTypeIcon(item.type as ItemType, 18)}
                     </div>
@@ -785,14 +785,14 @@ export default function SetListPage() {
                 ))}
               </div>
 
-              <div className="p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-3">
+              <div className="p-2.5 md:p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-2 md:gap-3">
                 <button onClick={() => setActiveTab('upload')}
-                  className="py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-2 text-sm font-bold">
-                  <UploadCloud size={18} /> 파일 가져오기
+                  className="py-2.5 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  <UploadCloud size={16} /> 파일 가져오기
                 </button>
                 <button onClick={() => setIsTextEditorOpen(true)}
-                  className="py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-2 text-sm font-bold">
-                  <Type size={18} /> 텍스트 작성
+                  className="py-2.5 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  <Type size={16} /> 텍스트 작성
                 </button>
               </div>
             </div>
