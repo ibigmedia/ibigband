@@ -680,7 +680,7 @@ export default function SetListPage() {
 
   // ==================== RENDER ====================
   return (
-    <div className="pt-20 md:pt-24 pb-20 md:pb-12 px-3 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-4 md:gap-6">
+    <div className="pt-20 md:pt-24 pb-20 md:pb-12 px-2 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-3 md:gap-6 overflow-x-hidden">
 
       {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
       <div className="lg:hidden flex bg-white rounded-2xl p-1 shadow-sm border border-[#78716A]/10 shrink-0">
@@ -695,7 +695,7 @@ export default function SetListPage() {
       </div>
 
       {/* ===== LEFT: Library ===== */}
-      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-3 md:gap-5 shrink-0 h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
+      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-3 md:gap-5 shrink-0 overflow-hidden h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
         <div className="bg-white rounded-2xl md:rounded-3xl p-1.5 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-1 md:gap-2 border border-[#78716A]/10 shrink-0">
           {[
             { key: 'library', icon: <Library size={18} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
@@ -961,8 +961,8 @@ export default function SetListPage() {
       </aside>
 
       {/* ===== RIGHT: Setlist Builder ===== */}
-      <main className={`flex-1 flex flex-col min-w-0 ${mobileView !== 'setlist' ? 'hidden lg:flex' : 'flex'}`}>
-        <div className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full">
+      <main className={`flex-1 flex flex-col min-w-0 w-full overflow-hidden ${mobileView !== 'setlist' ? 'hidden lg:flex' : 'flex'}`}>
+        <div className="bg-white rounded-2xl md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full overflow-hidden">
 
           {/* Header */}
           <header className="p-4 md:p-8 border-b border-black/5">
@@ -993,7 +993,7 @@ export default function SetListPage() {
           </header>
 
           {/* D&D list */}
-          <div className="p-5 md:p-8 flex-1 bg-[#FAF9F6]/50">
+          <div className="p-2.5 md:p-8 flex-1 bg-[#FAF9F6]/50 overflow-x-hidden">
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="cue-sheet">
                 {(provided) => (
@@ -1002,7 +1002,7 @@ export default function SetListPage() {
                       <Draggable key={item.id} draggableId={item.id} index={index}>
                         {(prov, snap) => (
                           <div ref={prov.innerRef} {...prov.draggableProps}
-                            className={`group relative bg-white border rounded-2xl p-3 md:p-4 flex flex-row gap-2.5 md:gap-5 items-center transition-all ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
+                            className={`group relative bg-white border rounded-2xl p-3 md:p-4 flex flex-row gap-2.5 md:gap-5 items-center transition-all overflow-hidden ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
                             <div {...prov.dragHandleProps} className="p-1 md:p-1.5 text-black/20 hover:text-[#2D2926] cursor-grab shrink-0"><MoreVertical size={18} /></div>
                             <div className="flex items-center gap-2 md:gap-3 shrink-0 cursor-pointer" onClick={() => handleItemClick(item)}>
                               <span className="text-xl md:text-3xl font-handwriting text-black/15 w-6 md:w-8 text-center">{index + 1}</span>
@@ -1055,7 +1055,7 @@ export default function SetListPage() {
           </div>
 
           {/* Footer bar */}
-          <div className="bg-[#2D2926] p-3 flex items-center justify-between gap-4 text-white rounded-b-[2rem]">
+          <div className="bg-[#2D2926] p-2 md:p-3 flex items-center justify-between gap-2 md:gap-4 text-white rounded-b-2xl md:rounded-b-[2rem] overflow-hidden">
             <div className="flex items-center gap-3">
               <button onClick={() => playingItem && togglePlay(playingItem)}
                 className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playingItem ? 'bg-[#E6C79C] text-[#2D2926]' : 'bg-white/10 text-white/30 cursor-not-allowed'}`}>
