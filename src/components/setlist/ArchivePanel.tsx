@@ -65,6 +65,8 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
   const [category, setCategory] = useState('all');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
+  const [editingAuthorId, setEditingAuthorId] = useState<string | null>(null);
+  const [editAuthor, setEditAuthor] = useState('');
   const [filterKey, setFilterKey] = useState('all');
   const [filterLang, setFilterLang] = useState('all');
   const [filterTag, setFilterTag] = useState('');
@@ -74,7 +76,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
   const [tagInputValue, setTagInputValue] = useState('');
 
   // 그룹별 보기
-  const [groupBy, setGroupBy] = useState<'none' | 'key' | 'lang' | 'category' | 'tag'>('none');
+  const [groupBy, setGroupBy] = useState<'none' | 'key' | 'lang' | 'category' | 'tag' | 'author'>('none');
 
   // 일괄 선택/수정 모드
   const [batchMode, setBatchMode] = useState(false);
@@ -138,7 +140,8 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
     const groups: Record<string, ArchiveItem[]> = {};
     for (const item of filtered) {
       let key: string;
-      if (groupBy === 'key') key = item.musicalKey || '미지정';
+      if (groupBy === 'author') key = item.author || '미상';
+      else if (groupBy === 'key') key = item.musicalKey || '미지정';
       else if (groupBy === 'lang') {
         const langMap: Record<string, string> = { '': '한글', 'EN': 'English', 'SP': 'Español' };
         key = langMap[item.lang || ''] || item.lang || '미지정';
@@ -169,6 +172,13 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
       await updateDoc(doc(db, 'users', userId, 'archive', archiveId), { title: editTitle.trim() });
     } catch (e) { console.error(e); }
     setEditingId(null);
+  };
+
+  const handleSaveAuthor = async (archiveId: string) => {
+    try {
+      await updateDoc(doc(db, 'users', userId, 'archive', archiveId), { author: editAuthor.trim() });
+    } catch (e) { console.error(e); }
+    setEditingAuthorId(null);
   };
 
   const handleDelete = async (archiveId: string) => {
@@ -328,7 +338,21 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
           <p className="font-bold text-[13px] text-[#2D2926] truncate">{item.title}</p>
         )}
         <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-          {item.author && <span className="text-[10px] text-[#78716A] truncate">{item.author}</span>}
+          {editingAuthorId === item.archiveId ? (
+            <div className="flex items-center gap-0.5">
+              <input type="text" value={editAuthor} onChange={e => setEditAuthor(e.target.value)}
+                onKeyDown={e => e.key === 'Enter' && handleSaveAuthor(item.archiveId)}
+                placeholder="아티스트/작곡자" autoFocus
+                className="text-[10px] bg-white border border-[#E6C79C] rounded px-1.5 py-0.5 w-24 focus:outline-none" />
+              <button onClick={() => handleSaveAuthor(item.archiveId)} className="text-green-600"><Check size={10} /></button>
+              <button onClick={() => setEditingAuthorId(null)} className="text-[#78716A]"><X size={10} /></button>
+            </div>
+          ) : (
+            <button onClick={() => { setEditingAuthorId(item.archiveId); setEditAuthor(item.author || ''); }}
+              className="text-[10px] text-[#78716A] truncate hover:text-[#2D2926] hover:underline cursor-pointer" title="아티스트 수정">
+              {item.author || '미상'}
+            </button>
+          )}
           <select value={item.category} onChange={e => handleChangeCategory(item.archiveId, e.target.value)}
             className="text-[9px] font-bold bg-[#E6C79C]/20 text-[#8C6B1C] px-1.5 py-0.5 rounded border-none focus:outline-none cursor-pointer">
             {CATEGORIES.filter(c => c.id !== 'all').map(c => (
@@ -521,6 +545,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
           <select value={groupBy} onChange={e => setGroupBy(e.target.value as any)}
             className="text-[10px] font-bold bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#2D2926]">
             <option value="none">그룹 없음</option>
+            <option value="author">🎤 아티스트별</option>
             <option value="key">🎹 키별</option>
             <option value="lang">🌐 언어별</option>
             <option value="category">📁 카테고리별</option>

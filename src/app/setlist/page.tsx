@@ -1070,18 +1070,20 @@ export default function SetListPage() {
               if (items.length === 0) { alert('셋리스트에 곡을 추가해주세요.'); return; }
               // 아카이브에서 가사 조회
               const archiveSnap = await getDocs(collection(db, 'users', user.uid, 'archive'));
-              const archiveMap = new Map<string, string>();
+              const archiveMap = new Map<string, { lyrics: string; docId: string }>();
               archiveSnap.docs.forEach(d => {
                 const data = d.data();
                 if (data.lyrics) {
-                  if (data.sourceId) archiveMap.set(data.sourceId, data.lyrics);
-                  archiveMap.set(data.title, data.lyrics);
+                  const entry = { lyrics: data.lyrics, docId: d.id };
+                  if (data.sourceId) archiveMap.set(data.sourceId, entry);
+                  archiveMap.set(data.title, entry);
                 }
               });
               const lyricsSlides: LyricsSlide[] = items
                 .map(i => {
-                  const lyrics = archiveMap.get(i.sourceId || '') || archiveMap.get(i.title) || '';
-                  return { title: i.title, author: i.author, text: lyrics };
+                  const match = archiveMap.get(i.sourceId || '') || archiveMap.get(i.title);
+                  const lyrics = match?.lyrics || '';
+                  return { title: i.title, author: i.author, text: lyrics, sourceId: match?.docId };
                 })
                 .filter(s => s.text.trim());
               if (lyricsSlides.length === 0) { alert('가사가 포함된 곡이 없습니다.\n아카이브에서 AI 가사 추출을 먼저 실행해 주세요.'); return; }
@@ -1169,6 +1171,13 @@ export default function SetListPage() {
         onLaunchPresenter={(slides) => {
           launchLyricsPresenter(slides);
           setIsLyricsPresentOpen(false);
+        }}
+        onSyncToArchive={async (slides) => {
+          if (!user) return;
+          const updates = slides.filter(s => s.sourceId);
+          await Promise.all(updates.map(s =>
+            updateDoc(doc(db, 'users', user.uid, 'archive', s.sourceId!), { lyrics: s.lyrics })
+          ));
         }}
       />
 
