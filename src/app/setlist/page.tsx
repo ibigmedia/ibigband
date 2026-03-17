@@ -5,7 +5,8 @@ import {
   X, Type, Search, UploadCloud, Library, Mic, FileAudio,
   Music, Sparkles, Smartphone, ChevronRight, LayoutDashboard,
   MoreVertical, FileVideo, Download, Pause, Clock, Cloud, HardDrive,
-  Mail, Loader2, Trash2, FolderOpen, MapPin, Bell, Send
+  Mail, Loader2, Trash2, FolderOpen, MapPin, Bell, Send,
+  Image, Megaphone, Eye, ClipboardPaste
 } from 'lucide-react';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
@@ -35,7 +36,7 @@ interface SavedSetlist {
 
 interface ScheduleItem {
   id: string;
-  type: 'event' | 'practice' | 'travel' | 'rehearsal';
+  type: 'event' | 'practice' | 'travel' | 'rehearsal' | 'notice';
   time: string;
   date?: string;
   title: string;
@@ -66,6 +67,10 @@ export default function SetListPage() {
   const [isTextEditorOpen, setIsTextEditorOpen] = useState(false);
   const [isManagerOpen, setIsManagerOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+
+  // Item preview modals
+  const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
+  const [previewText, setPreviewText] = useState<{ title: string; content: string } | null>(null);
 
   // Schedule
   const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
@@ -215,7 +220,8 @@ export default function SetListPage() {
     if (!file || !user) return;
     const isAudio = file.type.startsWith('audio/');
     const isPdf = file.type === 'application/pdf';
-    if (!isAudio && !isPdf) { alert('PDF 또는 오디오 파일만 가능합니다.'); return; }
+    const isImage = file.type.startsWith('image/');
+    if (!isAudio && !isPdf && !isImage) { alert('PDF, 이미지 또는 오디오 파일만 가능합니다.'); return; }
 
     try {
       const storageRef = ref(storage, `setlist_files/${user.uid}/${Date.now()}_${file.name}`);
@@ -224,10 +230,10 @@ export default function SetListPage() {
         async () => {
           const url = await getDownloadURL(task.snapshot.ref);
           const item: LibraryItem = {
-            id: `upload-${Date.now()}`, type: isPdf ? 'sheet' : 'mr',
+            id: `upload-${Date.now()}`, type: (isPdf || isImage) ? 'sheet' : 'mr',
             title: file.name.replace(/\.[^/.]+$/, ""), author: user.displayName || '업로드',
-            duration: '', note: '직접 업로드', hasAudio: isAudio, hasPdf: isPdf,
-            fileUrl: isPdf ? url : '', audioUrl: isAudio ? url : '', youtubeUrl: '',
+            duration: '', note: isImage ? '이미지 악보' : '직접 업로드', hasAudio: isAudio, hasPdf: isPdf,
+            fileUrl: (isPdf || isImage) ? url : '', audioUrl: isAudio ? url : '', youtubeUrl: '',
             source: 'upload', sourceId: `upload-${file.name}-${file.size}`,
           };
           setLibraryItems(prev => [item, ...prev]);
@@ -454,12 +460,72 @@ export default function SetListPage() {
     } catch { alert('일정 등록 실패'); }
   };
 
+  const deleteSchedule = async (id: string) => {
+    if (!confirm('이 일정을 삭제하시겠습니까?')) return;
+    try {
+      await deleteDoc(doc(db, 'schedules', id));
+      setSchedules(prev => prev.filter(s => s.id !== id));
+    } catch { alert('삭제 실패'); }
+  };
+
+  // === Image paste from clipboard ===
+  const handleImagePaste = async (e: React.ClipboardEvent) => {
+    const items = e.clipboardData?.items;
+    if (!items || !user) return;
+    for (const item of Array.from(items)) {
+      if (item.type.startsWith('image/')) {
+        e.preventDefault();
+        const file = item.getAsFile();
+        if (!file) continue;
+        const ext = file.type.split('/')[1] || 'png';
+        const fileName = `paste_${Date.now()}.${ext}`;
+        try {
+          const storageRef = ref(storage, `setlist_files/${user.uid}/${fileName}`);
+          const task = uploadBytesResumable(storageRef, file);
+          task.on('state_changed', () => {}, (err) => { console.error(err); alert('업로드 오류'); },
+            async () => {
+              const url = await getDownloadURL(task.snapshot.ref);
+              const libItem: LibraryItem = {
+                id: `paste-${Date.now()}`, type: 'sheet',
+                title: `붙여넣기 악보 ${new Date().toLocaleTimeString('ko-KR')}`,
+                author: '클립보드', duration: '',
+                note: '웹에서 복사한 이미지', hasAudio: false, hasPdf: false,
+                fileUrl: url, audioUrl: '', youtubeUrl: '',
+                source: 'paste', sourceId: `paste-${Date.now()}`,
+              };
+              setLibraryItems(prev => [libItem, ...prev]);
+              alert('이미지가 라이브러리에 추가되었습니다!');
+              setActiveTab('library');
+            }
+          );
+        } catch { alert('이미지 업로드 실패'); }
+        break;
+      }
+    }
+  };
+
+  // === Item click handler ===
+  const handleItemClick = (item: LibraryItem) => {
+    if (item.hasPdf && item.fileUrl) {
+      setPreviewPdfUrl(item.fileUrl);
+    } else if (item.fileUrl && !item.hasPdf) {
+      // Image file (pasted)
+      setPreviewPdfUrl(item.fileUrl);
+    } else if (item.hasAudio && item.audioUrl) {
+      togglePlay(item);
+    } else if (item.type === 'transcript' || item.type === 'guide') {
+      setPreviewText({ title: item.title, content: item.note || '(내용 없음)' });
+    } else if (item.youtubeUrl) {
+      window.open(item.youtubeUrl, '_blank');
+    }
+  };
+
   const shareScheduleEmail = async () => {
     if (schedules.length === 0) { alert('일정이 없습니다.'); return; }
     const email = prompt('일정을 전달할 이메일 주소 (콤마 구분)');
     if (!email) return;
     const idToken = await user.getIdToken();
-    const typeLabels: Record<string, string> = { event: '🙏 예배/집회', practice: '🎵 팀 연습', rehearsal: '🎧 리허설', travel: '🚗 이동/집결' };
+    const typeLabels: Record<string, string> = { event: '🙏 예배/집회', practice: '🎵 팀 연습', rehearsal: '🎧 리허설', travel: '🚗 이동/집결', notice: '📢 공지사항' };
     const rows = schedules.map(s =>
       `<tr><td style="padding:8px;font-weight:bold;color:#8C6B1C;white-space:nowrap">${s.date} ${s.time}</td>
        <td style="padding:8px"><span style="background:#f0ebe4;padding:2px 8px;border-radius:4px;font-size:12px">${typeLabels[s.type] || s.type}</span></td>
@@ -533,10 +599,10 @@ export default function SetListPage() {
                 )}
                 {filteredLibrary.map(item => (
                   <div key={item.id} className="bg-[#FAF9F6] border border-black/5 rounded-xl p-3 hover:border-[#E6C79C] transition-all group flex items-start gap-3">
-                    <div className={`mt-0.5 shrink-0 p-1.5 rounded-lg ${getTypeColor(item.type)}`}>
+                    <div className={`mt-0.5 shrink-0 p-1.5 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
                       {getTypeIcon(item.type as ItemType, 14)}
                     </div>
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleItemClick(item)}>
                       <p className="font-bold text-[13px] text-[#2D2926] truncate">{item.title}</p>
                       {item.author && <p className="text-[11px] text-[#78716A] truncate">{item.author}</p>}
                       <div className="flex gap-1.5 mt-1.5 flex-wrap">
@@ -577,7 +643,7 @@ export default function SetListPage() {
 
           {/* AI Search tab */}
           {activeTab === 'ai-search' && (
-            <div className="p-6 flex flex-col h-full">
+            <div className="p-6 flex flex-col h-full" onPaste={handleImagePaste}>
               <h3 className="font-bold text-lg mb-2 flex items-center gap-2"><Sparkles className="text-[#E6C79C]" /> AI 악보 검색</h3>
               <p className="text-xs text-[#78716A] mb-4">곡 제목, 아티스트, 가사를 입력하면 웹에서 악보를 찾아줍니다.</p>
               <div className="relative mb-4">
@@ -588,6 +654,14 @@ export default function SetListPage() {
                 <button onClick={doAiSearch} disabled={isAiSearching || !searchQuery}
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#2D2926] text-[#E6C79C] p-2 rounded-lg disabled:opacity-50"><Search size={14} /></button>
               </div>
+
+              {/* Clipboard paste zone */}
+              <div className="mb-4 border-2 border-dashed border-[#E6C79C]/40 rounded-xl p-4 text-center bg-[#E6C79C]/5 hover:bg-[#E6C79C]/10 transition-colors">
+                <ClipboardPaste size={20} className="mx-auto text-[#8C6B1C] mb-1.5" />
+                <p className="text-xs font-bold text-[#8C6B1C]">이미지 붙여넣기</p>
+                <p className="text-[10px] text-[#78716A]">웹에서 복사한 악보 이미지를 Ctrl+V로 붙여넣으세요</p>
+              </div>
+
               <div className="flex-1 flex flex-col items-center justify-center text-center opacity-40 px-4">
                 {isAiSearching ? (
                   <div className="animate-pulse flex flex-col items-center gap-3">
@@ -624,6 +698,7 @@ export default function SetListPage() {
                     <option value="practice">🎵 팀 연습</option>
                     <option value="rehearsal">🎧 리허설</option>
                     <option value="travel">🚗 이동/집결</option>
+                    <option value="notice">📢 공지사항</option>
                   </select>
                 </div>
                 <div className="flex gap-2">
@@ -635,9 +710,12 @@ export default function SetListPage() {
                 <input type="text" placeholder="일정 내용" value={newSchedule.title || ''}
                   onChange={e => setNewSchedule({...newSchedule, title: e.target.value})}
                   className="w-full bg-[#FAF9F6] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
+                <input type="text" placeholder="📍 장소" value={newSchedule.location || ''}
+                  onChange={e => setNewSchedule({...newSchedule, location: e.target.value})}
+                  className="w-full bg-[#FAF9F6] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
                 <div className="flex gap-2">
-                  <input type="text" placeholder="📍 장소" value={newSchedule.location || ''}
-                    onChange={e => setNewSchedule({...newSchedule, location: e.target.value})}
+                  <input type="text" placeholder="메모 (선택)" value={newSchedule.memo || ''}
+                    onChange={e => setNewSchedule({...newSchedule, memo: e.target.value})}
                     className="flex-1 bg-[#FAF9F6] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
                   <button onClick={addSchedule} className="px-4 py-1.5 bg-[#2D2926] text-white rounded-lg text-xs font-bold hover:bg-[#78716A] shrink-0">추가</button>
                 </div>
@@ -645,19 +723,33 @@ export default function SetListPage() {
 
               {/* Schedule list */}
               <div className="flex-1 overflow-y-auto space-y-2">
-                {schedules.map((s, i) => (
-                  <div key={s.id} className="relative flex items-start gap-3 bg-white p-3 rounded-xl border border-black/5 shadow-sm">
-                    {i < schedules.length - 1 && <div className="absolute left-[30px] top-full h-2 border-l-2 border-dashed border-[#E6C79C]/50 z-0" />}
-                    <div className="text-[#8C6B1C] font-bold text-[11px] bg-[#E6C79C]/20 px-2 py-1 rounded-lg shrink-0 w-[52px] text-center">{s.time}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-bold text-[12px] text-[#2D2926] truncate">{s.title}</p>
-                      <div className="flex gap-2 mt-0.5 text-[10px] text-[#78716A]">
-                        {s.date && <span>{s.date}</span>}
-                        {s.location && <span className="flex items-center gap-0.5"><MapPin size={8} /> {s.location}</span>}
+                {schedules.map((s, i) => {
+                  const schedTypeLabels: Record<string, string> = { event: '🙏 예배/집회', practice: '🎵 연습', rehearsal: '🎧 리허설', travel: '🚗 이동', notice: '📢 공지' };
+                  const schedTypeBg: Record<string, string> = { event: 'bg-[#E6C79C]/20 text-[#8C6B1C]', practice: 'bg-blue-50 text-blue-600', rehearsal: 'bg-purple-50 text-purple-600', travel: 'bg-green-50 text-green-600', notice: 'bg-amber-50 text-amber-700' };
+                  return (
+                    <div key={s.id} className="relative group flex items-start gap-3 bg-white p-3 rounded-xl border border-black/5 shadow-sm hover:shadow-md transition-shadow">
+                      {i < schedules.length - 1 && <div className="absolute left-[30px] top-full h-2 border-l-2 border-dashed border-[#E6C79C]/50 z-0" />}
+                      <div className="text-[#8C6B1C] font-bold text-[11px] bg-[#E6C79C]/20 px-2 py-1 rounded-lg shrink-0 w-[52px] text-center">{s.time}</div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${schedTypeBg[s.type] || 'bg-gray-100 text-gray-600'}`}>
+                            {schedTypeLabels[s.type] || s.type}
+                          </span>
+                          <p className="font-bold text-[12px] text-[#2D2926] truncate">{s.title}</p>
+                        </div>
+                        <div className="flex gap-2 mt-0.5 text-[10px] text-[#78716A] flex-wrap">
+                          {s.date && <span className="flex items-center gap-0.5"><Calendar size={8} /> {s.date}</span>}
+                          {s.location && <span className="flex items-center gap-0.5"><MapPin size={8} /> {s.location}</span>}
+                        </div>
+                        {s.memo && <p className="text-[10px] text-[#78716A] mt-1 bg-[#FAF9F6] px-2 py-1 rounded-lg">{s.memo}</p>}
                       </div>
+                      <button onClick={() => deleteSchedule(s.id)}
+                        className="p-1 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all shrink-0">
+                        <Trash2 size={12} />
+                      </button>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
                 {schedules.length === 0 && <p className="text-center text-xs text-[#78716A] py-8">등록된 일정이 없습니다.</p>}
               </div>
             </div>
@@ -671,7 +763,7 @@ export default function SetListPage() {
                 <button onClick={() => setActiveTab('library')} className="p-2 hover:bg-black/5 rounded-full"><X size={18} /></button>
               </div>
               <div className="flex flex-col gap-3">
-                <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept=".pdf,audio/mpeg,audio/wav" />
+                <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept=".pdf,audio/mpeg,audio/wav,image/jpeg,image/png,image/webp" />
                 {[
                   { icon: <HardDrive size={24} />, bg: 'bg-[#2D2926]/5', label: '내 PC에서 업로드', desc: 'PDF, MP3, WAV', onClick: () => fileInputRef.current?.click() },
                   { icon: <Music size={24} className="text-[#8C6B1C]" />, bg: 'bg-[#E6C79C]/20', label: '사이트 악보/음악', desc: '선택하여 가져오기 (중복 제외)', onClick: () => { setIsImportModalOpen(true); setActiveTab('library'); } },
@@ -737,11 +829,11 @@ export default function SetListPage() {
                           <div ref={prov.innerRef} {...prov.draggableProps}
                             className={`group relative bg-white border rounded-xl p-4 flex flex-col md:flex-row gap-3 md:gap-5 items-start md:items-center transition-all ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
                             <div {...prov.dragHandleProps} className="p-1 text-black/20 hover:text-[#2D2926] cursor-grab"><MoreVertical size={18} /></div>
-                            <div className="flex items-center gap-3 w-full md:w-auto">
+                            <div className="flex items-center gap-3 w-full md:w-auto cursor-pointer" onClick={() => handleItemClick(item)}>
                               <span className="text-2xl font-handwriting text-black/20 w-6 text-center">{index + 1}</span>
                               <div className={`p-2.5 rounded-xl shrink-0 ${getTypeColor(item.type)}`}>{getTypeIcon(item.type as ItemType)}</div>
                             </div>
-                            <div className="flex-1 min-w-0">
+                            <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleItemClick(item)}>
                               <div className="flex flex-wrap items-center gap-2 mb-0.5">
                                 <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase ${getTypeColor(item.type)}`}>{getTypeLabel(item.type)}</span>
                                 <h3 className="font-bold text-base truncate text-[#2D2926]">{item.title}</h3>
@@ -756,7 +848,16 @@ export default function SetListPage() {
                                     {playingItem?.id === item.id && isPlaying ? <Pause size={10} /> : <Play fill="currentColor" size={10} />} AUDIO
                                   </button>
                                 )}
-                                {item.hasPdf && <span className="flex items-center gap-1 text-[10px] font-bold"><FileText size={10} /> PDF</span>}
+                                {item.hasPdf && item.fileUrl && (
+                                  <button onClick={() => setPreviewPdfUrl(item.fileUrl!)} className="flex items-center gap-1 text-[10px] font-bold hover:text-[#2D2926]">
+                                    <FileText size={10} /> PDF
+                                  </button>
+                                )}
+                                {(item.type === 'transcript' || item.type === 'guide') && (
+                                  <button onClick={() => setPreviewText({ title: item.title, content: item.note || '(내용 없음)' })} className="flex items-center gap-1 text-[10px] font-bold hover:text-[#2D2926]">
+                                    <Eye size={10} /> 보기
+                                  </button>
+                                )}
                                 {item.duration && <span className="text-[10px] font-bold bg-[#FAF9F6] px-2 py-0.5 rounded">{item.duration}</span>}
                               </div>
                               <button onClick={() => removeFromSetlist(item.id)} className="p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"><X size={16} /></button>
@@ -818,7 +919,6 @@ export default function SetListPage() {
         onImport={(newItems) => { setLibraryItems(prev => [...newItems, ...prev]); alert(`${newItems.length}개 항목을 가져왔습니다.`); }} />
 
       <TextEditorModal isOpen={isTextEditorOpen} onClose={() => setIsTextEditorOpen(false)}
-        userToken={undefined}
         onAdd={(data) => {
           const item: LibraryItem = {
             id: `text-${Date.now()}`, type: data.type, title: data.title, author: '', duration: '',
@@ -835,6 +935,52 @@ export default function SetListPage() {
       <EmailShareModal isOpen={isEmailModalOpen} onClose={() => setIsEmailModalOpen(false)}
         setlistTitle={setlistTitle} items={items} totalDuration={calculateTotalDuration()}
         schedules={schedules} onSend={handleEmailSend} />
+
+      {/* PDF / Image Preview Modal */}
+      {previewPdfUrl && (
+        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewPdfUrl(null)}>
+          <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-4 border-b border-black/5 shrink-0">
+              <h3 className="font-bold text-lg flex items-center gap-2"><FileText className="text-[#E6C79C]" /> 악보 미리보기</h3>
+              <div className="flex items-center gap-2">
+                <a href={previewPdfUrl} target="_blank" rel="noopener noreferrer"
+                  className="text-xs font-bold text-[#78716A] hover:text-[#2D2926] px-3 py-1.5 rounded-lg hover:bg-black/5">
+                  새 탭에서 열기
+                </a>
+                <button onClick={() => setPreviewPdfUrl(null)} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+              </div>
+            </div>
+            <div className="flex-1 overflow-auto bg-[#FAF9F6] flex items-start justify-center p-4">
+              {previewPdfUrl.match(/\.(jpg|jpeg|png|gif|webp|bmp)/i) || previewPdfUrl.includes('paste') ? (
+                <img src={previewPdfUrl} alt="악보 이미지" className="max-w-full h-auto rounded-lg shadow-md" />
+              ) : (
+                <iframe src={previewPdfUrl} className="w-full h-[80vh] rounded-lg" title="PDF Preview" />
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Text Preview Modal */}
+      {previewText && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setPreviewText(null)}>
+          <div className="bg-white rounded-2xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between p-5 border-b border-black/5 shrink-0">
+              <h3 className="font-bold text-lg flex items-center gap-2"><Type className="text-[#E6C79C]" /> {previewText.title}</h3>
+              <button onClick={() => setPreviewText(null)} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="whitespace-pre-wrap text-sm leading-relaxed text-[#2D2926]">{previewText.content}</div>
+            </div>
+            <div className="p-4 border-t border-black/5 shrink-0 flex justify-end">
+              <button onClick={() => { navigator.clipboard.writeText(previewText.content); alert('복사되었습니다!'); }}
+                className="px-4 py-2 bg-[#FAF9F6] border border-black/10 rounded-xl text-sm font-bold hover:bg-[#E6C79C]/20 transition-colors">
+                복사
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

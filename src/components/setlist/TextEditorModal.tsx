@@ -7,10 +7,9 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onAdd: (item: { type: 'transcript' | 'guide'; title: string; note: string }) => void;
-  userToken?: string;
 }
 
-export default function TextEditorModal({ isOpen, onClose, onAdd, userToken }: Props) {
+export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [type, setType] = useState<'transcript' | 'guide'>('transcript');
@@ -37,52 +36,24 @@ export default function TextEditorModal({ isOpen, onClose, onAdd, userToken }: P
     }
     setAiLoading(true);
     try {
-      const res = await fetch('/api/admin/seekers/ai', {
+      const res = await fetch('/api/setlist/generate-text', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(userToken ? { 'Authorization': `Bearer ${userToken}` } : {}),
-        },
-        body: JSON.stringify({
-          prompt: `당신은 교회 예배/찬양 팀을 위한 전문 작성 도우미입니다.
-다음 요청에 맞는 텍스트를 작성해주세요. 자연스럽고 진심이 담긴 한국어로 작성하세요.
-마크다운이나 특수 형식 없이 순수 텍스트로만 작성해주세요.
-
-요청: ${aiPrompt}
-
-${type === 'transcript' ? '형식: 기도문/멘트/원고 형식으로 작성' : '형식: 진행 가이드/진행 멘트 형식으로 작성'}`,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: aiPrompt, type }),
       });
 
       if (res.ok) {
         const data = await res.json();
-        const generated = data.text || data.answer || data.content || '';
+        const generated = data.text || '';
         if (generated) {
           setContent(prev => prev ? prev + '\n\n' + generated : generated);
           if (!title) setTitle(aiPrompt.slice(0, 30) + (aiPrompt.length > 30 ? '...' : ''));
         } else {
-          alert('AI 응답을 파싱할 수 없습니다.');
+          alert('AI 응답이 비어있습니다.');
         }
       } else {
-        // Fallback: use generate-blog API with simple prompt
-        const res2 = await fetch('/api/generate-blog', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(userToken ? { 'Authorization': `Bearer ${userToken}` } : {}),
-          },
-          body: JSON.stringify({ topic: aiPrompt, keywords: type === 'transcript' ? '기도문,멘트,원고' : '진행가이드,MC멘트' }),
-        });
-        if (res2.ok) {
-          const data2 = await res2.json();
-          const text = data2.data?.content || '';
-          // Strip markdown
-          const plain = text.replace(/#{1,6}\s/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/!\[.*?\]\(.*?\)/g, '').replace(/\[.*?\]\(.*?\)/g, '');
-          setContent(prev => prev ? prev + '\n\n' + plain : plain);
-          if (!title) setTitle(data2.data?.title || aiPrompt.slice(0, 30));
-        } else {
-          alert('AI 생성에 실패했습니다. 관리자 권한이 필요할 수 있습니다.');
-        }
+        const err = await res.json().catch(() => ({}));
+        alert('AI 생성 실패: ' + (err.error || '서버 오류'));
       }
     } catch (e: any) {
       console.error(e);
