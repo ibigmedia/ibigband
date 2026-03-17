@@ -1072,7 +1072,25 @@ export default function SetListPage() {
                 <div className="h-full bg-[#E6C79C] transition-all" style={{ width: `${playingItem ? audioProgress : 0}%` }} />
               </div>
             </div>
-            <button onClick={() => items.length > 0 ? (() => { localStorage.setItem('ibigband_presenter_items', JSON.stringify(items)); window.open('/setlist/presenter', '_blank'); })() : alert('항목을 추가해주세요.')}
+            <button onClick={async () => {
+              if (items.length === 0) { alert('항목을 추가해주세요.'); return; }
+              // 아카이브에서 가사 조회하여 items에 합침
+              const archiveSnap = await getDocs(collection(db, 'users', user.uid, 'archive'));
+              const lyricsMap = new Map<string, string>();
+              archiveSnap.docs.forEach(d => {
+                const data = d.data();
+                if (data.lyrics) {
+                  if (data.sourceId) lyricsMap.set(data.sourceId, data.lyrics);
+                  lyricsMap.set(data.title, data.lyrics);
+                }
+              });
+              const enriched = items.map(i => ({
+                ...i,
+                lyrics: lyricsMap.get(i.sourceId || '') || lyricsMap.get(i.title) || '',
+              }));
+              localStorage.setItem('ibigband_presenter_items', JSON.stringify(enriched));
+              window.open('/setlist/presenter', '_blank');
+            }}
               className="hidden md:flex items-center gap-2 px-5 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold whitespace-nowrap">
               <LayoutDashboard size={14} /> 프레젠터 뷰
             </button>
@@ -1122,7 +1140,24 @@ export default function SetListPage() {
               </div>
               <span className="text-[10px] text-white/60 font-medium">재생</span>
             </button>
-            <button onClick={() => items.length > 0 ? (() => { localStorage.setItem('ibigband_presenter_items', JSON.stringify(items)); window.open('/setlist/presenter', '_blank'); })() : alert('항목을 추가해주세요.')}
+            <button onClick={async () => {
+              if (items.length === 0) { alert('항목을 추가해주세요.'); return; }
+              const archiveSnap = await getDocs(collection(db, 'users', user.uid, 'archive'));
+              const lyricsMap = new Map<string, string>();
+              archiveSnap.docs.forEach(d => {
+                const data = d.data();
+                if (data.lyrics) {
+                  if (data.sourceId) lyricsMap.set(data.sourceId, data.lyrics);
+                  lyricsMap.set(data.title, data.lyrics);
+                }
+              });
+              const enriched = items.map(i => ({
+                ...i,
+                lyrics: lyricsMap.get(i.sourceId || '') || lyricsMap.get(i.title) || '',
+              }));
+              localStorage.setItem('ibigband_presenter_items', JSON.stringify(enriched));
+              window.open('/setlist/presenter', '_blank');
+            }}
               className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl">
               <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 text-white/70">
                 <LayoutDashboard size={16} />
