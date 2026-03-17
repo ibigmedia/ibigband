@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { X, Play, FileText, Presentation, Plus, Trash2, Edit3, Check, ChevronUp, ChevronDown, Loader2, Copy, AlignLeft, AlignCenter, AlignRight, Save } from 'lucide-react';
-import { PDFDocument, rgb } from 'pdf-lib';
-import fontkit from '@pdf-lib/fontkit';
+// pdf-lib는 exportPdf 함수 내에서 dynamic import
 
 type TextAlign = 'left' | 'center' | 'right';
 
@@ -118,8 +117,11 @@ export default function LyricsPresentationModal({ isOpen, onClose, initialSlides
     if (slides.length === 0) return;
     setExporting('pdf');
     try {
+      const { PDFDocument, rgb } = await import('pdf-lib');
+      const fontkitModule = await import('@pdf-lib/fontkit');
+      const fontkit = fontkitModule.default ?? fontkitModule;
       const pdfDoc = await PDFDocument.create();
-      pdfDoc.registerFontkit(fontkit);
+      pdfDoc.registerFontkit(fontkit as any);
 
       const loadFont = async (url: string) => {
         const res = await fetch(url);
