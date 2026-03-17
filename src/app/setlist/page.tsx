@@ -680,10 +680,10 @@ export default function SetListPage() {
 
   // ==================== RENDER ====================
   return (
-    <div className="pb-20 md:pb-12 px-1 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-1.5 md:gap-6 overflow-x-hidden">
+    <div className="pb-20 md:pb-12 px-0 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-1 md:gap-6 overflow-x-hidden">
 
       {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
-      <div className="lg:hidden flex bg-white rounded-xl p-1 shadow-sm border border-[#78716A]/10 shrink-0">
+      <div className="lg:hidden flex bg-white rounded-none md:rounded-xl p-1 shadow-sm border-b md:border border-[#78716A]/10 shrink-0">
         <button onClick={() => setMobileView('files')}
           className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'files' ? 'bg-[#2D2926] text-white shadow-md' : 'text-[#78716A]'}`}>
           <Library size={14} className="inline mr-1.5 -mt-0.5" />미디어풀
@@ -696,7 +696,7 @@ export default function SetListPage() {
 
       {/* ===== LEFT: Library ===== */}
       <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-1.5 md:gap-5 lg:shrink-0 min-w-0 h-[calc(100vh-6.5rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
-        <div className="bg-white rounded-xl md:rounded-3xl p-1 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-0.5 md:gap-2 border border-[#78716A]/10 shrink-0">
+        <div className="bg-white rounded-none md:rounded-3xl p-1 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-0.5 md:gap-2 border-b md:border border-[#78716A]/10 shrink-0">
           {[
             { key: 'library', icon: <Library size={18} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
             { key: 'archive', icon: <FolderOpen size={18} />, label: '아카이브', active: activeTab === 'archive' },
@@ -710,7 +710,7 @@ export default function SetListPage() {
           ))}
         </div>
 
-        <div className="bg-white flex-1 rounded-xl md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
+        <div className="bg-white flex-1 rounded-none md:rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border-x-0 border-y md:border border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
@@ -962,7 +962,7 @@ export default function SetListPage() {
 
       {/* ===== RIGHT: Setlist Builder ===== */}
       <main className={`flex-1 flex flex-col min-w-0 w-full overflow-hidden ${mobileView !== 'setlist' ? 'hidden lg:flex' : 'flex'}`}>
-        <div className="bg-white rounded-xl md:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#78716A]/10 flex flex-col min-h-full overflow-hidden">
+        <div className="bg-white rounded-none md:rounded-[2rem] shadow-none md:shadow-[0_8px_30px_rgb(0,0,0,0.06)] border-y md:border border-[#78716A]/10 flex flex-col min-h-full overflow-hidden">
 
           {/* Header */}
           <header className="p-3 md:p-8 border-b border-black/5">
@@ -1054,7 +1054,7 @@ export default function SetListPage() {
           </div>
 
           {/* Footer bar */}
-          <div className="bg-[#2D2926] p-2 md:p-3 flex items-center justify-between gap-2 md:gap-4 text-white rounded-b-2xl md:rounded-b-[2rem] overflow-hidden">
+          <div className="bg-[#2D2926] p-2 md:p-3 flex items-center justify-between gap-2 md:gap-4 text-white rounded-none md:rounded-b-[2rem] overflow-hidden">
             <div className="flex items-center gap-3">
               <button onClick={() => playingItem && togglePlay(playingItem)}
                 className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playingItem ? 'bg-[#E6C79C] text-[#2D2926]' : 'bg-white/10 text-white/30 cursor-not-allowed'}`}>

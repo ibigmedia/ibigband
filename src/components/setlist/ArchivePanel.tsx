@@ -323,27 +323,26 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
     return (
     <div>
       {/* 개요 헤더 — 항상 표시 */}
-      <div className="flex items-center gap-3 cursor-pointer" onClick={() => setExpandedId(expanded ? null : item.archiveId)}>
+      <div className="flex items-center gap-2 cursor-pointer overflow-hidden" onClick={() => setExpandedId(expanded ? null : item.archiveId)}>
         {batchMode && (
           <button onClick={(e) => { e.stopPropagation(); toggleSelect(item.archiveId); }} className="shrink-0">
             {selectedIds.has(item.archiveId)
-              ? <CheckSquare size={18} className="text-[#E6C79C]" />
-              : <Square size={18} className="text-[#78716A]" />}
+              ? <CheckSquare size={16} className="text-[#E6C79C]" />
+              : <Square size={16} className="text-[#78716A]" />}
           </button>
         )}
         <div className="p-1.5 rounded-lg bg-[#2D2926]/10 shrink-0">
           {getTypeIcon(item.type)}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-sm text-[#2D2926] truncate">{item.title}</p>
+          <p className="font-bold text-xs md:text-sm text-[#2D2926] truncate">{item.title}</p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-xs text-[#78716A] truncate max-w-[80px]">{item.author || '미상'}</span>
-          {item.musicalKey && <span className="text-[10px] font-bold bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">{item.musicalKey}</span>}
-          {item.lang && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">{item.lang}</span>}
-          {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 px-1.5 py-0.5 rounded">PDF</span>}
-          {item.hasAudio && <span className="text-[10px] font-bold bg-[#E6C79C]/30 px-1.5 py-0.5 rounded">MP3</span>}
-          <ChevronDown size={14} className={`text-[#78716A] transition-transform ${expanded ? 'rotate-180' : ''}`} />
+        <div className="flex items-center gap-1 md:gap-2 shrink-0 overflow-hidden">
+          <span className="text-[10px] md:text-xs text-[#78716A] truncate max-w-[60px] md:max-w-[80px]">{item.author || '미상'}</span>
+          {item.musicalKey && <span className="text-[9px] md:text-[10px] font-bold bg-blue-100 text-blue-700 px-1 md:px-1.5 py-0.5 rounded">{item.musicalKey}</span>}
+          {item.hasPdf && <span className="text-[9px] md:text-[10px] font-bold bg-[#2D2926]/10 px-1 md:px-1.5 py-0.5 rounded">PDF</span>}
+          {item.hasAudio && <span className="text-[9px] md:text-[10px] font-bold bg-[#E6C79C]/30 px-1 md:px-1.5 py-0.5 rounded">MP3</span>}
+          <ChevronDown size={14} className={`text-[#78716A] transition-transform shrink-0 ${expanded ? 'rotate-180' : ''}`} />
         </div>
       </div>
 
