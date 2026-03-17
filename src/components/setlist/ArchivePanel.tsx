@@ -304,147 +304,147 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'sheet': return <FileText size={12} />;
-      case 'mr': case 'bgm': return <Music size={12} />;
-      case 'transcript': return <Type size={12} />;
-      case 'guide': return <Mic size={12} />;
-      default: return <FileText size={12} />;
+      case 'sheet': return <FileText size={16} />;
+      case 'mr': case 'bgm': return <Music size={16} />;
+      case 'transcript': return <Type size={16} />;
+      case 'guide': return <Mic size={16} />;
+      default: return <FileText size={16} />;
     }
   };
 
   // 아이템 렌더링 함수 (그룹/비그룹 공통)
   const renderItemContent = (item: ArchiveItem) => (
-    <div className="flex items-start gap-2.5">
+    <div className="flex items-start gap-3">
       {batchMode && (
         <button onClick={() => toggleSelect(item.archiveId)} className="mt-1 shrink-0">
           {selectedIds.has(item.archiveId)
-            ? <CheckSquare size={16} className="text-[#E6C79C]" />
-            : <Square size={16} className="text-[#78716A]" />}
+            ? <CheckSquare size={18} className="text-[#E6C79C]" />
+            : <Square size={18} className="text-[#78716A]" />}
         </button>
       )}
-      <div className="mt-0.5 p-1.5 rounded-lg bg-[#2D2926]/10 shrink-0">
+      <div className="mt-0.5 p-2 rounded-lg bg-[#2D2926]/10 shrink-0">
         {getTypeIcon(item.type)}
       </div>
       <div className="flex-1 min-w-0">
         {editingId === item.archiveId ? (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleRename(item.archiveId)}
-              className="flex-1 text-[13px] font-bold bg-white border border-[#E6C79C] rounded-lg px-2 py-1 focus:outline-none" autoFocus />
-            <button onClick={() => handleRename(item.archiveId)} className="p-1 text-green-600 hover:bg-green-50 rounded"><Check size={14} /></button>
-            <button onClick={() => setEditingId(null)} className="p-1 text-[#78716A] hover:bg-black/5 rounded"><X size={14} /></button>
+              className="flex-1 text-sm font-bold bg-white border border-[#E6C79C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
+            <button onClick={() => handleRename(item.archiveId)} className="p-1.5 text-green-600 hover:bg-green-50 rounded"><Check size={16} /></button>
+            <button onClick={() => setEditingId(null)} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded"><X size={16} /></button>
           </div>
         ) : (
-          <p className="font-bold text-[13px] text-[#2D2926] truncate">{item.title}</p>
+          <p className="font-bold text-sm text-[#2D2926] truncate">{item.title}</p>
         )}
-        <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+        <div className="flex items-center gap-2 mt-1 flex-wrap">
           {editingAuthorId === item.archiveId ? (
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               <input type="text" value={editAuthor} onChange={e => setEditAuthor(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSaveAuthor(item.archiveId)}
                 placeholder="아티스트/작곡자" autoFocus
-                className="text-[10px] bg-white border border-[#E6C79C] rounded px-1.5 py-0.5 w-24 focus:outline-none" />
-              <button onClick={() => handleSaveAuthor(item.archiveId)} className="text-green-600"><Check size={10} /></button>
-              <button onClick={() => setEditingAuthorId(null)} className="text-[#78716A]"><X size={10} /></button>
+                className="text-xs bg-white border border-[#E6C79C] rounded px-2 py-0.5 w-28 focus:outline-none" />
+              <button onClick={() => handleSaveAuthor(item.archiveId)} className="text-green-600"><Check size={12} /></button>
+              <button onClick={() => setEditingAuthorId(null)} className="text-[#78716A]"><X size={12} /></button>
             </div>
           ) : (
             <button onClick={() => { setEditingAuthorId(item.archiveId); setEditAuthor(item.author || ''); }}
-              className="text-[10px] text-[#78716A] truncate hover:text-[#2D2926] hover:underline cursor-pointer" title="아티스트 수정">
+              className="text-xs text-[#78716A] truncate hover:text-[#2D2926] hover:underline cursor-pointer" title="아티스트 수정">
               {item.author || '미상'}
             </button>
           )}
           <select value={item.category} onChange={e => handleChangeCategory(item.archiveId, e.target.value)}
-            className="text-[9px] font-bold bg-[#E6C79C]/20 text-[#8C6B1C] px-1.5 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+            className="text-[11px] font-bold bg-[#E6C79C]/20 text-[#8C6B1C] px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
             {CATEGORIES.filter(c => c.id !== 'all').map(c => (
               <option key={c.id} value={c.id}>{c.label}</option>
             ))}
           </select>
           <select value={item.musicalKey || ''} onChange={e => handleChangeKey(item.archiveId, e.target.value)}
-            className="text-[9px] font-bold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+            className="text-[11px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
             <option value="">키</option>
             {MUSICAL_KEYS.filter(k => k).map(k => <option key={k} value={k}>{k}</option>)}
           </select>
           <select value={item.lang || ''} onChange={e => handleChangeLang(item.archiveId, e.target.value)}
-            className="text-[9px] font-bold bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+            className="text-[11px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
             {LANGUAGES.map(l => <option key={l.id || 'kr'} value={l.id}>{l.label}</option>)}
           </select>
         </div>
-        <div className="flex gap-1 mt-1 flex-wrap items-center">
-          {item.musicalKey && <span className="text-[8px] font-bold bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">{item.musicalKey}</span>}
-          {item.lang && <span className="text-[8px] font-bold bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">{item.lang}</span>}
+        <div className="flex gap-1.5 mt-1.5 flex-wrap items-center">
+          {item.musicalKey && <span className="text-[10px] font-bold bg-blue-100 text-blue-700 px-2 py-0.5 rounded">{item.musicalKey}</span>}
+          {item.lang && <span className="text-[10px] font-bold bg-purple-100 text-purple-700 px-2 py-0.5 rounded">{item.lang}</span>}
           {(item.tags || []).map(tag => (
-            <span key={tag} className="text-[8px] font-bold bg-green-100 text-green-700 px-1.5 py-0.5 rounded flex items-center gap-0.5">
+            <span key={tag} className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-0.5">
               {tag}
-              <button onClick={() => handleRemoveTag(item.archiveId, tag)} className="hover:text-red-500 ml-0.5"><X size={8} /></button>
+              <button onClick={() => handleRemoveTag(item.archiveId, tag)} className="hover:text-red-500 ml-0.5"><X size={10} /></button>
             </span>
           ))}
-          {item.hasPdf && <span className="text-[8px] font-bold bg-[#2D2926]/10 px-1.5 py-0.5 rounded">PDF</span>}
-          {item.hasAudio && <span className="text-[8px] font-bold bg-[#E6C79C]/30 px-1.5 py-0.5 rounded">MP3</span>}
+          {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 px-2 py-0.5 rounded">PDF</span>}
+          {item.hasAudio && <span className="text-[10px] font-bold bg-[#E6C79C]/30 px-2 py-0.5 rounded">MP3</span>}
           {tagInputId === item.archiveId ? (
-            <div className="flex items-center gap-0.5">
+            <div className="flex items-center gap-1">
               <input type="text" value={tagInputValue} onChange={e => setTagInputValue(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleAddTag(item.archiveId)}
                 placeholder="태그 입력" autoFocus
-                className="text-[9px] bg-white border border-green-300 rounded px-1.5 py-0.5 w-16 focus:outline-none" />
-              <button onClick={() => handleAddTag(item.archiveId)} className="text-green-600"><Check size={10} /></button>
-              <button onClick={() => { setTagInputId(null); setTagInputValue(''); }} className="text-[#78716A]"><X size={10} /></button>
+                className="text-[11px] bg-white border border-green-300 rounded px-2 py-0.5 w-20 focus:outline-none" />
+              <button onClick={() => handleAddTag(item.archiveId)} className="text-green-600"><Check size={12} /></button>
+              <button onClick={() => { setTagInputId(null); setTagInputValue(''); }} className="text-[#78716A]"><X size={12} /></button>
             </div>
           ) : (
             <button onClick={() => { setTagInputId(item.archiveId); setTagInputValue(''); }}
-              className="text-[8px] text-[#78716A] hover:text-green-600 flex items-center gap-0.5 transition-colors" title="태그 추가">
-              <Tag size={8} />+
+              className="text-[10px] text-[#78716A] hover:text-green-600 flex items-center gap-0.5 transition-colors" title="태그 추가">
+              <Tag size={10} />+
             </button>
           )}
         </div>
       </div>
       {!batchMode && (
-        <div className="grid grid-cols-2 gap-1 shrink-0">
+        <div className="grid grid-cols-2 gap-1.5 shrink-0">
           {(item.hasPdf || item.fileUrl || item.type === 'transcript' || item.type === 'guide') && onPreview && (
             <button onClick={() => onPreview(item as LibraryItem)}
-              className="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md transition-colors" title="미리보기">
-              <Eye size={14} />
+              className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="미리보기">
+              <Eye size={16} />
             </button>
           )}
           {item.hasAudio && onPlayAudio && (
             <button onClick={() => onPlayAudio(item as LibraryItem)}
-              className="p-1.5 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C]/50 rounded-md transition-colors" title="재생">
-              <Play size={14} fill="currentColor" />
+              className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C]/50 rounded-lg transition-colors" title="재생">
+              <Play size={16} fill="currentColor" />
             </button>
           )}
           {onAddToSetlist && (
             <button onClick={() => onAddToSetlist(item as LibraryItem)}
-              className="p-1.5 bg-[#2D2926]/10 text-[#2D2926] hover:bg-[#2D2926] hover:text-white rounded-md transition-colors" title="셋리스트에 추가">
-              <ChevronRight size={14} />
+              className="p-2 bg-[#2D2926]/10 text-[#2D2926] hover:bg-[#2D2926] hover:text-white rounded-lg transition-colors" title="셋리스트에 추가">
+              <ChevronRight size={16} />
             </button>
           )}
           <button onClick={() => handleAddToLibrary(item)}
             disabled={existingLibraryIds.has(item.sourceId || '')}
-            className="p-1.5 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
             title={existingLibraryIds.has(item.sourceId || '') ? '이미 추가됨' : '미디어풀에 추가'}>
-            <Plus size={14} />
+            <Plus size={16} />
           </button>
           <button onClick={() => { setEditingId(item.archiveId); setEditTitle(item.title); }}
-            className="p-1.5 text-[#78716A] hover:bg-black/5 rounded-md transition-colors" title="이름 변경">
-            <Edit3 size={12} />
+            className="p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경">
+            <Edit3 size={14} />
           </button>
           {/* AI 가사 추출 */}
           {(item.hasPdf || item.fileUrl) && (
             <button onClick={() => handleExtractLyrics(item)}
               disabled={extractingId === item.archiveId}
-              className="p-1.5 bg-violet-50 text-violet-600 hover:bg-violet-100 rounded-md transition-colors disabled:opacity-40" title="AI 가사 추출">
-              {extractingId === item.archiveId ? <Loader2 size={12} className="animate-spin" /> : <Sparkles size={12} />}
+              className="p-2 bg-violet-50 text-violet-600 hover:bg-violet-100 rounded-lg transition-colors disabled:opacity-40" title="AI 가사 추출">
+              {extractingId === item.archiveId ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
             </button>
           )}
           {/* 가사 보기 */}
           {item.lyrics && (
             <button onClick={() => setLyricsViewId(lyricsViewId === item.archiveId ? null : item.archiveId)}
-              className={`p-1.5 rounded-md transition-colors ${lyricsViewId === item.archiveId ? 'bg-violet-500 text-white' : 'bg-violet-50 text-violet-600 hover:bg-violet-100'}`} title="가사 보기">
-              <BookOpen size={12} />
+              className={`p-2 rounded-lg transition-colors ${lyricsViewId === item.archiveId ? 'bg-violet-500 text-white' : 'bg-violet-50 text-violet-600 hover:bg-violet-100'}`} title="가사 보기">
+              <BookOpen size={14} />
             </button>
           )}
           <button onClick={() => handleDelete(item.archiveId)}
-            className="p-1.5 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-md transition-colors" title="삭제">
-            <Trash2 size={12} />
+            className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제">
+            <Trash2 size={14} />
           </button>
         </div>
       )}
@@ -615,14 +615,14 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
         ) : groupedItems ? (
           groupedItems.map(([groupName, groupItems]) => (
             <div key={groupName} className="mb-4">
-              <div className="flex items-center gap-2 mb-2 px-1 sticky top-0 bg-white/90 backdrop-blur-sm py-1 z-10">
-                <Layers size={12} className="text-[#E6C79C]" />
-                <span className="text-xs font-bold text-[#2D2926]">{groupName}</span>
-                <span className="text-[10px] text-[#78716A] bg-[#FAF9F6] px-1.5 py-0.5 rounded">{groupItems.length}개</span>
+              <div className="flex items-center gap-2 mb-2 px-1 sticky top-0 bg-white/90 backdrop-blur-sm py-1.5 z-10">
+                <Layers size={16} className="text-[#E6C79C]" />
+                <span className="text-sm font-bold text-[#2D2926]">{groupName}</span>
+                <span className="text-xs text-[#78716A] bg-[#FAF9F6] px-2 py-0.5 rounded">{groupItems.length}개</span>
               </div>
               <div className="space-y-2">
                 {groupItems.map(item => (
-                  <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-3 transition-all group ${
+                  <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-4 transition-all group ${
                     batchMode && selectedIds.has(item.archiveId) ? 'border-[#E6C79C] bg-[#E6C79C]/10' : 'border-black/5 hover:border-[#E6C79C]'
                   }`}>
                     {renderItemContent(item)}
@@ -633,7 +633,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
           ))
         ) : (
           filtered.map(item => (
-            <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-3 transition-all group ${
+            <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-4 transition-all group ${
               batchMode && selectedIds.has(item.archiveId) ? 'border-[#E6C79C] bg-[#E6C79C]/10' : 'border-black/5 hover:border-[#E6C79C]'
             }`}>
               {renderItemContent(item)}
