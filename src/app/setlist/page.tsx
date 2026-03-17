@@ -775,23 +775,23 @@ export default function SetListPage() {
                         {item.type === 'transcript' && <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">텍스트</span>}
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-1.5 shrink-0">
-                      <button onClick={() => addToSetlist(item)} className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={16} /></button>
-                      <button onClick={() => saveItemToArchive(item)} className="p-2 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-lg transition-colors" title="아카이브에 저장"><Archive size={15} /></button>
-                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
-                      <button onClick={() => removeFromLibrary(item.id)} className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={15} /></button>
+                    <div className="flex flex-col md:grid md:grid-cols-2 gap-1 md:gap-1.5 shrink-0">
+                      <button onClick={() => addToSetlist(item)} className="p-1.5 md:p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={15} /></button>
+                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 md:p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={14} /></button>
+                      <button onClick={() => saveItemToArchive(item)} className="hidden md:block p-2 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-lg transition-colors" title="아카이브에 저장"><Archive size={15} /></button>
+                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="hidden md:block p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="p-2.5 md:p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-2 md:gap-3">
+              <div className="p-2 md:p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-2 md:gap-3 sticky bottom-0 z-10">
                 <button onClick={() => setActiveTab('upload')}
-                  className="py-2.5 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
-                  <UploadCloud size={16} /> 파일 가져오기
+                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  <UploadCloud size={16} /> 가져오기
                 </button>
                 <button onClick={() => setIsTextEditorOpen(true)}
-                  className="py-2.5 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
                   <Type size={16} /> 텍스트 작성
                 </button>
               </div>
