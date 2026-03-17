@@ -83,18 +83,20 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
         if (tracks.length > 0) {
           tracks.forEach((track: any, idx: number) => {
             const sourceId = `db-music-${d.id}-${idx}`;
+            // Audio URL can be at track.audioUrl or track.versions[0].audioUrl
+            const trackAudioUrl = track.audioUrl || track.versions?.[0]?.audioUrl || '';
             musicItems.push({
               item: {
                 id: sourceId,
                 type: 'mr',
-                title: track.title || data.title || '제목 없음',
+                title: track.versions?.[0]?.title || track.title || data.title || '제목 없음',
                 author: data.artist || data.description || '',
                 duration: track.duration || '',
                 note: `${data.type || 'Album'} · ${data.title || ''}`,
-                hasAudio: !!track.audioUrl,
+                hasAudio: !!trackAudioUrl,
                 hasPdf: false,
                 fileUrl: '',
-                audioUrl: track.audioUrl || '',
+                audioUrl: trackAudioUrl,
                 youtubeUrl: '',
                 source: 'db',
                 sourceId,

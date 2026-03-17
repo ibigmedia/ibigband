@@ -18,12 +18,18 @@ export async function POST(request: Request) {
       html,
     };
 
-    // attachments format: [{ filename: 'cuesheet.pdf', content: '<base64string>' }]
+    // attachments format: [{ filename: string, path?: string, content?: string }]
+    // path: URL to download (Resend fetches it)
+    // content: base64 string (small files only)
     if (attachments && Array.isArray(attachments) && attachments.length > 0) {
-      emailOptions.attachments = attachments.map((att: any) => ({
-        filename: att.filename,
-        content: Buffer.from(att.content, 'base64'),
-      }));
+      emailOptions.attachments = attachments.map((att: any) => {
+        if (att.path) {
+          // URL-based attachment: Resend downloads from URL
+          return { filename: att.filename, path: att.path };
+        }
+        // Base64 content attachment (legacy, small files)
+        return { filename: att.filename, content: Buffer.from(att.content, 'base64') };
+      });
     }
 
     const data = await resend.emails.send(emailOptions);

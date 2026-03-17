@@ -21,6 +21,7 @@ import ImportModal, { type LibraryItem } from '@/components/setlist/ImportModal'
 import TextEditorModal from '@/components/setlist/TextEditorModal';
 import SetlistManagerModal from '@/components/setlist/SetlistManagerModal';
 import EmailShareModal from '@/components/setlist/EmailShareModal';
+import ArchivePanel, { saveToArchive } from '@/components/setlist/ArchivePanel';
 import { generateCueSheetPdf } from '@/components/setlist/cueSheetPdf';
 
 // --- Types ---
@@ -54,7 +55,7 @@ export default function SetListPage() {
   const [savedSetlists, setSavedSetlists] = useState<SavedSetlist[]>([]);
 
   // UI
-  const [activeTab, setActiveTab] = useState<'library' | 'ai-search' | 'upload' | 'schedule'>('library');
+  const [activeTab, setActiveTab] = useState<'library' | 'ai-search' | 'upload' | 'schedule' | 'archive'>('library');
   const [librarySearchQuery, setLibrarySearchQuery] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isAiSearching, setIsAiSearching] = useState(false);
@@ -237,6 +238,7 @@ export default function SetListPage() {
             source: 'upload', sourceId: `upload-${file.name}-${file.size}`,
           };
           setLibraryItems(prev => [item, ...prev]);
+          saveToArchive(user.uid, [item]);
           alert(`${file.name} 업로드 완료!`);
           setActiveTab('library');
         }
@@ -253,23 +255,56 @@ export default function SetListPage() {
       viewId: "DOCS", showUploadView: true, supportDrives: true, multiselect: true,
       callbackFunction: async (data: any) => {
         if (data.action !== 'picked') return;
+        const accessToken = data.access_token || (window as any).google?.accounts?.oauth2?.getToken?.()?.access_token;
         const newItems: LibraryItem[] = [];
         let dupes = 0;
+        let uploadCount = 0;
+
         for (const gDoc of data.docs) {
           const sid = `gdrive-${gDoc.id}`;
           if (existingSourceIds.has(sid)) { dupes++; continue; }
           const isPdf = gDoc.mimeType?.includes('pdf');
           const isAudio = gDoc.mimeType?.includes('audio');
+          const isImage = gDoc.mimeType?.includes('image');
+
+          let fileUrl = '';
+          let audioUrl = '';
+
+          // Download from Google Drive and re-upload to Firebase Storage
+          if (accessToken && (isPdf || isAudio || isImage)) {
+            try {
+              const dlRes = await fetch(`https://www.googleapis.com/drive/v3/files/${gDoc.id}?alt=media`, {
+                headers: { 'Authorization': `Bearer ${accessToken}` },
+              });
+              if (dlRes.ok) {
+                const fileBlob = await dlRes.blob();
+                const ext = isPdf ? 'pdf' : isAudio ? 'mp3' : 'jpg';
+                const storageRef = ref(storage, `gdrive_imports/${user.uid}/${Date.now()}_${gDoc.name || `file.${ext}`}`);
+                await uploadBytesResumable(storageRef, fileBlob);
+                const url = await getDownloadURL(storageRef);
+                if (isPdf || isImage) fileUrl = url;
+                if (isAudio) audioUrl = url;
+                uploadCount++;
+              }
+            } catch (e) { console.error('GDrive download/upload error:', e); }
+          }
+
           newItems.push({
-            id: sid, type: isPdf ? 'sheet' : isAudio ? 'mr' : 'transcript',
-            title: gDoc.name || '제목 없음', author: '구글 드라이브', duration: '',
+            id: sid, type: (isPdf || isImage) ? 'sheet' : isAudio ? 'mr' : 'transcript',
+            title: (gDoc.name || '제목 없음').replace(/\.[^/.]+$/, ''), author: '구글 드라이브', duration: '',
             note: '구글 드라이브', hasAudio: isAudio, hasPdf: isPdf,
-            fileUrl: isPdf ? gDoc.url : '', audioUrl: isAudio ? gDoc.url : '', youtubeUrl: '',
+            fileUrl, audioUrl, youtubeUrl: '',
             source: 'gdrive', sourceId: sid,
           });
         }
-        if (newItems.length > 0) setLibraryItems(prev => [...newItems, ...prev]);
-        alert(newItems.length > 0 ? `${newItems.length}개 가져옴${dupes > 0 ? ` (중복 ${dupes}개 건너뜀)` : ''}` : '모두 중복입니다.');
+        if (newItems.length > 0) {
+          setLibraryItems(prev => [...newItems, ...prev]);
+          saveToArchive(user.uid, newItems);
+        }
+        const msg = newItems.length > 0
+          ? `${newItems.length}개 가져옴 (${uploadCount}개 파일 업로드)${dupes > 0 ? `, 중복 ${dupes}개 건너뜀` : ''}`
+          : '모두 중복입니다.';
+        alert(msg);
         setActiveTab('library');
       },
     });
@@ -393,13 +428,21 @@ export default function SetListPage() {
 
     html += `<p style="color:#78716A;font-size:11px;margin-top:24px">Sent from <strong>ibiGband Smart Setlist</strong></p></div>`;
 
-    // Build attachments
-    const attachments: { filename: string; content: string }[] = [];
+    // Build attachments - upload to Storage to avoid body size limits
+    const attachments: { filename: string; path: string }[] = [];
+
+    const uploadTempPdf = async (bytes: Uint8Array, name: string): Promise<string> => {
+      const blob = new Blob([bytes as BlobPart], { type: 'application/pdf' });
+      const storageRef = ref(storage, `temp_email/${user.uid}/${Date.now()}_${name}`);
+      await uploadBytesResumable(storageRef, blob);
+      return getDownloadURL(storageRef);
+    };
 
     if (params.includeCueSheet) {
       try {
         const cueBytes = await generateCueSheetPdf(setlistTitle, items, calculateTotalDuration());
-        attachments.push({ filename: `${setlistTitle}_큐시트.pdf`, content: uint8ToBase64(cueBytes) });
+        const url = await uploadTempPdf(cueBytes, '큐시트.pdf');
+        attachments.push({ filename: `${setlistTitle}_큐시트.pdf`, path: url });
       } catch (e) { console.error('cue sheet gen error', e); }
     }
 
@@ -407,7 +450,8 @@ export default function SetListPage() {
       try {
         const masterBytes = await exportMasterPdf();
         if (masterBytes) {
-          attachments.push({ filename: `${setlistTitle}_마스터악보.pdf`, content: uint8ToBase64(masterBytes) });
+          const url = await uploadTempPdf(masterBytes, '마스터악보.pdf');
+          attachments.push({ filename: `${setlistTitle}_마스터악보.pdf`, path: url });
         }
       } catch (e) { console.error('master pdf gen error', e); }
     }
@@ -417,7 +461,11 @@ export default function SetListPage() {
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${idToken}` },
       body: JSON.stringify({ to: params.to, subject: `[ibiGband] ${setlistTitle}`, html, attachments }),
     });
-    if (!res.ok) { const d = await res.json(); throw new Error(d.error || '전송 실패'); }
+    if (!res.ok) {
+      let errMsg = '전송 실패';
+      try { const d = await res.json(); errMsg = d.error || errMsg; } catch {}
+      throw new Error(errMsg);
+    }
   };
 
   // === Audio ===
@@ -494,6 +542,7 @@ export default function SetListPage() {
                 source: 'paste', sourceId: `paste-${Date.now()}`,
               };
               setLibraryItems(prev => [libItem, ...prev]);
+              saveToArchive(user.uid, [libItem]);
               alert('이미지가 라이브러리에 추가되었습니다!');
               setActiveTab('library');
             }
@@ -552,11 +601,12 @@ export default function SetListPage() {
 
       {/* ===== LEFT: Library ===== */}
       <aside className="w-full lg:w-[400px] flex flex-col gap-6 shrink-0 h-[calc(100vh-8rem)] sticky top-24">
-        <div className="bg-white rounded-3xl p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-3 gap-2 border border-[#78716A]/10 shrink-0">
+        <div className="bg-white rounded-3xl p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-1.5 border border-[#78716A]/10 shrink-0">
           {[
-            { key: 'library', icon: <Library size={18} />, label: '라이브러리', active: activeTab === 'library' || activeTab === 'upload' },
-            { key: 'ai-search', icon: <Sparkles size={18} />, label: 'AI 검색', active: activeTab === 'ai-search' },
-            { key: 'schedule', icon: <Calendar size={18} />, label: '일정', active: activeTab === 'schedule' },
+            { key: 'library', icon: <Library size={16} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
+            { key: 'archive', icon: <FolderOpen size={16} />, label: '아카이브', active: activeTab === 'archive' },
+            { key: 'ai-search', icon: <Sparkles size={16} />, label: 'AI 검색', active: activeTab === 'ai-search' },
+            { key: 'schedule', icon: <Calendar size={16} />, label: '일정', active: activeTab === 'schedule' },
           ].map(t => (
             <button key={t.key} onClick={() => setActiveTab(t.key as any)}
               className={`py-2 rounded-2xl flex flex-col items-center justify-center gap-1 text-[11px] font-bold transition-all ${t.active ? (t.key === 'library' ? 'bg-[#2D2926] text-white' : 'bg-[#E6C79C] text-[#2D2926]') + ' shadow-md' : 'text-[#78716A] hover:bg-black/5'}`}>
@@ -620,9 +670,9 @@ export default function SetListPage() {
                         {item.type === 'transcript' && <span className="text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">텍스트</span>}
                       </div>
                     </div>
-                    <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
-                      <button onClick={() => addToSetlist(item)} className="p-1 text-[#78716A] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-md" title="셋리스트에 추가"><Plus size={14} /></button>
-                      <button onClick={() => removeFromLibrary(item.id)} className="p-1 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-md" title="삭제"><X size={14} /></button>
+                    <div className="flex flex-col gap-1.5 shrink-0">
+                      <button onClick={() => addToSetlist(item)} className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={16} /></button>
+                      <button onClick={() => removeFromLibrary(item.id)} className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={14} /></button>
                     </div>
                   </div>
                 ))}
@@ -677,6 +727,21 @@ export default function SetListPage() {
                 )}
               </div>
             </div>
+          )}
+
+          {/* Archive tab */}
+          {activeTab === 'archive' && (
+            <ArchivePanel
+              userId={user.uid}
+              onAddToLibrary={(item) => {
+                if (existingSourceIds.has(item.sourceId || '')) {
+                  alert('이미 미디어풀에 있습니다.');
+                  return;
+                }
+                setLibraryItems(prev => [item, ...prev]);
+              }}
+              existingLibraryIds={existingSourceIds}
+            />
           )}
 
           {/* Schedule tab */}
@@ -916,7 +981,11 @@ export default function SetListPage() {
       {/* ===== Modals ===== */}
       <ImportModal isOpen={isImportModalOpen} onClose={() => setIsImportModalOpen(false)}
         existingSourceIds={existingSourceIds}
-        onImport={(newItems) => { setLibraryItems(prev => [...newItems, ...prev]); alert(`${newItems.length}개 항목을 가져왔습니다.`); }} />
+        onImport={(newItems) => {
+          setLibraryItems(prev => [...newItems, ...prev]);
+          saveToArchive(user.uid, newItems).then(n => n > 0 && console.log(`${n}개 아카이브 저장`));
+          alert(`${newItems.length}개 항목을 가져왔습니다.`);
+        }} />
 
       <TextEditorModal isOpen={isTextEditorOpen} onClose={() => setIsTextEditorOpen(false)}
         onAdd={(data) => {
@@ -926,6 +995,7 @@ export default function SetListPage() {
             source: 'local', sourceId: `text-${Date.now()}-${data.title}`,
           };
           setLibraryItems(prev => [item, ...prev]);
+          saveToArchive(user.uid, [item]);
         }} />
 
       <SetlistManagerModal isOpen={isManagerOpen} onClose={() => setIsManagerOpen(false)}
