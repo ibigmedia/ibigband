@@ -82,9 +82,11 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
   const [batchAction, setBatchAction] = useState<'key' | 'lang' | 'category' | 'tag' | null>(null);
   const [batchValue, setBatchValue] = useState('');
 
-  // 가사 추출
+  // 가사 추출/수정
   const [extractingId, setExtractingId] = useState<string | null>(null);
   const [lyricsViewId, setLyricsViewId] = useState<string | null>(null);
+  const [lyricsEditId, setLyricsEditId] = useState<string | null>(null);
+  const [lyricsEditValue, setLyricsEditValue] = useState('');
 
   // 실시간 리스너
   useEffect(() => {
@@ -231,6 +233,14 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
     } finally {
       setExtractingId(null);
     }
+  };
+
+  // 가사 수정 저장
+  const handleSaveLyrics = async (archiveId: string) => {
+    try {
+      await updateDoc(doc(db, 'users', userId, 'archive', archiveId), { lyrics: lyricsEditValue });
+      setLyricsEditId(null);
+    } catch (e) { console.error(e); alert('가사 저장 실패'); }
   };
 
   // 일괄 수정 실행
@@ -414,19 +424,40 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
           </button>
         </div>
       )}
-      {/* 가사 인라인 미리보기 */}
+      {/* 가사 인라인 미리보기/수정 */}
       {lyricsViewId === item.archiveId && item.lyrics && (
-        <div className="col-span-full mt-2 bg-violet-50 border border-violet-200 rounded-lg p-3 text-xs text-[#2D2926] whitespace-pre-wrap max-h-48 overflow-y-auto">
+        <div className="col-span-full mt-2 bg-violet-50 border border-violet-200 rounded-lg p-3 text-xs text-[#2D2926]">
           <div className="flex items-center justify-between mb-2">
             <span className="font-bold text-violet-700 flex items-center gap-1"><BookOpen size={12} /> 가사</span>
-            {onLyricsPresent && (
-              <button onClick={() => onLyricsPresent([{ title: item.title, author: item.author, text: item.lyrics! }])}
-                className="text-[10px] font-bold bg-violet-600 text-white px-2 py-0.5 rounded hover:bg-violet-700">
-                프레젠테이션
-              </button>
-            )}
+            <div className="flex items-center gap-1.5">
+              {lyricsEditId === item.archiveId ? (
+                <>
+                  <button onClick={() => handleSaveLyrics(item.archiveId)}
+                    className="text-[10px] font-bold bg-green-600 text-white px-2 py-0.5 rounded hover:bg-green-700">저장</button>
+                  <button onClick={() => setLyricsEditId(null)}
+                    className="text-[10px] font-bold bg-gray-400 text-white px-2 py-0.5 rounded hover:bg-gray-500">취소</button>
+                </>
+              ) : (
+                <button onClick={() => { setLyricsEditId(item.archiveId); setLyricsEditValue(item.lyrics || ''); }}
+                  className="text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded hover:bg-violet-200 flex items-center gap-0.5">
+                  <Edit3 size={10} /> 수정
+                </button>
+              )}
+              {onLyricsPresent && lyricsEditId !== item.archiveId && (
+                <button onClick={() => onLyricsPresent([{ title: item.title, author: item.author, text: item.lyrics! }])}
+                  className="text-[10px] font-bold bg-violet-600 text-white px-2 py-0.5 rounded hover:bg-violet-700">
+                  프레젠테이션
+                </button>
+              )}
+            </div>
           </div>
-          {item.lyrics}
+          {lyricsEditId === item.archiveId ? (
+            <textarea value={lyricsEditValue} onChange={e => setLyricsEditValue(e.target.value)}
+              className="w-full bg-white border border-violet-300 rounded-lg p-2 text-xs text-[#2D2926] focus:outline-none focus:border-violet-500 min-h-[160px] resize-y"
+              placeholder="가사를 수정하세요..." />
+          ) : (
+            <div className="whitespace-pre-wrap max-h-48 overflow-y-auto">{item.lyrics}</div>
+          )}
         </div>
       )}
     </div>

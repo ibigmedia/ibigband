@@ -23,6 +23,7 @@ import SetlistManagerModal from '@/components/setlist/SetlistManagerModal';
 import EmailShareModal from '@/components/setlist/EmailShareModal';
 import ArchivePanel, { saveToArchive } from '@/components/setlist/ArchivePanel';
 import { generateCueSheetPdf } from '@/components/setlist/cueSheetPdf';
+import LyricsPresentationModal, { type LyricsSlide } from '@/components/setlist/LyricsPresentationModal';
 
 // --- Types ---
 type ItemType = 'sheet' | 'mr' | 'bgm' | 'transcript' | 'guide';
@@ -69,6 +70,8 @@ export default function SetListPage() {
   const [isManagerOpen, setIsManagerOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [isArchiveFullscreen, setIsArchiveFullscreen] = useState(false);
+  const [isLyricsPresentOpen, setIsLyricsPresentOpen] = useState(false);
+  const [lyricsPresentSlides, setLyricsPresentSlides] = useState<LyricsSlide[]>([]);
 
   // Item preview modals
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
@@ -635,11 +638,17 @@ export default function SetListPage() {
     }
   };
 
-  // 가사 프레젠테이션 실행
+  // 가사 프레젠테이션 실행 (단일 곡 → 바로 프레젠터)
   const launchLyricsPresenter = (lyrics: { title: string; author?: string; text: string }[]) => {
     if (lyrics.length === 0) { alert('가사 데이터가 없습니다.'); return; }
     localStorage.setItem('ibigband_lyrics_presenter', JSON.stringify(lyrics));
     window.open('/setlist/presenter/lyrics', '_blank');
+  };
+
+  // 셋리스트 전체 가사 프레젠테이션 편집 모달
+  const openLyricsPresentationEditor = (slides: LyricsSlide[]) => {
+    setLyricsPresentSlides(slides);
+    setIsLyricsPresentOpen(true);
   };
 
   const shareScheduleEmail = async () => {
@@ -828,7 +837,7 @@ export default function SetListPage() {
               onAddToSetlist={(item) => addToSetlist(item)}
               onPreview={(item) => handleItemClick(item)}
               onPlayAudio={(item) => togglePlay(item)}
-              onLyricsPresent={launchLyricsPresenter}
+              onLyricsPresent={openLyricsPresentationEditor}
               existingLibraryIds={existingSourceIds}
               onOpenFullscreen={() => setIsArchiveFullscreen(true)}
             />
@@ -1057,6 +1066,17 @@ export default function SetListPage() {
               className="hidden md:flex items-center gap-2 px-5 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold whitespace-nowrap">
               <LayoutDashboard size={14} /> 프레젠터 뷰
             </button>
+            <button onClick={() => {
+              if (items.length === 0) { alert('셋리스트에 곡을 추가해주세요.'); return; }
+              const lyricsSlides: LyricsSlide[] = items
+                .filter(i => i.type === 'sheet' || i.type === 'transcript' || i.type === 'guide')
+                .map(i => ({ title: i.title, author: i.author, text: i.note || '' }));
+              if (lyricsSlides.length === 0) { alert('가사가 포함된 곡이 없습니다.\n아카이브에서 AI 가사 추출을 먼저 실행해 주세요.'); return; }
+              openLyricsPresentationEditor(lyricsSlides);
+            }}
+              className="hidden md:flex items-center gap-2 px-5 py-2 bg-violet-500/20 hover:bg-violet-500/40 text-violet-200 rounded-xl text-xs font-bold whitespace-nowrap">
+              <FileText size={14} /> 가사 프레젠테이션
+            </button>
           </div>
 
           <audio ref={audioRef} onTimeUpdate={() => {
@@ -1091,7 +1111,7 @@ export default function SetListPage() {
                 onAddToSetlist={(item) => addToSetlist(item)}
                 onPreview={(item) => handleItemClick(item)}
                 onPlayAudio={(item) => togglePlay(item)}
-                onLyricsPresent={launchLyricsPresenter}
+                onLyricsPresent={openLyricsPresentationEditor}
                 existingLibraryIds={existingSourceIds}
                 fullscreen={true}
               />
@@ -1127,6 +1147,17 @@ export default function SetListPage() {
       <EmailShareModal isOpen={isEmailModalOpen} onClose={() => setIsEmailModalOpen(false)}
         setlistTitle={setlistTitle} items={items} totalDuration={calculateTotalDuration()}
         schedules={schedules} onSend={handleEmailSend} />
+
+      <LyricsPresentationModal
+        isOpen={isLyricsPresentOpen}
+        onClose={() => setIsLyricsPresentOpen(false)}
+        initialSlides={lyricsPresentSlides}
+        setlistTitle={setlistTitle}
+        onLaunchPresenter={(slides) => {
+          launchLyricsPresenter(slides);
+          setIsLyricsPresentOpen(false);
+        }}
+      />
 
       {/* PDF / Image Preview Modal */}
       {previewPdfUrl && (
