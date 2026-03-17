@@ -603,7 +603,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+      <div className="flex-1 overflow-y-auto p-3">
         {loading ? (
           <div className="flex items-center justify-center py-16"><Loader2 size={20} className="animate-spin text-[#78716A]" /></div>
         ) : filtered.length === 0 ? (
@@ -620,7 +620,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
                 <span className="text-sm font-bold text-[#2D2926]">{groupName}</span>
                 <span className="text-xs text-[#78716A] bg-[#FAF9F6] px-2 py-0.5 rounded">{groupItems.length}개</span>
               </div>
-              <div className="space-y-2">
+              <div className={fullscreen ? 'grid grid-cols-2 gap-2' : 'space-y-2'}>
                 {groupItems.map(item => (
                   <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-4 transition-all group ${
                     batchMode && selectedIds.has(item.archiveId) ? 'border-[#E6C79C] bg-[#E6C79C]/10' : 'border-black/5 hover:border-[#E6C79C]'
@@ -632,13 +632,15 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
             </div>
           ))
         ) : (
-          filtered.map(item => (
-            <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-4 transition-all group ${
-              batchMode && selectedIds.has(item.archiveId) ? 'border-[#E6C79C] bg-[#E6C79C]/10' : 'border-black/5 hover:border-[#E6C79C]'
-            }`}>
-              {renderItemContent(item)}
-            </div>
-          ))
+          <div className={fullscreen ? 'grid grid-cols-2 gap-2' : 'space-y-2'}>
+            {filtered.map(item => (
+              <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-4 transition-all group ${
+                batchMode && selectedIds.has(item.archiveId) ? 'border-[#E6C79C] bg-[#E6C79C]/10' : 'border-black/5 hover:border-[#E6C79C]'
+              }`}>
+                {renderItemContent(item)}
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
