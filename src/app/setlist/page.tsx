@@ -6,7 +6,7 @@ import {
   Music, Sparkles, Smartphone, ChevronRight, LayoutDashboard,
   MoreVertical, FileVideo, Download, Pause, Clock, Cloud, HardDrive,
   Mail, Loader2, Trash2, FolderOpen, MapPin, Bell, Send,
-  Image, Megaphone, Eye, ClipboardPaste
+  Image, Megaphone, Eye, ClipboardPaste, Edit3, Archive, Check
 } from 'lucide-react';
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
@@ -72,6 +72,10 @@ export default function SetListPage() {
   // Item preview modals
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [previewText, setPreviewText] = useState<{ title: string; content: string } | null>(null);
+
+  // Library rename
+  const [renamingItemId, setRenamingItemId] = useState<string | null>(null);
+  const [renameValue, setRenameValue] = useState('');
 
   // Schedule
   const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
@@ -209,6 +213,22 @@ export default function SetListPage() {
     });
   };
 
+  const renameLibraryItem = (id: string, newTitle: string) => {
+    if (!newTitle.trim()) return;
+    setLibraryItems(prev => {
+      const next = prev.map(i => i.id === id ? { ...i, title: newTitle.trim() } : i);
+      localStorage.setItem('ibigband_library_items', JSON.stringify(next));
+      return next;
+    });
+    setRenamingItemId(null);
+  };
+
+  const saveItemToArchive = async (item: LibraryItem) => {
+    const n = await saveToArchive(user.uid, [item]);
+    if (n > 0) alert('아카이브에 저장되었습니다!');
+    else alert('이미 아카이브에 있습니다.');
+  };
+
   const clearLibrary = () => {
     if (!confirm('라이브러리를 모두 비우시겠습니까?')) return;
     setLibraryItems([]);
@@ -255,7 +275,10 @@ export default function SetListPage() {
       viewId: "DOCS", showUploadView: true, supportDrives: true, multiselect: true,
       callbackFunction: async (data: any) => {
         if (data.action !== 'picked') return;
-        const accessToken = data.access_token || (window as any).google?.accounts?.oauth2?.getToken?.()?.access_token;
+        // Get OAuth token from picker response or global gapi
+        const accessToken = data.access_token || data.token
+          || (window as any).gapi?.auth?.getToken?.()?.access_token;
+
         const newItems: LibraryItem[] = [];
         let dupes = 0;
         let uploadCount = 0;
@@ -270,23 +293,28 @@ export default function SetListPage() {
           let fileUrl = '';
           let audioUrl = '';
 
-          // Download from Google Drive and re-upload to Firebase Storage
+          // Use server-side proxy to download from GDrive (avoids CORS)
           if (accessToken && (isPdf || isAudio || isImage)) {
             try {
-              const dlRes = await fetch(`https://www.googleapis.com/drive/v3/files/${gDoc.id}?alt=media`, {
-                headers: { 'Authorization': `Bearer ${accessToken}` },
+              const proxyRes = await fetch('/api/setlist/gdrive-proxy', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  fileId: gDoc.id,
+                  accessToken,
+                  fileName: gDoc.name || 'file',
+                  userId: user.uid,
+                }),
               });
-              if (dlRes.ok) {
-                const fileBlob = await dlRes.blob();
-                const ext = isPdf ? 'pdf' : isAudio ? 'mp3' : 'jpg';
-                const storageRef = ref(storage, `gdrive_imports/${user.uid}/${Date.now()}_${gDoc.name || `file.${ext}`}`);
-                await uploadBytesResumable(storageRef, fileBlob);
-                const url = await getDownloadURL(storageRef);
+              if (proxyRes.ok) {
+                const { url } = await proxyRes.json();
                 if (isPdf || isImage) fileUrl = url;
                 if (isAudio) audioUrl = url;
                 uploadCount++;
+              } else {
+                console.error('Proxy error:', await proxyRes.text());
               }
-            } catch (e) { console.error('GDrive download/upload error:', e); }
+            } catch (e) { console.error('GDrive proxy error:', e); }
           }
 
           newItems.push({
@@ -652,8 +680,18 @@ export default function SetListPage() {
                     <div className={`mt-0.5 shrink-0 p-1.5 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
                       {getTypeIcon(item.type as ItemType, 14)}
                     </div>
-                    <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleItemClick(item)}>
-                      <p className="font-bold text-[13px] text-[#2D2926] truncate">{item.title}</p>
+                    <div className="flex-1 min-w-0">
+                      {renamingItemId === item.id ? (
+                        <div className="flex items-center gap-1 mb-1">
+                          <input type="text" value={renameValue} onChange={e => setRenameValue(e.target.value)}
+                            onKeyDown={e => e.key === 'Enter' && renameLibraryItem(item.id, renameValue)}
+                            className="flex-1 text-[13px] font-bold bg-white border border-[#E6C79C] rounded-lg px-2 py-1 focus:outline-none" autoFocus />
+                          <button onClick={() => renameLibraryItem(item.id, renameValue)} className="p-1 text-green-600 hover:bg-green-50 rounded"><Check size={14} /></button>
+                          <button onClick={() => setRenamingItemId(null)} className="p-1 text-[#78716A] hover:bg-black/5 rounded"><X size={14} /></button>
+                        </div>
+                      ) : (
+                        <p className="font-bold text-[13px] text-[#2D2926] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
+                      )}
                       {item.author && <p className="text-[11px] text-[#78716A] truncate">{item.author}</p>}
                       <div className="flex gap-1.5 mt-1.5 flex-wrap">
                         {item.hasPdf && <span className="text-[9px] font-bold bg-[#2D2926]/10 text-[#2D2926] px-1.5 py-0.5 rounded">PDF</span>}
@@ -672,7 +710,9 @@ export default function SetListPage() {
                     </div>
                     <div className="flex flex-col gap-1.5 shrink-0">
                       <button onClick={() => addToSetlist(item)} className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={16} /></button>
-                      <button onClick={() => removeFromLibrary(item.id)} className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={14} /></button>
+                      <button onClick={() => saveItemToArchive(item)} className="p-1.5 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-lg transition-colors" title="아카이브에 저장"><Archive size={13} /></button>
+                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={13} /></button>
+                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={13} /></button>
                     </div>
                   </div>
                 ))}

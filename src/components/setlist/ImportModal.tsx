@@ -80,51 +80,31 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
       musicSnap.docs.forEach(d => {
         const data = d.data();
         const tracks = data.tracks || [];
-        if (tracks.length > 0) {
-          tracks.forEach((track: any, idx: number) => {
-            const sourceId = `db-music-${d.id}-${idx}`;
-            // Audio URL can be at track.audioUrl or track.versions[0].audioUrl
-            const trackAudioUrl = track.audioUrl || track.versions?.[0]?.audioUrl || '';
-            musicItems.push({
-              item: {
-                id: sourceId,
-                type: 'mr',
-                title: track.versions?.[0]?.title || track.title || data.title || '제목 없음',
-                author: data.artist || data.description || '',
-                duration: track.duration || '',
-                note: `${data.type || 'Album'} · ${data.title || ''}`,
-                hasAudio: !!trackAudioUrl,
-                hasPdf: false,
-                fileUrl: '',
-                audioUrl: trackAudioUrl,
-                youtubeUrl: '',
-                source: 'db',
-                sourceId,
-              },
-              alreadyExists: existingSourceIds.has(sourceId),
-            });
-          });
-        } else {
-          const sourceId = `db-music-${d.id}`;
+        // Only import individual tracks that have audio - skip album descriptions
+        tracks.forEach((track: any, idx: number) => {
+          const sourceId = `db-music-${d.id}-${idx}`;
+          const trackAudioUrl = track.audioUrl || track.versions?.[0]?.audioUrl || '';
+          // Skip tracks without audio
+          if (!trackAudioUrl) return;
           musicItems.push({
             item: {
               id: sourceId,
               type: 'mr',
-              title: data.title || '제목 없음',
+              title: track.versions?.[0]?.title || track.title || '제목 없음',
               author: data.artist || '',
-              duration: '',
-              note: data.type || 'Album',
-              hasAudio: !!data.audioUrl,
+              duration: track.duration || '',
+              note: data.title || '',
+              hasAudio: true,
               hasPdf: false,
               fileUrl: '',
-              audioUrl: data.audioUrl || '',
+              audioUrl: trackAudioUrl,
               youtubeUrl: '',
               source: 'db',
               sourceId,
             },
             alreadyExists: existingSourceIds.has(sourceId),
           });
-        }
+        });
       });
 
       setItems(tab === 'sheets' ? sheets : musicItems);
