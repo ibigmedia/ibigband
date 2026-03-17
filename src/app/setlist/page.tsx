@@ -680,7 +680,7 @@ export default function SetListPage() {
 
   // ==================== RENDER ====================
   return (
-    <div className="pt-14 md:pt-24 pb-20 md:pb-12 px-1 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-1.5 md:gap-6 overflow-x-hidden">
+    <div className="pb-20 md:pb-12 px-1 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-1.5 md:gap-6 overflow-x-hidden">
 
       {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
       <div className="lg:hidden flex bg-white rounded-xl p-1 shadow-sm border border-[#78716A]/10 shrink-0">
