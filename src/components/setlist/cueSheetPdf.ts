@@ -33,10 +33,20 @@ export async function generateCueSheetPdf(
   const pdfDoc = await PDFDocument.create();
   pdfDoc.registerFontkit(fontkit);
 
-  // 한글 폰트 로드
+  // 한글 폰트 로드 (응답 검증 포함)
+  const loadFont = async (url: string) => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`폰트 로드 실패: ${url} (${res.status})`);
+    const ct = res.headers.get('content-type') || '';
+    if (ct.includes('text/html')) throw new Error(`폰트 대신 HTML 반환됨: ${url}`);
+    const buf = await res.arrayBuffer();
+    if (buf.byteLength < 1000) throw new Error(`폰트 파일이 너무 작음: ${url} (${buf.byteLength} bytes)`);
+    return buf;
+  };
+
   const [regularBytes, boldBytes] = await Promise.all([
-    fetch('/fonts/Pretendard-Regular.otf').then(r => r.arrayBuffer()),
-    fetch('/fonts/Pretendard-Bold.otf').then(r => r.arrayBuffer()),
+    loadFont('/fonts/Pretendard-Regular.ttf'),
+    loadFont('/fonts/Pretendard-Bold.ttf'),
   ]);
 
   const font = await pdfDoc.embedFont(regularBytes);
