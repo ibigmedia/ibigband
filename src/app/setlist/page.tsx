@@ -710,7 +710,7 @@ export default function SetListPage() {
           ))}
         </div>
 
-        <div className="bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
+        <div className="bg-white flex-1 border-y md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
