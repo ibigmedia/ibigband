@@ -27,14 +27,16 @@ export async function POST(req: Request) {
 주어진 악보 이미지/PDF에서 가사(lyrics)만 정확하게 추출해 주세요.
 
 규칙:
-1. 절(verse), 후렴(chorus), 브릿지(bridge) 등 구분이 있으면 표시해 주세요
-2. 각 절은 빈 줄로 구분해 주세요
+1. 절(verse), 후렴(chorus), 브릿지(bridge) 등 구분은 [1절], [2절], [후렴], [브릿지] 형식으로 표시해 주세요
+2. 각 절/후렴은 빈 줄로 구분해 주세요
 3. 반복 기호가 있으면 가사를 반복하지 말고 [반복] 표시만 해주세요
 4. 코드(Am, C, G7 등)는 제외하고 가사만 추출하세요
 5. 악보에 가사가 없는 경우 "가사를 찾을 수 없습니다"라고 답변하세요
 6. 곡 제목이 보이면 첫 줄에 제목을 적어주세요
 7. 한국어, 영어, 스페인어 등 원본 언어 그대로 추출하세요
-8. 프레젠테이션 슬라이드에 사용할 것이므로 깔끔하게 정리해 주세요`;
+8. 프레젠테이션 슬라이드에 사용할 것이므로 깔끔하게 정리해 주세요
+9. 절대 마크다운 문법(**, *, #, ## 등)을 사용하지 마세요. 순수 텍스트로만 작성하세요
+10. "곡 제목:" 같은 불필요한 접두어 없이 가사 내용만 출력하세요`;
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -54,13 +56,21 @@ export async function POST(req: Request) {
       ],
     });
 
-    const lyrics = response.text || '';
+    let lyrics = response.text || '';
 
-    if (!lyrics.trim()) {
+    // 마크다운 문법 후처리 제거
+    lyrics = lyrics
+      .replace(/\*\*([^*]+)\*\*/g, '$1')   // **bold** → bold
+      .replace(/\*([^*]+)\*/g, '$1')        // *italic* → italic
+      .replace(/^#{1,6}\s+/gm, '')          // ## 헤딩 제거
+      .replace(/^```[\s\S]*?```$/gm, '')    // 코드블록 제거
+      .trim();
+
+    if (!lyrics) {
       return NextResponse.json({ error: '가사를 추출할 수 없습니다.' }, { status: 400 });
     }
 
-    return NextResponse.json({ lyrics: lyrics.trim() });
+    return NextResponse.json({ lyrics });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Server Error';
     console.error('Lyrics extraction error:', error);

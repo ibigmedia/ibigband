@@ -216,20 +216,26 @@ export default function LyricsPresentationModal({ isOpen, onClose, initialSlides
           const totalTextHeight = lines.length * lineHeight;
           let y = (H + totalTextHeight) / 2 - fontSize - 20;
 
+          const markerRe = /^(\[(?:1절|2절|3절|4절|5절|6절|7절|8절|Verse\s*\d*|Chorus|후렴|브릿지|Bridge|Intro|Outro|간주|반복|Refrain|Pre-?Chorus|Tag|Coda|Ending)[^\]]*\])$/i;
           for (const line of lines) {
-            const trimmed = line.trim();
+            let trimmed = line.trim().replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1');
             if (!trimmed) { y -= lineHeight * 0.5; continue; }
-            const textWidth = fontBold.widthOfTextAtSize(trimmed, fontSize);
+            const isMarker = markerRe.test(trimmed);
+            const lineFs = isMarker ? Math.round(fontSize * 0.5) : fontSize;
+            const lineColor = isMarker ? rgb(0.45, 0.45, 0.45) : white;
+            const lineFont = isMarker ? font : fontBold;
+            if (isMarker) y += lineHeight * 0.15;
+            const textWidth = lineFont.widthOfTextAtSize(trimmed, lineFs);
             const clippedWidth = Math.min(textWidth, W - 100);
             let x: number;
             if (align === 'left') x = 50;
             else if (align === 'right') x = W - 50 - clippedWidth;
             else x = (W - clippedWidth) / 2;
 
-            page.drawText(truncateText(trimmed, W - 100, fontBold, fontSize), {
-              x, y, font: fontBold, size: fontSize, color: white,
+            page.drawText(truncateText(trimmed, W - 100, lineFont, lineFs), {
+              x, y, font: lineFont, size: lineFs, color: lineColor,
             });
-            y -= lineHeight;
+            y -= isMarker ? lineHeight * 0.6 : lineHeight;
           }
         }
       }
@@ -430,12 +436,12 @@ ${slidesHtml.join('\n')}
                       </span>
                       <span className="text-gray-500 text-[9px]">{previewSection + 1}/{previewSections.length}</span>
                     </div>
-                    <p className={`text-white font-bold leading-relaxed whitespace-pre-wrap w-full ${
+                    <div className={`font-bold leading-relaxed w-full ${
                       slides[previewIndex].align === 'left' ? 'text-left' :
                       slides[previewIndex].align === 'right' ? 'text-right' : 'text-center'
                     }`} style={{ fontSize: `${slides[previewIndex].fontSize && slides[previewIndex].fontSize! > 0 ? Math.round(slides[previewIndex].fontSize! * 0.4) : 14}px` }}>
-                      {previewSections[previewSection] || '(빈 섹션)'}
-                    </p>
+                      {renderLyricsWithMarkers(previewSections[previewSection] || '(빈 섹션)')}
+                    </div>
                   </div>
                 </div>
                 <div className="p-3 border-t border-white/10">
@@ -516,4 +522,24 @@ function truncateText(text: string, maxWidth: number, f: any, size: number): str
 
 function escapeHtml(str: string): string {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// 섹션 마커([1절], [후렴] 등)를 작고 흐리게 렌더링
+const SECTION_MARKER_RE = /^(\[(?:1절|2절|3절|4절|5절|6절|7절|8절|Verse\s*\d*|Chorus|후렴|브릿지|Bridge|Intro|Outro|간주|반복|Refrain|Pre-?Chorus|Tag|Coda|Ending)[^\]]*\])$/i;
+
+function renderLyricsWithMarkers(text: string) {
+  // 마크다운 볼드 제거
+  const cleaned = text.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1');
+  const lines = cleaned.split('\n');
+  return lines.map((line, i) => {
+    const trimmed = line.trim();
+    if (SECTION_MARKER_RE.test(trimmed)) {
+      return (
+        <div key={i} className="text-white/30 font-normal" style={{ fontSize: '0.55em', marginTop: '0.3em', marginBottom: '0.1em' }}>
+          {trimmed}
+        </div>
+      );
+    }
+    return <div key={i} className="text-white">{trimmed || '\u00A0'}</div>;
+  });
 }

@@ -147,10 +147,10 @@ export default function LyricsPresenterPage() {
       <div className="flex-1 flex items-center justify-center px-12 py-24"
         onClick={(e) => { e.stopPropagation(); goNextSection(); }}>
         <div className="max-w-5xl w-full text-center">
-          <p className="font-bold leading-relaxed tracking-wide whitespace-pre-wrap"
+          <div className="font-bold leading-relaxed tracking-wide"
             style={{ fontSize: `${fontSize}px`, lineHeight: 1.5 }}>
-            {currentText}
-          </p>
+            {renderLyricsWithMarkers(currentText)}
+          </div>
         </div>
       </div>
 
@@ -213,4 +213,23 @@ export default function LyricsPresenterPage() {
       </div>
     </div>
   );
+}
+
+// 섹션 마커([1절], [후렴] 등)를 작고 흐리게 렌더링
+const SECTION_MARKER_RE = /^(\[(?:1절|2절|3절|4절|5절|6절|7절|8절|Verse\s*\d*|Chorus|후렴|브릿지|Bridge|Intro|Outro|간주|반복|Refrain|Pre-?Chorus|Tag|Coda|Ending)[^\]]*\])$/i;
+
+function renderLyricsWithMarkers(text: string) {
+  const cleaned = text.replace(/\*\*([^*]+)\*\*/g, '$1').replace(/\*([^*]+)\*/g, '$1');
+  const lines = cleaned.split('\n');
+  return lines.map((line, i) => {
+    const trimmed = line.trim();
+    if (SECTION_MARKER_RE.test(trimmed)) {
+      return (
+        <div key={i} className="text-white/25 font-normal" style={{ fontSize: '0.45em', marginTop: '0.4em', marginBottom: '0.15em' }}>
+          {trimmed}
+        </div>
+      );
+    }
+    return <div key={i}>{trimmed || '\u00A0'}</div>;
+  });
 }
