@@ -9,15 +9,24 @@ export async function POST(request: Request) {
     const authResult = await verifyAdmin(request);
     if (isErrorResponse(authResult)) return authResult;
 
-    const { to, subject, html } = await request.json();
+    const { to, subject, html, attachments } = await request.json();
 
-    const data = await resend.emails.send({
+    const emailOptions: any = {
       from: 'IBIG Band <hello@ibighome.com>',
       to,
       subject,
       html,
-    });
+    };
 
+    // attachments format: [{ filename: 'cuesheet.pdf', content: '<base64string>' }]
+    if (attachments && Array.isArray(attachments) && attachments.length > 0) {
+      emailOptions.attachments = attachments.map((att: any) => ({
+        filename: att.filename,
+        content: Buffer.from(att.content, 'base64'),
+      }));
+    }
+
+    const data = await resend.emails.send(emailOptions);
     return NextResponse.json(data);
   } catch (error) {
     console.error("Email send error:", error);
