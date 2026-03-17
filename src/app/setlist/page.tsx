@@ -695,7 +695,7 @@ export default function SetListPage() {
       </div>
 
       {/* ===== LEFT: Library ===== */}
-      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-2 md:gap-5 shrink-0 min-w-0 h-[calc(100vh-10rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
+      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-2 md:gap-5 lg:shrink-0 min-w-0 h-[calc(100vh-7rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
         <div className="bg-white rounded-2xl md:rounded-3xl p-1 md:p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-0.5 md:gap-2 border border-[#78716A]/10 shrink-0">
           {[
             { key: 'library', icon: <Library size={18} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
