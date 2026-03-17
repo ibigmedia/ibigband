@@ -314,25 +314,25 @@ ${slidesHtml.join('\n')}
   const FONT_SIZE_OPTIONS = [0, 20, 24, 28, 32, 36, 40, 48, 56];
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-3xl w-full max-w-5xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-end md:items-center justify-center md:p-4" onClick={onClose}>
+      <div className="bg-white rounded-t-3xl md:rounded-3xl w-full max-w-5xl h-[95vh] md:max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
         {/* 헤더 */}
-        <div className="p-5 border-b border-black/5 shrink-0">
+        <div className="p-4 md:p-5 border-b border-black/5 shrink-0">
           <div className="flex items-center justify-between">
-            <div>
-              <h3 className="font-bold text-lg flex items-center gap-2">
-                <Presentation size={20} className="text-violet-600" /> 가사 프레젠테이션
+            <div className="min-w-0">
+              <h3 className="font-bold text-base md:text-lg flex items-center gap-2">
+                <Presentation size={18} className="text-violet-600" /> 가사 프레젠테이션
               </h3>
-              <p className="text-xs text-[#78716A] mt-0.5">{setlistTitle} · {slides.length}곡 · 수정 후 저장하면 아카이브에 자동 반영</p>
+              <p className="text-[10px] md:text-xs text-[#78716A] mt-0.5 truncate">{setlistTitle} · {slides.length}곡</p>
             </div>
             <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
           </div>
         </div>
 
-        {/* 본문: 2단 */}
-        <div className="flex-1 flex overflow-hidden">
+        {/* 본문: 모바일 세로 / 데스크톱 2단 */}
+        <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
           {/* 좌측: 곡 목록 */}
-          <div className="w-1/2 border-r border-black/5 flex flex-col">
+          <div className="flex-1 md:w-1/2 border-b md:border-b-0 md:border-r border-black/5 flex flex-col min-h-0">
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
               {slides.map((slide, i) => (
                 <div key={i} className={`border rounded-xl p-3 transition-all ${
@@ -425,7 +425,7 @@ ${slidesHtml.join('\n')}
           </div>
 
           {/* 우측: 미리보기 */}
-          <div className="w-1/2 bg-[#111] flex flex-col">
+          <div className="hidden md:flex md:w-1/2 bg-[#111] flex-col">
             {previewIndex !== null && slides[previewIndex] ? (
               <>
                 <div className="flex-1 flex items-center justify-center p-8">
@@ -472,32 +472,34 @@ ${slidesHtml.join('\n')}
         </div>
 
         {/* 하단 액션 바 */}
-        <div className="p-4 border-t border-black/5 shrink-0 flex items-center justify-between gap-3">
-          <p className="text-xs text-[#78716A]">
-            총 {slides.reduce((acc, s) => acc + s.text.split(/\n\s*\n/).filter(x => x.trim()).length, 0)}개 슬라이드
-          </p>
-          <div className="flex gap-2 flex-wrap justify-end">
+        <div className="p-3 md:p-4 border-t border-black/5 shrink-0">
+          <div className="flex items-center justify-between gap-2 mb-0 md:mb-0">
+            <p className="text-[10px] md:text-xs text-[#78716A] shrink-0">
+              {slides.reduce((acc, s) => acc + s.text.split(/\n\s*\n/).filter(x => x.trim()).length, 0)}개 슬라이드
+            </p>
+          </div>
+          <div className="flex gap-1.5 md:gap-2 flex-wrap justify-end mt-2">
             {onSyncToArchive && (
               <button onClick={handleSyncSave} disabled={syncing || slides.length === 0}
-                className="px-4 py-2.5 bg-green-50 text-green-700 rounded-xl text-xs font-bold hover:bg-green-100 disabled:opacity-40 flex items-center gap-1.5">
+                className="px-3 md:px-4 py-2 md:py-2.5 bg-green-50 text-green-700 rounded-xl text-[11px] md:text-xs font-bold hover:bg-green-100 disabled:opacity-40 flex items-center gap-1">
                 {syncing ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                아카이브 동기화 저장
+                <span className="hidden sm:inline">아카이브</span> 저장
               </button>
             )}
             <button onClick={exportPdf} disabled={exporting !== null || slides.length === 0}
-              className="px-4 py-2.5 bg-red-50 text-red-700 rounded-xl text-xs font-bold hover:bg-red-100 disabled:opacity-40 flex items-center gap-1.5">
+              className="px-3 md:px-4 py-2 md:py-2.5 bg-red-50 text-red-700 rounded-xl text-[11px] md:text-xs font-bold hover:bg-red-100 disabled:opacity-40 flex items-center gap-1">
               {exporting === 'pdf' ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
-              PDF 저장
+              PDF
             </button>
             <button onClick={exportGoogleSlides} disabled={exporting !== null || slides.length === 0}
-              className="px-4 py-2.5 bg-blue-50 text-blue-700 rounded-xl text-xs font-bold hover:bg-blue-100 disabled:opacity-40 flex items-center gap-1.5">
+              className="px-3 md:px-4 py-2 md:py-2.5 bg-blue-50 text-blue-700 rounded-xl text-[11px] md:text-xs font-bold hover:bg-blue-100 disabled:opacity-40 flex items-center gap-1">
               {exporting === 'gslides' ? <Loader2 size={14} className="animate-spin" /> : <Presentation size={14} />}
-              Google Slides용 HTML
+              <span className="hidden sm:inline">Google Slides</span><span className="sm:hidden">HTML</span>
             </button>
             <button onClick={() => { onLaunchPresenter(slides); }}
               disabled={slides.length === 0}
-              className="px-5 py-2.5 bg-violet-600 text-white rounded-xl text-xs font-bold hover:bg-violet-700 disabled:opacity-40 flex items-center gap-1.5">
-              <Play size={14} /> 프레젠테이션 시작
+              className="px-3 md:px-5 py-2 md:py-2.5 bg-violet-600 text-white rounded-xl text-[11px] md:text-xs font-bold hover:bg-violet-700 disabled:opacity-40 flex items-center gap-1">
+              <Play size={14} /> 시작
             </button>
           </div>
         </div>

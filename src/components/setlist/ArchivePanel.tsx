@@ -511,41 +511,41 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
 
   return (
     <div className="flex flex-col h-full">
-      <div className="p-5 border-b border-black/5 shrink-0">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-bold text-base flex items-center gap-2">
+      <div className="p-3 md:p-5 border-b border-black/5 shrink-0">
+        <div className="flex items-center justify-between mb-2 md:mb-3">
+          <h3 className="font-bold text-sm md:text-base flex items-center gap-2">
             <Archive className="text-[#E6C79C]" size={18} /> 아카이브
           </h3>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 md:gap-2">
             <button onClick={() => { setBatchMode(!batchMode); setSelectedIds(new Set()); setBatchAction(null); }}
               className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all ${batchMode ? 'bg-[#2D2926] text-white' : 'bg-[#FAF9F6] text-[#78716A] hover:bg-black/5'}`}>
-              {batchMode ? '선택 해제' : '일괄 수정'}
+              {batchMode ? '해제' : '일괄'}
             </button>
             {!fullscreen && onOpenFullscreen && (
               <button onClick={onOpenFullscreen} className="text-[10px] font-bold px-2 py-1 rounded-lg bg-[#FAF9F6] text-[#78716A] hover:bg-black/5" title="전체화면으로 보기">
                 <Maximize2 size={12} />
               </button>
             )}
-            <span className="text-xs text-[#78716A]">{items.length}개</span>
+            <span className="text-[11px] md:text-xs text-[#78716A] font-bold">{filtered.length}개</span>
           </div>
         </div>
-        <div className="relative mb-3">
+        <div className="relative mb-2 md:mb-3">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" size={16} />
           <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-            placeholder="제목, 아티스트, 태그 검색..."
-            className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#2D2926]" />
+            placeholder="검색..."
+            className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-9 pr-4 py-2 md:py-2.5 text-sm focus:outline-none focus:border-[#2D2926]" />
         </div>
-        <div className="flex gap-1.5 overflow-x-auto pb-1">
+        <div className="flex gap-1 md:gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
           {CATEGORIES.map(c => (
             <button key={c.id} onClick={() => setCategory(c.id)}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap transition-all ${
+              className={`px-2 md:px-2.5 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap transition-all ${
                 category === c.id ? 'bg-[#2D2926] text-white' : 'bg-[#FAF9F6] text-[#78716A] hover:bg-black/5'
               }`}>
               {c.icon} {c.label}
             </button>
           ))}
         </div>
-        <div className="flex gap-2 mt-2 flex-wrap">
+        <div className="flex gap-1.5 md:gap-2 mt-2 flex-wrap">
           <select value={filterKey} onChange={e => setFilterKey(e.target.value)}
             className="text-[10px] font-bold bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#2D2926]">
             <option value="all">키 전체</option>
