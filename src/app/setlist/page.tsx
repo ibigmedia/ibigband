@@ -680,7 +680,7 @@ export default function SetListPage() {
 
   // ==================== RENDER ====================
   return (
-    <div className="pb-20 md:pb-12 px-0 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-0 md:gap-6 overflow-x-hidden">
+    <div className="w-full pb-20 md:pb-12 px-0 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-0 md:gap-6 overflow-x-hidden">
 
       {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
       <div className="lg:hidden flex bg-white p-1 shadow-sm border-b border-[#78716A]/10 shrink-0">
@@ -695,7 +695,7 @@ export default function SetListPage() {
       </div>
 
       {/* ===== LEFT: Library ===== */}
-      <aside style={{outline: '3px solid red'}} className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-0 md:gap-5 lg:shrink-0 min-w-0 h-[calc(100vh-6.5rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
+      <aside className={`w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-0 md:gap-5 lg:shrink-0 min-w-0 h-[calc(100vh-6.5rem)] lg:h-[calc(100vh-8rem)] lg:sticky lg:top-24 ${mobileView !== 'files' ? 'hidden lg:flex' : 'flex'}`}>
         <div className="bg-white md:bg-white md:rounded-3xl p-0 md:p-2.5 md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-0 md:gap-2 border-b md:border md:border-[#78716A]/10 shrink-0">
           {[
             { key: 'library', icon: <Library size={18} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
@@ -710,7 +710,7 @@ export default function SetListPage() {
           ))}
         </div>
 
-        <div style={{outline: '3px solid blue'}} className="bg-[#FAF9F6] md:bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-auto flex flex-col min-w-0">
+        <div className="bg-[#FAF9F6] md:bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-auto flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
