@@ -509,7 +509,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
   };
 
   return (
-    <div className="flex flex-col h-full bg-white md:bg-transparent">
+    <div className="flex flex-col h-full">
       <div className="px-3 py-3 md:p-5 border-b border-black/5 shrink-0">
         <div className="flex items-center justify-between mb-2 md:mb-3">
           <h3 className="font-bold text-sm md:text-base flex items-center gap-2">

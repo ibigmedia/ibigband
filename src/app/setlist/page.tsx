@@ -710,12 +710,12 @@ export default function SetListPage() {
           ))}
         </div>
 
-        <div className="bg-[#FAF9F6] md:bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
+        <div className="bg-[#FAF9F6] md:bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-auto flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
-            <div className="flex flex-col h-full bg-white md:bg-transparent">
-              <div className="px-3 py-3 md:p-5 border-b border-black/5 shrink-0">
+            <div className="flex flex-col h-full">
+              <div className="px-2 py-2 md:px-5 md:py-5 border-b border-black/5 shrink-0">
                 <div className="flex items-center justify-between mb-2 md:mb-3">
                   <h3 className="font-bold text-base md:text-lg flex items-center gap-2"><LayoutDashboard className="text-[#E6C79C]" size={20} /> 미디어 풀</h3>
                   <div className="flex items-center gap-2">
@@ -735,7 +735,7 @@ export default function SetListPage() {
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-3 py-2 md:p-4 space-y-2">
+              <div className="flex-1 overflow-y-auto px-0 py-1 md:p-4 divide-y divide-black/5">
                 {filteredLibrary.length === 0 && (
                   <div className="flex flex-col items-center justify-center py-12 text-[#78716A]">
                     <Library size={36} className="mb-3 opacity-30" />
@@ -743,9 +743,9 @@ export default function SetListPage() {
                   </div>
                 )}
                 {filteredLibrary.map(item => (
-                  <div key={item.id} className="bg-[#FAF9F6] border border-black/5 rounded-xl p-2.5 md:p-4 hover:border-[#E6C79C] transition-all group flex items-start gap-2 md:gap-3">
-                    <div className={`mt-0.5 shrink-0 p-2 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
-                      {getTypeIcon(item.type as ItemType, 18)}
+                  <div key={item.id} className="bg-white md:bg-[#FAF9F6] md:border md:border-black/5 md:rounded-xl px-3 py-2.5 md:p-4 hover:bg-[#FAF9F6] md:hover:border-[#E6C79C] transition-all group flex items-start gap-2 md:gap-3">
+                    <div className={`mt-0.5 shrink-0 p-1.5 md:p-2 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
+                      {getTypeIcon(item.type as ItemType, 16)}
                     </div>
                     <div className="flex-1 min-w-0">
                       {renamingItemId === item.id ? (
@@ -757,27 +757,27 @@ export default function SetListPage() {
                           <button onClick={() => setRenamingItemId(null)} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded"><X size={16} /></button>
                         </div>
                       ) : (
-                        <p className="font-bold text-[15px] text-[#2D2926] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
+                        <p className="font-bold text-sm md:text-[15px] text-[#2D2926] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
                       )}
-                      {item.author && <p className="text-[13px] text-[#78716A] truncate">{item.author}</p>}
-                      <div className="flex gap-1.5 mt-2 flex-wrap">
-                        {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 text-[#2D2926] px-2 py-0.5 rounded">PDF</span>}
+                      {item.author && <p className="text-xs md:text-[13px] text-[#78716A] truncate">{item.author}</p>}
+                      <div className="flex gap-1 mt-1.5 md:mt-2 flex-wrap">
+                        {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 text-[#2D2926] px-1.5 py-0.5 rounded">PDF</span>}
                         {item.hasAudio && (
                           <button onClick={e => { e.stopPropagation(); togglePlay(item); }}
-                            className="flex items-center gap-1 text-[10px] font-bold bg-[#E6C79C]/30 hover:bg-[#E6C79C]/60 text-[#8C6B1C] px-2 py-0.5 rounded transition-colors">
+                            className="flex items-center gap-1 text-[10px] font-bold bg-[#E6C79C]/30 hover:bg-[#E6C79C]/60 text-[#8C6B1C] px-1.5 py-0.5 rounded transition-colors">
                             {playingItem?.id === item.id && isPlaying ? <Pause size={10} /> : <Play fill="currentColor" size={10} />} MP3
                           </button>
                         )}
                         {item.youtubeUrl && (
                           <button onClick={e => { e.stopPropagation(); window.open(item.youtubeUrl, '_blank'); }}
-                            className="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded">YT</button>
+                            className="text-[10px] font-bold bg-red-100 text-red-700 px-1.5 py-0.5 rounded">YT</button>
                         )}
-                        {item.type === 'transcript' && <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">텍스트</span>}
+                        {item.type === 'transcript' && <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">텍스트</span>}
                       </div>
                     </div>
-                    <div className="flex flex-col md:grid md:grid-cols-2 gap-1 md:gap-1.5 shrink-0">
-                      <button onClick={() => addToSetlist(item)} className="p-1.5 md:p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={15} /></button>
-                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 md:p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={14} /></button>
+                    <div className="flex flex-col gap-1 md:grid md:grid-cols-2 md:gap-1.5 shrink-0">
+                      <button onClick={() => addToSetlist(item)} className="p-1.5 md:p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={14} /></button>
+                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 md:p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={13} /></button>
                       <button onClick={() => saveItemToArchive(item)} className="hidden md:block p-2 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-lg transition-colors" title="아카이브에 저장"><Archive size={15} /></button>
                       <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="hidden md:block p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
                     </div>
@@ -785,7 +785,7 @@ export default function SetListPage() {
                 ))}
               </div>
 
-              <div className="px-3 py-2 md:p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-2 md:gap-3 sticky bottom-0 z-10">
+              <div className="px-2 py-2 md:p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-2 md:gap-3 sticky bottom-0 z-10">
                 <button onClick={() => setActiveTab('upload')}
                   className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
                   <UploadCloud size={16} /> 가져오기
@@ -800,21 +800,21 @@ export default function SetListPage() {
 
           {/* AI Search tab */}
           {activeTab === 'ai-search' && (
-            <div className="px-3 py-3 md:p-6 flex flex-col h-full bg-white md:bg-transparent" onPaste={handleImagePaste}>
-              <h3 className="font-bold text-lg mb-2 flex items-center gap-2"><Sparkles className="text-[#E6C79C]" /> AI 악보 검색</h3>
-              <p className="text-xs text-[#78716A] mb-4">곡 제목, 아티스트, 가사를 입력하면 웹에서 악보를 찾아줍니다.</p>
-              <div className="relative mb-4">
+            <div className="px-2 py-2 md:p-6 flex flex-col h-full" onPaste={handleImagePaste}>
+              <h3 className="font-bold text-base md:text-lg mb-2 flex items-center gap-2"><Sparkles className="text-[#E6C79C]" /> AI 악보 검색</h3>
+              <p className="text-xs text-[#78716A] mb-3 md:mb-4">곡 제목, 아티스트, 가사를 입력하면 웹에서 악보를 찾아줍니다.</p>
+              <div className="relative mb-3 md:mb-4">
                 <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && doAiSearch()}
                   placeholder="'마커스 주는 완전합니다 악보'"
-                  className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl px-4 py-3 pr-12 text-sm focus:outline-none focus:border-[#E6C79C]" />
+                  className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl px-3 md:px-4 py-2.5 md:py-3 pr-12 text-sm focus:outline-none focus:border-[#E6C79C]" />
                 <button onClick={doAiSearch} disabled={isAiSearching || !searchQuery}
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#2D2926] text-[#E6C79C] p-2 rounded-lg disabled:opacity-50"><Search size={14} /></button>
               </div>
 
               {/* Clipboard paste zone */}
-              <div className="mb-4 border-2 border-dashed border-[#E6C79C]/40 rounded-xl p-4 text-center bg-[#E6C79C]/5 hover:bg-[#E6C79C]/10 transition-colors">
-                <ClipboardPaste size={20} className="mx-auto text-[#8C6B1C] mb-1.5" />
+              <div className="mb-3 md:mb-4 border-2 border-dashed border-[#E6C79C]/40 rounded-xl p-3 md:p-4 text-center bg-[#E6C79C]/5 hover:bg-[#E6C79C]/10 transition-colors">
+                <ClipboardPaste size={18} className="mx-auto text-[#8C6B1C] mb-1" />
                 <p className="text-xs font-bold text-[#8C6B1C]">이미지 붙여넣기</p>
                 <p className="text-[10px] text-[#78716A]">웹에서 복사한 악보 이미지를 Ctrl+V로 붙여넣으세요</p>
               </div>
