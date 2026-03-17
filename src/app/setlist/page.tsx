@@ -1066,11 +1066,24 @@ export default function SetListPage() {
               className="hidden md:flex items-center gap-2 px-5 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold whitespace-nowrap">
               <LayoutDashboard size={14} /> 프레젠터 뷰
             </button>
-            <button onClick={() => {
+            <button onClick={async () => {
               if (items.length === 0) { alert('셋리스트에 곡을 추가해주세요.'); return; }
+              // 아카이브에서 가사 조회
+              const archiveSnap = await getDocs(collection(db, 'users', user.uid, 'archive'));
+              const archiveMap = new Map<string, string>();
+              archiveSnap.docs.forEach(d => {
+                const data = d.data();
+                if (data.lyrics) {
+                  if (data.sourceId) archiveMap.set(data.sourceId, data.lyrics);
+                  archiveMap.set(data.title, data.lyrics);
+                }
+              });
               const lyricsSlides: LyricsSlide[] = items
-                .filter(i => i.type === 'sheet' || i.type === 'transcript' || i.type === 'guide')
-                .map(i => ({ title: i.title, author: i.author, text: i.note || '' }));
+                .map(i => {
+                  const lyrics = archiveMap.get(i.sourceId || '') || archiveMap.get(i.title) || '';
+                  return { title: i.title, author: i.author, text: lyrics };
+                })
+                .filter(s => s.text.trim());
               if (lyricsSlides.length === 0) { alert('가사가 포함된 곡이 없습니다.\n아카이브에서 AI 가사 추출을 먼저 실행해 주세요.'); return; }
               openLyricsPresentationEditor(lyricsSlides);
             }}
