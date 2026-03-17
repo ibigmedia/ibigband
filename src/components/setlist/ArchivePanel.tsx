@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
-import { Search, Plus, Trash2, Edit3, Check, X, Archive, Music, FileText, Mic, Type, Loader2, Tag, CheckSquare, Square } from 'lucide-react';
+import { Search, Plus, Trash2, Edit3, Check, X, Archive, Music, FileText, Mic, Type, Loader2, Tag, CheckSquare, Square, Eye, Play, ChevronRight, Maximize2 } from 'lucide-react';
 import { collection, query, orderBy, onSnapshot, updateDoc, deleteDoc, doc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import type { LibraryItem } from './ImportModal';
@@ -25,7 +25,11 @@ function getDefaultCategory(type: string): string {
   }
 }
 
-const MUSICAL_KEYS = ['', 'C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B'];
+const MUSICAL_KEYS = [
+  '', 'C', 'Cm', 'C#', 'C#m', 'Db', 'Dbm', 'D', 'Dm', 'D#', 'D#m',
+  'Eb', 'Ebm', 'E', 'Em', 'F', 'Fm', 'F#', 'F#m', 'Gb', 'Gbm',
+  'G', 'Gm', 'G#', 'G#m', 'Ab', 'Abm', 'A', 'Am', 'A#', 'A#m', 'Bb', 'Bbm', 'B', 'Bm',
+];
 const LANGUAGES = [
   { id: '', label: '한글' },
   { id: 'EN', label: 'EN' },
@@ -44,10 +48,15 @@ interface ArchiveItem extends LibraryItem {
 interface Props {
   userId: string;
   onAddToLibrary: (item: LibraryItem) => void;
+  onAddToSetlist?: (item: LibraryItem) => void;
+  onPreview?: (item: LibraryItem) => void;
+  onPlayAudio?: (item: LibraryItem) => void;
   existingLibraryIds: Set<string>;
+  fullscreen?: boolean;
+  onOpenFullscreen?: () => void;
 }
 
-export default function ArchivePanel({ userId, onAddToLibrary, existingLibraryIds }: Props) {
+export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, onPreview, onPlayAudio, existingLibraryIds, fullscreen, onOpenFullscreen }: Props) {
   const [items, setItems] = useState<ArchiveItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -234,6 +243,11 @@ export default function ArchivePanel({ userId, onAddToLibrary, existingLibraryId
               className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all ${batchMode ? 'bg-[#2D2926] text-white' : 'bg-[#FAF9F6] text-[#78716A] hover:bg-black/5'}`}>
               {batchMode ? '선택 해제' : '일괄 수정'}
             </button>
+            {!fullscreen && onOpenFullscreen && (
+              <button onClick={onOpenFullscreen} className="text-[10px] font-bold px-2 py-1 rounded-lg bg-[#FAF9F6] text-[#78716A] hover:bg-black/5" title="전체화면으로 보기">
+                <Maximize2 size={12} />
+              </button>
+            )}
             <span className="text-xs text-[#78716A]">{items.length}개</span>
           </div>
         </div>
@@ -410,19 +424,41 @@ export default function ArchivePanel({ userId, onAddToLibrary, existingLibraryId
                   </div>
                 </div>
                 {!batchMode && (
-                  <div className="flex flex-col gap-1.5 shrink-0">
+                  <div className="grid grid-cols-2 gap-1 shrink-0">
+                    {/* 미리보기 (PDF/이미지/텍스트) */}
+                    {(item.hasPdf || item.fileUrl || item.type === 'transcript' || item.type === 'guide') && onPreview && (
+                      <button onClick={() => onPreview(item as LibraryItem)}
+                        className="p-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md transition-colors" title="미리보기">
+                        <Eye size={14} />
+                      </button>
+                    )}
+                    {/* 오디오 재생 */}
+                    {item.hasAudio && onPlayAudio && (
+                      <button onClick={() => onPlayAudio(item as LibraryItem)}
+                        className="p-1.5 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C]/50 rounded-md transition-colors" title="재생">
+                        <Play size={14} fill="currentColor" />
+                      </button>
+                    )}
+                    {/* 셋리스트에 추가 */}
+                    {onAddToSetlist && (
+                      <button onClick={() => onAddToSetlist(item as LibraryItem)}
+                        className="p-1.5 bg-[#2D2926]/10 text-[#2D2926] hover:bg-[#2D2926] hover:text-white rounded-md transition-colors" title="셋리스트에 추가">
+                        <ChevronRight size={14} />
+                      </button>
+                    )}
+                    {/* 미디어풀에 추가 */}
                     <button onClick={() => handleAddToLibrary(item)}
                       disabled={existingLibraryIds.has(item.sourceId || '')}
-                      className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="p-1.5 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-md transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                       title={existingLibraryIds.has(item.sourceId || '') ? '이미 추가됨' : '미디어풀에 추가'}>
-                      <Plus size={16} />
+                      <Plus size={14} />
                     </button>
                     <button onClick={() => { setEditingId(item.archiveId); setEditTitle(item.title); }}
-                      className="p-1.5 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경">
+                      className="p-1.5 text-[#78716A] hover:bg-black/5 rounded-md transition-colors" title="이름 변경">
                       <Edit3 size={12} />
                     </button>
                     <button onClick={() => handleDelete(item.archiveId)}
-                      className="p-1.5 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제">
+                      className="p-1.5 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-md transition-colors" title="삭제">
                       <Trash2 size={12} />
                     </button>
                   </div>

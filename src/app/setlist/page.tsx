@@ -21,7 +21,7 @@ import ImportModal, { type LibraryItem } from '@/components/setlist/ImportModal'
 import TextEditorModal from '@/components/setlist/TextEditorModal';
 import SetlistManagerModal from '@/components/setlist/SetlistManagerModal';
 import EmailShareModal from '@/components/setlist/EmailShareModal';
-import ArchivePanel, { saveToArchive, MUSICAL_KEYS, LANGUAGES } from '@/components/setlist/ArchivePanel';
+import ArchivePanel, { saveToArchive } from '@/components/setlist/ArchivePanel';
 import { generateCueSheetPdf } from '@/components/setlist/cueSheetPdf';
 
 // --- Types ---
@@ -68,6 +68,7 @@ export default function SetListPage() {
   const [isTextEditorOpen, setIsTextEditorOpen] = useState(false);
   const [isManagerOpen, setIsManagerOpen] = useState(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isArchiveFullscreen, setIsArchiveFullscreen] = useState(false);
 
   // Item preview modals
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
@@ -662,19 +663,19 @@ export default function SetListPage() {
 
   // ==================== RENDER ====================
   return (
-    <div className="pt-24 pb-12 px-4 md:px-8 max-w-screen-2xl mx-auto min-h-screen flex flex-col lg:flex-row gap-6">
+    <div className="pt-24 pb-12 px-4 md:px-6 lg:px-10 max-w-[1920px] mx-auto min-h-screen flex flex-col lg:flex-row gap-6">
 
       {/* ===== LEFT: Library ===== */}
-      <aside className="w-full lg:w-[400px] flex flex-col gap-6 shrink-0 h-[calc(100vh-8rem)] sticky top-24">
-        <div className="bg-white rounded-3xl p-2 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-1.5 border border-[#78716A]/10 shrink-0">
+      <aside className="w-full lg:w-[480px] xl:w-[520px] flex flex-col gap-5 shrink-0 h-[calc(100vh-8rem)] sticky top-24">
+        <div className="bg-white rounded-3xl p-2.5 shadow-[0_8px_30px_rgb(0,0,0,0.04)] grid grid-cols-4 gap-2 border border-[#78716A]/10 shrink-0">
           {[
-            { key: 'library', icon: <Library size={16} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
-            { key: 'archive', icon: <FolderOpen size={16} />, label: '아카이브', active: activeTab === 'archive' },
-            { key: 'ai-search', icon: <Sparkles size={16} />, label: 'AI 검색', active: activeTab === 'ai-search' },
-            { key: 'schedule', icon: <Calendar size={16} />, label: '일정', active: activeTab === 'schedule' },
+            { key: 'library', icon: <Library size={20} />, label: '미디어풀', active: activeTab === 'library' || activeTab === 'upload' },
+            { key: 'archive', icon: <FolderOpen size={20} />, label: '아카이브', active: activeTab === 'archive' },
+            { key: 'ai-search', icon: <Sparkles size={20} />, label: 'AI 검색', active: activeTab === 'ai-search' },
+            { key: 'schedule', icon: <Calendar size={20} />, label: '일정', active: activeTab === 'schedule' },
           ].map(t => (
             <button key={t.key} onClick={() => setActiveTab(t.key as any)}
-              className={`py-2 rounded-2xl flex flex-col items-center justify-center gap-1 text-[11px] font-bold transition-all ${t.active ? (t.key === 'library' ? 'bg-[#2D2926] text-white' : 'bg-[#E6C79C] text-[#2D2926]') + ' shadow-md' : 'text-[#78716A] hover:bg-black/5'}`}>
+              className={`py-3 rounded-2xl flex flex-col items-center justify-center gap-1.5 text-[13px] font-bold transition-all ${t.active ? (t.key === 'library' ? 'bg-[#2D2926] text-white' : 'bg-[#E6C79C] text-[#2D2926]') + ' shadow-md' : 'text-[#78716A] hover:bg-black/5'}`}>
               {t.icon} {t.label}
             </button>
           ))}
@@ -687,82 +688,82 @@ export default function SetListPage() {
             <div className="flex flex-col h-full">
               <div className="p-5 border-b border-black/5 shrink-0">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-base flex items-center gap-2"><LayoutDashboard className="text-[#E6C79C]" size={18} /> 미디어 풀</h3>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs text-[#78716A]">{libraryItems.length}개</span>
+                  <h3 className="font-bold text-lg flex items-center gap-2"><LayoutDashboard className="text-[#E6C79C]" size={22} /> 미디어 풀</h3>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-[#78716A] font-bold">{libraryItems.length}개</span>
                     {libraryItems.length > 0 && (
-                      <button onClick={clearLibrary} className="text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded-lg hover:bg-red-50" title="전체 삭제">
-                        <Trash2 size={12} />
+                      <button onClick={clearLibrary} className="text-sm text-red-400 hover:text-red-600 px-2 py-1.5 rounded-lg hover:bg-red-50" title="전체 삭제">
+                        <Trash2 size={14} />
                       </button>
                     )}
                   </div>
                 </div>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" size={16} />
+                  <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" size={18} />
                   <input type="text" value={librarySearchQuery} onChange={e => setLibrarySearchQuery(e.target.value)}
                     placeholder="악보/음원 검색..."
-                    className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#2D2926]" />
+                    className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-10 pr-4 py-3 text-[15px] focus:outline-none focus:border-[#2D2926]" />
                 </div>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              <div className="flex-1 overflow-y-auto p-4 space-y-2.5">
                 {filteredLibrary.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-10 text-[#78716A]">
-                    <Library size={28} className="mb-2 opacity-30" />
-                    <p className="text-sm font-bold">{librarySearchQuery ? '검색 결과 없음' : '라이브러리가 비어있습니다'}</p>
+                  <div className="flex flex-col items-center justify-center py-12 text-[#78716A]">
+                    <Library size={36} className="mb-3 opacity-30" />
+                    <p className="text-base font-bold">{librarySearchQuery ? '검색 결과 없음' : '라이브러리가 비어있습니다'}</p>
                   </div>
                 )}
                 {filteredLibrary.map(item => (
-                  <div key={item.id} className="bg-[#FAF9F6] border border-black/5 rounded-xl p-3 hover:border-[#E6C79C] transition-all group flex items-start gap-3">
-                    <div className={`mt-0.5 shrink-0 p-1.5 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
-                      {getTypeIcon(item.type as ItemType, 14)}
+                  <div key={item.id} className="bg-[#FAF9F6] border border-black/5 rounded-xl p-4 hover:border-[#E6C79C] transition-all group flex items-start gap-3">
+                    <div className={`mt-0.5 shrink-0 p-2 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
+                      {getTypeIcon(item.type as ItemType, 18)}
                     </div>
                     <div className="flex-1 min-w-0">
                       {renamingItemId === item.id ? (
-                        <div className="flex items-center gap-1 mb-1">
+                        <div className="flex items-center gap-1.5 mb-1">
                           <input type="text" value={renameValue} onChange={e => setRenameValue(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && renameLibraryItem(item.id, renameValue)}
-                            className="flex-1 text-[13px] font-bold bg-white border border-[#E6C79C] rounded-lg px-2 py-1 focus:outline-none" autoFocus />
-                          <button onClick={() => renameLibraryItem(item.id, renameValue)} className="p-1 text-green-600 hover:bg-green-50 rounded"><Check size={14} /></button>
-                          <button onClick={() => setRenamingItemId(null)} className="p-1 text-[#78716A] hover:bg-black/5 rounded"><X size={14} /></button>
+                            className="flex-1 text-sm font-bold bg-white border border-[#E6C79C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
+                          <button onClick={() => renameLibraryItem(item.id, renameValue)} className="p-1.5 text-green-600 hover:bg-green-50 rounded"><Check size={16} /></button>
+                          <button onClick={() => setRenamingItemId(null)} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded"><X size={16} /></button>
                         </div>
                       ) : (
-                        <p className="font-bold text-[13px] text-[#2D2926] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
+                        <p className="font-bold text-[15px] text-[#2D2926] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
                       )}
-                      {item.author && <p className="text-[11px] text-[#78716A] truncate">{item.author}</p>}
-                      <div className="flex gap-1.5 mt-1.5 flex-wrap">
-                        {item.hasPdf && <span className="text-[9px] font-bold bg-[#2D2926]/10 text-[#2D2926] px-1.5 py-0.5 rounded">PDF</span>}
+                      {item.author && <p className="text-[13px] text-[#78716A] truncate">{item.author}</p>}
+                      <div className="flex gap-1.5 mt-2 flex-wrap">
+                        {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 text-[#2D2926] px-2 py-0.5 rounded">PDF</span>}
                         {item.hasAudio && (
                           <button onClick={e => { e.stopPropagation(); togglePlay(item); }}
-                            className="flex items-center gap-0.5 text-[9px] font-bold bg-[#E6C79C]/30 hover:bg-[#E6C79C]/60 text-[#8C6B1C] px-1.5 py-0.5 rounded transition-colors">
-                            {playingItem?.id === item.id && isPlaying ? <Pause size={8} /> : <Play fill="currentColor" size={8} />} MP3
+                            className="flex items-center gap-1 text-[10px] font-bold bg-[#E6C79C]/30 hover:bg-[#E6C79C]/60 text-[#8C6B1C] px-2 py-0.5 rounded transition-colors">
+                            {playingItem?.id === item.id && isPlaying ? <Pause size={10} /> : <Play fill="currentColor" size={10} />} MP3
                           </button>
                         )}
                         {item.youtubeUrl && (
                           <button onClick={e => { e.stopPropagation(); window.open(item.youtubeUrl, '_blank'); }}
-                            className="text-[9px] font-bold bg-red-100 text-red-700 px-1.5 py-0.5 rounded">YT</button>
+                            className="text-[10px] font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded">YT</button>
                         )}
-                        {item.type === 'transcript' && <span className="text-[9px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">텍스트</span>}
+                        {item.type === 'transcript' && <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded">텍스트</span>}
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-1 shrink-0">
-                      <button onClick={() => addToSetlist(item)} className="p-1.5 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-md transition-colors" title="셋리스트에 추가"><Plus size={14} /></button>
-                      <button onClick={() => saveItemToArchive(item)} className="p-1.5 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-md transition-colors" title="아카이브에 저장"><Archive size={13} /></button>
-                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded-md transition-colors" title="이름 변경"><Edit3 size={13} /></button>
-                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-md transition-colors" title="삭제"><Trash2 size={13} /></button>
+                    <div className="grid grid-cols-2 gap-1.5 shrink-0">
+                      <button onClick={() => addToSetlist(item)} className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={16} /></button>
+                      <button onClick={() => saveItemToArchive(item)} className="p-2 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-lg transition-colors" title="아카이브에 저장"><Archive size={15} /></button>
+                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
+                      <button onClick={() => removeFromLibrary(item.id)} className="p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={15} /></button>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="p-3 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-2">
+              <div className="p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-3">
                 <button onClick={() => setActiveTab('upload')}
-                  className="py-3 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs font-bold">
-                  <UploadCloud size={16} /> 파일 가져오기
+                  className="py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-2 text-sm font-bold">
+                  <UploadCloud size={18} /> 파일 가져오기
                 </button>
                 <button onClick={() => setIsTextEditorOpen(true)}
-                  className="py-3 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs font-bold">
-                  <Type size={16} /> 텍스트 작성
+                  className="py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-2 text-sm font-bold">
+                  <Type size={18} /> 텍스트 작성
                 </button>
               </div>
             </div>
@@ -817,7 +818,11 @@ export default function SetListPage() {
                 }
                 setLibraryItems(prev => [item, ...prev]);
               }}
+              onAddToSetlist={(item) => addToSetlist(item)}
+              onPreview={(item) => handleItemClick(item)}
+              onPlayAudio={(item) => togglePlay(item)}
               existingLibraryIds={existingSourceIds}
+              onOpenFullscreen={() => setIsArchiveFullscreen(true)}
             />
           )}
 
@@ -970,39 +975,39 @@ export default function SetListPage() {
                         {(prov, snap) => (
                           <div ref={prov.innerRef} {...prov.draggableProps}
                             className={`group relative bg-white border rounded-xl p-4 flex flex-col md:flex-row gap-3 md:gap-5 items-start md:items-center transition-all ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
-                            <div {...prov.dragHandleProps} className="p-1 text-black/20 hover:text-[#2D2926] cursor-grab"><MoreVertical size={18} /></div>
+                            <div {...prov.dragHandleProps} className="p-1.5 text-black/20 hover:text-[#2D2926] cursor-grab"><MoreVertical size={20} /></div>
                             <div className="flex items-center gap-3 w-full md:w-auto cursor-pointer" onClick={() => handleItemClick(item)}>
-                              <span className="text-2xl font-handwriting text-black/20 w-6 text-center">{index + 1}</span>
-                              <div className={`p-2.5 rounded-xl shrink-0 ${getTypeColor(item.type)}`}>{getTypeIcon(item.type as ItemType)}</div>
+                              <span className="text-3xl font-handwriting text-black/15 w-8 text-center">{index + 1}</span>
+                              <div className={`p-3 rounded-xl shrink-0 ${getTypeColor(item.type)}`}>{getTypeIcon(item.type as ItemType, 20)}</div>
                             </div>
                             <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleItemClick(item)}>
-                              <div className="flex flex-wrap items-center gap-2 mb-0.5">
-                                <span className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase ${getTypeColor(item.type)}`}>{getTypeLabel(item.type)}</span>
-                                <h3 className="font-bold text-base truncate text-[#2D2926]">{item.title}</h3>
-                                {item.author && <span className="text-xs text-[#78716A]">· {item.author}</span>}
+                              <div className="flex flex-wrap items-center gap-2 mb-1">
+                                <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase ${getTypeColor(item.type)}`}>{getTypeLabel(item.type)}</span>
+                                <h3 className="font-bold text-lg truncate text-[#2D2926]">{item.title}</h3>
+                                {item.author && <span className="text-sm text-[#78716A]">· {item.author}</span>}
                               </div>
-                              <p className="text-xs text-[#78716A] line-clamp-1">{item.note}</p>
+                              <p className="text-sm text-[#78716A] line-clamp-1">{item.note}</p>
                             </div>
                             <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
-                              <div className="flex gap-2 text-[#78716A]">
+                              <div className="flex gap-3 text-[#78716A]">
                                 {item.hasAudio && (
-                                  <button onClick={() => togglePlay(item)} className="flex items-center gap-1 text-[10px] font-bold hover:text-[#2D2926]">
-                                    {playingItem?.id === item.id && isPlaying ? <Pause size={10} /> : <Play fill="currentColor" size={10} />} AUDIO
+                                  <button onClick={() => togglePlay(item)} className="flex items-center gap-1.5 text-xs font-bold hover:text-[#2D2926] px-2 py-1 rounded-lg hover:bg-[#E6C79C]/20 transition-colors">
+                                    {playingItem?.id === item.id && isPlaying ? <Pause size={12} /> : <Play fill="currentColor" size={12} />} 재생
                                   </button>
                                 )}
                                 {item.hasPdf && item.fileUrl && (
-                                  <button onClick={() => setPreviewPdfUrl(item.fileUrl!)} className="flex items-center gap-1 text-[10px] font-bold hover:text-[#2D2926]">
-                                    <FileText size={10} /> PDF
+                                  <button onClick={() => setPreviewPdfUrl(item.fileUrl!)} className="flex items-center gap-1.5 text-xs font-bold hover:text-[#2D2926] px-2 py-1 rounded-lg hover:bg-blue-50 transition-colors">
+                                    <FileText size={12} /> 보기
                                   </button>
                                 )}
                                 {(item.type === 'transcript' || item.type === 'guide') && (
-                                  <button onClick={() => setPreviewText({ title: item.title, content: item.note || '(내용 없음)' })} className="flex items-center gap-1 text-[10px] font-bold hover:text-[#2D2926]">
-                                    <Eye size={10} /> 보기
+                                  <button onClick={() => setPreviewText({ title: item.title, content: item.note || '(내용 없음)' })} className="flex items-center gap-1.5 text-xs font-bold hover:text-[#2D2926] px-2 py-1 rounded-lg hover:bg-amber-50 transition-colors">
+                                    <Eye size={12} /> 보기
                                   </button>
                                 )}
-                                {item.duration && <span className="text-[10px] font-bold bg-[#FAF9F6] px-2 py-0.5 rounded">{item.duration}</span>}
+                                {item.duration && <span className="text-xs font-bold bg-[#FAF9F6] px-2.5 py-1 rounded-lg">{item.duration}</span>}
                               </div>
-                              <button onClick={() => removeFromSetlist(item.id)} className="p-1.5 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"><X size={16} /></button>
+                              <button onClick={() => removeFromSetlist(item.id)} className="p-2 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"><X size={18} /></button>
                             </div>
                           </div>
                         )}
@@ -1054,6 +1059,37 @@ export default function SetListPage() {
           }} onEnded={() => { setIsPlaying(false); setAudioProgress(0); }} className="hidden" />
         </div>
       </main>
+
+      {/* ===== 아카이브 풀스크린 모달 ===== */}
+      {isArchiveFullscreen && user && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 md:p-8">
+          <div className="bg-white rounded-2xl w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between p-5 border-b border-black/5 shrink-0">
+              <h2 className="font-bold text-xl flex items-center gap-2">
+                <Archive className="text-[#E6C79C]" size={24} /> 아카이브 전체 보기
+              </h2>
+              <button onClick={() => setIsArchiveFullscreen(false)} className="p-2 hover:bg-black/5 rounded-full"><X size={22} /></button>
+            </div>
+            <div className="flex-1 overflow-hidden">
+              <ArchivePanel
+                userId={user.uid}
+                onAddToLibrary={(item) => {
+                  if (existingSourceIds.has(item.sourceId || '')) {
+                    alert('이미 미디어풀에 있습니다.');
+                    return;
+                  }
+                  setLibraryItems(prev => [item, ...prev]);
+                }}
+                onAddToSetlist={(item) => addToSetlist(item)}
+                onPreview={(item) => handleItemClick(item)}
+                onPlayAudio={(item) => togglePlay(item)}
+                existingLibraryIds={existingSourceIds}
+                fullscreen={true}
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== Modals ===== */}
       <ImportModal isOpen={isImportModalOpen} onClose={() => setIsImportModalOpen(false)}
@@ -1122,7 +1158,7 @@ export default function SetListPage() {
               <div>
                 <label className="text-[11px] font-bold text-[#78716A] block mb-1">키 (Key)</label>
                 <div className="flex flex-wrap gap-1.5">
-                  {['', 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'Db', 'Eb', 'Gb', 'Ab', 'Bb', 'C#', 'D#', 'F#', 'G#', 'A#'].map(k => (
+                  {['', 'C', 'Cm', 'D', 'Dm', 'E', 'Em', 'F', 'Fm', 'G', 'Gm', 'A', 'Am', 'B', 'Bm', 'Db', 'Eb', 'Gb', 'Ab', 'Bb', 'C#', 'D#', 'F#', 'G#', 'A#', 'C#m', 'D#m', 'F#m', 'G#m', 'A#m', 'Dbm', 'Ebm', 'Gbm', 'Abm', 'Bbm'].map(k => (
                     <button key={k || 'none'} onClick={() => setArchiveSaveKey(k)}
                       className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all ${
                         archiveSaveKey === k
