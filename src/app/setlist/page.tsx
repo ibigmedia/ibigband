@@ -21,7 +21,7 @@ import ImportModal, { type LibraryItem } from '@/components/setlist/ImportModal'
 import TextEditorModal from '@/components/setlist/TextEditorModal';
 import SetlistManagerModal from '@/components/setlist/SetlistManagerModal';
 import EmailShareModal from '@/components/setlist/EmailShareModal';
-import ArchivePanel, { saveToArchive } from '@/components/setlist/ArchivePanel';
+import ArchivePanel, { saveToArchive, MUSICAL_KEYS, LANGUAGES } from '@/components/setlist/ArchivePanel';
 import { generateCueSheetPdf } from '@/components/setlist/cueSheetPdf';
 
 // --- Types ---
@@ -76,6 +76,13 @@ export default function SetListPage() {
   // Library rename
   const [renamingItemId, setRenamingItemId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState('');
+
+  // Archive save popup
+  const [archiveSaveItem, setArchiveSaveItem] = useState<LibraryItem | null>(null);
+  const [archiveSaveKey, setArchiveSaveKey] = useState('');
+  const [archiveSaveLang, setArchiveSaveLang] = useState('');
+  const [archiveSaveTags, setArchiveSaveTags] = useState<string[]>([]);
+  const [archiveTagInput, setArchiveTagInput] = useState('');
 
   // Schedule
   const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
@@ -223,10 +230,20 @@ export default function SetListPage() {
     setRenamingItemId(null);
   };
 
-  const saveItemToArchive = async (item: LibraryItem) => {
-    const n = await saveToArchive(user.uid, [item]);
+  const saveItemToArchive = (item: LibraryItem) => {
+    setArchiveSaveItem(item);
+    setArchiveSaveKey('');
+    setArchiveSaveLang('');
+    setArchiveSaveTags([]);
+    setArchiveTagInput('');
+  };
+
+  const confirmArchiveSave = async () => {
+    if (!archiveSaveItem || !user) return;
+    const n = await saveToArchive(user.uid, [archiveSaveItem], undefined, { musicalKey: archiveSaveKey, lang: archiveSaveLang, tags: archiveSaveTags });
     if (n > 0) alert('아카이브에 저장되었습니다!');
     else alert('이미 아카이브에 있습니다.');
+    setArchiveSaveItem(null);
   };
 
   const clearLibrary = () => {
@@ -445,13 +462,32 @@ export default function SetListPage() {
     }
 
     if (params.includeSchedule && schedules.length > 0) {
-      const sRows = schedules.map(s =>
-        `<tr><td style="padding:6px 8px;border-bottom:1px solid #eee;font-weight:bold;color:#8C6B1C">${s.time}</td>
-         <td style="padding:6px 8px;border-bottom:1px solid #eee">${s.title}</td>
-         <td style="padding:6px 8px;border-bottom:1px solid #eee;color:#78716A">${s.location || ''}</td></tr>`
-      ).join('');
-      html += `<h3 style="margin-top:24px;color:#2D2926">📅 일정 타임라인</h3>
-        <table style="width:100%;border-collapse:collapse"><tbody>${sRows}</tbody></table>`;
+      const schedTypeLabels: Record<string, string> = {
+        event: '🎵 예배/공연', practice: '🎸 연습', travel: '🚗 이동', rehearsal: '🎤 리허설', notice: '📢 공지'
+      };
+      const sRows = schedules.map(s => {
+        const dateStr = s.date ? `${s.date.slice(5).replace('-', '/')} ` : '';
+        return `<tr style="border-bottom:1px solid #f0ebe4">
+          <td style="padding:10px 8px;font-weight:bold;color:#8C6B1C;white-space:nowrap;vertical-align:top">${dateStr}${s.time}</td>
+          <td style="padding:10px 8px;vertical-align:top">
+            <span style="background:#f0ebe4;padding:2px 8px;border-radius:4px;font-size:11px;color:#78716A">${schedTypeLabels[s.type] || s.type}</span>
+          </td>
+          <td style="padding:10px 8px;vertical-align:top">
+            <strong style="color:#2D2926">${s.title}</strong>
+            ${s.location ? `<br><span style="font-size:12px;color:#78716A">📍 ${s.location}</span>` : ''}
+            ${s.memo ? `<br><span style="font-size:11px;color:#9CA3AF;font-style:italic">💬 ${s.memo}</span>` : ''}
+          </td>
+        </tr>`;
+      }).join('');
+      html += `<h3 style="margin-top:24px;color:#2D2926;border-bottom:2px solid #E6C79C;padding-bottom:8px">📅 일정 타임라인</h3>
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:#2D2926;color:white">
+            <th style="padding:8px;text-align:left">시간</th>
+            <th style="padding:8px;text-align:left">구분</th>
+            <th style="padding:8px;text-align:left">내용</th>
+          </tr></thead>
+          <tbody>${sRows}</tbody>
+        </table>`;
     }
 
     html += `<p style="color:#78716A;font-size:11px;margin-top:24px">Sent from <strong>ibiGband Smart Setlist</strong></p></div>`;
@@ -468,7 +504,8 @@ export default function SetListPage() {
 
     if (params.includeCueSheet) {
       try {
-        const cueBytes = await generateCueSheetPdf(setlistTitle, items, calculateTotalDuration());
+        const cueSchedules = params.includeSchedule ? schedules : undefined;
+        const cueBytes = await generateCueSheetPdf(setlistTitle, items, calculateTotalDuration(), cueSchedules);
         const url = await uploadTempPdf(cueBytes, '큐시트.pdf');
         attachments.push({ filename: `${setlistTitle}_큐시트.pdf`, path: url });
       } catch (e) { console.error('cue sheet gen error', e); }
@@ -1066,6 +1103,90 @@ export default function SetListPage() {
               ) : (
                 <iframe src={previewPdfUrl} className="w-full h-[80vh] rounded-lg" title="PDF Preview" />
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Archive Save Popup */}
+      {archiveSaveItem && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setArchiveSaveItem(null)}>
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="p-5 border-b border-black/5">
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <Archive className="text-[#E6C79C]" size={18} /> 아카이브에 저장
+              </h3>
+              <p className="text-xs text-[#78716A] mt-1 truncate">{archiveSaveItem.title}</p>
+            </div>
+            <div className="p-5 space-y-3">
+              <div>
+                <label className="text-[11px] font-bold text-[#78716A] block mb-1">키 (Key)</label>
+                <div className="flex flex-wrap gap-1.5">
+                  {['', 'C', 'D', 'E', 'F', 'G', 'A', 'B', 'Db', 'Eb', 'Gb', 'Ab', 'Bb', 'C#', 'D#', 'F#', 'G#', 'A#'].map(k => (
+                    <button key={k || 'none'} onClick={() => setArchiveSaveKey(k)}
+                      className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                        archiveSaveKey === k
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-[#FAF9F6] text-[#78716A] hover:bg-blue-50'
+                      }`}>
+                      {k || '없음'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-[11px] font-bold text-[#78716A] block mb-1">언어</label>
+                <div className="flex gap-2">
+                  {[{ id: '', label: '한글' }, { id: 'EN', label: 'English' }, { id: 'SP', label: 'Spanish' }].map(l => (
+                    <button key={l.id || 'kr'} onClick={() => setArchiveSaveLang(l.id)}
+                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
+                        archiveSaveLang === l.id
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-[#FAF9F6] text-[#78716A] hover:bg-purple-50'
+                      }`}>
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-[11px] font-bold text-[#78716A] block mb-1">사용자 태그</label>
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {archiveSaveTags.map(tag => (
+                    <span key={tag} className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-1">
+                      {tag}
+                      <button onClick={() => setArchiveSaveTags(prev => prev.filter(t => t !== tag))} className="hover:text-red-500"><X size={8} /></button>
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-1.5">
+                  <input type="text" value={archiveTagInput} onChange={e => setArchiveTagInput(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && archiveTagInput.trim()) {
+                        const tag = archiveTagInput.trim();
+                        if (!archiveSaveTags.includes(tag)) setArchiveSaveTags(prev => [...prev, tag]);
+                        setArchiveTagInput('');
+                      }
+                    }}
+                    placeholder="태그 입력 후 Enter..."
+                    className="flex-1 text-[11px] bg-[#FAF9F6] border border-black/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-green-400" />
+                  <button onClick={() => {
+                    const tag = archiveTagInput.trim();
+                    if (tag && !archiveSaveTags.includes(tag)) setArchiveSaveTags(prev => [...prev, tag]);
+                    setArchiveTagInput('');
+                  }} className="px-2.5 py-1.5 bg-green-100 text-green-700 rounded-lg text-[10px] font-bold hover:bg-green-200">추가</button>
+                </div>
+              </div>
+            </div>
+            <div className="p-4 border-t border-black/5 flex justify-end gap-2">
+              <button onClick={() => setArchiveSaveItem(null)}
+                className="px-4 py-2 text-sm font-bold text-[#78716A] hover:bg-black/5 rounded-xl transition-colors">
+                취소
+              </button>
+              <button onClick={confirmArchiveSave}
+                className="px-5 py-2 bg-[#2D2926] text-white rounded-xl font-bold text-sm hover:bg-[#78716A] transition-colors">
+                저장
+              </button>
             </div>
           </div>
         </div>

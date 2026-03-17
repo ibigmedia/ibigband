@@ -17,7 +17,7 @@ interface Props {
   setlistTitle: string;
   items: SetlistItem[];
   totalDuration: string;
-  schedules: { time: string; title: string; type: string }[];
+  schedules: { time: string; title: string; type: string; date?: string; location?: string; memo?: string }[];
   onSend: (params: {
     to: string[];
     includeOverview: boolean;
@@ -130,14 +130,28 @@ export default function EmailShareModal({ isOpen, onClose, setlistTitle, items, 
               </label>
 
               {schedules.length > 0 && (
-                <label className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-xl cursor-pointer hover:bg-[#E6C79C]/10 transition-colors">
-                  <input type="checkbox" checked={includeSchedule} onChange={e => setIncludeSchedule(e.target.checked)} className="accent-[#2D2926] w-4 h-4" />
-                  <Calendar size={16} className="text-[#78716A]" />
-                  <div>
-                    <p className="text-sm font-bold text-[#2D2926]">일정 타임라인</p>
-                    <p className="text-[11px] text-[#78716A]">연습/리허설/본 예배 일정</p>
-                  </div>
-                </label>
+                <div>
+                  <label className="flex items-center gap-3 p-3 bg-[#FAF9F6] rounded-xl cursor-pointer hover:bg-[#E6C79C]/10 transition-colors">
+                    <input type="checkbox" checked={includeSchedule} onChange={e => setIncludeSchedule(e.target.checked)} className="accent-[#2D2926] w-4 h-4" />
+                    <Calendar size={16} className="text-[#78716A]" />
+                    <div>
+                      <p className="text-sm font-bold text-[#2D2926]">일정 타임라인</p>
+                      <p className="text-[11px] text-[#78716A]">시간, 구분, 장소, 메모 등 세부 일정 포함</p>
+                    </div>
+                  </label>
+                  {includeSchedule && (
+                    <div className="mt-2 ml-7 bg-white border border-black/5 rounded-lg p-3 max-h-28 overflow-y-auto space-y-1.5">
+                      {schedules.map((s, i) => (
+                        <div key={i} className="text-[11px] flex gap-2">
+                          <span className="font-bold text-[#8C6B1C] shrink-0">{s.date ? `${s.date.slice(5)} ` : ''}{s.time}</span>
+                          <span className="text-[#2D2926] font-bold">{s.title}</span>
+                          {s.location && <span className="text-[#78716A]">📍{s.location}</span>}
+                          {s.memo && <span className="text-[#9CA3AF] italic">({s.memo})</span>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
