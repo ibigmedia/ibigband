@@ -710,11 +710,11 @@ export default function SetListPage() {
           ))}
         </div>
 
-        <div className="bg-white flex-1 border-y md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
+        <div className="bg-[#FAF9F6] md:bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-hidden flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
-            <div className="flex flex-col h-full">
+            <div className="flex flex-col h-full bg-white md:bg-transparent">
               <div className="px-3 py-3 md:p-5 border-b border-black/5 shrink-0">
                 <div className="flex items-center justify-between mb-2 md:mb-3">
                   <h3 className="font-bold text-base md:text-lg flex items-center gap-2"><LayoutDashboard className="text-[#E6C79C]" size={20} /> 미디어 풀</h3>
@@ -800,7 +800,7 @@ export default function SetListPage() {
 
           {/* AI Search tab */}
           {activeTab === 'ai-search' && (
-            <div className="px-3 py-3 md:p-6 flex flex-col h-full" onPaste={handleImagePaste}>
+            <div className="px-3 py-3 md:p-6 flex flex-col h-full bg-white md:bg-transparent" onPaste={handleImagePaste}>
               <h3 className="font-bold text-lg mb-2 flex items-center gap-2"><Sparkles className="text-[#E6C79C]" /> AI 악보 검색</h3>
               <p className="text-xs text-[#78716A] mb-4">곡 제목, 아티스트, 가사를 입력하면 웹에서 악보를 찾아줍니다.</p>
               <div className="relative mb-4">
