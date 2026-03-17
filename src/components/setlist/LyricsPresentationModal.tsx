@@ -42,6 +42,45 @@ export default function LyricsPresentationModal({ isOpen, onClose, initialSlides
     }
   }, [isOpen, initialSlides]);
 
+  // 키보드 좌우 화살표로 슬라이드/섹션 이동
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    if (editingIndex !== null) return;
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') return;
+
+    if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      if (previewIndex === null) {
+        if (slides.length > 0) { setPreviewIndex(0); setPreviewSection(0); }
+        return;
+      }
+      const sections = slides[previewIndex].text.split(/\n\s*\n/).filter(s => s.trim());
+      if (previewSection < sections.length - 1) {
+        setPreviewSection(prev => prev + 1);
+      } else if (previewIndex < slides.length - 1) {
+        setPreviewIndex(prev => (prev ?? 0) + 1);
+        setPreviewSection(0);
+      }
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      if (previewIndex === null) return;
+      if (previewSection > 0) {
+        setPreviewSection(prev => prev - 1);
+      } else if (previewIndex > 0) {
+        const prevIdx = previewIndex - 1;
+        const prevSections = slides[prevIdx].text.split(/\n\s*\n/).filter(s => s.trim());
+        setPreviewIndex(prevIdx);
+        setPreviewSection(Math.max(0, prevSections.length - 1));
+      }
+    }
+  }, [editingIndex, previewIndex, previewSection, slides]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, handleKeyDown]);
+
   if (!isOpen) return null;
 
   const startEdit = (i: number) => {
@@ -265,46 +304,6 @@ ${slidesHtml.join('\n')}
   const previewSections = previewIndex !== null && slides[previewIndex]
     ? slides[previewIndex].text.split(/\n\s*\n/).filter(s => s.trim())
     : [];
-
-  // 키보드 좌우 화살표로 슬라이드/섹션 이동
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    // 편집 중이면 무시
-    if (editingIndex !== null) return;
-    const target = e.target as HTMLElement;
-    if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') return;
-
-    if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      if (previewIndex === null) {
-        if (slides.length > 0) { setPreviewIndex(0); setPreviewSection(0); }
-        return;
-      }
-      const sections = slides[previewIndex].text.split(/\n\s*\n/).filter(s => s.trim());
-      if (previewSection < sections.length - 1) {
-        setPreviewSection(prev => prev + 1);
-      } else if (previewIndex < slides.length - 1) {
-        setPreviewIndex(prev => (prev ?? 0) + 1);
-        setPreviewSection(0);
-      }
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      if (previewIndex === null) return;
-      if (previewSection > 0) {
-        setPreviewSection(prev => prev - 1);
-      } else if (previewIndex > 0) {
-        const prevIdx = previewIndex - 1;
-        const prevSections = slides[prevIdx].text.split(/\n\s*\n/).filter(s => s.trim());
-        setPreviewIndex(prevIdx);
-        setPreviewSection(Math.max(0, prevSections.length - 1));
-      }
-    }
-  }, [editingIndex, previewIndex, previewSection, slides]);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, handleKeyDown]);
 
   const FONT_SIZE_OPTIONS = [0, 20, 24, 28, 32, 36, 40, 48, 56];
 
