@@ -635,6 +635,13 @@ export default function SetListPage() {
     }
   };
 
+  // 가사 프레젠테이션 실행
+  const launchLyricsPresenter = (lyrics: { title: string; author?: string; text: string }[]) => {
+    if (lyrics.length === 0) { alert('가사 데이터가 없습니다.'); return; }
+    localStorage.setItem('ibigband_lyrics_presenter', JSON.stringify(lyrics));
+    window.open('/setlist/presenter/lyrics', '_blank');
+  };
+
   const shareScheduleEmail = async () => {
     if (schedules.length === 0) { alert('일정이 없습니다.'); return; }
     const email = prompt('일정을 전달할 이메일 주소 (콤마 구분)');
@@ -821,6 +828,7 @@ export default function SetListPage() {
               onAddToSetlist={(item) => addToSetlist(item)}
               onPreview={(item) => handleItemClick(item)}
               onPlayAudio={(item) => togglePlay(item)}
+              onLyricsPresent={launchLyricsPresenter}
               existingLibraryIds={existingSourceIds}
               onOpenFullscreen={() => setIsArchiveFullscreen(true)}
             />
@@ -1083,6 +1091,7 @@ export default function SetListPage() {
                 onAddToSetlist={(item) => addToSetlist(item)}
                 onPreview={(item) => handleItemClick(item)}
                 onPlayAudio={(item) => togglePlay(item)}
+                onLyricsPresent={launchLyricsPresenter}
                 existingLibraryIds={existingSourceIds}
                 fullscreen={true}
               />
