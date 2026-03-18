@@ -24,6 +24,7 @@ export interface UserData {
   photoURL: string | null;
   isPremium: boolean;
   role: 'user' | 'admin';
+  grade?: 'basic' | 'member' | 'admin';
   status?: 'pending' | 'approved' | 'rejected';
   bio?: string;
   createdAt?: any;
