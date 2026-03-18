@@ -118,9 +118,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 프로필 업데이트
       await updateProfile(cred.user, { displayName: name });
 
-      // 이메일 인증 발송
-      await sendEmailVerification(cred.user);
-
       // Firestore 사용자 문서 생성 (status: pending)
       const newUserData: UserData = {
         uid: cred.user.uid,
@@ -134,6 +131,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         createdAt: serverTimestamp(),
       };
       await setDoc(doc(db, 'users', cred.user.uid), newUserData);
+
+      // 커스텀 인증 이메일 발송
+      try {
+        await fetch('/api/auth/send-verification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid: cred.user.uid }),
+        });
+      } catch (emailErr) {
+        console.error('커스텀 인증 이메일 발송 실패, Firebase 기본 이메일로 대체:', emailErr);
+        await sendEmailVerification(cred.user);
+      }
 
       // 가입 직후 로그아웃 (승인 대기 상태)
       await firebaseSignOut(auth);
