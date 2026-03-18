@@ -103,7 +103,7 @@ export default function SetListPage() {
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { user, loading, signInWithGoogle } = useAuth();
+  const { user, userData, loading, signInWithGoogle } = useAuth();
   const [openPicker] = useDrivePicker();
 
   // --- Filtered library ---
@@ -167,7 +167,18 @@ export default function SetListPage() {
       <h1 className="text-3xl font-handwriting text-[#E6C79C] mb-6">ibiGband</h1>
       <h2 className="text-2xl font-bold text-[#2D2926] mb-4">밴드 멤버 전용 페이지입니다</h2>
       <p className="text-[#78716A] mb-8 max-w-md">로그인 후 셋리스트, 악보, 미디어를 관리할 수 있습니다.</p>
-      <button onClick={signInWithGoogle} className="bg-[#2D2926] text-white px-8 py-4 rounded-full font-bold hover:bg-[#8C6B1C] transition-colors">Google 계정으로 로그인</button>
+      <a href="/auth" className="bg-[#2D2926] text-white px-8 py-4 rounded-full font-bold hover:bg-[#78716A] transition-colors">로그인 / 회원가입</a>
+    </div>
+  );
+
+  // 밴드멤버 이상만 접근 가능
+  const userGrade = userData?.grade || (userData?.role === 'admin' ? 'admin' : 'basic');
+  if (userGrade === 'basic') return (
+    <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center p-6 text-center">
+      <h1 className="text-3xl font-handwriting text-[#E6C79C] mb-6">ibiGband</h1>
+      <h2 className="text-2xl font-bold text-[#2D2926] mb-4">밴드 멤버 전용 페이지입니다</h2>
+      <p className="text-[#78716A] mb-4 max-w-md">셋리스트 기능은 <strong className="text-[#2D2926]">밴드멤버</strong> 등급 이상부터 이용 가능합니다.</p>
+      <p className="text-[#78716A] text-sm max-w-md">관리자에게 등급 변경을 요청해 주세요.</p>
     </div>
   );
 

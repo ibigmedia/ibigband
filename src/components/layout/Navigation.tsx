@@ -60,13 +60,13 @@ export default function Navigation() {
                   <Settings size={20} />
                 </Link>
               )}
-              {userData?.isPremium ? (
+              {(userData?.grade === 'member' || userData?.grade === 'admin' || userData?.role === 'admin') ? null : userData?.isPremium ? (
                 <div className="flex items-center gap-2 bg-[#2D2926] text-[#E6C79C] px-5 py-2 rounded-full text-sm font-bold">
                   <CreditCard size={16} /> 프리미엄 멤버
                 </div>
               ) : (
-                <button 
-                  onClick={() => setIsPaymentModalOpen(true)} 
+                <button
+                  onClick={() => setIsPaymentModalOpen(true)}
                   className="flex items-center gap-2 bg-[#E6C79C] text-[#2D2926] px-5 py-2 rounded-full text-sm font-bold hover:shadow-lg transition-all"
                 >
                   <CreditCard size={16} /> 프리미엄 구독
@@ -120,13 +120,13 @@ export default function Navigation() {
                       <Settings size={22} /> 대시보드 가기
                     </Link>
                   )}
-                  {userData?.isPremium ? (
+                  {(userData?.grade === 'member' || userData?.grade === 'admin' || userData?.role === 'admin') ? null : userData?.isPremium ? (
                     <div className="flex items-center justify-center gap-2 bg-[#2D2926] text-[#E6C79C] px-6 py-4 rounded-2xl text-base font-bold w-full">
                       <CreditCard size={18} /> 프리미엄 멤버
                     </div>
                   ) : (
-                    <button 
-                      onClick={() => { setIsPaymentModalOpen(true); setIsMobileMenuOpen(false); }} 
+                    <button
+                      onClick={() => { setIsPaymentModalOpen(true); setIsMobileMenuOpen(false); }}
                       className="flex items-center justify-center gap-2 bg-[#E6C79C] text-[#2D2926] px-6 py-4 rounded-2xl text-base font-bold w-full shadow-md"
                     >
                       <CreditCard size={18} /> 프리미엄 구독
