@@ -1,25 +1,32 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  User, 
-  GoogleAuthProvider, 
-  signInWithPopup, 
+import {
+  User,
+  GoogleAuthProvider,
+  signInWithPopup,
   signInWithRedirect,
   signOut as firebaseSignOut,
   onAuthStateChanged,
-  getRedirectResult
+  getRedirectResult,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from './config';
 
-interface UserData {
+export interface UserData {
   uid: string;
   email: string | null;
   displayName: string | null;
   photoURL: string | null;
   isPremium: boolean;
   role: 'user' | 'admin';
+  status?: 'pending' | 'approved' | 'rejected';
+  bio?: string;
+  createdAt?: any;
 }
 
 interface AuthContextType {
@@ -27,6 +34,8 @@ interface AuthContextType {
   userData: UserData | null;
   loading: boolean;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<{ error?: string }>;
+  signUpWithEmail: (email: string, password: string, name: string, bio: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 }
 
@@ -35,6 +44,8 @@ const AuthContext = createContext<AuthContextType>({
   userData: null,
   loading: true,
   signInWithGoogle: async () => {},
+  signInWithEmail: async () => ({}),
+  signUpWithEmail: async () => ({}),
   signOut: async () => {},
 });
 
@@ -44,33 +55,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. 리다이렉트 로그인 결과 (혹은 에러) 처리
     getRedirectResult(auth).catch((error) => {
       console.error("Redirect Auth Error:", error);
       if (error?.code === 'auth/unauthorized-domain') {
-        alert("승인되지 않은 도메인입니다. 파이어베이스 콘솔(Authentication -> Settings -> Authorized domains)에 현재 도메인을 추가해주세요.");
-      } else {
-        alert("구글 로그인 중 오류가 발생했습니다: " + error.message);
+        alert("승인되지 않은 도메인입니다. 파이어베이스 콘솔에서 도메인을 추가해주세요.");
       }
     });
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
-        // Fetch or create user document in Firestore
         const userRef = doc(db, 'users', firebaseUser.uid);
         const userSnap = await getDoc(userRef);
-        
+
         if (userSnap.exists()) {
           setUserData(userSnap.data() as UserData);
         } else {
+          // 구글 로그인으로 처음 접속한 경우 자동 생성 (approved)
           const newUserData: UserData = {
             uid: firebaseUser.uid,
             email: firebaseUser.email,
             displayName: firebaseUser.displayName,
             photoURL: firebaseUser.photoURL,
             isPremium: false,
-            role: 'user'
+            role: 'user',
+            status: 'approved',
+            createdAt: serverTimestamp(),
           };
           await setDoc(userRef, newUserData);
           setUserData(newUserData);
@@ -88,20 +98,92 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const provider = new GoogleAuthProvider();
       provider.setCustomParameters({ prompt: 'select_account' });
-      
-      // 모바일(Safari, Chrome)에서 도메인 간 교차 쿠키 추적 방지(ITP)로 인해 
-      // Redirect가 무한 루프 무시되는 이슈를 해결하기 위해 
-      // 모든 플랫폼에서 팝업(Popup)을 강제로 사용합니다.
       await signInWithPopup(auth, provider);
     } catch (error: any) {
       console.error("Error signing in with Google", error);
       if (error?.code === 'auth/popup-blocked') {
-        alert('구글 로그인 팝업이 차단되었습니다. 모바일 브라우저나 인앱 브라우저(카카오톡 등)의 설정에서 팝업 차단을 해제한 뒤 다시 시도해주세요.');
+        alert('팝업이 차단되었습니다. 팝업 차단을 해제한 뒤 다시 시도해주세요.');
       } else if (error?.code === 'auth/unauthorized-domain') {
-        alert('파이어베이스 승인되지 않은 도메인 에러입니다. 콘솔에서 도메인을 추가해주세요.');
+        alert('승인되지 않은 도메인입니다. 파이어베이스 콘솔에서 도메인을 추가해주세요.');
       } else {
-        alert('구글 로그인 중 오류가 발생했습니다: ' + (error?.message || '알 수 없는 오류'));
+        alert('구글 로그인 중 오류: ' + (error?.message || '알 수 없는 오류'));
       }
+    }
+  };
+
+  const signUpWithEmail = async (email: string, password: string, name: string, bio: string): Promise<{ error?: string }> => {
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+
+      // 프로필 업데이트
+      await updateProfile(cred.user, { displayName: name });
+
+      // 이메일 인증 발송
+      await sendEmailVerification(cred.user);
+
+      // Firestore 사용자 문서 생성 (status: pending)
+      const newUserData: UserData = {
+        uid: cred.user.uid,
+        email: cred.user.email,
+        displayName: name,
+        photoURL: null,
+        isPremium: false,
+        role: 'user',
+        status: 'pending',
+        bio,
+        createdAt: serverTimestamp(),
+      };
+      await setDoc(doc(db, 'users', cred.user.uid), newUserData);
+
+      // 가입 직후 로그아웃 (승인 대기 상태)
+      await firebaseSignOut(auth);
+
+      return {};
+    } catch (error: any) {
+      console.error("Email signup error:", error);
+      if (error?.code === 'auth/email-already-in-use') {
+        return { error: '이미 등록된 이메일입니다.' };
+      } else if (error?.code === 'auth/weak-password') {
+        return { error: '비밀번호는 6자 이상이어야 합니다.' };
+      } else if (error?.code === 'auth/invalid-email') {
+        return { error: '유효하지 않은 이메일 형식입니다.' };
+      }
+      return { error: error?.message || '회원가입 중 오류가 발생했습니다.' };
+    }
+  };
+
+  const signInWithEmail = async (email: string, password: string): Promise<{ error?: string }> => {
+    try {
+      const cred = await signInWithEmailAndPassword(auth, email, password);
+
+      // 이메일 인증 확인
+      if (!cred.user.emailVerified) {
+        await firebaseSignOut(auth);
+        return { error: '이메일 인증이 완료되지 않았습니다. 메일함을 확인해주세요.' };
+      }
+
+      // 관리자 승인 확인
+      const userSnap = await getDoc(doc(db, 'users', cred.user.uid));
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.status === 'pending') {
+          await firebaseSignOut(auth);
+          return { error: '관리자 승인 대기 중입니다. 승인 후 로그인할 수 있습니다.' };
+        } else if (data.status === 'rejected') {
+          await firebaseSignOut(auth);
+          return { error: '가입이 거절되었습니다. 관리자에게 문의해주세요.' };
+        }
+      }
+
+      return {};
+    } catch (error: any) {
+      console.error("Email signin error:", error);
+      if (error?.code === 'auth/user-not-found' || error?.code === 'auth/wrong-password' || error?.code === 'auth/invalid-credential') {
+        return { error: '이메일 또는 비밀번호가 올바르지 않습니다.' };
+      } else if (error?.code === 'auth/too-many-requests') {
+        return { error: '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해주세요.' };
+      }
+      return { error: error?.message || '로그인 중 오류가 발생했습니다.' };
     }
   };
 
@@ -114,7 +196,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, userData, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, userData, loading, signInWithGoogle, signInWithEmail, signUpWithEmail, signOut }}>
       {children}
     </AuthContext.Provider>
   );

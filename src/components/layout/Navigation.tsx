@@ -77,9 +77,9 @@ export default function Navigation() {
               </button>
             </>
           ) : (
-            <button onClick={signInWithGoogle} className="flex items-center gap-2 bg-[#2D2926] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#78716A] transition-all">
-              <LogIn size={16} /> 구글 로그인
-            </button>
+            <Link href="/auth" className="flex items-center gap-2 bg-[#2D2926] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#78716A] transition-all">
+              <LogIn size={16} /> 로그인 / 회원가입
+            </Link>
           )}
 
         </div>
@@ -137,9 +137,9 @@ export default function Navigation() {
                   </button>
                 </>
               ) : (
-                <button onClick={() => { signInWithGoogle(); setIsMobileMenuOpen(false); }} className="flex items-center justify-center gap-2 bg-[#2D2926] text-white px-6 py-4 rounded-2xl text-lg font-bold w-full mt-2 hover:bg-[#78716A] shadow-lg">
-                  <LogIn size={20} /> 구글 로그인
-                </button>
+                <Link href="/auth" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2 bg-[#2D2926] text-white px-6 py-4 rounded-2xl text-lg font-bold w-full mt-2 hover:bg-[#78716A] shadow-lg">
+                  <LogIn size={20} /> 로그인 / 회원가입
+                </Link>
               )}
             </div>
           </div>
