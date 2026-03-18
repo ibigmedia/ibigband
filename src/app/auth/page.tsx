@@ -198,6 +198,15 @@ export default function AuthPage() {
             </div>
           )}
 
+          {mode === 'signup' && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
+              <p className="font-bold mb-1">회원가입 안내</p>
+              <p className="text-xs leading-relaxed">
+                회원가입 신청 후 <strong>이메일 인증</strong>과 <strong>관리자 승인</strong>이 완료되어야 로그인이 가능합니다. 승인까지 다소 시간이 소요될 수 있으니 양지하여 주시기 바랍니다.
+              </p>
+            </div>
+          )}
+
           <button type="submit" disabled={loading}
             className="w-full bg-[#2D2926] text-white py-3.5 rounded-xl font-bold text-sm hover:bg-[#78716A] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
             {loading && <Loader2 size={16} className="animate-spin" />}
@@ -223,13 +232,6 @@ export default function AuthPage() {
             </>
           )}
         </div>
-
-        {mode === 'signup' && (
-          <div className="mt-6 bg-[#FAF9F6] border border-[#78716A]/10 rounded-xl p-4 text-xs text-[#78716A]">
-            <p className="font-bold text-[#2D2926] mb-1">가입 안내</p>
-            <p>회원가입 후 이메일 인증과 관리자 승인이 필요합니다. 승인 완료 후 모든 기능을 이용할 수 있습니다.</p>
-          </div>
-        )}
 
         <div className="text-center mt-8">
           <Link href="/" className="text-xs text-[#78716A] hover:text-[#2D2926] flex items-center justify-center gap-1">
