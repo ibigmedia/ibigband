@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/Button';
 import { getCollectionDocs, addDocument, createOrUpdateDoc, deleteDocument, SheetMusic } from '@/lib/firebase/firestore';
 import { uploadFile } from '@/lib/firebase/storage';
-import { Plus, Edit, Trash2, FileText, Music, Loader2, Video, Save, LayoutGrid, CheckCircle, Search, Activity, Hash, TagIcon, UploadCloud, PlayCircle, ChevronRight, Disc3 } from 'lucide-react';
+import { Plus, Edit, Trash2, FileText, Music, Loader2, Video, Save, LayoutGrid, CheckCircle, Search, Activity, Hash, TagIcon, UploadCloud, PlayCircle, ChevronRight, Disc3, Copy, Check } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 import { MusicAlbum } from '@/types/music';
 
@@ -16,6 +16,39 @@ export default function AdminSheetsPage() {
   
   // Selection
   const [selectedSheet, setSelectedSheet] = useState<SheetMusic | null>(null);
+
+  // 공유 링크 복사 피드백 (방금 복사한 sheet id 를 잠시 기억)
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyShareLink = async (sheetId: string, e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.ibigband.com';
+    const url = `${origin}/sheets/${sheetId}`;
+    const markCopied = () => {
+      setCopiedId(sheetId);
+      setTimeout(() => setCopiedId((curr) => (curr === sheetId ? null : curr)), 1800);
+    };
+    try {
+      await navigator.clipboard.writeText(url);
+      markCopied();
+    } catch (err) {
+      console.error('Clipboard API 실패, fallback 시도:', err);
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        markCopied();
+      } catch {
+        alert('링크 복사에 실패했습니다. 직접 복사해주세요:\n' + url);
+      } finally {
+        document.body.removeChild(ta);
+      }
+    }
+  };
 
   // Form State
   const [currentId, setCurrentId] = useState<string | null>(null);
@@ -303,6 +336,13 @@ export default function AdminSheetsPage() {
                     {sheet.audioUrl && <span className="w-2 h-2 rounded-full bg-blue-500" title="MR 포함"></span>}
                   </div>
                 </div>
+                <button
+                  onClick={(e) => copyShareLink(sheet.id!, e)}
+                  className="p-3 text-[#71717A] hover:text-[#E6C79C] hover:bg-[#E6C79C]/10 rounded-xl shrink-0 self-center transition-colors"
+                  title="YouTube 등에 공유할 링크 복사"
+                >
+                  {copiedId === sheet.id ? <Check className="w-5 h-5 lg:w-4 lg:h-4 text-green-400"/> : <Copy className="w-5 h-5 lg:w-4 lg:h-4"/>}
+                </button>
                 <button onClick={(e) => handleDelete(sheet.id!, e)} className="p-3 text-[#71717A] hover:text-red-400 hover:bg-red-400/10 rounded-xl shrink-0 self-center">
                   <Trash2 className="w-5 h-5 lg:w-4 lg:h-4"/>
                 </button>
@@ -325,9 +365,18 @@ export default function AdminSheetsPage() {
              <p className="text-xs text-[#A1A1AA] hidden lg:block">악보와 MR(음원)을 구분하여 업로드하고 관리할 수 있습니다.</p>
            </div>
            {currentId && currentId !== 'new' && (
-             <span className="hidden lg:flex px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-[#A1A1AA] items-center gap-2">
-                ID: {currentId.slice(0, 8)}...
-             </span>
+             <button
+               type="button"
+               onClick={() => copyShareLink(currentId)}
+               className="hidden lg:flex px-3 py-1 bg-white/5 border border-white/10 hover:bg-[#E6C79C]/10 hover:border-[#E6C79C]/40 hover:text-[#E6C79C] rounded-full text-xs text-[#A1A1AA] items-center gap-2 transition-all"
+               title="YouTube 등에 공유할 링크 복사"
+             >
+               {copiedId === currentId ? (
+                 <><Check className="w-3 h-3 text-green-400"/> 링크 복사됨</>
+               ) : (
+                 <><Copy className="w-3 h-3"/> 공유 링크 복사</>
+               )}
+             </button>
            )}
         </div>
 
