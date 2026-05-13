@@ -280,25 +280,36 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                 onClick={() => openSheet(sheet)}
                 className="group cursor-pointer bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:bg-white/10 transition-all duration-300 hover:shadow-[0_0_30px_rgba(230,199,156,0.1)] hover:-translate-y-1 flex flex-col pt-1"
               >
-                {/* Thumbnail Area — 프리미엄 카드 썸네일도 약하게 블러 + 우클릭/드래그 차단 */}
+                {/* Thumbnail Area — 게스트의 프리미엄 카드만 하단 부분 블러, 로그인 시 선명 */}
                 <div className="aspect-[4/5] relative bg-[#0A0A0A] overflow-hidden m-4 rounded-xl border border-white/5 flex items-center justify-center">
                   {sheet.thumbnailUrl ? (
-                    <img
-                      src={sheet.thumbnailUrl}
-                      alt={sheet.title}
-                      draggable={false}
-                      onContextMenu={(e) => e.preventDefault()}
-                      onDragStart={(e) => e.preventDefault()}
-                      style={{
-                        userSelect: 'none',
-                        WebkitUserSelect: 'none',
-                        WebkitUserDrag: 'none',
-                        WebkitTouchCallout: 'none',
-                        filter: sheet.isPremiumOnly ? 'blur(6px) saturate(0.9)' : undefined,
-                        transform: sheet.isPremiumOnly ? 'scale(1.08)' : undefined,
-                      } as React.CSSProperties}
-                      className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
-                    />
+                    <>
+                      <img
+                        src={sheet.thumbnailUrl}
+                        alt={sheet.title}
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                        onDragStart={(e) => e.preventDefault()}
+                        style={{
+                          userSelect: 'none',
+                          WebkitUserSelect: 'none',
+                          WebkitUserDrag: 'none',
+                          WebkitTouchCallout: 'none',
+                        } as React.CSSProperties}
+                        className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                      />
+                      {sheet.isPremiumOnly && !user && (
+                        <div
+                          className="absolute inset-0 pointer-events-none"
+                          style={{
+                            backdropFilter: 'blur(5px)',
+                            WebkitBackdropFilter: 'blur(5px)',
+                            maskImage: 'linear-gradient(to bottom, transparent 45%, black 82%)',
+                            WebkitMaskImage: 'linear-gradient(to bottom, transparent 45%, black 82%)',
+                          } as React.CSSProperties}
+                        />
+                      )}
+                    </>
                   ) : sheet.youtubeId ? (
                     <>
                       <img

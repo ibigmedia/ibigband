@@ -29,8 +29,12 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
       userData?.role === 'admin'
     )
   );
-  const isLocked = Boolean(sheet.isPremiumOnly) && !canAccessPremium;
+  // 프리뷰는 비로그인 게스트만 부분 잠금 (상단 선명 / 하단 블러).
+  // PDF 다운로드는 프리미엄 권한 없는 모두 잠금. → 두 잠금 분리.
+  const isPreviewLocked = Boolean(sheet.isPremiumOnly) && !user;
+  const isPdfLocked = Boolean(sheet.isPremiumOnly) && !canAccessPremium;
   const lockReason: 'login' | 'upgrade' = !user ? 'login' : 'upgrade';
+  const premiumPrice = sheet.price && sheet.price !== '0' ? `$${sheet.price}` : '$5';
 
   // Theme color mappings
   const t = {
@@ -145,24 +149,33 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                         WebkitUserSelect: 'none',
                         WebkitUserDrag: 'none',
                         WebkitTouchCallout: 'none',
-                        filter: isLocked ? 'blur(3px)' : undefined,
                       } as React.CSSProperties}
                       className="block w-full max-h-[45vh] lg:max-h-[78vh] object-contain bg-white"
                     />
-                    {isLocked && (
+                    {isPreviewLocked && (
                       <>
-                        {/* 대각선 워터마크 */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+                        {/* 하단으로 갈수록 강해지는 그라데이션 블러 (상단은 선명) */}
+                        <div
+                          className="absolute inset-0 pointer-events-none"
+                          style={{
+                            backdropFilter: 'blur(7px)',
+                            WebkitBackdropFilter: 'blur(7px)',
+                            maskImage: 'linear-gradient(to bottom, transparent 40%, black 78%)',
+                            WebkitMaskImage: 'linear-gradient(to bottom, transparent 40%, black 78%)',
+                          } as React.CSSProperties}
+                        />
+                        {/* 하단 워터마크 (블러 영역 안에 자연스럽게 위치) */}
+                        <div className="absolute inset-x-0 bottom-[16%] flex items-center justify-center pointer-events-none">
                           <span
-                            style={{ transform: 'rotate(-22deg)' }}
-                            className="text-white/30 font-black text-2xl sm:text-3xl md:text-4xl tracking-[0.25em] whitespace-nowrap drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] select-none"
+                            style={{ transform: 'rotate(-8deg)' }}
+                            className="text-white/55 font-black text-xl sm:text-2xl md:text-3xl tracking-[0.3em] whitespace-nowrap drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] select-none"
                           >
                             ibiGband · PREMIUM
                           </span>
                         </div>
-                        {/* 하단 페이드 */}
+                        {/* 최하단 페이드 — 배경색으로 부드럽게 마감 */}
                         <div
-                          className="absolute inset-x-0 bottom-0 h-1/3 pointer-events-none"
+                          className="absolute inset-x-0 bottom-0 h-1/4 pointer-events-none"
                           style={{
                             background: `linear-gradient(to top, ${isLight ? '#FAF9F6' : '#0F0F0F'} 0%, transparent 100%)`,
                           }}
@@ -206,8 +219,8 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
             {/* 우측: 상세 */}
             <div className="flex-1 min-w-0 space-y-5">
 
-              {/* 프리미엄 잠금 안내 (locked일 때 최상단) */}
-              {isLocked && (
+              {/* 프리미엄 안내 — PDF 다운로드 권한이 없는 사용자(게스트/비프리미엄)에게 표시 */}
+              {isPdfLocked && (
                 <div className={`${t.boxBg} p-5 md:p-6 rounded-2xl border-l-4 border-l-brand-gold ${isLight ? 'border border-brand-taupe/15' : 'border-[#1A1A1A]'} shadow-lg`}>
                   <div className="flex items-start gap-4">
                     <div className="w-11 h-11 rounded-full bg-brand-gold/15 flex shrink-0 items-center justify-center border border-brand-gold/30">
@@ -216,9 +229,19 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                     <div className="flex-1">
                       <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>프리미엄 전용 악보입니다</h4>
                       <p className={`text-sm ${t.textMuted} mb-4 leading-relaxed`}>
-                        {lockReason === 'login'
-                          ? '미리보기는 누구나 볼 수 있지만, 선명한 악보·PDF 다운로드는 로그인 후 멤버십에서 이용할 수 있어요. 음원은 참조용으로 자유롭게 들으실 수 있습니다.'
-                          : '미리보기는 자유롭게 보실 수 있지만, 선명한 악보·PDF 다운로드는 프리미엄 멤버십에서 이용할 수 있어요. 음원은 참조용으로 자유롭게 들으실 수 있습니다.'}
+                        {lockReason === 'login' ? (
+                          <>
+                            로그인하시면 <strong className={t.textMain}>프리뷰 전체</strong>를 선명하게 보실 수 있고,{' '}
+                            <strong className="text-brand-gold">{premiumPrice} 프리미엄 멤버십</strong>으로 PDF 다운로드까지 이용하실 수 있습니다.
+                            음원은 참조용으로 자유롭게 들으실 수 있어요.
+                          </>
+                        ) : (
+                          <>
+                            프리뷰는 자유롭게 보실 수 있습니다. PDF 다운로드는{' '}
+                            <strong className="text-brand-gold">{premiumPrice} 프리미엄 멤버십</strong>에서 이용하실 수 있어요.
+                            음원은 참조용으로 자유롭게 들으실 수 있습니다.
+                          </>
+                        )}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {lockReason === 'login' ? (
@@ -241,7 +264,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                             onClick={() => { onClose(); router.push('/premium'); }}
                             className="bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-5 py-2 font-bold"
                           >
-                            멤버십 자세히 보기
+                            {premiumPrice} 멤버십 결제하기
                           </Button>
                         )}
                       </div>
@@ -290,12 +313,12 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                   <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>PDF 악보</h4>
                   <p className={`text-xs ${t.textMuted}`}>인쇄 가능한 고화질 악보 파일</p>
                 </div>
-                {isLocked ? (
+                {isPdfLocked ? (
                   <Button
                     onClick={() => { onClose(); router.push(lockReason === 'login' ? '/auth' : '/premium'); }}
                     className="w-full sm:w-auto bg-brand-gold/15 text-[#C9A675] hover:bg-brand-gold/25 border border-brand-gold/40 rounded-xl px-5 py-3 sm:py-2 transition-colors font-bold flex gap-2"
                   >
-                    <Lock className="w-4 h-4"/> 프리미엄 전용
+                    <Lock className="w-4 h-4"/> {lockReason === 'login' ? '로그인 후 결제' : `${premiumPrice} 결제하기`}
                   </Button>
                 ) : (
                   <Button

@@ -44,8 +44,8 @@ export async function generateMetadata(
   const titleLine = meta.artistId ? `${meta.title} — ${meta.artistId}` : meta.title;
   const fullTitle = `${titleLine} | ibiGband 악보`;
   const description = meta.isPremiumOnly
-    ? `${titleLine} 프리미엄 악보 · PDF/MR 다운로드는 멤버십에서 제공됩니다.`
-    : `${titleLine} · ibiGband의 PDF 악보와 MR 반주를 만나보세요.`;
+    ? `${titleLine} · 프리미엄 악보. PDF 다운로드는 멤버십($5)에서 제공되며, 참조용 음원은 자유롭게 들으실 수 있습니다.`
+    : `${titleLine} · ibiGband의 PDF 악보와 참조용 음원을 만나보세요.`;
 
   // OG 이미지 우선순위: 등록된 썸네일 → 유튜브 썸네일
   const ogImage =
