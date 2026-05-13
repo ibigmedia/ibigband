@@ -27,8 +27,9 @@ export async function GET(
 
   const url = new URL(request.url);
   const type = url.searchParams.get('type');
-  if (type !== 'pdf' && type !== 'audio') {
-    return NextResponse.json({ error: 'type 파라미터는 pdf 또는 audio 여야 합니다.' }, { status: 400, headers });
+  // 음원은 참조용으로 듣기만 제공하며 다운로드 라우트로는 발급하지 않습니다.
+  if (type !== 'pdf') {
+    return NextResponse.json({ error: 'PDF 외 파일은 다운로드 라우트로 제공하지 않습니다.' }, { status: 400, headers });
   }
 
   const verified = await verifyUser(request);
@@ -39,7 +40,7 @@ export async function GET(
     if (!snap.exists) {
       return NextResponse.json({ error: '악보를 찾을 수 없습니다.' }, { status: 404, headers });
     }
-    const data = snap.data() as { isPremiumOnly?: boolean; pdfUrl?: string; audioUrl?: string };
+    const data = snap.data() as { isPremiumOnly?: boolean; pdfUrl?: string };
 
     if (data.isPremiumOnly && !canAccessPremium(verified)) {
       const reason = verified ? 'upgrade' : 'login';
@@ -49,12 +50,11 @@ export async function GET(
       );
     }
 
-    const fileUrl = type === 'pdf' ? data.pdfUrl : data.audioUrl;
-    if (!fileUrl) {
+    if (!data.pdfUrl) {
       return NextResponse.json({ error: '해당 파일이 등록되어 있지 않습니다.' }, { status: 404, headers });
     }
 
-    return NextResponse.json({ url: fileUrl }, { headers });
+    return NextResponse.json({ url: data.pdfUrl }, { headers });
   } catch (error) {
     console.error('Sheets download API error:', error);
     return NextResponse.json({ error: 'Failed to issue download URL' }, { status: 500, headers });

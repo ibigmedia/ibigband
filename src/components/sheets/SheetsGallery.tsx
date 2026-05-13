@@ -280,12 +280,23 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                 onClick={() => openSheet(sheet)}
                 className="group cursor-pointer bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:bg-white/10 transition-all duration-300 hover:shadow-[0_0_30px_rgba(230,199,156,0.1)] hover:-translate-y-1 flex flex-col pt-1"
               >
-                {/* Thumbnail Area */}
+                {/* Thumbnail Area — 프리미엄 카드 썸네일도 약하게 블러 + 우클릭/드래그 차단 */}
                 <div className="aspect-[4/5] relative bg-[#0A0A0A] overflow-hidden m-4 rounded-xl border border-white/5 flex items-center justify-center">
                   {sheet.thumbnailUrl ? (
                     <img
                       src={sheet.thumbnailUrl}
                       alt={sheet.title}
+                      draggable={false}
+                      onContextMenu={(e) => e.preventDefault()}
+                      onDragStart={(e) => e.preventDefault()}
+                      style={{
+                        userSelect: 'none',
+                        WebkitUserSelect: 'none',
+                        WebkitUserDrag: 'none',
+                        WebkitTouchCallout: 'none',
+                        filter: sheet.isPremiumOnly ? 'blur(6px) saturate(0.9)' : undefined,
+                        transform: sheet.isPremiumOnly ? 'scale(1.08)' : undefined,
+                      } as React.CSSProperties}
                       className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
                     />
                   ) : sheet.youtubeId ? (
@@ -293,6 +304,9 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                       <img
                         src={`https://img.youtube.com/vi/${sheet.youtubeId}/hqdefault.jpg`}
                         alt={sheet.title}
+                        draggable={false}
+                        onContextMenu={(e) => e.preventDefault()}
+                        onDragStart={(e) => e.preventDefault()}
                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                       />
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
@@ -340,7 +354,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                   {/* Indicators (잠긴 sheet도 파일 존재 여부 표시) */}
                   <div className="flex gap-2 mb-4">
                     {(sheet.hasPdf ?? Boolean(sheet.pdfUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 font-bold">PDF 악보</span>}
-                    {(sheet.hasAudio ?? Boolean(sheet.audioUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">MR 음원</span>}
+                    {(sheet.hasAudio ?? Boolean(sheet.audioUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">음원</span>}
                   </div>
 
                   {/* Metadata Tags */}

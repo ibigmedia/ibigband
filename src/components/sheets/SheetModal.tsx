@@ -50,8 +50,8 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
     tagHover: isLight ? 'hover:text-[#2D2926]' : 'hover:text-white',
   };
 
-  // 서버 측 등급 검증을 거쳐 다운로드 URL을 받아옵니다. 클라이언트만 조작해서 잠금을 우회하는 것을 막아줍니다.
-  const requestDownload = async (type: 'pdf' | 'audio'): Promise<string | null> => {
+  // 서버 측 등급 검증을 거쳐 PDF 다운로드 URL을 받아옵니다. 음원은 다운로드를 제공하지 않습니다.
+  const handleDownloadPdf = async () => {
     try {
       const headers: Record<string, string> = {};
       if (user) {
@@ -62,7 +62,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
           console.warn('ID 토큰 발급 실패:', e);
         }
       }
-      const res = await fetch(`/api/sheets/${sheet.id}/download?type=${type}`, { headers, cache: 'no-store' });
+      const res = await fetch(`/api/sheets/${sheet.id}/download?type=pdf`, { headers, cache: 'no-store' });
       const body = await res.json().catch(() => ({}));
       if (!res.ok) {
         if (res.status === 403) {
@@ -74,29 +74,13 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
         } else {
           alert(body?.error || '다운로드 링크를 가져오지 못했습니다.');
         }
-        return null;
+        return;
       }
-      return body?.url || null;
+      if (body?.url) window.open(body.url, '_blank');
     } catch (e) {
       console.error('다운로드 요청 실패:', e);
       alert('다운로드 요청에 실패했습니다. 잠시 후 다시 시도해주세요.');
-      return null;
     }
-  };
-
-  const handleDownloadPdf = async () => {
-    const url = await requestDownload('pdf');
-    if (url) window.open(url, '_blank');
-  };
-
-  const handleDownloadAudio = async () => {
-    const url = await requestDownload('audio');
-    if (!url) return;
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${sheet.title}_MR.mp3`;
-    a.target = '_blank';
-    a.click();
   };
 
   const handlePlayLinkedMusic = async (albumId: string, trackId: string) => {
@@ -143,14 +127,42 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
         {/* Modal Content - Scrolling Area */}
         <div className={`overflow-y-auto flex-1 custom-scrollbar ${t.contentBg}`}>
           
-          {/* Large Sheet Preview at Top */}
+          {/* Large Sheet Preview at Top — 프리미엄은 블러 + 우클릭/드래그/저장 차단 */}
           {sheet.thumbnailUrl && (
             <div className={`w-full ${t.previewBg} border-b ${t.borderColor} relative flex justify-center items-center overflow-hidden py-10 px-4 min-h-[40vh] md:min-h-[60vh]`}>
-              <img 
-                src={sheet.thumbnailUrl} 
-                alt={sheet.title} 
-                className="max-w-full lg:max-w-4xl max-h-[70vh] object-contain shadow-2xl border border-black/5" 
+              <img
+                src={sheet.thumbnailUrl}
+                alt={sheet.title}
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+                style={{
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  WebkitUserDrag: 'none',
+                  WebkitTouchCallout: 'none',
+                  filter: isLocked ? 'blur(18px) saturate(0.85)' : undefined,
+                  transform: isLocked ? 'scale(1.05)' : undefined, // blur 가장자리 가림
+                } as React.CSSProperties}
+                className="max-w-full lg:max-w-4xl max-h-[70vh] object-contain shadow-2xl border border-black/5 transition-all"
               />
+              {isLocked && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <div className="bg-black/55 backdrop-blur-sm border border-brand-gold/50 rounded-2xl px-6 py-5 flex flex-col items-center gap-3 max-w-sm text-center pointer-events-auto">
+                    <Lock className="w-7 h-7 text-brand-gold" />
+                    <p className="text-white font-bold text-base">프리미엄 전용 미리보기</p>
+                    <p className="text-white/80 text-xs leading-relaxed">
+                      멤버십 가입 후 전체 악보를 선명하게 볼 수 있고,<br/>PDF로도 다운로드할 수 있습니다.
+                    </p>
+                    <Button
+                      onClick={() => { onClose(); router.push(lockReason === 'login' ? '/login' : '/premium'); }}
+                      className="mt-1 bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-4 py-2 text-sm font-bold"
+                    >
+                      {lockReason === 'login' ? '로그인하기' : '멤버십 알아보기'}
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -232,7 +244,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                   </div>
                 )}
 
-                {/* 프리미엄 잠금 안내 (게스트/비프리미엄) */}
+                {/* 프리미엄 잠금 안내 (게스트/비프리미엄) — 악보(PDF/미리보기 이미지)만 잠기며 음원은 참조용으로 들을 수 있습니다. */}
                 {isLocked && (
                   <div className={`${t.boxBg} p-6 rounded-2xl border-l-4 border-l-brand-gold ${isLight ? 'border border-brand-taupe/15' : 'border-[#1A1A1A]'} shadow-lg`}>
                     <div className="flex items-start gap-4">
@@ -243,8 +255,8 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                         <h4 className={`${t.textMain} font-bold text-lg mb-1`}>프리미엄 전용 악보입니다</h4>
                         <p className={`text-sm ${t.textMuted} mb-4 leading-relaxed`}>
                           {lockReason === 'login'
-                            ? '이 악보는 로그인 후 프리미엄 멤버십 또는 밴드 멤버 등급에서 다운로드할 수 있습니다.'
-                            : '이 악보를 다운로드하려면 프리미엄 멤버십 또는 밴드 멤버 등급이 필요합니다.'}
+                            ? '악보(PDF·미리보기 이미지)는 로그인 후 프리미엄 멤버십 또는 밴드 멤버 등급에서 이용할 수 있습니다. 음원은 참조용으로 자유롭게 들을 수 있습니다.'
+                            : '악보(PDF·미리보기 이미지)를 보려면 프리미엄 멤버십 또는 밴드 멤버 등급이 필요합니다. 음원은 참조용으로 자유롭게 들을 수 있습니다.'}
                         </p>
                         <div className="flex flex-wrap gap-2">
                           {lockReason === 'login' ? (
@@ -303,44 +315,34 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                   )}
                 </div>
 
-                {/* MR Audio Box */}
-                <div className={`${t.boxBg} p-6 rounded-2xl border-l-4 ${isLight ? 'border' : 'border-[#1A1A1A]'} border-l-blue-500 shadow-lg ${isLight ? 'border-[#78716A]/15' : ''}`}>
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-4">
-                    <div className="w-16 h-16 rounded-full bg-blue-500/10 flex shrink-0 items-center justify-center">
-                        <Music className="w-8 h-8 text-blue-500"/>
+                {/* 음원 듣기 — 잠금 무관 누구나 재생 가능, 다운로드는 제공하지 않습니다. */}
+                {(sheet.audioUrl || sheet.hasAudio) && (
+                  <div className={`${t.boxBg} p-6 rounded-2xl border-l-4 ${isLight ? 'border' : 'border-[#1A1A1A]'} border-l-blue-500 shadow-lg ${isLight ? 'border-[#78716A]/15' : ''}`}>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-4">
+                      <div className="w-16 h-16 rounded-full bg-blue-500/10 flex shrink-0 items-center justify-center">
+                          <Music className="w-8 h-8 text-blue-500"/>
+                      </div>
+                      <div className="flex-1">
+                          <h4 className={`${t.textMain} font-bold text-lg mb-1`}>음원 듣기</h4>
+                          <p className={`text-xs ${t.textMuted}`}>참조용 음원입니다. (별도 저장은 제공되지 않습니다)</p>
+                      </div>
                     </div>
-                    <div className="flex-1">
-                        <h4 className={`${t.textMain} font-bold text-lg mb-1`}>MR 반주 음원</h4>
-                        <p className={`text-xs ${t.textMuted}`}>다운로드 가능한 고음질 반주 음원</p>
-                    </div>
-                    {isLocked ? (
-                      <Button
-                        onClick={() => { onClose(); router.push(lockReason === 'login' ? '/login' : '/premium'); }}
-                        className="w-full sm:w-auto mt-4 sm:mt-0 bg-brand-gold/15 text-[#C9A675] hover:bg-brand-gold/25 border border-brand-gold/40 rounded-xl px-6 py-4 sm:py-2 transition-colors font-bold flex gap-2"
-                      >
-                        <Lock className="w-5 h-5 sm:w-4 sm:h-4"/> 프리미엄 전용
-                      </Button>
-                    ) : (
-                      <Button
-                        disabled={!sheet.audioUrl && !sheet.hasAudio}
-                        onClick={handleDownloadAudio}
-                        className={`w-full sm:w-auto mt-4 sm:mt-0 bg-blue-500/10 text-blue-600 hover:bg-blue-500/20 border border-blue-500/30 rounded-xl px-6 py-4 sm:py-2 transition-colors font-bold flex gap-2 ${(!sheet.audioUrl && !sheet.hasAudio) && 'opacity-50'}`}
-                      >
-                          {(sheet.audioUrl || sheet.hasAudio) ? <><Download className="w-5 h-5 sm:w-4 sm:h-4"/> 소스 다운로드</> : '준비 중'}
-                      </Button>
+
+                    {sheet.audioUrl && (
+                      <div className={`${t.contentBg} border ${t.borderColor} p-4 rounded-xl mt-2`}>
+                        <audio
+                          controls
+                          className="w-full h-12 outline-none"
+                          controlsList="nodownload noplaybackrate"
+                          onContextMenu={(e) => e.preventDefault()}
+                        >
+                          <source src={sheet.audioUrl} type="audio/mpeg" />
+                          Your browser does not support the audio element.
+                        </audio>
+                      </div>
                     )}
                   </div>
-
-                  {/* Explicit Audio Player for MR (잠긴 경우 audioUrl 노출 방지) */}
-                  {sheet.audioUrl && !isLocked && (
-                    <div className={`${t.contentBg} border ${t.borderColor} p-4 rounded-xl mt-4`}>
-                      <audio controls className="w-full h-12 outline-none" controlsList="nodownload">
-                        <source src={sheet.audioUrl} type="audio/mpeg" />
-                        Your browser does not support the audio element.
-                      </audio>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
           </div>
 

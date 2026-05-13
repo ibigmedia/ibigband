@@ -50,10 +50,9 @@ export async function GET(request: Request) {
         isPremiumOnly: Boolean(data.isPremiumOnly),
         price: data.price ?? '',
         createdAt: data.createdAt ?? 0,
-        // 잠긴 경우 다운로드 URL을 클라이언트에 노출하지 않습니다.
+        // 프리미엄은 PDF 만 보호하고, audio 는 참조용으로 누구나 들을 수 있게 노출합니다.
         pdfUrl: locked ? '' : (data.pdfUrl || ''),
-        audioUrl: locked ? '' : (data.audioUrl || ''),
-        // UI에서 파일 존재 여부만 표시할 수 있도록 boolean 플래그 동봉
+        audioUrl: data.audioUrl || '',
         hasPdf: Boolean(data.pdfUrl),
         hasAudio: Boolean(data.audioUrl),
       };
