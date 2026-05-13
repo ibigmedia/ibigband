@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings, CreditCard, LogIn, LogOut, Menu, X } from 'lucide-react';
+import { Settings, CreditCard, LogIn, LogOut, Menu, X, User } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 import { PaymentModal } from '@/components/payment/PaymentModal';
 
@@ -60,6 +60,9 @@ export default function Navigation() {
                   <Settings size={20} />
                 </Link>
               )}
+              <Link href="/mypage" className="p-2 hover:bg-[#78716A]/5 rounded-full text-[#78716A]" title="마이페이지">
+                <User size={20} />
+              </Link>
               {(userData?.grade === 'member' || userData?.grade === 'admin' || userData?.role === 'admin') ? null : userData?.isPremium ? (
                 <div className="flex items-center gap-2 bg-[#2D2926] text-[#E6C79C] px-5 py-2 rounded-full text-sm font-bold">
                   <CreditCard size={16} /> 프리미엄 멤버
@@ -120,6 +123,9 @@ export default function Navigation() {
                       <Settings size={22} /> 대시보드 가기
                     </Link>
                   )}
+                  <Link href="/mypage" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 py-3 text-lg font-bold text-[#2D2926]">
+                    <User size={22} /> 마이페이지
+                  </Link>
                   {(userData?.grade === 'member' || userData?.grade === 'admin' || userData?.role === 'admin') ? null : userData?.isPremium ? (
                     <div className="flex items-center justify-center gap-2 bg-[#2D2926] text-[#E6C79C] px-6 py-4 rounded-2xl text-base font-bold w-full">
                       <CreditCard size={18} /> 프리미엄 멤버

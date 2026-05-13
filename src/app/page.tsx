@@ -11,9 +11,11 @@ import SheetModal from '@/components/sheets/SheetModal';
 import { Sheet } from '@/types/sheet';
 import { Video as VideoType } from '@/types/video';
 import VideoModal from '@/components/video/VideoModal';
+import { useAuth } from '@/lib/firebase/auth';
 
 export default function Home() {
   const router = useRouter();
+  const { user } = useAuth();
   const [previewSheet, setPreviewSheet] = useState<Sheet | null>(null);
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [latestSheets, setLatestSheets] = useState<any[]>([]);
@@ -26,21 +28,33 @@ export default function Home() {
   useEffect(() => {
     const fetchLatestContent = async () => {
       try {
-        // 1. Fetch latest 8 premium/free sheets
-        const qSheets = query(collection(db, 'sheets'), orderBy('createdAt', 'desc'), limit(8));
-        const snapSheets = await getDocs(qSheets);
-        
-        setLatestSheets(snapSheets.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            ...data,
-            title: data.title ? data.title.normalize('NFC') : data.title,
-            artist: data.artist ? data.artist.normalize('NFC') : data.artist,
-            // Convert timestamp to string or date object as needed for display
-            releaseDate: data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString()
-          };
-        }));
+        // 1. Fetch latest 8 sheets — /api/sheets/list 가 등급에 맞춰 pdfUrl/audioUrl 을 마스킹합니다.
+        try {
+          const sheetHeaders: Record<string, string> = {};
+          if (user) {
+            try {
+              const idToken = await user.getIdToken();
+              sheetHeaders['Authorization'] = `Bearer ${idToken}`;
+            } catch (tokenErr) {
+              console.warn('홈 sheets: 토큰 발급 실패, 게스트로 요청:', tokenErr);
+            }
+          }
+          const sheetsRes = await fetch('/api/sheets/list?limit=8', {
+            headers: sheetHeaders,
+            cache: 'no-store',
+          });
+          if (sheetsRes.ok) {
+            const body = await sheetsRes.json() as { sheets: Array<Record<string, unknown>> };
+            setLatestSheets((body.sheets || []).map((data) => ({
+              ...data,
+              title: typeof data.title === 'string' ? data.title.normalize('NFC') : data.title,
+              artist: typeof data.artist === 'string' ? data.artist.normalize('NFC') : data.artist,
+              releaseDate: new Date().toISOString(),
+            })));
+          }
+        } catch (e) {
+          console.error('홈 sheets 로드 실패:', e);
+        }
 
         // 2. Fetch latest 4 blogs
         const qBlogs = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'), limit(4));
@@ -77,7 +91,9 @@ export default function Home() {
       }
     };
     fetchLatestContent();
-  }, []);
+    // user 가 바뀌면 sheets 마스킹 상태도 다시 가져옵니다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <div className="flex-1 flex flex-col">

@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Claude / 로컬 도구 메타
+.claude/
+AGENTS.md
+
+# 로컬 디버그/백업 (운영 배포 대상 아님)
+cors.json
+original_*.tsx
+test_*.js

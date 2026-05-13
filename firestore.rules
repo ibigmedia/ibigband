@@ -23,6 +23,10 @@ service cloud.firestore {
       match /archive/{archiveId} {
         allow read, write: if request.auth.uid == userId;
       }
+
+      match /favorites/{sheetId} {
+        allow read, write: if request.auth.uid == userId;
+      }
     }
 
     match /sheets/{sheetId} {
