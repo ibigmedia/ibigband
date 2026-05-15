@@ -5,6 +5,7 @@ import { useAuth } from '@/lib/firebase/auth';
 import { SheetMusic } from '@/lib/firebase/firestore';
 import { Download, AlertCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { useTranslations } from 'next-intl';
 
 interface SheetDownloadModalProps {
   sheet: SheetMusic | null;
@@ -15,6 +16,7 @@ interface SheetDownloadModalProps {
 
 export function SheetDownloadModal({ sheet, isOpen, onClose, onOpenPaymentModal }: SheetDownloadModalProps) {
   const { user, userData } = useAuth();
+  const t = useTranslations('sheetDownload');
 
   if (!isOpen || !sheet) return null;
 
@@ -38,28 +40,28 @@ export function SheetDownloadModal({ sheet, isOpen, onClose, onOpenPaymentModal 
         {isPremiumRequired ? (
           <div className="bg-[#E6C79C]/10 border border-[#E6C79C] p-6 rounded-2xl mb-6 text-center">
             <AlertCircle className="mx-auto text-[#E6C79C] mb-3" size={32} />
-            <p className="text-sm text-[#2D2926] font-bold mb-2">프리미엄 혜택입니다</p>
+            <p className="text-sm text-[#2D2926] font-bold mb-2">{t('premiumTitle')}</p>
             <p className="text-xs text-[#78716A] font-light mb-6 leading-relaxed">
-              이 악보를 다운로드하려면<br/>월간 구독 또는 프리미엄 멤버십이 필요합니다.
+              {t.rich('premiumBody', { br: () => <br /> })}
             </p>
             <Button variant="secondary" className="w-full" onClick={() => {
               onClose();
               onOpenPaymentModal();
             }}>
-              멤버십 자세히 보기
+              {t('viewMembership')}
             </Button>
           </div>
         ) : (
           <div className="text-center">
             <Button variant="primary" className="w-full" onClick={handleDownload}>
-              <Download size={18} className="mr-2"/> 악보 (PDF) 다운로드
+              <Download size={18} className="mr-2"/> {t('downloadPdf')}
             </Button>
           </div>
         )}
 
         {!user && (
           <p className="text-[10px] text-center text-[#78716A] mt-4">
-            * 다운로드 시 로그인이 필요할 수 있습니다.
+            {t('loginNote')}
           </p>
         )}
       </div>

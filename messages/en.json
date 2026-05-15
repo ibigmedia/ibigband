@@ -147,5 +147,37 @@
     "ctaBody": "If you have more questions, or just want to talk with someone, reach out anytime. We'll listen without judgment.",
     "ctaTalk": "Start a conversation",
     "ctaListen": "Listen to music"
+  },
+  "archive": {
+    "title": "Archive",
+    "subtitle": "Browse and search all media and insights at a glance.",
+    "searchPlaceholder": "Search title, content...",
+    "viewList": "List view",
+    "viewGrid": "Grid view",
+    "viewCategory": "Category view",
+    "filterAll": "All types",
+    "filterVideo": "🎵 Video",
+    "filterBlog": "📝 Journal",
+    "filterSheet": "🎼 Sheets/Audio",
+    "tagAll": "All tags",
+    "noResults": "No results found.",
+    "colInfo": "Info",
+    "colType": "Type",
+    "colTags": "Tags",
+    "colLink": "Link",
+    "typeVideo": "Video",
+    "typeBlog": "Journal",
+    "typeSheet": "Sheet",
+    "typeMusic": "Audio",
+    "typeSeeker": "Seeker",
+    "typeOther": "Other",
+    "countItems": "{count}"
+  },
+  "sheetDownload": {
+    "premiumTitle": "This is a Premium benefit",
+    "premiumBody": "To download this sheet,<br></br>a monthly subscription or Premium membership is required.",
+    "viewMembership": "Learn more about membership",
+    "downloadPdf": "Download sheet (PDF)",
+    "loginNote": "* Sign-in may be required to download."
   }
 }

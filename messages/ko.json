@@ -147,5 +147,37 @@
     "ctaBody": "질문이 더 있거나, 누군가와 직접 이야기하고 싶다면 편하게 연락하세요. 판단 없이 듣겠습니다.",
     "ctaTalk": "이야기 나누기",
     "ctaListen": "음악 듣기"
+  },
+  "archive": {
+    "title": "저장소 (Archive)",
+    "subtitle": "모든 미디어와 인사이트를 한눈에 파악하고 검색하세요.",
+    "searchPlaceholder": "제목, 내용 검색...",
+    "viewList": "리스트 뷰",
+    "viewGrid": "그리드 뷰",
+    "viewCategory": "카테고리 뷰",
+    "filterAll": "모든 형태",
+    "filterVideo": "🎵 영상",
+    "filterBlog": "📝 저널",
+    "filterSheet": "🎼 악보/음원",
+    "tagAll": "태그 전체",
+    "noResults": "검색 결과가 없습니다.",
+    "colInfo": "정보",
+    "colType": "형식",
+    "colTags": "태그",
+    "colLink": "링크",
+    "typeVideo": "영상",
+    "typeBlog": "저널",
+    "typeSheet": "악보",
+    "typeMusic": "음원",
+    "typeSeeker": "구도자",
+    "typeOther": "기타",
+    "countItems": "{count}개"
+  },
+  "sheetDownload": {
+    "premiumTitle": "프리미엄 혜택입니다",
+    "premiumBody": "이 악보를 다운로드하려면<br></br>월간 구독 또는 프리미엄 멤버십이 필요합니다.",
+    "viewMembership": "멤버십 자세히 보기",
+    "downloadPdf": "악보 (PDF) 다운로드",
+    "loginNote": "* 다운로드 시 로그인이 필요할 수 있습니다."
   }
 }
