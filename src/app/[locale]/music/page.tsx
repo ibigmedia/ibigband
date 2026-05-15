@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 import { MusicAlbum } from '@/types/music';
 import { useMusicStore } from '@/store/useMusicStore';
+import { useTranslations } from 'next-intl';
 
 const MOCK_ALBUMS: MusicAlbum[] = [
   {
@@ -116,6 +117,7 @@ const MOCK_ALBUMS: MusicAlbum[] = [
 type ViewTab = 'overview' | 'Album' | 'EP' | 'Single' | 'global';
 
 export default function MusicPage() {
+  const t = useTranslations('music');
   const { albums, selectedAlbum, openAlbumModal } = useMusicStore();
 
   const [activeTab, setActiveTab] = useState<ViewTab>('overview');
@@ -173,7 +175,7 @@ export default function MusicPage() {
            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-slate-800 shadow-sm">
               {album.type}
            </span>
-           {album.tracks.some(t => t.versions.length > 1) && (
+           {album.tracks.some(tr => tr.versions.length > 1) && (
               <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest bg-[#C48C5E]/90 backdrop-blur-md px-2.5 py-1 rounded-full text-white shadow-sm flex items-center gap-1">
                  <Globe2 className="w-3 h-3" /> Global
               </span>
@@ -202,7 +204,7 @@ export default function MusicPage() {
         }}
         className="mt-auto self-start bg-transparent hover:bg-[#2D2926]/5 border border-[#78716A]/15 text-[#78716A] text-[11px] font-medium uppercase px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
       >
-        음반 듣기 <ArrowRight className="w-3 h-3" />
+        {t('listenAlbum')} <ArrowRight className="w-3 h-3" />
       </button>
     </div>
   );
@@ -220,17 +222,17 @@ export default function MusicPage() {
               Music<span className="text-[#C48C5E]">.</span>
             </h1>
             <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">
-               아이빅밴드가 전하는 따뜻하고 서정적인 메시지. 찾고 계시는 음반 종류나 글로벌 버전의 찬양을 쉽고 편하게 감상할 수 있습니다.
+               {t('subtitle')}
             </p>
           </div>
 
           <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 snap-x border-b border-slate-200">
             {([
-               { id: 'overview', label: 'Overview' },
-               { id: 'Album', label: '정규 앨범' },
-               { id: 'EP', label: 'EP' },
-               { id: 'Single', label: '싱글' },
-               { id: 'global', label: '글로벌 찬양 (EN/ES)' },
+               { id: 'overview', label: t('tabOverview') },
+               { id: 'Album', label: t('tabAlbum') },
+               { id: 'EP', label: t('tabEP') },
+               { id: 'Single', label: t('tabSingle') },
+               { id: 'global', label: t('tabGlobal') },
             ] as const).map(tab => (
               <button 
                 key={tab.id}
@@ -256,9 +258,9 @@ export default function MusicPage() {
              {albums.some(a => a.type === 'Album') && (
                 <section>
                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">정규 앨범 <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">Albums</span></h2>
+                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">{t('sectionAlbums')} {t('descAlbums') && <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">{t('descAlbums')}</span>}</h2>
                       <button onClick={() => setActiveTab('Album')} className="text-[#C48C5E] text-sm font-bold flex items-center hover:underline">
-                         더보기 <ChevronRight className="w-4 h-4 ml-1" />
+                         {t('more')} <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
                    <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
@@ -271,9 +273,9 @@ export default function MusicPage() {
              {albums.some(a => a.type === 'EP') && (
                 <section>
                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">EP <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">Extended Plays</span></h2>
+                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">EP {t('descEP') && <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">{t('descEP')}</span>}</h2>
                       <button onClick={() => setActiveTab('EP')} className="text-[#C48C5E] text-sm font-bold flex items-center hover:underline">
-                         더보기 <ChevronRight className="w-4 h-4 ml-1" />
+                         {t('more')} <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
                    <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
@@ -286,9 +288,9 @@ export default function MusicPage() {
              {albums.some(a => a.type === 'Single') && (
                 <section>
                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">싱글 <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">Singles</span></h2>
+                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">{t('sectionSingles')} {t('descSingles') && <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">{t('descSingles')}</span>}</h2>
                       <button onClick={() => setActiveTab('Single')} className="text-[#C48C5E] text-sm font-bold flex items-center hover:underline">
-                         더보기 <ChevronRight className="w-4 h-4 ml-1" />
+                         {t('more')} <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
                    <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4 md:gap-6">
@@ -307,7 +309,7 @@ export default function MusicPage() {
              {albums.filter(a => a.type === activeTab).length === 0 && (
                 <div className="col-span-full py-20 text-center text-slate-400">
                    <Music className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                   <p>현재 등록된 {activeTab} 음반이 없습니다.</p>
+                   <p>{t('emptyType', { type: activeTab })}</p>
                 </div>
              )}
           </div>
@@ -329,7 +331,7 @@ export default function MusicPage() {
                         : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
                      }`}
                    >
-                     {lang === 'All' ? '모든 글로벌 곡' : lang === 'en' ? 'English (영어)' : 'Español (스페인어)'}
+                     {lang === 'All' ? t('globalAll') : lang === 'en' ? t('globalEn') : t('globalEs')}
                    </button>
                 ))}
              </div>
@@ -343,7 +345,7 @@ export default function MusicPage() {
                 {getGlobalAlbums().length === 0 && (
                    <div className="col-span-full py-20 text-center text-slate-400">
                       <Globe2 className="w-12 h-12 mx-auto mb-3 opacity-20" />
-                      <p>해당 언어 버전이 포함된 곡이 없습니다.</p>
+                      <p>{t('emptyGlobal')}</p>
                    </div>
                 )}
              </div>

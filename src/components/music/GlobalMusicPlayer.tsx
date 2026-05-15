@@ -6,6 +6,7 @@ import { Play, Pause, X, Globe2, ChevronRight, Users, Mic2, Disc, Languages, Ski
 import { useMusicStore } from '@/store/useMusicStore';
 import { Track, MusicAlbum } from '@/types/music';
 import { getCollectionDocs } from '@/lib/firebase/firestore';
+import { useTranslations } from 'next-intl';
 
 const langNames = {
   ko: '한국어',
@@ -19,6 +20,7 @@ function activeLanguage(track: Track, lang: 'ko' | 'en' | 'es'): 'ko' | 'en' | '
 }
 
 export default function GlobalMusicPlayer() {
+  const t = useTranslations('music');
   const [showLyricsMobile, setShowLyricsMobile] = useState(false);
   const {
     albums,
@@ -119,10 +121,10 @@ export default function GlobalMusicPlayer() {
     ));
   };
 
-  const activeTrackAlbum = activeTrack ? albums.find(a => a.tracks.some(t => t.id === activeTrack.id)) : null;
+  const activeTrackAlbum = activeTrack ? albums.find(a => a.tracks.some(tk => tk.id === activeTrack.id)) : null;
 
   const albumIndex = activeTrackAlbum ? albums.findIndex(a => a.id === activeTrackAlbum.id) : -1;
-  const trackIndex = (activeTrackAlbum && activeTrack) ? activeTrackAlbum.tracks.findIndex(t => t.id === activeTrack.id) : -1;
+  const trackIndex = (activeTrackAlbum && activeTrack) ? activeTrackAlbum.tracks.findIndex(tk => tk.id === activeTrack.id) : -1;
   const hasPrevTrack = albumIndex !== -1 && trackIndex !== -1 && (trackIndex > 0 || albumIndex > 0);
   const hasNextTrack = albumIndex !== -1 && trackIndex !== -1 && activeTrackAlbum && (trackIndex < (activeTrackAlbum.tracks.length - 1) || albumIndex < (albums.length - 1));
 
@@ -131,7 +133,7 @@ export default function GlobalMusicPlayer() {
     const albumIndex = albums.findIndex(a => a.id === activeTrackAlbum.id);
     if (albumIndex === -1) return;
     
-    const trackIndex = activeTrackAlbum.tracks.findIndex(t => t.id === activeTrack?.id);
+    const trackIndex = activeTrackAlbum.tracks.findIndex(tk => tk.id === activeTrack?.id);
     
     // Next track in same album
     if (trackIndex < activeTrackAlbum.tracks.length - 1) {
@@ -151,7 +153,7 @@ export default function GlobalMusicPlayer() {
     const albumIndex = albums.findIndex(a => a.id === activeTrackAlbum.id);
     if (albumIndex === -1) return;
     
-    const trackIndex = activeTrackAlbum.tracks.findIndex(t => t.id === activeTrack?.id);
+    const trackIndex = activeTrackAlbum.tracks.findIndex(tk => tk.id === activeTrack?.id);
     
     // Prev track in same album
     if (trackIndex > 0) {
@@ -334,7 +336,7 @@ export default function GlobalMusicPlayer() {
                            onClick={() => setShowLyricsMobile(true)}
                            className="w-full py-4 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-2xl flex items-center justify-center gap-2 transition-colors border border-slate-200 shadow-sm"
                          >
-                            <FileText className="w-5 h-5 text-[#C48C5E]"/> 가사 보기 (Lyrics)
+                            <FileText className="w-5 h-5 text-[#C48C5E]"/> {t('playerViewLyrics')}
                          </button>
                       </div>
 
@@ -354,7 +356,7 @@ export default function GlobalMusicPlayer() {
                              <span className="text-[#C48C5E] font-bold tracking-widest text-xs uppercase">Now Playing</span>
                              <span className="hidden lg:flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100/80 px-2.5 py-1 rounded-md border border-slate-200/60">
                                 <kbd className="font-sans font-bold border border-slate-200 rounded shadow-[0_1px_0_rgba(0,0,0,0.1)] px-1.5 pb-[2px] bg-white text-slate-600 leading-none">Space</kbd>
-                                스페이스바로 재생
+                                {t('playerSpacebar')}
                              </span>
                           </div>
                          <h2 className="text-slate-900 text-3xl md:text-4xl lg:text-4xl leading-tight font-handwriting flex items-center lg:items-baseline flex-wrap gap-x-3 gap-y-1">
@@ -433,7 +435,7 @@ export default function GlobalMusicPlayer() {
                  >
                     <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white/80 backdrop-blur-md rounded-t-[32px]">
                        <div>
-                          <p className="text-[10px] font-bold text-[#C48C5E] tracking-widest uppercase mb-0.5">가사 (Lyrics)</p>
+                          <p className="text-[10px] font-bold text-[#C48C5E] tracking-widest uppercase mb-0.5">{t('playerLyricsLabel')}</p>
                           <h3 className="text-2xl font-handwriting text-slate-900 leading-none">{currentVersion.title.normalize('NFC')}</h3>
                        </div>
                        <button onClick={() => setShowLyricsMobile(false)} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
@@ -468,7 +470,7 @@ export default function GlobalMusicPlayer() {
                           <div className="flex items-baseline gap-2 shrink-0">
                             <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title?.normalize('NFC') || currentVersion.title}</h4>
                             <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold hidden md:inline-block">
-                               {activeTrackAlbum.type === 'Album' ? '앨범 보기 〉' : `${activeTrackAlbum.type} 보기 〉`}
+                               {activeTrackAlbum.type === 'Album' ? t('playerViewAlbum') : t('playerViewType', { type: activeTrackAlbum.type })}
                             </span>
                           </div>
                           {activeTrackAlbum.description && (
@@ -479,10 +481,10 @@ export default function GlobalMusicPlayer() {
                           {(activeTrack.credits?.composer || activeTrack.credits?.arranger || activeTrack.credits?.producer || currentVersion.vocal) && (
                              <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
                                 {[
-                                  activeTrack.credits?.composer ? `작곡: ${activeTrack.credits?.composer}` : null,
-                                  activeTrack.credits?.arranger ? `편곡: ${activeTrack.credits?.arranger}` : null,
-                                  activeTrack.credits?.producer ? `프로듀서: ${activeTrack.credits?.producer}` : null,
-                                  currentVersion.vocal ? `보컬: ${currentVersion.vocal}` : null
+                                  activeTrack.credits?.composer ? `${t('creditComposer')}: ${activeTrack.credits?.composer}` : null,
+                                  activeTrack.credits?.arranger ? `${t('creditArranger')}: ${activeTrack.credits?.arranger}` : null,
+                                  activeTrack.credits?.producer ? `${t('creditProducer')}: ${activeTrack.credits?.producer}` : null,
+                                  currentVersion.vocal ? `${t('creditVocal')}: ${currentVersion.vocal}` : null
                                 ].filter(Boolean).join(' • ')?.normalize('NFC') || ''}
                              </span>
                           )}
