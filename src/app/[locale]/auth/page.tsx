@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Link } from '@/i18n/navigation';
-import { useRouter } from 'next/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { Mail, Lock, User, FileText, Eye, EyeOff, CheckCircle, ArrowLeft, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 
 export default function AuthPage() {
   const router = useRouter();
+  const t = useTranslations('auth');
   const { user, signInWithGoogle, signInWithEmail, signUpWithEmail } = useAuth();
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [showPassword, setShowPassword] = useState(false);
@@ -44,10 +45,10 @@ export default function AuthPage() {
     e.preventDefault();
     setError('');
 
-    if (!name.trim()) { setError('이름을 입력해주세요.'); return; }
-    if (!email.trim()) { setError('이메일을 입력해주세요.'); return; }
-    if (password.length < 6) { setError('비밀번호는 6자 이상이어야 합니다.'); return; }
-    if (!bio.trim()) { setError('자기소개를 입력해주세요.'); return; }
+    if (!name.trim()) { setError(t('errNameRequired')); return; }
+    if (!email.trim()) { setError(t('errEmailRequired')); return; }
+    if (password.length < 6) { setError(t('errPasswordLength')); return; }
+    if (!bio.trim()) { setError(t('errBioRequired')); return; }
 
     setLoading(true);
     const result = await signUpWithEmail(email, password, name.trim(), bio.trim());
@@ -74,24 +75,24 @@ export default function AuthPage() {
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle size={32} className="text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-[#2D2926] mb-3">회원가입 완료!</h1>
+          <h1 className="text-2xl font-bold text-[#2D2926] mb-3">{t('successTitle')}</h1>
           <p className="text-[#78716A] mb-2">
-            <strong className="text-[#2D2926]">{email}</strong>로 인증 메일을 발송했습니다.
+            {t.rich('successEmailSent', { b: (chunks) => <strong className="text-[#2D2926]">{chunks}</strong>, email })}
           </p>
           <p className="text-[#78716A] text-sm mb-8">
-            이메일 인증 완료 후, 관리자 승인이 이루어지면 로그인할 수 있습니다.
+            {t('successApproval')}
           </p>
           <div className="bg-[#E6C79C]/10 border border-[#E6C79C]/30 rounded-xl p-4 text-sm text-[#78716A] mb-8">
-            <p className="font-bold text-[#2D2926] mb-1">가입 절차</p>
+            <p className="font-bold text-[#2D2926] mb-1">{t('stepsTitle')}</p>
             <ol className="text-left space-y-1.5 list-decimal list-inside">
-              <li>이메일 인증 링크 클릭 <span className="text-[#E6C79C] font-bold">← 지금</span></li>
-              <li>관리자 승인 대기</li>
-              <li>승인 완료 후 로그인</li>
+              <li>{t('step1')} <span className="text-[#E6C79C] font-bold">{t('stepNow')}</span></li>
+              <li>{t('step2')}</li>
+              <li>{t('step3')}</li>
             </ol>
           </div>
           <button onClick={() => { setSignupSuccess(false); setMode('login'); }}
             className="text-[#2D2926] font-bold hover:underline">
-            로그인 페이지로 돌아가기
+            {t('backToLogin')}
           </button>
         </div>
       </div>
@@ -115,10 +116,10 @@ export default function AuthPage() {
             <span className="text-3xl font-handwriting font-bold tracking-tight">ibiGband</span>
           </Link>
           <h1 className="text-2xl font-bold text-[#2D2926]">
-            {mode === 'login' ? '로그인' : '회원가입'}
+            {mode === 'login' ? t('titleLogin') : t('titleSignup')}
           </h1>
           <p className="text-[#78716A] text-sm mt-1">
-            {mode === 'login' ? '계정에 로그인하세요' : '새 계정을 만들어 시작하세요'}
+            {mode === 'login' ? t('subtitleLogin') : t('subtitleSignup')}
           </p>
         </div>
 
@@ -131,13 +132,13 @@ export default function AuthPage() {
             <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-          Google 계정으로 {mode === 'login' ? '로그인' : '시작하기'}
+          {mode === 'login' ? t('googleLogin') : t('googleSignup')}
         </button>
 
         {/* 구분선 */}
         <div className="flex items-center gap-4 my-6">
           <div className="flex-1 h-px bg-[#78716A]/20" />
-          <span className="text-xs text-[#78716A] font-medium">또는 이메일로</span>
+          <span className="text-xs text-[#78716A] font-medium">{t('orEmail')}</span>
           <div className="flex-1 h-px bg-[#78716A]/20" />
         </div>
 
@@ -145,18 +146,18 @@ export default function AuthPage() {
         <form onSubmit={mode === 'login' ? handleEmailLogin : handleEmailSignup} className="space-y-4">
           {mode === 'signup' && (
             <div>
-              <label className="text-sm font-bold text-[#2D2926] block mb-1.5">이름 *</label>
+              <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelName')}</label>
               <div className="relative">
                 <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" />
                 <input type="text" value={name} onChange={e => setName(e.target.value)}
-                  placeholder="홍길동"
+                  placeholder={t('placeholderName')}
                   className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors" />
               </div>
             </div>
           )}
 
           <div>
-            <label className="text-sm font-bold text-[#2D2926] block mb-1.5">이메일 *</label>
+            <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelEmail')}</label>
             <div className="relative">
               <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" />
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}
@@ -166,11 +167,11 @@ export default function AuthPage() {
           </div>
 
           <div>
-            <label className="text-sm font-bold text-[#2D2926] block mb-1.5">비밀번호 *</label>
+            <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelPassword')}</label>
             <div className="relative">
               <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" />
               <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
-                placeholder={mode === 'signup' ? '6자 이상' : '비밀번호 입력'}
+                placeholder={mode === 'signup' ? t('placeholderPasswordSignup') : t('placeholderPasswordLogin')}
                 className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-11 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors" />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-[#78716A] hover:text-[#2D2926]">
@@ -181,11 +182,11 @@ export default function AuthPage() {
 
           {mode === 'signup' && (
             <div>
-              <label className="text-sm font-bold text-[#2D2926] block mb-1.5">자기소개 *</label>
+              <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelBio')}</label>
               <div className="relative">
                 <FileText size={16} className="absolute left-3.5 top-3.5 text-[#78716A]" />
                 <textarea value={bio} onChange={e => setBio(e.target.value)}
-                  placeholder="본인 소개, 교회/팀명, 파트 등을 간단히 적어주세요"
+                  placeholder={t('placeholderBio')}
                   rows={3}
                   className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors resize-none" />
               </div>
@@ -200,9 +201,9 @@ export default function AuthPage() {
 
           {mode === 'signup' && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
-              <p className="font-bold mb-1">회원가입 안내</p>
+              <p className="font-bold mb-1">{t('noticeTitle')}</p>
               <p className="text-xs leading-relaxed">
-                회원가입 신청 후 <strong>이메일 인증</strong>과 <strong>관리자 승인</strong>이 완료되어야 로그인이 가능합니다. 승인까지 다소 시간이 소요될 수 있으니 양지하여 주시기 바랍니다.
+                {t.rich('noticeBody', { b: (chunks) => <strong>{chunks}</strong> })}
               </p>
             </div>
           )}
@@ -210,7 +211,7 @@ export default function AuthPage() {
           <button type="submit" disabled={loading}
             className="w-full bg-[#2D2926] text-white py-3.5 rounded-xl font-bold text-sm hover:bg-[#78716A] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
             {loading && <Loader2 size={16} className="animate-spin" />}
-            {mode === 'login' ? '로그인' : '회원가입'}
+            {mode === 'login' ? t('titleLogin') : t('titleSignup')}
           </button>
         </form>
 
@@ -218,16 +219,16 @@ export default function AuthPage() {
         <div className="text-center mt-6 text-sm text-[#78716A]">
           {mode === 'login' ? (
             <>
-              계정이 없으신가요?{' '}
+              {t('switchToSignupQ')}{' '}
               <button onClick={() => { setMode('signup'); setError(''); }} className="font-bold text-[#2D2926] hover:underline">
-                회원가입
+                {t('titleSignup')}
               </button>
             </>
           ) : (
             <>
-              이미 계정이 있으신가요?{' '}
+              {t('switchToLoginQ')}{' '}
               <button onClick={() => { setMode('login'); setError(''); }} className="font-bold text-[#2D2926] hover:underline">
-                로그인
+                {t('titleLogin')}
               </button>
             </>
           )}
@@ -235,7 +236,7 @@ export default function AuthPage() {
 
         <div className="text-center mt-8">
           <Link href="/" className="text-xs text-[#78716A] hover:text-[#2D2926] flex items-center justify-center gap-1">
-            <ArrowLeft size={12} /> 메인으로 돌아가기
+            <ArrowLeft size={12} /> {t('backToMain')}
           </Link>
         </div>
       </div>
