@@ -266,6 +266,27 @@
     "favAriaRemove": "Remove from favorites",
     "favAriaAdd": "Add to favorites"
   },
+  "payment": {
+    "loginRequired": "Sign-in is required to proceed with payment.",
+    "googleLogin1s": "Sign in with Google (1 sec)",
+    "errOrderId": "Failed to issue an order number.",
+    "errCreateOrder": "A server error occurred while creating the payment request.",
+    "successMembership": "Payment verified successfully! Enjoy all premium content now 🎉",
+    "successSheet": "Payment complete! PDF download is available for 30 days.",
+    "errApprove": "An error occurred during approval verification. Please contact support.",
+    "errWidget": "There was a problem loading the payment widget.",
+    "billed": "Amount billed: ${amount} USD",
+    "modalTitle": "Premium Membership",
+    "modalSubtitle": "Get unlimited access to all high-quality sheets and practice tracks.",
+    "planName": "Monthly subscription",
+    "benefit1": "Unlimited PDF sheet downloads",
+    "benefit2": "Original MR track downloads",
+    "benefit3": "Set list calendar sync",
+    "benefit4": "Unlimited AI recommendations & tagging",
+    "successTitle": "Payment & upgrade complete!",
+    "successBody": "You can now enjoy all premium benefits.<br></br> Share worship together with ibiGband.",
+    "confirm": "OK"
+  },
   "auth": {
     "errNameRequired": "Please enter your name.",
     "errEmailRequired": "Please enter your email.",

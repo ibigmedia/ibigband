@@ -3,7 +3,8 @@
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import { useState } from 'react';
 import { useAuth } from '@/lib/firebase/auth';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import type { PaymentPurpose } from '@/lib/pricing';
 
 interface Props {
@@ -17,18 +18,19 @@ export default function PayPalButton({ amount, purpose = 'membership', sheetId, 
   const { user, signInWithGoogle } = useAuth();
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const t = useTranslations('payment');
 
   if (!user) {
     return (
       <div className="p-4 text-center bg-gray-50 dark:bg-zinc-800 rounded-xl">
         <p className="text-zinc-500 dark:text-zinc-400 text-sm mb-4">
-          결제를 진행하시려면 로그인이 필수입니다.
+          {t('loginRequired')}
         </p>
         <button
           onClick={signInWithGoogle}
           className="bg-zinc-900 dark:bg-white text-white dark:text-black font-semibold px-4 py-2 rounded-lg"
         >
-          Google 계정으로 로그인 (1초)
+          {t('googleLogin1s')}
         </button>
       </div>
     );
@@ -44,10 +46,10 @@ export default function PayPalButton({ amount, purpose = 'membership', sheetId, 
       const orderData = await response.json();
 
       if (orderData.id) return orderData.id;
-      throw new Error(orderData.error || '주문서 번호를 발급받지 못했습니다.');
+      throw new Error(orderData.error || t('errOrderId'));
     } catch (err) {
       console.error(err);
-      setError('결제 요청 생성 중 서버 에러가 발생했습니다.');
+      setError(t('errCreateOrder'));
       return '';
     }
   };
@@ -72,15 +74,15 @@ export default function PayPalButton({ amount, purpose = 'membership', sheetId, 
       }
 
       if (purpose === 'membership') {
-        alert('결제가 성공적으로 검증되었습니다! 이제 모든 프리미엄 콘텐츠를 마음껏 즐기세요 🎉');
+        alert(t('successMembership'));
       } else {
-        alert('결제가 완료되었습니다! 30일간 PDF 다운로드가 가능합니다.');
+        alert(t('successSheet'));
       }
       onSuccess?.({ expiresAt: captureData?.expiresAt });
       router.refresh();
     } catch (err) {
       console.error(err);
-      setError('승인 확인 과정에서 예외 에러가 일어났습니다. 고객센터 문의 요망.');
+      setError(t('errApprove'));
     }
   };
 
@@ -103,14 +105,14 @@ export default function PayPalButton({ amount, purpose = 'membership', sheetId, 
           onApprove={onApprove}
           onError={(err) => {
             console.error('PayPal 스크립트 내부 에러', err);
-            setError('결제 위젯을 가져오는 중 문제가 일어났습니다.');
+            setError(t('errWidget'));
           }}
         />
       </PayPalScriptProvider>
 
       {amount && (
         <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-400">
-          청구 금액: ${amount} USD
+          {t('billed', { amount })}
         </p>
       )}
     </div>

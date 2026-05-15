@@ -266,6 +266,27 @@
     "favAriaRemove": "즐겨찾기 해제",
     "favAriaAdd": "즐겨찾기 추가"
   },
+  "payment": {
+    "loginRequired": "결제를 진행하시려면 로그인이 필수입니다.",
+    "googleLogin1s": "Google 계정으로 로그인 (1초)",
+    "errOrderId": "주문서 번호를 발급받지 못했습니다.",
+    "errCreateOrder": "결제 요청 생성 중 서버 에러가 발생했습니다.",
+    "successMembership": "결제가 성공적으로 검증되었습니다! 이제 모든 프리미엄 콘텐츠를 마음껏 즐기세요 🎉",
+    "successSheet": "결제가 완료되었습니다! 30일간 PDF 다운로드가 가능합니다.",
+    "errApprove": "승인 확인 과정에서 예외 에러가 일어났습니다. 고객센터 문의 요망.",
+    "errWidget": "결제 위젯을 가져오는 중 문제가 일어났습니다.",
+    "billed": "청구 금액: ${amount} USD",
+    "modalTitle": "프리미엄 멤버십",
+    "modalSubtitle": "모든 고화질 악보와 연습용 음원을 무제한으로 열람하세요.",
+    "planName": "월간 정기구독",
+    "benefit1": "PDF 악보 무제한 다운",
+    "benefit2": "오리지널 MR 다운",
+    "benefit3": "셋리스트 캘린더 연동",
+    "benefit4": "무제한 AI 추천, 태깅",
+    "successTitle": "결제 및 권한 승격 완료!",
+    "successBody": "이제 모든 프리미엄 혜택을 이용하실 수 있습니다.<br></br> ibiGband와 함께 찬양을 나누세요.",
+    "confirm": "확인"
+  },
   "auth": {
     "errNameRequired": "이름을 입력해주세요.",
     "errEmailRequired": "이메일을 입력해주세요.",
