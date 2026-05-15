@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { Music, PlayCircle, FileText, Download, X, Lock, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useMusicStore } from '@/store/useMusicStore';
@@ -21,6 +22,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
   const isLight = theme === 'light';
   const router = useRouter();
   const { user, userData } = useAuth();
+  const tx = useTranslations('sheets');
 
   // 프리미엄 접근 가능 조건: 로그인 + (프리미엄 결제 || 밴드멤버 이상 || 관리자)
   const canAccessPremium = Boolean(
@@ -77,19 +79,19 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
       if (!res.ok) {
         if (res.status === 403) {
           alert(body?.reason === 'login'
-            ? '로그인이 필요한 프리미엄 악보입니다.'
-            : '프리미엄 멤버십이 필요한 악보입니다.');
+            ? tx('alertNeedLogin')
+            : tx('alertNeedPremium'));
         } else if (res.status === 404) {
-          alert(body?.error || '파일이 등록되어 있지 않습니다.');
+          alert(body?.error || tx('alertNoFile'));
         } else {
-          alert(body?.error || '다운로드 링크를 가져오지 못했습니다.');
+          alert(body?.error || tx('alertDownloadLinkFailed'));
         }
         return;
       }
       if (body?.url) window.open(body.url, '_blank');
     } catch (e) {
       console.error('다운로드 요청 실패:', e);
-      alert('다운로드 요청에 실패했습니다. 잠시 후 다시 시도해주세요.');
+      alert(tx('alertDownloadFailed'));
     }
   };
 
@@ -98,7 +100,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
       const album = await getDocById<MusicAlbum>('albums', albumId);
       if (album) {
         useMusicStore.getState().openAlbumModal(album, 'ko');
-        const track = album.tracks?.find(t => t.id === trackId) || album.tracks?.[0];
+        const track = album.tracks?.find(tk => tk.id === trackId) || album.tracks?.[0];
         if (track) {
           useMusicStore.getState().setActiveTrack(track);
           useMusicStore.getState().setIsPlaying(true);
@@ -106,7 +108,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
       }
     } catch (e) {
       console.error(e);
-      alert('음원을 불러오는데 실패했습니다.');
+      alert(tx('loadMusicFailed'));
     }
   };
 
@@ -120,7 +122,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
         {/* Modal Header */}
         <div className={`flex justify-between items-center p-4 md:p-6 border-b ${t.modalHeaderBorder} shrink-0`}>
           <div>
-            <span className="text-[10px] font-bold tracking-widest text-[#E6C79C] uppercase mb-1 block">상세 보기</span>
+            <span className="text-[10px] font-bold tracking-widest text-[#E6C79C] uppercase mb-1 block">{tx('detailBadge')}</span>
             <div className="flex items-center gap-3">
               <h2 className={`text-3xl md:text-4xl ${t.textMain} line-clamp-1 tracking-normal font-handwriting`}>{sheet.title}</h2>
               <FavoriteButton sheet={sheet} size={22} />
@@ -197,7 +199,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
 
                 {/* 모바일 전용 스크롤 힌트 */}
                 <div className={`lg:hidden flex items-center justify-center gap-1.5 text-xs font-bold py-1 ${isLight ? 'text-[#C9A675]' : 'text-brand-gold/90'}`}>
-                  <ChevronDown className="w-4 h-4 animate-bounce" /> 아래로 스크롤해 상세 보기
+                  <ChevronDown className="w-4 h-4 animate-bounce" /> {tx('scrollHint')}
                 </div>
 
                 {/* YouTube Preview */}
@@ -205,7 +207,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                   <div className={`bg-black border ${t.borderColor} rounded-2xl overflow-hidden shadow-lg`}>
                     <div className={`px-4 py-2.5 ${isLight ? 'bg-[#2D2926]' : 'bg-[#1A1A1A]'} border-b ${t.borderColor} flex items-center gap-2`}>
                       <PlayCircle className="w-4 h-4 text-red-500" />
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">영상 미리보기</span>
+                      <span className="text-xs font-bold text-white uppercase tracking-wider">{tx('videoPreview')}</span>
                     </div>
                     <div className="aspect-video w-full relative">
                       <iframe
@@ -233,21 +235,21 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                       <Lock className="w-5 h-5 text-brand-gold" />
                     </div>
                     <div className="flex-1">
-                      <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>프리미엄 전용 악보입니다</h4>
+                      <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>{tx('premiumOnlyTitle')}</h4>
                       <p className={`text-sm ${t.textMuted} mb-4 leading-relaxed`}>
-                        {lockReason === 'login' ? (
-                          <>
-                            로그인하시면 <strong className={t.textMain}>프리뷰 전체</strong>를 선명하게 보실 수 있고,{' '}
-                            <strong className="text-brand-gold">{unlockPrice}</strong>로 이 악보 PDF를 {SHEET_UNLOCK_VALID_DAYS}일간 다운로드하실 수 있습니다.
-                            음원은 참조용으로 자유롭게 들으실 수 있어요.
-                          </>
-                        ) : (
-                          <>
-                            프리뷰는 자유롭게 보실 수 있습니다. PDF는{' '}
-                            <strong className="text-brand-gold">{unlockPrice}</strong>로 잠금 해제({SHEET_UNLOCK_VALID_DAYS}일 다운로드 가능)하거나,{' '}
-                            월 ${PREMIUM_MONTHLY_PRICE_USD} 멤버십으로 무제한 이용할 수 있어요.
-                          </>
-                        )}
+                        {lockReason === 'login'
+                          ? tx.rich('lockLoginText', {
+                              b: (chunks) => <strong className={t.textMain}>{chunks}</strong>,
+                              gold: (chunks) => <strong className="text-brand-gold">{chunks}</strong>,
+                              price: unlockPrice,
+                              days: SHEET_UNLOCK_VALID_DAYS,
+                            })
+                          : tx.rich('lockUpgradeText', {
+                              gold: (chunks) => <strong className="text-brand-gold">{chunks}</strong>,
+                              price: unlockPrice,
+                              days: SHEET_UNLOCK_VALID_DAYS,
+                              monthly: PREMIUM_MONTHLY_PRICE_USD,
+                            })}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {lockReason === 'login' ? (
@@ -256,13 +258,13 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                               onClick={() => { onClose(); router.push('/auth'); }}
                               className="bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-5 py-2 font-bold"
                             >
-                              로그인
+                              {tx('login')}
                             </Button>
                             <Button
                               onClick={() => { onClose(); router.push('/premium'); }}
                               className="bg-transparent border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 rounded-xl px-5 py-2 font-bold"
                             >
-                              멤버십 알아보기
+                              {tx('learnMembership')}
                             </Button>
                           </>
                         ) : (
@@ -271,13 +273,13 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                               onClick={() => setIsPurchaseOpen(true)}
                               className="bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-5 py-2 font-bold"
                             >
-                              {unlockPrice}로 잠금 해제
+                              {tx('unlockWithPrice', { price: unlockPrice })}
                             </Button>
                             <Button
                               onClick={() => { onClose(); router.push('/premium'); }}
                               className="bg-transparent border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 rounded-xl px-5 py-2 font-bold"
                             >
-                              월 ${PREMIUM_MONTHLY_PRICE_USD} 멤버십
+                              {tx('monthlyMembership', { monthly: PREMIUM_MONTHLY_PRICE_USD })}
                             </Button>
                           </>
                         )}
@@ -289,10 +291,10 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
 
               {/* 기본 정보 */}
               <div className={`${t.boxBg} p-5 md:p-6 rounded-2xl border ${t.borderColor} ${isLight ? 'shadow-sm' : ''}`}>
-                <h3 className={`text-xs font-bold ${t.textMuted} uppercase tracking-wider mb-3 border-b ${t.borderColor} pb-2`}>기본 정보</h3>
+                <h3 className={`text-xs font-bold ${t.textMuted} uppercase tracking-wider mb-3 border-b ${t.borderColor} pb-2`}>{tx('basicInfo')}</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className={`${t.textSubMuted} text-sm`}>아티스트/편곡자</span>
+                    <span className={`${t.textSubMuted} text-sm`}>{tx('artistArranger')}</span>
                     <span className={`${t.textMain} font-medium text-sm`}>{sheet.artistId || '-'}</span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -304,8 +306,8 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                     <span className={`${t.textMain} font-medium text-sm`}>{sheet.key || '-'}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className={`${t.textSubMuted} text-sm`}>가격</span>
-                    <span className="text-brand-gold font-black tracking-wider">{sheet.price === '0' || !sheet.price ? '무료' : `$${sheet.price}`}</span>
+                    <span className={`${t.textSubMuted} text-sm`}>{tx('priceLabel')}</span>
+                    <span className="text-brand-gold font-black tracking-wider">{sheet.price === '0' || !sheet.price ? tx('free') : `$${sheet.price}`}</span>
                   </div>
                 </div>
 
@@ -324,8 +326,8 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                   <FileText className="w-7 h-7 text-green-500"/>
                 </div>
                 <div className="flex-1">
-                  <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>PDF 악보</h4>
-                  <p className={`text-xs ${t.textMuted}`}>인쇄 가능한 고화질 악보 파일</p>
+                  <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>{tx('pdfSheet')}</h4>
+                  <p className={`text-xs ${t.textMuted}`}>{tx('pdfDesc')}</p>
                 </div>
                 {isPdfLocked ? (
                   <Button
@@ -335,7 +337,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                     }}
                     className="w-full sm:w-auto bg-brand-gold/15 text-[#C9A675] hover:bg-brand-gold/25 border border-brand-gold/40 rounded-xl px-5 py-3 sm:py-2 transition-colors font-bold flex gap-2"
                   >
-                    <Lock className="w-4 h-4"/> {lockReason === 'login' ? '로그인 후 결제' : `${unlockPrice}로 잠금 해제`}
+                    <Lock className="w-4 h-4"/> {lockReason === 'login' ? tx('loginThenPay') : tx('unlockWithPrice', { price: unlockPrice })}
                   </Button>
                 ) : (
                   <Button
@@ -343,7 +345,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                     onClick={handleDownloadPdf}
                     className={`w-full sm:w-auto bg-green-500/10 text-green-600 hover:bg-green-500/20 border border-green-500/30 rounded-xl px-5 py-3 sm:py-2 transition-colors font-bold flex gap-2 ${(!sheet.pdfUrl && !sheet.hasPdf) && 'opacity-50'}`}
                   >
-                    {(sheet.pdfUrl || sheet.hasPdf) ? <><Download className="w-4 h-4"/> 열기 / 저장</> : '준비 중'}
+                    {(sheet.pdfUrl || sheet.hasPdf) ? <><Download className="w-4 h-4"/> {tx('openSave')}</> : tx('preparing')}
                   </Button>
                 )}
               </div>
@@ -356,8 +358,8 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                       <Music className="w-7 h-7 text-blue-500"/>
                     </div>
                     <div className="flex-1">
-                      <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>음원 듣기</h4>
-                      <p className={`text-xs ${t.textMuted}`}>참조용 음원입니다. (별도 저장은 제공되지 않습니다)</p>
+                      <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>{tx('audioListen')}</h4>
+                      <p className={`text-xs ${t.textMuted}`}>{tx('audioDesc')}</p>
                     </div>
                   </div>
 
@@ -383,8 +385,8 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                   <div className="w-11 h-11 bg-brand-gold/10 rounded-full flex items-center justify-center mx-auto mb-3 border border-brand-gold/20">
                     <Music className="w-5 h-5 text-brand-gold"/>
                   </div>
-                  <h4 className={`${t.textMain} font-bold mb-1`}>공식 음원 연결됨</h4>
-                  <p className={`text-xs ${t.textMuted} mb-3`}>음반 페이지와 연동되어 이 곡의 반주 및 가사를 들을 수 있습니다.</p>
+                  <h4 className={`${t.textMain} font-bold mb-1`}>{tx('linkedAudioTitle')}</h4>
+                  <p className={`text-xs ${t.textMuted} mb-3`}>{tx('linkedAudioDesc')}</p>
                   <Button
                     onClick={() => {
                       onClose();
@@ -393,7 +395,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                     className="w-full bg-brand-gold text-[#2D2926] hover:bg-[#C9A675] font-bold py-3 tracking-wide shadow-lg shadow-brand-gold/20 border-none"
                   >
                     <PlayCircle className="w-5 h-5 mr-2"/>
-                    연결된 음원 재생하기
+                    {tx('playLinkedAudio')}
                   </Button>
                 </div>
               )}

@@ -2,7 +2,8 @@
 
 import { X, Lock, FileText, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import PayPalButton from '@/components/PayPalButton';
 import { SHEET_UNLOCK_PRICE_USD, SHEET_UNLOCK_VALID_DAYS, PREMIUM_MONTHLY_PRICE_USD } from '@/lib/pricing';
 
@@ -23,6 +24,7 @@ interface Props {
 export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitle, onPurchased }: Props) {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
+  const t = useTranslations('sheetPurchase');
 
   if (!isOpen) return null;
 
@@ -32,7 +34,7 @@ export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitl
         <button
           onClick={() => { setSuccess(false); onClose(); }}
           className="absolute top-5 right-5 text-[#78716A] hover:text-[#2D2926]"
-          aria-label="닫기"
+          aria-label={t('close')}
         >
           <X size={22} />
         </button>
@@ -43,7 +45,7 @@ export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitl
               <div className="w-14 h-14 rounded-full bg-brand-gold/15 mx-auto flex items-center justify-center border border-brand-gold/30 mb-3">
                 <FileText className="w-7 h-7 text-brand-gold" />
               </div>
-              <h3 className="text-2xl font-bold text-[#2D2926] mb-1">PDF 악보 잠금 해제</h3>
+              <h3 className="text-2xl font-bold text-[#2D2926] mb-1">{t('title')}</h3>
               {sheetTitle && (
                 <p className="text-sm text-[#78716A] truncate">{sheetTitle}</p>
               )}
@@ -51,7 +53,7 @@ export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitl
 
             <div className="border-2 border-brand-gold/40 bg-brand-gold/5 rounded-2xl p-5 mb-5">
               <div className="flex items-baseline justify-between mb-3">
-                <span className="text-sm font-semibold text-[#2D2926]">단발 구매</span>
+                <span className="text-sm font-semibold text-[#2D2926]">{t('oneTime')}</span>
                 <span className="text-3xl font-extrabold text-[#2D2926]">
                   ${SHEET_UNLOCK_PRICE_USD}
                   <span className="text-xs font-medium text-[#78716A] ml-1">USD</span>
@@ -60,11 +62,11 @@ export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitl
               <ul className="text-sm text-[#78716A] space-y-2">
                 <li className="flex items-start gap-2">
                   <CheckCircle size={14} className="text-brand-gold mt-0.5 shrink-0" />
-                  <span>이 악보 PDF를 <strong className="text-[#2D2926]">{SHEET_UNLOCK_VALID_DAYS}일간</strong> 자유롭게 다운로드</span>
+                  <span>{t.rich('benefit1', { b: (chunks) => <strong className="text-[#2D2926]">{chunks}</strong>, days: SHEET_UNLOCK_VALID_DAYS })}</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <CheckCircle size={14} className="text-brand-gold mt-0.5 shrink-0" />
-                  <span>참조용 음원도 그대로 청취 가능</span>
+                  <span>{t('benefit2')}</span>
                 </li>
               </ul>
             </div>
@@ -77,22 +79,22 @@ export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitl
             />
 
             <div className="mt-5 pt-5 border-t border-[#78716A]/15 text-center">
-              <p className="text-xs text-[#78716A] mb-2">자주 받으시면 멤버십이 더 경제적이에요</p>
+              <p className="text-xs text-[#78716A] mb-2">{t('membershipHint')}</p>
               <button
                 onClick={() => { onClose(); router.push('/premium'); }}
                 className="text-sm font-semibold text-brand-gold hover:underline inline-flex items-center gap-1"
               >
                 <Lock className="w-3 h-3" />
-                월 ${PREMIUM_MONTHLY_PRICE_USD} 멤버십으로 무제한 →
+                {t('membershipCta', { monthly: PREMIUM_MONTHLY_PRICE_USD })}
               </button>
             </div>
           </>
         ) : (
           <div className="text-center py-6">
             <CheckCircle size={56} className="mx-auto text-green-500 mb-4" />
-            <h3 className="text-2xl font-bold text-[#2D2926] mb-2">결제 완료!</h3>
+            <h3 className="text-2xl font-bold text-[#2D2926] mb-2">{t('successTitle')}</h3>
             <p className="text-sm text-[#78716A] mb-6">
-              지금부터 <strong>{SHEET_UNLOCK_VALID_DAYS}일간</strong> 이 악보를 자유롭게 다운로드하실 수 있습니다.
+              {t.rich('successBody', { b: (chunks) => <strong>{chunks}</strong>, days: SHEET_UNLOCK_VALID_DAYS })}
             </p>
             <button
               className="bg-[#2D2926] text-white w-full py-3 rounded-lg font-bold"
@@ -102,7 +104,7 @@ export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitl
                 onPurchased?.();
               }}
             >
-              PDF 다운로드
+              {t('successDownload')}
             </button>
           </div>
         )}

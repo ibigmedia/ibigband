@@ -5,6 +5,7 @@ import { Heart } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 import { addFavorite, removeFavorite, isFavorite } from '@/lib/firebase/favorites';
 import { Sheet } from '@/types/sheet';
+import { useTranslations } from 'next-intl';
 
 interface FavoriteButtonProps {
   sheet: Sheet;
@@ -22,6 +23,7 @@ export default function FavoriteButton({
   onToggle,
 }: FavoriteButtonProps) {
   const { user } = useAuth();
+  const t = useTranslations('sheets');
   const [favorited, setFavorited] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -43,7 +45,7 @@ export default function FavoriteButton({
     e.stopPropagation();
 
     if (!user) {
-      alert('로그인 후 이용할 수 있습니다.');
+      alert(t('favLoginRequired'));
       return;
     }
 
@@ -75,7 +77,7 @@ export default function FavoriteButton({
       onClick={handleToggle}
       disabled={loading}
       className={`transition-all duration-200 hover:scale-110 disabled:opacity-50 ${className}`}
-      aria-label={favorited ? '즐겨찾기 해제' : '즐겨찾기 추가'}
+      aria-label={favorited ? t('favAriaRemove') : t('favAriaAdd')}
     >
       <Heart
         size={size}

@@ -12,6 +12,7 @@ import SheetModal from '@/components/sheets/SheetModal';
 import FavoriteButton from '@/components/sheets/FavoriteButton';
 import { useAuth } from '@/lib/firebase/auth';
 import { getFavoriteSheetIds } from '@/lib/firebase/favorites';
+import { useTranslations } from 'next-intl';
 
 interface SheetsGalleryProps {
   /** URL 진입 시 자동으로 열려야 할 sheet 문서 id (예: /sheets/[id]) */
@@ -29,6 +30,7 @@ interface SheetsGalleryProps {
  */
 export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
   const { user } = useAuth();
+  const t = useTranslations('sheets');
   const [sheets, setSheets] = useState<Sheet[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -76,7 +78,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
       const res = await fetch('/api/sheets/list', { headers, cache: 'no-store' });
       if (!res.ok) {
         const errBody = await res.json().catch(() => ({}));
-        throw new Error(errBody?.error || `악보 목록을 불러오지 못했습니다 (${res.status})`);
+        throw new Error(errBody?.error || t('fetchListError', { status: res.status }));
       }
       const body = await res.json() as { sheets: Sheet[] };
       const data = (body.sheets || []).map((d) => ({
@@ -87,7 +89,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
       setSheets(data);
     } catch (err: any) {
       console.error('Error fetching sheets:', err);
-      setError(err?.message || '악보를 불러오는 중 오류가 발생했습니다.');
+      setError(err?.message || t('fetchGenericError'));
     } finally {
       setLoading(false);
     }
@@ -180,7 +182,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
       const album = await getDocById<MusicAlbum>('albums', albumId);
       if (album) {
         useMusicStore.getState().openAlbumModal(album, 'ko');
-        const track = album.tracks?.find(t => t.id === trackId) || album.tracks?.[0];
+        const track = album.tracks?.find(tk => tk.id === trackId) || album.tracks?.[0];
         if (track) {
           useMusicStore.getState().setActiveTrack(track);
           useMusicStore.getState().setIsPlaying(true);
@@ -188,7 +190,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
       }
     } catch (e) {
       console.error(e);
-      alert('음원을 불러오는데 실패했습니다.');
+      alert(t('loadMusicFailed'));
     }
   };
 
@@ -209,11 +211,10 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
             <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E6C79C] to-[#C9A675] mb-4">
-              아이빅밴드 악보
+              {t('galleryTitle')}
             </h1>
             <p className="text-lg text-[#A1A1AA] max-w-2xl">
-              다음 연주를 위한 전문적인 악보를 찾아보세요.
-              제목, 아티스트, 곡의 감정이나 장르로 검색할 수 있습니다.
+              {t('gallerySubtitle')}
             </p>
           </div>
         </div>
@@ -223,7 +224,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
           <div className="relative flex-1">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#A1A1AA]" />
             <Input
-              placeholder="곡 제목이나 아티스트로 검색..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-12 bg-white/5 border-white/10 text-white placeholder:text-[#A1A1AA]"
@@ -238,7 +239,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                   : 'bg-white/5 text-[#A1A1AA] hover:bg-white/10 hover:text-white border border-white/5'
               }`}
             >
-              전체
+              {t('filterAll')}
             </button>
             {allTags.map(tag => (
               <button
@@ -263,14 +264,14 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
           </div>
         ) : error ? (
           <div className="text-center py-20 bg-red-500/10 rounded-3xl border border-red-500/20">
-            <h3 className="text-xl font-bold text-red-500 mb-2">악보를 불러오지 못했습니다</h3>
+            <h3 className="text-xl font-bold text-red-500 mb-2">{t('loadError')}</h3>
             <p className="text-red-400 max-w-md mx-auto">{error}</p>
           </div>
         ) : filteredSheets.length === 0 ? (
           <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/10">
             <Music className="w-12 h-12 text-[#A1A1AA] mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-bold text-white mb-2">악보를 찾을 수 없습니다</h3>
-            <p className="text-[#A1A1AA]">검색어나 필터를 조정해 보세요.</p>
+            <h3 className="text-xl font-bold text-white mb-2">{t('notFoundTitle')}</h3>
+            <p className="text-[#A1A1AA]">{t('notFoundHint')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -358,14 +359,14 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                       {sheet.title}
                     </h3>
                     <p className="text-[#A1A1AA] text-sm flex items-center gap-1 font-medium">
-                      <Music className="w-3.5 h-3.5" /> {sheet.artistId || '알 수 없는 아티스트'}
+                      <Music className="w-3.5 h-3.5" /> {sheet.artistId || t('unknownArtist')}
                     </p>
                   </div>
 
                   {/* Indicators (잠긴 sheet도 파일 존재 여부 표시) */}
                   <div className="flex gap-2 mb-4">
-                    {(sheet.hasPdf ?? Boolean(sheet.pdfUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 font-bold">PDF 악보</span>}
-                    {(sheet.hasAudio ?? Boolean(sheet.audioUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">음원</span>}
+                    {(sheet.hasPdf ?? Boolean(sheet.pdfUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 font-bold">{t('badgePdf')}</span>}
+                    {(sheet.hasAudio ?? Boolean(sheet.audioUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">{t('badgeAudio')}</span>}
                   </div>
 
                   {/* Metadata Tags */}
@@ -386,7 +387,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                   <div className="flex items-center justify-between mt-auto">
                     <div className="flex flex-col">
                       <span className="text-lg font-black text-white">
-                        {sheet.price === '0' || sheet.price === '' || !sheet.price ? '무료' : `$${sheet.price}`}
+                        {sheet.price === '0' || sheet.price === '' || !sheet.price ? t('free') : `$${sheet.price}`}
                       </span>
                     </div>
 
@@ -397,7 +398,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                       }}
                       className="bg-[#E6C79C] text-black hover:bg-[#C9A675] rounded-full px-5 transition-all text-sm font-black shadow-lg shadow-[#E6C79C]/20"
                     >
-                      상세 정보
+                      {t('details')}
                     </Button>
                   </div>
                 </div>

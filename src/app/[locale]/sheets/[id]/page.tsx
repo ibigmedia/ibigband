@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { adminDb } from '@/lib/firebase/admin';
 import SheetsGallery from '@/components/sheets/SheetsGallery';
 
@@ -31,21 +32,22 @@ async function getSheetMeta(id: string): Promise<SheetMeta | null> {
 }
 
 export async function generateMetadata(
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string; locale: string }> }
 ): Promise<Metadata> {
-  const { id } = await params;
+  const { id, locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'sheetsMeta' });
   const meta = await getSheetMeta(id);
   if (!meta) {
     return {
-      title: '악보를 찾을 수 없습니다 | ibiGband',
+      title: t('detailNotFound'),
     };
   }
 
   const titleLine = meta.artistId ? `${meta.title} — ${meta.artistId}` : meta.title;
-  const fullTitle = `${titleLine} | ibiGband 악보`;
+  const fullTitle = t('detailTitle', { line: titleLine });
   const description = meta.isPremiumOnly
-    ? `${titleLine} · 프리미엄 악보. PDF 다운로드는 멤버십($3)에서 제공되며, 참조용 음원은 자유롭게 들으실 수 있습니다.`
-    : `${titleLine} · ibiGband의 PDF 악보와 참조용 음원을 만나보세요.`;
+    ? t('detailDescPremium', { line: titleLine })
+    : t('detailDescNormal', { line: titleLine });
 
   // OG 이미지 우선순위: 등록된 썸네일 → 유튜브 썸네일
   const ogImage =
