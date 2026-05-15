@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, User, FileText, Eye, EyeOff, CheckCircle, ArrowLeft, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';

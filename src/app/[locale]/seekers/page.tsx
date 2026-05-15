@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { ChevronRight, Play, BookOpen, Headphones, Video } from 'lucide-react';
 import DOMPurify from 'isomorphic-dompurify';
 import { db } from '@/lib/firebase/config';

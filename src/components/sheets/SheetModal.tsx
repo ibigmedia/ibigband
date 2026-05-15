@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Music, PlayCircle, FileText, Download, X, Lock, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -8,6 +8,8 @@ import { getDocById } from '@/lib/firebase/firestore';
 import { Sheet } from '@/types/sheet';
 import FavoriteButton from '@/components/sheets/FavoriteButton';
 import { useAuth } from '@/lib/firebase/auth';
+import SheetPurchaseModal from '@/components/sheets/SheetPurchaseModal';
+import { PREMIUM_MONTHLY_PRICE_USD, SHEET_UNLOCK_VALID_DAYS } from '@/lib/pricing';
 
 interface SheetModalProps {
   sheet: Sheet;
@@ -34,7 +36,11 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
   const isPreviewLocked = Boolean(sheet.isPremiumOnly) && !user;
   const isPdfLocked = Boolean(sheet.isPremiumOnly) && !canAccessPremium;
   const lockReason: 'login' | 'upgrade' = !user ? 'login' : 'upgrade';
-  const premiumPrice = sheet.price && sheet.price !== '0' ? `$${sheet.price}` : '$5';
+  // 시트별 단발 구매 가격 (관리자가 sheet.price 설정 시 그것 우선, 아니면 디폴트 $3)
+  const unlockPrice = sheet.price && sheet.price !== '0' ? `$${sheet.price}` : '$3';
+
+  // 단발 결제 모달 상태
+  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false);
 
   // Theme color mappings
   const t = {
@@ -232,14 +238,14 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                         {lockReason === 'login' ? (
                           <>
                             로그인하시면 <strong className={t.textMain}>프리뷰 전체</strong>를 선명하게 보실 수 있고,{' '}
-                            <strong className="text-brand-gold">{premiumPrice} 프리미엄 멤버십</strong>으로 PDF 다운로드까지 이용하실 수 있습니다.
+                            <strong className="text-brand-gold">{unlockPrice}</strong>로 이 악보 PDF를 {SHEET_UNLOCK_VALID_DAYS}일간 다운로드하실 수 있습니다.
                             음원은 참조용으로 자유롭게 들으실 수 있어요.
                           </>
                         ) : (
                           <>
-                            프리뷰는 자유롭게 보실 수 있습니다. PDF 다운로드는{' '}
-                            <strong className="text-brand-gold">{premiumPrice} 프리미엄 멤버십</strong>에서 이용하실 수 있어요.
-                            음원은 참조용으로 자유롭게 들으실 수 있습니다.
+                            프리뷰는 자유롭게 보실 수 있습니다. PDF는{' '}
+                            <strong className="text-brand-gold">{unlockPrice}</strong>로 잠금 해제({SHEET_UNLOCK_VALID_DAYS}일 다운로드 가능)하거나,{' '}
+                            월 ${PREMIUM_MONTHLY_PRICE_USD} 멤버십으로 무제한 이용할 수 있어요.
                           </>
                         )}
                       </p>
@@ -260,12 +266,20 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                             </Button>
                           </>
                         ) : (
-                          <Button
-                            onClick={() => { onClose(); router.push('/premium'); }}
-                            className="bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-5 py-2 font-bold"
-                          >
-                            {premiumPrice} 멤버십 결제하기
-                          </Button>
+                          <>
+                            <Button
+                              onClick={() => setIsPurchaseOpen(true)}
+                              className="bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-5 py-2 font-bold"
+                            >
+                              {unlockPrice}로 잠금 해제
+                            </Button>
+                            <Button
+                              onClick={() => { onClose(); router.push('/premium'); }}
+                              className="bg-transparent border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 rounded-xl px-5 py-2 font-bold"
+                            >
+                              월 ${PREMIUM_MONTHLY_PRICE_USD} 멤버십
+                            </Button>
+                          </>
                         )}
                       </div>
                     </div>
@@ -315,10 +329,13 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                 </div>
                 {isPdfLocked ? (
                   <Button
-                    onClick={() => { onClose(); router.push(lockReason === 'login' ? '/auth' : '/premium'); }}
+                    onClick={() => {
+                      if (lockReason === 'login') { onClose(); router.push('/auth'); return; }
+                      setIsPurchaseOpen(true);
+                    }}
                     className="w-full sm:w-auto bg-brand-gold/15 text-[#C9A675] hover:bg-brand-gold/25 border border-brand-gold/40 rounded-xl px-5 py-3 sm:py-2 transition-colors font-bold flex gap-2"
                   >
-                    <Lock className="w-4 h-4"/> {lockReason === 'login' ? '로그인 후 결제' : `${premiumPrice} 결제하기`}
+                    <Lock className="w-4 h-4"/> {lockReason === 'login' ? '로그인 후 결제' : `${unlockPrice}로 잠금 해제`}
                   </Button>
                 ) : (
                   <Button
@@ -384,6 +401,15 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
           </div>
         </div>
       </div>
+
+      {/* 단발 $3 결제 모달 */}
+      <SheetPurchaseModal
+        isOpen={isPurchaseOpen}
+        onClose={() => setIsPurchaseOpen(false)}
+        sheetId={sheet.id}
+        sheetTitle={sheet.title}
+        onPurchased={handleDownloadPdf}
+      />
     </div>
   );
 }

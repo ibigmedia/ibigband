@@ -7,7 +7,7 @@ import { BlogPost, SheetMusic } from '@/lib/firebase/firestore';
 import { Video } from '@/types/video';
 import { MusicAlbum } from '@/types/music';
 import Image from 'next/image';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import VideoModal from '@/components/video/VideoModal';
 import SheetModal from '@/components/sheets/SheetModal';
 import { Sheet } from '@/types/sheet';

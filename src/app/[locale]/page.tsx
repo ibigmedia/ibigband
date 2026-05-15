@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { Music, FileText, List, ArrowRight, Play, PlayCircle, Heart, Download, BookOpen, LayoutList } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter, Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import SheetModal from '@/components/sheets/SheetModal';
 import { Sheet } from '@/types/sheet';
@@ -15,6 +15,7 @@ import { useAuth } from '@/lib/firebase/auth';
 
 export default function Home() {
   const router = useRouter();
+  const t = useTranslations('home');
   const { user } = useAuth();
   const [previewSheet, setPreviewSheet] = useState<Sheet | null>(null);
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -110,19 +111,18 @@ export default function Home() {
           />
         </div>
         <h1 className="text-[42px] sm:text-[60px] md:text-[88px] font-handwriting mb-3 md:mb-6 leading-[1.05] md:leading-[1.05] text-[#2D2926] relative z-10 tracking-[-0.06em] break-keep">
-          찬양이 멈추지 않는 <br />
-          <span className="text-[#E6C79C] tracking-[-0.08em]">아카이브</span>
+          {t('heroLine1')} <br />
+          <span className="text-[#E6C79C] tracking-[-0.08em]">{t('heroHighlight')}</span>
         </h1>
         <p className="text-[#78716A] text-[14px] sm:text-[15px] md:text-lg max-w-xl mx-auto mb-10 md:mb-12 font-light leading-relaxed relative z-10 break-keep px-2 sm:px-0 tracking-tight">
-          고퀄리티 프리미엄 악보와 영감을 주는 아티스트 저널을 만나보세요. <br className="hidden sm:block"/>
-          언제 어디서든 가장 섬세하게 준비된 컨텐츠에 접속할 수 있습니다.
+          {t('heroSubtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center relative z-10 w-full px-6 md:px-0 max-w-xs sm:max-w-none mx-auto">
           <button onClick={() => router.push('/sheets')} className="bg-[#2D2926]/90 text-white px-6 py-4 md:px-10 md:py-4 rounded-full md:rounded-ibig flex items-center justify-center gap-2 transform hover:-translate-y-1 hover:shadow-lg transition-all font-medium text-[15px] w-full sm:w-auto shadow-sm">
-            <FileText size={18} className="opacity-80"/> 악보 라이브러리
+            <FileText size={18} className="opacity-80"/> {t('heroCtaSheets')}
           </button>
           <button onClick={() => router.push('/setlist')} className="bg-transparent border border-[#2D2926]/15 text-[#2D2926] px-6 py-4 md:px-10 md:py-4 rounded-full md:rounded-ibig flex items-center justify-center gap-2 hover:bg-[#2D2926]/5 transition-all font-medium text-[15px] w-full sm:w-auto">
-            <List size={18} className="opacity-80"/> 스마트 셋리스트
+            <List size={18} className="opacity-80"/> {t('heroCtaSetlist')}
           </button>
         </div>
       </section>
@@ -131,11 +131,11 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">새로운 음반</h2>
-            <p className="text-xs md:text-sm text-[#78716A]">가장 최근에 발매된 음반들을 들어보세요</p>
+            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">{t('musicTitle')}</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">{t('musicSubtitle')}</p>
           </div>
           <div className="flex w-full md:w-auto">
-            <Link href="/music" className="w-full px-5 py-3 md:py-2.5 bg-transparent border border-[#78716A]/15 text-[#78716A] rounded-full hover:bg-[#78716A]/5 hover:text-[#2D2926] flex items-center justify-center font-medium text-[13px] md:text-sm transition-all">전체 듣기</Link>
+            <Link href="/music" className="w-full px-5 py-3 md:py-2.5 bg-transparent border border-[#78716A]/15 text-[#78716A] rounded-full hover:bg-[#78716A]/5 hover:text-[#2D2926] flex items-center justify-center font-medium text-[13px] md:text-sm transition-all">{t('musicListenAll')}</Link>
           </div>
         </div>
         
@@ -190,13 +190,13 @@ export default function Home() {
                        router.push(`/music?albumId=${album.id}`);
                     }}
                   >
-                    앨범 듣기 <ArrowRight className="w-3 h-3" />
+                    {t('musicPlayAlbum')} <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               </div>
             ))}
             {latestMusic.length === 0 && (
-              <div className="col-span-full text-center py-20 text-[#78716A]">아직 등록된 음반이 없습니다</div>
+              <div className="col-span-full text-center py-20 text-[#78716A]">{t('musicEmpty')}</div>
             )}
         </div>
       </section>
@@ -205,11 +205,11 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto border-t border-[#78716A]/10 mt-8 md:mt-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">iBigMedia 비주얼</h2>
-            <p className="text-xs md:text-sm text-[#78716A]">공식 비디오, 라이브 워십, 강좌 및 다양한 영상들</p>
+            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">{t('videoTitle')}</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">{t('videoSubtitle')}</p>
           </div>
           <div className="flex w-full md:w-auto">
-            <Link href="/video" className="w-full px-5 py-3 md:py-2.5 bg-transparent border border-[#78716A]/15 text-[#78716A] rounded-full hover:bg-[#78716A]/5 hover:text-[#2D2926] flex items-center justify-center font-medium text-[13px] md:text-sm transition-all">전체 영상 보기</Link>
+            <Link href="/video" className="w-full px-5 py-3 md:py-2.5 bg-transparent border border-[#78716A]/15 text-[#78716A] rounded-full hover:bg-[#78716A]/5 hover:text-[#2D2926] flex items-center justify-center font-medium text-[13px] md:text-sm transition-all">{t('videoSeeAll')}</Link>
           </div>
         </div>
         
@@ -247,7 +247,7 @@ export default function Home() {
               </div>
             ))}
             {latestVideos.length === 0 && (
-              <div className="col-span-full text-center py-20 text-[#78716A]">아직 등록된 영상이 없습니다</div>
+              <div className="col-span-full text-center py-20 text-[#78716A]">{t('videoEmpty')}</div>
             )}
         </div>
       </section>
@@ -256,8 +256,8 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-8 md:mb-16 border-t border-[#78716A]/10 mt-8 md:mt-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">악보 라이브러리</h2>
-            <p className="text-xs md:text-sm text-[#78716A]">최신 등록된 고해상도 악보와 음원자료</p>
+            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">{t('sheetsTitle')}</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">{t('sheetsSubtitle')}</p>
           </div>
           <div className="flex w-full md:w-auto">
             <Link href="/sheets" className="w-full py-3 md:p-3 bg-transparent border border-[#78716A]/15 text-[#78716A] rounded-full hover:bg-[#78716A]/5 hover:text-[#2D2926] flex items-center justify-center transition-all"><ArrowRight size={18} className="md:w-5 md:h-5"/></Link>
@@ -292,7 +292,7 @@ export default function Home() {
                     }}
                     className="flex-1 py-2.5 md:py-4 bg-transparent border border-[#78716A]/15 text-[#78716A] rounded-xl md:rounded-2xl text-[11px] md:text-xs font-medium flex items-center justify-center gap-1.5 hover:bg-[#78716A]/5 hover:text-[#2D2926] transition-all"
                   >
-                    <BookOpen size={12} className="md:w-[14px] md:h-[14px]" /> <span className="hidden sm:inline">악보보기</span><span className="sm:hidden">보기</span>
+                    <BookOpen size={12} className="md:w-[14px] md:h-[14px]" /> <span className="hidden sm:inline">{t('sheetsViewLong')}</span><span className="sm:hidden">{t('sheetsViewShort')}</span>
                   </button>
                   <button 
                     onClick={(e) => {
@@ -307,7 +307,7 @@ export default function Home() {
               </div>
             ))}
             {latestSheets.length === 0 && (
-              <div className="col-span-3 text-center py-20 text-[#78716A]">아직 등록된 악보가 없습니다</div>
+              <div className="col-span-3 text-center py-20 text-[#78716A]">{t('sheetsEmpty')}</div>
             )}
         </div>
       </section>
@@ -316,12 +316,12 @@ export default function Home() {
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto pb-6 md:pb-16 border-t border-[#78716A]/10 mt-8 md:mt-16">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
           <div className="text-center md:text-left">
-            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">ibiGband Journal</h2>
-            <p className="text-xs md:text-sm text-[#78716A]">찬양은 삶의 고백이자 예술의 완성입니다</p>
+            <h2 className="text-[40px] leading-tight md:text-6xl font-handwriting mb-1 md:mb-3 text-[#2D2926]">{t('blogTitle')}</h2>
+            <p className="text-xs md:text-sm text-[#78716A]">{t('blogSubtitle')}</p>
           </div>
           <div className="flex w-full md:w-auto">
             <Link href="/blog" className="w-full px-5 py-3 md:py-2.5 bg-transparent border border-[#78716A]/15 text-[#78716A] rounded-full hover:bg-[#78716A]/5 hover:text-[#2D2926] flex items-center justify-center font-medium text-[13px] md:text-sm transition-all">
-              더 보기 <ArrowRight className="w-4 h-4 ml-1" />
+              {t('blogMore')} <ArrowRight className="w-4 h-4 ml-1" />
             </Link>
           </div>
         </div>
@@ -363,7 +363,7 @@ export default function Home() {
             </article>
           ))}
           {latestBlogs.length === 0 && (
-            <div className="col-span-full text-center py-20 text-[#78716A]">아직 작성된 저널이 없습니다</div>
+            <div className="col-span-full text-center py-20 text-[#78716A]">{t('blogEmpty')}</div>
           )}
         </div>
       </section>
@@ -381,17 +381,17 @@ export default function Home() {
             
             <div>
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-handwriting text-[#2D2926] mb-2 md:mb-3">
-                모든 컨텐츠를 한곳에서
+                {t('ctaTitle')}
               </h2>
               <p className="text-[13px] sm:text-[14px] md:text-[15px] text-[#78716A] font-light leading-relaxed max-w-lg md:max-w-xl">
-                음악, 영상, 악보, 저널 등 ibiGband의 숨결이 담긴 모든 자료를 저장소에서 자유롭게 탐색해 보세요.
+                {t('ctaBody')}
               </p>
             </div>
           </div>
-          
+
           <div className="relative z-10 shrink-0 w-full md:w-auto mt-4 md:mt-0">
              <Link href="/archive" className="inline-flex w-full md:w-auto justify-center items-center gap-2 px-8 py-4 md:py-4 bg-[#2D2926]/90 text-white rounded-full hover:bg-[#2D2926] hover:shadow-lg hover:-translate-y-1 transition-all font-medium text-[14px] md:text-base cursor-pointer">
-               저장소 입장하기 <ArrowRight size={18} className="ml-1 opacity-80" />
+               {t('ctaButton')} <ArrowRight size={18} className="ml-1 opacity-80" />
              </Link>
           </div>
         </div>

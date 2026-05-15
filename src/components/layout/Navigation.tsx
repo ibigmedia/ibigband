@@ -1,27 +1,29 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { Settings, CreditCard, LogIn, LogOut, Menu, X, User } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 import { PaymentModal } from '@/components/payment/PaymentModal';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navigation() {
   const pathname = usePathname();
+  const t = useTranslations('nav');
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, userData, signInWithGoogle, signOut } = useAuth();
 
   const navItems = [
-    { label: '음악', enLabel: 'Music', path: '/music' },
-    { label: '영상', enLabel: 'Video', path: '/video' },
-    { label: '악보', enLabel: 'Sheets', path: '/sheets' },
-    { label: '저장소', enLabel: 'Archive', path: '/archive' },
-    { label: 'Seekers', enLabel: '구도자', path: '/seekers' },
-    { label: '블로그', enLabel: 'Blog', path: '/blog' },
-    { label: '셑리스트', enLabel: 'Set List', path: '/setlist' },
-  ];
+    { key: 'music', path: '/music' },
+    { key: 'video', path: '/video' },
+    { key: 'sheets', path: '/sheets' },
+    { key: 'archive', path: '/archive' },
+    { key: 'seekers', path: '/seekers' },
+    { key: 'blog', path: '/blog' },
+    { key: 'setlist', path: '/setlist' },
+  ] as const;
 
   return (
     <>
@@ -41,18 +43,19 @@ export default function Navigation() {
           {navItems.map(item => {
             const isActive = pathname === item.path || pathname.startsWith(`${item.path}/`);
             return (
-              <Link 
-                key={item.label} 
+              <Link
+                key={item.key}
                 href={item.path}
-                className={`group min-w-[70px] xl:min-w-[80px] text-center transition-colors px-3 py-1.5 rounded-full ${isActive ? 'bg-[#2D2926] text-[#E6C79C]' : 'text-[#78716A] hover:bg-[#2D2926]/15 hover:text-[#2D2926]'}`}
+                className={`min-w-[70px] xl:min-w-[80px] text-center transition-colors px-3 py-1.5 rounded-full ${isActive ? 'bg-[#2D2926] text-[#E6C79C]' : 'text-[#78716A] hover:bg-[#2D2926]/15 hover:text-[#2D2926]'}`}
               >
-                <span className="block group-hover:hidden">{item.label}</span>
-                <span className="hidden group-hover:block font-sans text-[14px] xl:text-[15px]">{item.enLabel}</span>
+                {t(item.key)}
               </Link>
             )
           })}
           <div className="h-4 w-[1px] bg-[#78716A]/20 mx-1" />
-          
+
+          <LanguageSwitcher compact />
+
           {user ? (
             <>
               {userData?.role === 'admin' && (
@@ -60,35 +63,35 @@ export default function Navigation() {
                   <Settings size={20} />
                 </Link>
               )}
-              <Link href="/mypage" className="p-2 hover:bg-[#78716A]/5 rounded-full text-[#78716A]" title="마이페이지">
+              <Link href="/mypage" className="p-2 hover:bg-[#78716A]/5 rounded-full text-[#78716A]" title={t('myPage')}>
                 <User size={20} />
               </Link>
               {(userData?.grade === 'member' || userData?.grade === 'admin' || userData?.role === 'admin') ? null : userData?.isPremium ? (
                 <div className="flex items-center gap-2 bg-[#2D2926] text-[#E6C79C] px-5 py-2 rounded-full text-sm font-bold">
-                  <CreditCard size={16} /> 프리미엄 멤버
+                  <CreditCard size={16} /> {t('premiumMember')}
                 </div>
               ) : (
                 <button
                   onClick={() => setIsPaymentModalOpen(true)}
                   className="flex items-center gap-2 bg-[#E6C79C] text-[#2D2926] px-5 py-2 rounded-full text-sm font-bold hover:shadow-lg transition-all"
                 >
-                  <CreditCard size={16} /> 프리미엄 구독
+                  <CreditCard size={16} /> {t('premiumSubscribe')}
                 </button>
               )}
-              <button onClick={signOut} className="p-2 hover:bg-[#78716A]/5 rounded-full text-[#78716A]" title="로그아웃">
+              <button onClick={signOut} className="p-2 hover:bg-[#78716A]/5 rounded-full text-[#78716A]" title={t('signOut')}>
                 <LogOut size={18} />
               </button>
             </>
           ) : (
             <Link href="/auth" className="flex items-center gap-2 bg-[#2D2926] text-white px-5 py-2 rounded-full text-sm font-bold hover:bg-[#78716A] transition-all">
-              <LogIn size={16} /> 로그인 / 회원가입
+              <LogIn size={16} /> {t('loginSignup')}
             </Link>
           )}
 
         </div>
-        
+
         {/* Mobile Menu Toggle Button */}
-        <button 
+        <button
           className="lg:hidden p-2 -mr-2 text-[#2D2926]"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
@@ -103,58 +106,59 @@ export default function Navigation() {
             {navItems.map(item => {
               const isActive = pathname === item.path || pathname.startsWith(`${item.path}/`);
               return (
-                <Link 
-                  key={item.label} 
+                <Link
+                  key={item.key}
                   href={item.path}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className={`font-handwriting font-medium text-[22px] px-4 py-2 flex items-baseline gap-2 rounded-xl transition-colors ${isActive ? 'bg-[#2D2926] text-[#E6C79C]' : 'text-[#2D2926] hover:bg-[#2D2926]/10'}`}
+                  className={`font-handwriting font-medium text-[22px] px-4 py-2 rounded-xl transition-colors ${isActive ? 'bg-[#2D2926] text-[#E6C79C]' : 'text-[#2D2926] hover:bg-[#2D2926]/10'}`}
                 >
-                  <span>{item.label}</span>
-                  <span className="text-[14px] font-sans tracking-wide opacity-60">({item.enLabel})</span>
+                  {t(item.key)}
                 </Link>
               )
             })}
-            
+
             <div className="mt-8 flex flex-col gap-4">
+              <LanguageSwitcher />
+
               {user ? (
                 <>
                   {userData?.role === 'admin' && (
                     <Link href="/admin" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 py-3 text-lg font-bold text-[#2D2926]">
-                      <Settings size={22} /> 대시보드 가기
+                      <Settings size={22} /> {t('dashboard')}
                     </Link>
                   )}
                   <Link href="/mypage" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-3 py-3 text-lg font-bold text-[#2D2926]">
-                    <User size={22} /> 마이페이지
+                    <User size={22} /> {t('myPage')}
                   </Link>
                   {(userData?.grade === 'member' || userData?.grade === 'admin' || userData?.role === 'admin') ? null : userData?.isPremium ? (
                     <div className="flex items-center justify-center gap-2 bg-[#2D2926] text-[#E6C79C] px-6 py-4 rounded-2xl text-base font-bold w-full">
-                      <CreditCard size={18} /> 프리미엄 멤버
+                      <CreditCard size={18} /> {t('premiumMember')}
                     </div>
                   ) : (
                     <button
                       onClick={() => { setIsPaymentModalOpen(true); setIsMobileMenuOpen(false); }}
                       className="flex items-center justify-center gap-2 bg-[#E6C79C] text-[#2D2926] px-6 py-4 rounded-2xl text-base font-bold w-full shadow-md"
                     >
-                      <CreditCard size={18} /> 프리미엄 구독
+                      <CreditCard size={18} /> {t('premiumSubscribe')}
                     </button>
                   )}
                   <button onClick={() => { signOut(); setIsMobileMenuOpen(false); }} className="flex items-center gap-3 py-3 text-lg font-bold text-[#78716A] mt-2 border-t border-[#78716A]/10 pt-6">
-                    <LogOut size={22} /> 로그아웃
+                    <LogOut size={22} /> {t('signOut')}
                   </button>
                 </>
               ) : (
                 <Link href="/auth" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center justify-center gap-2 bg-[#2D2926] text-white px-6 py-4 rounded-2xl text-lg font-bold w-full mt-2 hover:bg-[#78716A] shadow-lg">
-                  <LogIn size={20} /> 로그인 / 회원가입
+                  <LogIn size={20} /> {t('loginSignup')}
                 </Link>
               )}
             </div>
           </div>
         </div>
       )}
-      
-      <PaymentModal 
-        isOpen={isPaymentModalOpen} 
-        onClose={() => setIsPaymentModalOpen(false)} 
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
       />
     </>
   );

@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { Inter, Nanum_Pen_Script } from "next/font/google";
 import Script from "next/script";
-import "./globals.css";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { setRequestLocale } from "next-intl/server";
+import { notFound } from "next/navigation";
+import "../globals.css";
 import Navigation from "@/components/layout/Navigation";
 import Footer from "@/components/layout/Footer";
 import { AuthProvider } from "@/lib/firebase/auth";
 import GlobalMusicPlayer from "@/components/music/GlobalMusicPlayer";
-
-
+import { routing } from "@/i18n/routing";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,20 +22,48 @@ const nanumPen = Nanum_Pen_Script({
   preload: false,
 });
 
-export const metadata: Metadata = {
-  title: "ibiGband",
-  description: "Contemporary Warmth Archive for CCM and Artists",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: "ibiGband",
+    description: "Contemporary Warmth Archive for CCM and Artists",
+    metadataBase: new URL("https://www.ibigband.com"),
+    alternates: {
+      canonical: locale === routing.defaultLocale ? "/" : `/${locale}`,
+      languages: {
+        ko: "/",
+        en: "/en",
+        "x-default": "/",
+      },
+    },
+  };
+}
 
-export default function RootLayout({
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function RootLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }>) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) {
+    notFound();
+  }
+  setRequestLocale(locale);
+
   // 환경 변수 값에 줄바꿈/공백이 섞여 들어와도 GA4가 거부하지 않도록 정리
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
   return (
-    <html lang="ko" className="bg-[#2D2926]">
+    <html lang={locale} className="bg-[#2D2926]">
       <head>
         {/* Google Tag Manager */}
         <Script id="gtm-head" strategy="afterInteractive">
@@ -67,16 +97,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FH84HDL"
             height="0" width="0" style={{display:'none',visibility:'hidden'}} />
         </noscript>
-        <AuthProvider>
-          <Navigation />
-          <main className="pt-17 md:pt-20 flex flex-col bg-[#FAF9F6]">
-            {children}
-          </main>
-          <GlobalMusicPlayer />
-          <Footer />
-        </AuthProvider>
+        <NextIntlClientProvider>
+          <AuthProvider>
+            <Navigation />
+            <main className="pt-17 md:pt-20 flex flex-col bg-[#FAF9F6]">
+              {children}
+            </main>
+            <GlobalMusicPlayer />
+            <Footer />
+          </AuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
 }
-

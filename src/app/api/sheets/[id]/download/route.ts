@@ -2,16 +2,17 @@ import { adminDb } from '@/lib/firebase/admin';
 import { NextResponse } from 'next/server';
 import { corsHeaders, handlePreflight } from '@/lib/api/cors';
 import { verifyUser, canAccessPremium, isErrorResponse } from '@/lib/api-auth';
+import type { SheetPurchase } from '@/types/purchase';
 
 export const OPTIONS = handlePreflight;
 
 /**
  * 악보 파일 다운로드 URL 발급 라우트.
- * GET /api/sheets/[id]/download?type=pdf|audio
+ * GET /api/sheets/[id]/download?type=pdf
  *
- * - 프리미엄 sheet은 로그인 + (프리미엄 결제 || 밴드멤버 이상 || 관리자) 인 경우에만 URL을 반환합니다.
- * - 현재 Storage 객체는 공개 download URL 그대로 저장되어 있어, 검증 후 동일 URL을 반환합니다.
- *   추후 Storage 비공개 전환 시 이 라우트에서 signed URL을 발급하도록 교체하면 됩니다.
+ * 권한 규칙:
+ *  - 프리미엄 sheet은 (멤버십 가입자) OR (해당 sheet을 구매했고 만료 전) 인 경우에만 URL 반환.
+ *  - 단발 구매 기록: users/{uid}/purchasedSheets/{sheetId}.expiresAt 이 현재 시각 이후.
  */
 export async function GET(
   request: Request,
@@ -27,7 +28,6 @@ export async function GET(
 
   const url = new URL(request.url);
   const type = url.searchParams.get('type');
-  // 음원은 참조용으로 듣기만 제공하며 다운로드 라우트로는 발급하지 않습니다.
   if (type !== 'pdf') {
     return NextResponse.json({ error: 'PDF 외 파일은 다운로드 라우트로 제공하지 않습니다.' }, { status: 400, headers });
   }
@@ -42,12 +42,29 @@ export async function GET(
     }
     const data = snap.data() as { isPremiumOnly?: boolean; pdfUrl?: string };
 
-    if (data.isPremiumOnly && !canAccessPremium(verified)) {
-      const reason = verified ? 'upgrade' : 'login';
-      return NextResponse.json(
-        { error: '프리미엄 전용 악보입니다.', reason },
-        { status: 403, headers }
-      );
+    if (data.isPremiumOnly) {
+      const hasMembership = canAccessPremium(verified);
+      let hasValidPurchase = false;
+
+      if (!hasMembership && verified) {
+        const purchaseSnap = await adminDb
+          .collection('users').doc(verified.uid)
+          .collection('purchasedSheets').doc(id)
+          .get();
+        if (purchaseSnap.exists) {
+          const p = purchaseSnap.data() as SheetPurchase | undefined;
+          const exp = p?.expiresAt ? Date.parse(p.expiresAt) : 0;
+          hasValidPurchase = Number.isFinite(exp) && exp > Date.now();
+        }
+      }
+
+      if (!hasMembership && !hasValidPurchase) {
+        const reason = verified ? 'upgrade' : 'login';
+        return NextResponse.json(
+          { error: '프리미엄 전용 악보입니다.', reason },
+          { status: 403, headers }
+        );
+      }
     }
 
     if (!data.pdfUrl) {
