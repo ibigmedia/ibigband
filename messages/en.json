@@ -116,5 +116,14 @@
     "notFoundBody": "We couldn't find the journal you're looking for.",
     "backToList": "Back to list",
     "back": "Back"
+  },
+  "mypage": {
+    "userFallback": "User",
+    "signOutAria": "Sign out",
+    "favoritesTitle": "Favorite Sheets",
+    "favoritesEmpty": "No favorite sheets yet.",
+    "browseSheets": "Browse sheets",
+    "removeFavoriteAria": "Remove from favorites",
+    "unknownArtist": "Unknown artist"
   }
 }

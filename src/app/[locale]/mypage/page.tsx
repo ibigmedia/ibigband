@@ -1,15 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { Heart, Music, User, LogOut } from 'lucide-react';
 import { useAuth } from '@/lib/firebase/auth';
 import { getFavorites, removeFavorite } from '@/lib/firebase/favorites';
 import { Favorite } from '@/types/favorite';
+import { useTranslations } from 'next-intl';
 
 export default function MyPage() {
   const { user, userData, loading, signOut } = useAuth();
   const router = useRouter();
+  const t = useTranslations('mypage');
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [favLoading, setFavLoading] = useState(true);
 
@@ -54,14 +56,14 @@ export default function MyPage() {
           </div>
           <div className="flex-1">
             <h1 className="text-2xl md:text-3xl font-bold text-[#2D2926]">
-              {userData?.displayName || '사용자'}
+              {userData?.displayName || t('userFallback')}
             </h1>
             <p className="text-[#78716A] text-sm">{userData?.email}</p>
           </div>
           <button
             onClick={async () => { await signOut(); router.replace('/'); }}
             className="p-2 rounded-full hover:bg-[#78716A]/10 text-[#78716A] transition-colors"
-            aria-label="로그아웃"
+            aria-label={t('signOutAria')}
           >
             <LogOut className="w-5 h-5" />
           </button>
@@ -71,7 +73,7 @@ export default function MyPage() {
         <section>
           <div className="flex items-center gap-2 mb-6">
             <Heart className="w-5 h-5 text-red-500 fill-red-500" />
-            <h2 className="text-xl font-bold text-[#2D2926]">즐겨찾기 악보</h2>
+            <h2 className="text-xl font-bold text-[#2D2926]">{t('favoritesTitle')}</h2>
             <span className="text-sm text-[#78716A] ml-1">({favorites.length})</span>
           </div>
 
@@ -82,12 +84,12 @@ export default function MyPage() {
           ) : favorites.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-[#78716A]/10">
               <Music className="w-10 h-10 text-[#78716A]/30 mx-auto mb-3" />
-              <p className="text-[#78716A] font-medium">아직 즐겨찾기한 악보가 없습니다.</p>
+              <p className="text-[#78716A] font-medium">{t('favoritesEmpty')}</p>
               <button
                 onClick={() => router.push('/sheets')}
                 className="mt-4 text-sm text-[#C9A675] hover:text-[#A68B5B] font-medium transition-colors"
               >
-                악보 둘러보기 &rarr;
+                {t('browseSheets')} &rarr;
               </button>
             </div>
           ) : (
@@ -115,7 +117,7 @@ export default function MyPage() {
                     <button
                       onClick={(e) => { e.stopPropagation(); handleRemove(fav.sheetId); }}
                       className="absolute top-3 right-3 p-1.5 rounded-full bg-black/40 hover:bg-black/60 transition-colors"
-                      aria-label="즐겨찾기 해제"
+                      aria-label={t('removeFavoriteAria')}
                     >
                       <Heart className="w-4 h-4 fill-red-500 text-red-500" />
                     </button>
@@ -127,7 +129,7 @@ export default function MyPage() {
                       {fav.title}
                     </h3>
                     <p className="text-sm text-[#78716A] mt-1 line-clamp-1">
-                      {fav.artistId || '알 수 없는 아티스트'}
+                      {fav.artistId || t('unknownArtist')}
                     </p>
                   </div>
                 </div>
