@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { Video as VideoType } from '@/types/video';
 import { X, ExternalLink, Music, BookOpen, Crown, ShoppingBag, Video } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 interface VideoModalProps {
   video: VideoType | null;
@@ -11,6 +12,7 @@ interface VideoModalProps {
 }
 
 export default function VideoModal({ video, onClose }: VideoModalProps) {
+  const t = useTranslations('video');
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -90,7 +92,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
           ) : (
             <div className="w-full h-full flex flex-col items-center justify-center text-white/50">
               <Video size={48} className="mb-4" />
-              <p>영상을 찾을 수 없습니다.</p>
+              <p>{t('notFound')}</p>
             </div>
           )}
         </div>
@@ -112,7 +114,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
           <div className="space-y-4">
             {video.relatedLinks && video.relatedLinks.length > 0 && (
               <>
-                <h3 className="text-sm font-bold text-[#2D2926] uppercase tracking-wider mb-2">💡 연결된 콘텐츠 및 서비스</h3>
+                <h3 className="text-sm font-bold text-[#2D2926] uppercase tracking-wider mb-2">{t('relatedHeading')}</h3>
                 <div className="flex flex-col gap-2">
                   {video.relatedLinks.map((link, idx) => (
                     <Link
@@ -134,15 +136,15 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
             <div className="mt-8 pt-6 border-t border-[#78716A]/10">
               <div className="bg-white border border-[#E6C79C]/30 p-4 rounded-2xl flex flex-col items-center text-center">
                 <div className="w-12 h-12 bg-[#2D2926] rounded-full flex items-center justify-center text-[#E6C79C] font-bold text-xl mb-3 shadow-lg">i</div>
-                <h4 className="font-bold text-[#2D2926] mb-1">iBigMedia 유튜브</h4>
-                <p className="text-xs text-[#78716A] mb-3">구독하고 더 많은 영상을 만나보세요!</p>
+                <h4 className="font-bold text-[#2D2926] mb-1">{t('ytCardTitle')}</h4>
+                <p className="text-xs text-[#78716A] mb-3">{t('ytCardBody')}</p>
                 <a 
                   href="https://www.youtube.com/@dkdlqlr" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="bg-red-600 text-white font-bold text-xs px-4 py-2 rounded-full hover:bg-red-700 transition-colors w-full"
                 >
-                  유투브 채널 방문
+                  {t('ytCardButton')}
                 </a>
               </div>
             </div>
