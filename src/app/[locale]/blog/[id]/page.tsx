@@ -3,15 +3,18 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import Image from 'next/image';
 import { ArrowLeft, Clock, User, Tag } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useTranslations } from 'next-intl';
 
 export default function BlogDetailPage() {
   const { id } = useParams();
   const router = useRouter();
+  const t = useTranslations('blog');
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [blog, setBlog] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,10 +55,10 @@ export default function BlogDetailPage() {
   if (!blog) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center py-40 bg-[#FAF9F6] px-6 text-center">
-        <h2 className="text-4xl font-handwriting mb-4 text-[#2D2926]">Journal Not Found</h2>
-        <p className="text-[#78716A] mb-8">요청하신 블로그를 찾을 수 없습니다.</p>
+        <h2 className="text-4xl font-handwriting mb-4 text-[#2D2926]">{t('notFoundTitle')}</h2>
+        <p className="text-[#78716A] mb-8">{t('notFoundBody')}</p>
         <button onClick={() => router.push('/blog')} className="px-6 py-3 bg-[#2D2926] text-white rounded-full font-bold">
-          목록으로 돌아가기
+          {t('backToList')}
         </button>
       </div>
     );
@@ -84,7 +87,7 @@ export default function BlogDetailPage() {
             onClick={() => router.push('/blog')} 
             className="flex items-center gap-2 text-[#78716A] hover:text-[#2D2926] transition-colors mb-6 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-full w-fit shadow-sm border border-[#78716A]/10"
           >
-            <ArrowLeft size={16} /> 목록으로
+            <ArrowLeft size={16} /> {t('back')}
           </button>
           <div className="bg-white p-8 md:p-12 rounded-t-[32px] shadow-sm border border-[#78716A]/5">
             <div className="flex flex-wrap items-center gap-4 mb-6">

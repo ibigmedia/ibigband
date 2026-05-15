@@ -108,5 +108,13 @@
     "ytCardTitle": "iBigMedia 유튜브",
     "ytCardBody": "구독하고 더 많은 영상을 만나보세요!",
     "ytCardButton": "유투브 채널 방문"
+  },
+  "blog": {
+    "subtitle": "찬양과 예배, 그리고 음악에 대한 깊이 있는 통찰과 이야기",
+    "empty": "아직 작성된 저널이 없습니다.",
+    "notFoundTitle": "Journal Not Found",
+    "notFoundBody": "요청하신 블로그를 찾을 수 없습니다.",
+    "backToList": "목록으로 돌아가기",
+    "back": "목록으로"
   }
 }

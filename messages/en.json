@@ -108,5 +108,13 @@
     "ytCardTitle": "iBigMedia on YouTube",
     "ytCardBody": "Subscribe for more videos!",
     "ytCardButton": "Visit YouTube channel"
+  },
+  "blog": {
+    "subtitle": "Deep reflections and stories on worship, praise, and music",
+    "empty": "No journal entries yet.",
+    "notFoundTitle": "Journal Not Found",
+    "notFoundBody": "We couldn't find the journal you're looking for.",
+    "backToList": "Back to list",
+    "back": "Back"
   }
 }

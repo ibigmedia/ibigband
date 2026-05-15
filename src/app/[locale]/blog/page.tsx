@@ -4,11 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { FileText, ArrowRight, BookOpen } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
 
 export default function BlogPage() {
   const router = useRouter();
+  const t = useTranslations('blog');
   /* eslint-disable @typescript-eslint/no-explicit-any */
   const [blogs, setBlogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +45,7 @@ export default function BlogPage() {
       <section className="pt-16 pb-8 px-6 text-center border-b border-[#78716A]/10 bg-white">
         <h1 className="text-5xl md:text-7xl font-handwriting mb-4 text-[#E6C79C]">ibiGband Journal</h1>
         <p className="text-[#78716A] text-lg font-light italic max-w-2xl mx-auto">
-          찬양과 예배, 그리고 음악에 대한 깊이 있는 통찰과 이야기
+          {t('subtitle')}
         </p>
       </section>
 
@@ -110,7 +112,7 @@ export default function BlogPage() {
             {blogs.length === 0 && (
               <div className="col-span-full flex flex-col items-center justify-center py-32 text-[#78716A]">
                 <BookOpen size={64} className="mb-6 opacity-20" />
-                <p className="text-xl font-handwriting">아직 작성된 저널이 없습니다.</p>
+                <p className="text-xl font-handwriting">{t('empty')}</p>
               </div>
             )}
           </div>
