@@ -6,18 +6,21 @@ import { ChevronRight, Play, BookOpen, Headphones, Video } from 'lucide-react';
 import DOMPurify from 'isomorphic-dompurify';
 import { db } from '@/lib/firebase/config';
 import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
+import { useTranslations } from 'next-intl';
 
+// label은 메시지 키로만 두고, 렌더 시 t()로 현지화한다.
 const CATEGORIES = [
-  { id: 'all', label: '전체' },
-  { id: 'existence', label: '존재와 우주' },
-  { id: 'history', label: '역사와 문서' },
-  { id: 'science', label: '과학과 신앙' },
-  { id: 'pain', label: '고통과 공의' },
-  { id: 'church', label: '교회와 종교' },
-  { id: 'personal', label: '개인과 신앙' }
+  { id: 'all', key: 'catAll' },
+  { id: 'existence', key: 'catExistence' },
+  { id: 'history', key: 'catHistory' },
+  { id: 'science', key: 'catScience' },
+  { id: 'pain', key: 'catPain' },
+  { id: 'church', key: 'catChurch' },
+  { id: 'personal', key: 'catPersonal' }
 ];
 
 export default function SeekersPage() {
+  const t = useTranslations('seekers');
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({});
@@ -127,9 +130,9 @@ export default function SeekersPage() {
           textAlign: (settings?.heroTextAlign as any) || 'center'
         }}
       >
-        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200" dangerouslySetInnerHTML={{ __html: clean(settings?.heroLabel || 'Seekers / 구도자') }} />
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8 animate-fade-up delay-200" dangerouslySetInnerHTML={{ __html: clean(settings?.heroLabel || t('heroLabelDefault')) }} />
         <h1 className="font-serif text-[clamp(2.5rem,7vw,5rem)] font-light leading-[1.05] tracking-[-0.02em] text-[#2D2926] mb-8 animate-fade-up delay-400" dangerouslySetInnerHTML={{ __html: clean(settings?.heroTitle || 'Questions<br />worth <em class="italic text-[#C48C5E]">asking.</em>') }} />
-        <p className="text-[1.05rem] text-[#78716A] max-w-[540px] mx-auto mb-12 animate-fade-up delay-600" dangerouslySetInnerHTML={{ __html: clean(settings?.heroSubtitle || '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.') }} />
+        <p className="text-[1.05rem] text-[#78716A] max-w-[540px] mx-auto mb-12 animate-fade-up delay-600" dangerouslySetInnerHTML={{ __html: clean(settings?.heroSubtitle || t('heroSubtitleDefault')) }} />
         <div className="w-[1px] h-[60px] bg-gradient-to-b from-[#C48C5E] to-transparent mx-auto animate-fade-up delay-800"></div>
       </section>
 
@@ -144,7 +147,7 @@ export default function SeekersPage() {
       >
         <blockquote className="font-handwriting text-[clamp(1.6rem,4vw,2.5rem)] leading-[1.4] text-[#2D2926] relative p-0 m-0">
           <span className="absolute top-6 md:top-10 -left-2 md:-left-6 text-[6rem] md:text-[8rem] leading-none text-[#C48C5E] opacity-20 font-serif">"</span>
-          <span dangerouslySetInnerHTML={{ __html: clean(settings?.quote || "우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에.") }} />
+          <span dangerouslySetInnerHTML={{ __html: clean(settings?.quote || t.raw('quoteDefault')) }} />
           <cite className="block mt-6 text-[0.95rem] md:text-[1rem] tracking-[0.15em] text-[#C48C5E] not-italic uppercase" dangerouslySetInnerHTML={{ __html: clean(settings?.quoteAuthor || "— ibigband") }} />
         </blockquote>
       </div>
@@ -153,7 +156,7 @@ export default function SeekersPage() {
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pb-6 md:pb-8">
         <input 
           type="text" 
-          placeholder="궁금한 것을 검색하세요  /  Search your question..." 
+          placeholder={t('searchPlaceholder')}
           value={searchQuery}
           onChange={handleSearch}
           className="w-full bg-white shadow-sm border border-[#2D2926]/10 rounded-[20px] md:rounded-full px-6 py-4 md:py-4 text-[#2D2926] font-sans text-[0.95rem] md:text-[1rem] outline-none transition-all duration-300 focus:border-[#C48C5E] focus:shadow-md placeholder:text-[#A19D98]"
@@ -162,7 +165,7 @@ export default function SeekersPage() {
 
       {/* Filter Pills */}
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pb-[2rem] md:pb-[3rem]">
-        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.2em] text-[#A19D98] uppercase mb-5">주제별로 보기</p>
+        <p className="text-[1rem] md:text-[1.05rem] tracking-[0.2em] text-[#A19D98] uppercase mb-5">{t('browseByTopic')}</p>
         <div className="flex flex-wrap gap-2.5 mb-4">
           {CATEGORIES.map(cat => (
             <button
@@ -174,11 +177,11 @@ export default function SeekersPage() {
                   : 'bg-white border-[1.5px] border-[#2D2926]/20 text-[#4a4845] hover:bg-[#F2EFE9] hover:border-[#2D2926]/40 hover:text-[#2D2926] font-semibold'
                 }`}
             >
-              {cat.label}
+              {t(cat.key)}
             </button>
           ))}
         </div>
-        <p className="text-[0.95rem] md:text-[1rem] text-[#78716A] text-center mt-6">질문(?)을 터치하시면 답글(!)을 보실 수 있습니다.</p>
+        <p className="text-[0.95rem] md:text-[1rem] text-[#78716A] text-center mt-6">{t('tapHint')}</p>
       </div>
 
       {/* Q&A List */}
@@ -191,7 +194,7 @@ export default function SeekersPage() {
           return (
             <div key={cat.id} className="mb-8">
               <div className="flex items-center gap-4 mt-14 mb-6 after:content-[''] after:flex-1 after:h-[1px] after:bg-[rgba(45,41,38,0.1)]">
-                <span className="text-[1rem] md:text-[1.05rem] tracking-[0.2em] text-[#C48C5E] uppercase">{cat.label}</span>
+                <span className="text-[1rem] md:text-[1.05rem] tracking-[0.2em] text-[#C48C5E] uppercase">{t(cat.key)}</span>
               </div>
 
               {catItems.map(item => {
@@ -235,7 +238,7 @@ export default function SeekersPage() {
                         </div>
                         <div className="flex flex-col gap-4">
                           {item.media && item.media.length > 0 && (
-                            <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">관련 미디어</p>
+                            <p className="text-[1rem] md:text-[1.05rem] tracking-[0.15em] text-[#A19D98] uppercase mb-2">{t('relatedMedia')}</p>
                           )}
                           {item.media?.map((m: any, i: number) => {
                             if (m.type === 'video') {
@@ -296,7 +299,7 @@ export default function SeekersPage() {
 
         {!loading && filteredData.length === 0 && (
           <div className="py-20 text-center text-[#78716A]">
-             검색 결과가 없습니다.
+             {t('noResults')}
           </div>
         )}
       </section>
@@ -305,7 +308,7 @@ export default function SeekersPage() {
       {!loading && playlist.length > 0 && (
         <section className="bg-white py-[4rem] px-5 md:px-10">
           <div className="max-w-[900px] mx-auto">
-            <h2 className="text-2xl font-bold mb-6 text-center text-[#2D2926]">함께 들으면 좋은 추천 음악</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center text-[#2D2926]">{t('recommendedMusic')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {playlist.map((music: any) => (
                 <div key={music.id} className="bg-[#FAF9F6] border border-[#2D2926]/10 p-4 flex items-center gap-4 rounded-xl hover:bg-[#F2EFE9] transition-colors shadow-sm">
@@ -336,17 +339,17 @@ export default function SeekersPage() {
       <div className="border-t border-[rgba(45,41,38,0.1)] py-[4rem] md:py-[6rem] px-5 md:px-10 text-center max-w-[700px] mx-auto">
         <p className="text-[1rem] md:text-[1.05rem] tracking-[0.25em] text-[#C48C5E] uppercase mb-8">Next Step</p>
         <h2 className="font-handwriting text-[clamp(2.4rem,6vw,3.5rem)] leading-[1.2] mb-5 text-[#2D2926]">
-          더 이야기하고<br />싶으신가요?
+          {t.rich('ctaTitle', { br: () => <br /> })}
         </h2>
         <p className="text-[1.05rem] text-[#78716A] mb-12">
-          질문이 더 있거나, 누군가와 직접 이야기하고 싶다면 편하게 연락하세요. 판단 없이 듣겠습니다.
+          {t('ctaBody')}
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
           <a href="#" className="px-8 py-3 bg-[#B87A4B] text-white rounded-full font-sans text-[0.95rem] md:text-[1.05rem] font-bold tracking-[0.08em] uppercase transition-all shadow hover:shadow-md hover:bg-[#a66a3d]">
-            이야기 나누기
+            {t('ctaTalk')}
           </a>
           <Link href="/music" className="px-8 py-3 bg-transparent text-[#4a4845] border-[1.5px] border-[#2D2926]/20 rounded-full font-sans text-[0.95rem] md:text-[1.05rem] font-bold tracking-[0.08em] uppercase transition-all hover:border-[#2D2926]/60 hover:text-[#2D2926] hover:bg-black/5">
-            음악 듣기
+            {t('ctaListen')}
           </Link>
         </div>
       </div>

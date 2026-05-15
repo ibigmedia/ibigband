@@ -125,5 +125,27 @@
     "browseSheets": "악보 둘러보기",
     "removeFavoriteAria": "즐겨찾기 해제",
     "unknownArtist": "알 수 없는 아티스트"
+  },
+  "seekers": {
+    "catAll": "전체",
+    "catExistence": "존재와 우주",
+    "catHistory": "역사와 문서",
+    "catScience": "과학과 신앙",
+    "catPain": "고통과 공의",
+    "catChurch": "교회와 종교",
+    "catPersonal": "개인과 신앙",
+    "heroLabelDefault": "Seekers / 구도자",
+    "heroSubtitleDefault": "믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.",
+    "quoteDefault": "우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에.",
+    "searchPlaceholder": "궁금한 것을 검색하세요  /  Search your question...",
+    "browseByTopic": "주제별로 보기",
+    "tapHint": "질문(?)을 터치하시면 답글(!)을 보실 수 있습니다.",
+    "relatedMedia": "관련 미디어",
+    "noResults": "검색 결과가 없습니다.",
+    "recommendedMusic": "함께 들으면 좋은 추천 음악",
+    "ctaTitle": "더 이야기하고<br></br>싶으신가요?",
+    "ctaBody": "질문이 더 있거나, 누군가와 직접 이야기하고 싶다면 편하게 연락하세요. 판단 없이 듣겠습니다.",
+    "ctaTalk": "이야기 나누기",
+    "ctaListen": "음악 듣기"
   }
 }

@@ -125,5 +125,27 @@
     "browseSheets": "Browse sheets",
     "removeFavoriteAria": "Remove from favorites",
     "unknownArtist": "Unknown artist"
+  },
+  "seekers": {
+    "catAll": "All",
+    "catExistence": "Existence & Cosmos",
+    "catHistory": "History & Documents",
+    "catScience": "Science & Faith",
+    "catPain": "Pain & Justice",
+    "catChurch": "Church & Religion",
+    "catPersonal": "The Self & Faith",
+    "heroLabelDefault": "Seekers",
+    "heroSubtitleDefault": "You don't need to believe to be here. If you have questions, start here.",
+    "quoteDefault": "We are people who make songs &mdash;<br />because we are searching for something<br />that music alone cannot reach.",
+    "searchPlaceholder": "Search your question...",
+    "browseByTopic": "Browse by topic",
+    "tapHint": "Tap a question (?) to reveal the answer (!).",
+    "relatedMedia": "Related media",
+    "noResults": "No results found.",
+    "recommendedMusic": "Music to listen along",
+    "ctaTitle": "Want to talk<br></br>more?",
+    "ctaBody": "If you have more questions, or just want to talk with someone, reach out anytime. We'll listen without judgment.",
+    "ctaTalk": "Start a conversation",
+    "ctaListen": "Listen to music"
   }
 }
