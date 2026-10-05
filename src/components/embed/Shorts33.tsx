@@ -8,7 +8,7 @@ type Props = {
   font?: string; heading?: string; kicker?: string; count?: number; plain?: boolean; className?: string;
 };
 
-export default function Shorts33({ count = 6, plain, className, ...rest }: Props) {
+export default function Shorts33({ count = 5, plain, className, ...rest }: Props) {
   useEffect(() => {
     const w = window as unknown as { S33?: { boot: () => void } };
     if (w.S33) { w.S33.boot(); return; }
