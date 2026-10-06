@@ -13,6 +13,7 @@ import { Video as VideoType } from '@/types/video';
 import VideoModal from '@/components/video/VideoModal';
 import { useAuth } from '@/lib/firebase/auth';
 import Shorts33 from '@/components/embed/Shorts33';
+import IbigSection from '@/components/embed/IbigSection';
 
 export default function Home() {
   const router = useRouter();
@@ -372,6 +373,11 @@ export default function Home() {
       {/* 아이빅 33 묵상 쇼츠 (3s3k.org에서 자동으로) */}
       <section className="pt-8 md:pt-16 px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-10 md:mb-16 border-t border-[#78716A]/10">
         <Shorts33 point="#2D2926" ink="#2D2926" muted="#78716A" paper="#FAF9F6" tint="#F2EFE9" line="#E7E2DA" font="var(--font-handwriting)" kicker="IBIG 묵상 삼시세끼" heading="아이빅 33 묵상" plain />
+        {/* 새 노래 이야기(3s3k.org 운영실 작곡 후보 › 녹음 완료) — 자료 없으면 안 보임 */}
+        <div className="mt-12">
+          <IbigSection section="band-new" point="#2D2926" ink="#2D2926" muted="#78716A" paper="#FAF9F6" tint="#F2EFE9" line="#E7E2DA" font="var(--font-handwriting)" plain />
+        </div>
+        <div className="mt-4 text-right"><a href="/praise" className="text-[#2D2926] font-semibold border-b border-current pb-0.5">찬양과 가사 전체 보기 →</a></div>
       </section>
 
       {/* Minimal Archive CTA Section */}
