@@ -16,6 +16,27 @@
     "signOut": "로그아웃",
     "language": "언어"
   },
+  "contact": {
+    "title": "문의하기",
+    "lead": "찬양, 악보, 멤버십, 협업에 대해 궁금한 점을 보내 주세요. 확인 후 이메일로 답장드립니다.",
+    "email": "ibigmedia@gmail.com",
+    "name": "이름",
+    "replyEmail": "회신 이메일",
+    "type": "문의 유형",
+    "typePlaceholder": "선택해 주세요",
+    "typeWorship": "찬양·음원",
+    "typeSheets": "악보",
+    "typeMembership": "멤버십·결제",
+    "typePartnership": "파트너십·협업",
+    "typeSupport": "고객 지원",
+    "typeOther": "기타",
+    "message": "문의 내용",
+    "send": "문의 보내기",
+    "sending": "보내는 중…",
+    "sentTitle": "문의가 접수되었습니다",
+    "sentBody": "입력하신 이메일로 답장드리겠습니다.",
+    "failed": "전송하지 못했습니다. 잠시 후 다시 시도하시거나 ibigmedia@gmail.com 으로 메일을 보내 주세요."
+  },
   "footer": {
     "tagline": "예술로 복음을 전하는 컨템포러리 아카이브. 하나님이 주신 재능으로 세상을 아름답게 만듭니다.",
     "navHeading": "네비게이션",

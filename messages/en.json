@@ -16,6 +16,27 @@
     "signOut": "Sign out",
     "language": "Language"
   },
+  "contact": {
+    "title": "Contact us",
+    "lead": "Send us your questions about worship music, sheet music, membership, or collaboration. We will reply by email.",
+    "email": "ibigmedia@gmail.com",
+    "name": "Name",
+    "replyEmail": "Reply email",
+    "type": "Subject",
+    "typePlaceholder": "Please select",
+    "typeWorship": "Worship & music",
+    "typeSheets": "Sheet music",
+    "typeMembership": "Membership & billing",
+    "typePartnership": "Partnership",
+    "typeSupport": "Support",
+    "typeOther": "Other",
+    "message": "Message",
+    "send": "Send message",
+    "sending": "Sending…",
+    "sentTitle": "Your message has been sent",
+    "sentBody": "We will reply to your email.",
+    "failed": "We could not send your message. Please try again or email ibigmedia@gmail.com."
+  },
   "footer": {
     "tagline": "A contemporary archive that shares the gospel through art — using the gifts God has given us to make the world more beautiful.",
     "navHeading": "Navigation",

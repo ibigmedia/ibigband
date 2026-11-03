@@ -8,6 +8,7 @@ const SITE_URL = 'https://www.ibigband.com';
 const STATIC_PATHS = [
   '',
   '/about',
+  '/contact',
   '/music',
   '/video',
   '/sheets',

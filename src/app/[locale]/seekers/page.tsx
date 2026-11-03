@@ -345,9 +345,9 @@ export default function SeekersPage() {
           {t('ctaBody')}
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
-          <a href="#" className="px-8 py-3 bg-[#B3350F] text-white rounded-full font-sans text-[0.95rem] md:text-[1.05rem] font-bold tracking-[0.08em] uppercase transition-all shadow hover:shadow-md hover:bg-[#a66a3d]">
+          <Link href="/contact" className="px-8 py-3 bg-[#B3350F] text-white rounded-full font-sans text-[0.95rem] md:text-[1.05rem] font-bold tracking-[0.08em] uppercase transition-all shadow hover:shadow-md hover:bg-[#a66a3d]">
             {t('ctaTalk')}
-          </a>
+          </Link>
           <Link href="/music" className="px-8 py-3 bg-transparent text-[#4a4845] border-[1.5px] border-[#121110]/20 rounded-full font-sans text-[0.95rem] md:text-[1.05rem] font-bold tracking-[0.08em] uppercase transition-all hover:border-[#121110]/60 hover:text-[#121110] hover:bg-black/5">
             {t('ctaListen')}
           </Link>
