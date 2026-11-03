@@ -70,7 +70,7 @@ export default function EmailShareModal({ isOpen, onClose, setlistTitle, items, 
         <div className="p-6 border-b border-black/5 shrink-0">
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-xl flex items-center gap-2"><Mail className="text-t-gold" /> 이메일 공유</h3>
-            <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+            <button onClick={onClose} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={20} /></button>
           </div>
         </div>
 
@@ -81,7 +81,7 @@ export default function EmailShareModal({ isOpen, onClose, setlistTitle, items, 
             <input
               type="text" value={emailTo} onChange={e => setEmailTo(e.target.value)}
               placeholder="member1@email.com, member2@email.com"
-              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#121110]"
+              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#E0DBD0]"
             />
           </div>
 
@@ -146,7 +146,7 @@ export default function EmailShareModal({ isOpen, onClose, setlistTitle, items, 
                           <span className="font-bold text-t-copper shrink-0">{s.date ? `${s.date.slice(5)} ` : ''}{s.time}</span>
                           <span className="text-[#121110] font-bold">{s.title}</span>
                           {s.location && <span className="text-t-muted">📍{s.location}</span>}
-                          {s.memo && <span className="text-[#9CA3AF] italic">({s.memo})</span>}
+                          {s.memo && <span className="text-t-muted italic">({s.memo})</span>}
                         </div>
                       ))}
                     </div>
@@ -162,7 +162,7 @@ export default function EmailShareModal({ isOpen, onClose, setlistTitle, items, 
           <button
             onClick={handleSend}
             disabled={sending || !emailTo.trim() || items.length === 0}
-            className="w-full py-3 bg-[#121110] text-white rounded-xl font-bold hover:bg-[#2A2826] transition-colors disabled:opacity-40 flex items-center justify-center gap-2"
+            className="w-full py-3 bg-[#FFFDF9] text-[#121110] rounded-xl font-bold hover:bg-[#ECE7DC] transition-colors disabled:opacity-40 flex items-center justify-center gap-2"
           >
             {sending ? <Loader2 size={16} className="animate-spin" /> : <Mail size={16} />}
             {sending ? '전송 중...' : '이메일 전송'}

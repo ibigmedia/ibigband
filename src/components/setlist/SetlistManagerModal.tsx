@@ -90,11 +90,11 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
             <div className="flex items-center gap-2">
               <button
                 onClick={() => { onNew(); onClose(); }}
-                className="px-4 py-2 bg-[#121110] text-white rounded-xl text-sm font-bold hover:bg-[#2A2826] transition-colors"
+                className="px-4 py-2 bg-[#FFFDF9] text-[#121110] rounded-xl text-sm font-bold hover:bg-[#ECE7DC] transition-colors"
               >
                 + 새로 만들기
               </button>
-              <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+              <button onClick={onClose} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={20} /></button>
             </div>
           </div>
 
@@ -104,7 +104,7 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
             <input
               type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="셋리스트 검색..."
-              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#121110]"
+              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#E0DBD0]"
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
                 key={c.id}
                 onClick={() => setCategory(c.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
-                  category === c.id ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted hover:bg-black/5'
+                  category === c.id ? 'bg-[#FFFDF9] text-[#121110]' : 'bg-[#F5F2EC] text-t-muted hover:bg-[#ECE7DC]'
                 }`}
               >
                 {c.label}
@@ -160,7 +160,7 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
               <button
                 onClick={(e) => { e.stopPropagation(); handleDelete(sl.id); }}
                 disabled={deleting === sl.id}
-                className="p-2 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-xl opacity-0 group-hover:opacity-100 transition-all shrink-0"
+                className="p-2 text-red-700 hover:bg-red-50 hover:text-red-600 rounded-xl opacity-0 group-hover:opacity-100 transition-all shrink-0"
               >
                 <Trash2 size={16} />
               </button>

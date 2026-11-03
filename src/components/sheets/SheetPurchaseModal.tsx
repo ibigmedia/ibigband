@@ -97,7 +97,7 @@ export default function SheetPurchaseModal({ isOpen, onClose, sheetId, sheetTitl
               {t.rich('successBody', { b: (chunks) => <strong>{chunks}</strong>, days: SHEET_UNLOCK_VALID_DAYS })}
             </p>
             <button
-              className="bg-[#121110] text-white w-full py-3 rounded-lg font-bold"
+              className="bg-[#FFFDF9] text-[#121110] w-full py-3 rounded-lg font-bold"
               onClick={() => {
                 setSuccess(false);
                 onClose();

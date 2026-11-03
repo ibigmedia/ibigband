@@ -18,7 +18,7 @@ export default function AdminBudgetPage() {
   }, [user, userData, loading, router]);
 
   if (loading || !user || userData?.role !== 'admin') {
-    return <div className="p-8 text-white">Loading...</div>;
+    return <div className="p-8 text-[#121110]">Loading...</div>;
   }
 
   const [activeTab, setActiveTab] = useState<'overview' | 'transactions'>('overview');
@@ -117,12 +117,12 @@ export default function AdminBudgetPage() {
     <div className="max-w-7xl mx-auto space-y-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#E8481C]">예산 및 재정 관리</h1>
-          <p className="text-white/60 mt-2">2026년 상반기 찬양팀 예산 현황 및 지출 내역</p>
+          <h1 className="text-3xl font-bold text-t-copper">예산 및 재정 관리</h1>
+          <p className="text-t-muted mt-2">2026년 상반기 찬양팀 예산 현황 및 지출 내역</p>
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-[#E8481C] text-[#1A1817] px-6 py-3 rounded-lg font-bold hover:bg-[#D4B384] transition-colors flex items-center gap-2"
+          className="bg-[#E8481C] text-[#121110] px-6 py-3 rounded-lg font-bold hover:bg-[#E8481C] transition-colors flex items-center gap-2"
         >
           새 지출결의서 작성
         </button>
@@ -130,29 +130,29 @@ export default function AdminBudgetPage() {
       
       {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-[#121110] p-6 rounded-2xl border border-white/5">
-          <p className="text-white/60 text-sm mb-2">올해 총 예산</p>
-          <p className="text-3xl font-bold text-white">{formatCurrency(TOTAL_BUDGET)}</p>
-          <p className="text-sm text-green-400 mt-2">운영 위원회 배정 예산</p>
+        <div className="bg-[#FFFDF9] p-6 rounded-2xl border border-[#E0DBD0]">
+          <p className="text-t-muted text-sm mb-2">올해 총 예산</p>
+          <p className="text-3xl font-bold text-[#121110]">{formatCurrency(TOTAL_BUDGET)}</p>
+          <p className="text-sm text-green-800 mt-2">운영 위원회 배정 예산</p>
         </div>
-        <div className="bg-[#121110] p-6 rounded-2xl border border-white/5">
-          <p className="text-white/60 text-sm mb-2">현재까지 집행액 (YTD)</p>
-          <p className="text-3xl font-bold text-[#E8481C]">{formatCurrency(ytdSpent)}</p>
+        <div className="bg-[#FFFDF9] p-6 rounded-2xl border border-[#E0DBD0]">
+          <p className="text-t-muted text-sm mb-2">현재까지 집행액 (YTD)</p>
+          <p className="text-3xl font-bold text-t-copper">{formatCurrency(ytdSpent)}</p>
           <p className="text-sm text-yellow-500 mt-2">예산 대비 {((ytdSpent/TOTAL_BUDGET)*100).toFixed(1)}% 소진</p>
         </div>
-        <div className="bg-[#121110] p-6 rounded-2xl border border-white/5">
-          <p className="text-white/60 text-sm mb-2">잔여 예산</p>
-          <p className="text-3xl font-bold text-white">{formatCurrency(remaining)}</p>
-          <p className="text-sm text-white/40 mt-2">안정적인 진행 중</p>
+        <div className="bg-[#FFFDF9] p-6 rounded-2xl border border-[#E0DBD0]">
+          <p className="text-t-muted text-sm mb-2">잔여 예산</p>
+          <p className="text-3xl font-bold text-[#121110]">{formatCurrency(remaining)}</p>
+          <p className="text-sm text-t-muted mt-2">안정적인 진행 중</p>
         </div>
       </div>
 
       {/* Transactions Table Mockup */}
-      <div className="bg-[#121110] rounded-2xl border border-white/5 overflow-hidden">
-        <div className="flex gap-6 p-6 border-b border-white/5">
+      <div className="bg-[#FFFDF9] rounded-2xl border border-[#E0DBD0] overflow-hidden">
+        <div className="flex gap-6 p-6 border-b border-[#E0DBD0]">
           <button 
             onClick={() => setActiveTab('overview')}
-            className={`font-semibold pb-2 border-b-2 transition-colors ${activeTab === 'overview' ? 'border-[#E8481C] text-[#E8481C]' : 'border-transparent text-white/50 hover:text-white'}`}
+            className={`font-semibold pb-2 border-b-2 transition-colors ${activeTab === 'overview' ? 'border-[#E8481C] text-t-copper' : 'border-transparent text-t-muted hover:text-[#B3350F]'}`}
           >
             최근 집행 내역
           </button>
@@ -161,7 +161,7 @@ export default function AdminBudgetPage() {
         <div className="p-0 overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-white/5 text-white/60 text-sm uppercase tracking-wider">
+              <tr className="bg-[#FFFDF9] text-t-muted text-sm uppercase tracking-wider">
                 <th className="p-4 font-medium">날짜</th>
                 <th className="p-4 font-medium">카테고리</th>
                 <th className="p-4 font-medium">세부 내역</th>
@@ -171,42 +171,42 @@ export default function AdminBudgetPage() {
                 <th className="p-4 font-medium text-right">관리</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5 text-sm">
+            <tbody className="divide-y divide-[#E0DBD0] text-sm">
               {transactions.length > 0 ? transactions.map((t, idx) => (
-                <tr key={idx} className="hover:bg-white/5 transition-colors">
-                  <td className="p-4 text-white/80">{t.date}</td>
+                <tr key={idx} className="hover:bg-[#ECE7DC] transition-colors">
+                  <td className="p-4 text-t-muted">{t.date}</td>
                   <td className="p-4">
                     <span className={`px-2 py-1 rounded text-xs
-                      ${t.category === '장비 구매' || t.category === '장비' ? 'bg-blue-500/20 text-blue-300' : ''}
-                      ${t.category === '식비' ? 'bg-purple-500/20 text-purple-300' : ''}
-                      ${t.category === '라이선스' ? 'bg-[#E8481C]/20 text-[#E8481C]' : ''}
-                      ${t.category === '사역' || t.category === '사역비' ? 'bg-green-500/20 text-green-300' : ''}
+                      ${t.category === '장비 구매' || t.category === '장비' ? 'bg-blue-500/20 text-t-copper' : ''}
+                      ${t.category === '식비' ? 'bg-purple-500/20 text-t-copper' : ''}
+                      ${t.category === '라이선스' ? 'bg-[#E8481C]/20 text-t-copper' : ''}
+                      ${t.category === '사역' || t.category === '사역비' ? 'bg-green-500/20 text-green-800' : ''}
                     `}>
                       {t.category}
                     </span>
                   </td>
-                  <td className="p-4 text-white font-medium">{t.detail}</td>
-                  <td className="p-4 text-white/80">{t.applicant}</td>
-                  <td className="p-4 text-white font-bold">{formatCurrency(t.amount)}</td>
+                  <td className="p-4 text-[#121110] font-medium">{t.detail}</td>
+                  <td className="p-4 text-t-muted">{t.applicant}</td>
+                  <td className="p-4 text-[#121110] font-bold">{formatCurrency(t.amount)}</td>
                   <td className="p-4">
                     <select 
                       value={t.status}
                       onChange={(e) => handleStatusChange(t.id, e.target.value)}
                       className={`text-xs px-2 py-1 rounded font-bold appearance-none bg-transparent cursor-pointer
-                        ${t.status === 'approved' ? 'text-green-400 bg-green-400/10' : ''}
-                        ${t.status === 'pending' ? 'text-yellow-400 bg-yellow-400/10' : ''}
-                        ${t.status === 'rejected' ? 'text-red-400 bg-red-400/10' : ''}
+                        ${t.status === 'approved' ? 'text-green-800 bg-green-400/10' : ''}
+                        ${t.status === 'pending' ? 'text-amber-800 bg-yellow-400/10' : ''}
+                        ${t.status === 'rejected' ? 'text-red-700 bg-red-400/10' : ''}
                       `}
                     >
-                      <option value="pending" className="bg-[#121110] text-yellow-400">대기 중</option>
-                      <option value="approved" className="bg-[#121110] text-green-400">승인됨</option>
-                      <option value="rejected" className="bg-[#121110] text-red-400">거절됨</option>
+                      <option value="pending" className="bg-[#FFFDF9] text-amber-800">대기 중</option>
+                      <option value="approved" className="bg-[#FFFDF9] text-green-800">승인됨</option>
+                      <option value="rejected" className="bg-[#FFFDF9] text-red-700">거절됨</option>
                     </select>
                   </td>
                   <td className="p-4 text-right">
                     <button 
                       onClick={() => handleDelete(t.id)} 
-                      className="text-red-400/50 hover:text-red-400 transition-colors"
+                      className="text-red-700/50 hover:text-red-700 transition-colors"
                     >
                       삭제
                     </button>
@@ -214,7 +214,7 @@ export default function AdminBudgetPage() {
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan={7} className="p-8 text-center text-white/50">데이터가 없습니다.</td>
+                  <td colSpan={7} className="p-8 text-center text-t-muted">데이터가 없습니다.</td>
                 </tr>
               )}
             </tbody>
@@ -225,96 +225,96 @@ export default function AdminBudgetPage() {
       {/* Write Exependiture Modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="bg-[#121110] p-8 rounded-2xl w-full max-w-lg border border-white/10 relative">
+          <div className="bg-[#FFFDF9] p-8 rounded-2xl w-full max-w-lg border border-[#E0DBD0] relative">
             <button 
               onClick={() => setShowModal(false)}
-              className="absolute top-4 right-4 text-white/50 hover:text-white"
+              className="absolute top-4 right-4 text-t-muted hover:text-[#B3350F]"
             >
               ✕
             </button>
-            <h2 className="text-2xl font-bold text-[#E8481C] mb-6">새 지출결의서 작성</h2>
+            <h2 className="text-2xl font-bold text-t-copper mb-6">새 지출결의서 작성</h2>
             
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-white/60 font-medium block mb-2">날짜</label>
+                  <label className="text-sm text-t-muted font-medium block mb-2">날짜</label>
                   <input 
                     type="date" 
                     value={formData.date}
                     onChange={(e) => setFormData({...formData, date: e.target.value})}
-                    className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
+                    className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-white/60 font-medium block mb-2">카테고리</label>
+                  <label className="text-sm text-t-muted font-medium block mb-2">카테고리</label>
                   <select 
                     value={formData.category}
                     onChange={(e) => setFormData({...formData, category: e.target.value})}
-                    className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]">
-                    <option value="식비" className="text-white">식비 (운영)</option>
-                    <option value="장비" className="text-white">장비 구매 및 수리</option>
-                    <option value="악보/라이선스" className="text-white">라이선스 (악보 등)</option>
-                    <option value="사역비" className="text-white">사역 지원 / 외부 강사</option>
-                    <option value="기타" className="text-white">기타</option>
+                    className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]">
+                    <option value="식비" className="text-[#121110]">식비 (운영)</option>
+                    <option value="장비" className="text-[#121110]">장비 구매 및 수리</option>
+                    <option value="악보/라이선스" className="text-[#121110]">라이선스 (악보 등)</option>
+                    <option value="사역비" className="text-[#121110]">사역 지원 / 외부 강사</option>
+                    <option value="기타" className="text-[#121110]">기타</option>
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="text-sm text-white/60 font-medium block mb-2">세부 내역</label>
+                <label className="text-sm text-t-muted font-medium block mb-2">세부 내역</label>
                 <input 
                   type="text" 
                   value={formData.detail}
                   onChange={(e) => setFormData({...formData, detail: e.target.value})}
                   placeholder="무엇을 구매 또는 지출하셨나요?"
-                  className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
+                  className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-sm text-white/60 font-medium block mb-2">제출 금액 (원)</label>
+                  <label className="text-sm text-t-muted font-medium block mb-2">제출 금액 (원)</label>
                   <input 
                     type="number" 
                     value={formData.amount}
                     onChange={(e) => setFormData({...formData, amount: e.target.value})}
                     placeholder="25000"
-                    className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
+                    className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-white/60 font-medium block mb-2">신청자</label>
+                  <label className="text-sm text-t-muted font-medium block mb-2">신청자</label>
                   <input 
                     type="text" 
                     value={formData.applicant}
                     onChange={(e) => setFormData({...formData, applicant: e.target.value})}
-                    className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
+                    className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-sm text-white/60 font-medium block mb-2">초기 상태 처리</label>
+                <label className="text-sm text-t-muted font-medium block mb-2">초기 상태 처리</label>
                 <select 
                   value={formData.status}
                   onChange={(e) => setFormData({...formData, status: e.target.value})}
-                  className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]">
-                  <option value="pending" className="text-white">대기 중 (승인 요망)</option>
-                  <option value="approved" className="text-white">승인됨 (결제 완료)</option>
+                  className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]">
+                  <option value="pending" className="text-[#121110]">대기 중 (승인 요망)</option>
+                  <option value="approved" className="text-[#121110]">승인됨 (결제 완료)</option>
                 </select>
               </div>
 
-              <div className="pt-4 flex justify-end gap-3 border-t border-white/5 mt-6">
+              <div className="pt-4 flex justify-end gap-3 border-t border-[#E0DBD0] mt-6">
                  <button 
                    onClick={() => setShowModal(false)}
-                   className="px-4 py-2 rounded-lg text-white/60 hover:text-white font-medium"
+                   className="px-4 py-2 rounded-lg text-t-muted hover:text-[#B3350F] font-medium"
                  >
                    취소
                  </button>
                  <button 
                    onClick={handleSave}
                    disabled={isSubmitting}
-                   className="bg-[#E8481C] text-[#1A1817] px-6 py-2 rounded-lg font-bold hover:bg-[#D4B384] transition-colors disabled:opacity-50"
+                   className="bg-[#E8481C] text-[#121110] px-6 py-2 rounded-lg font-bold hover:bg-[#E8481C] transition-colors disabled:opacity-50"
                  >
                    {isSubmitting ? '저장 중...' : '지출결의서 제출'}
                  </button>

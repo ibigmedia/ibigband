@@ -1,11 +1,11 @@
 {
   "name": "ibigband",
   "short_name": "ibigband",
-  "description": "Contemporary Warmth Archive for CCM and Artists",
+  "description": "Worship archive for CCM and artists",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAF9F6",
-  "theme_color": "#2D2926",
+  "background_color": "#F5F2EC",
+  "theme_color": "#121110",
   "icons": [
     {
       "src": "/icon-192x192.png",

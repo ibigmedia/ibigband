@@ -186,8 +186,8 @@ export default function AdminVideoPage() {
     <div className="space-y-8 pb-20">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold font-handwriting text-[#E8481C]">영상 관리</h1>
-          <p className="text-gray-400 mt-2">유튜브 영상 및 관련 모달 정보 관리</p>
+          <h1 className="text-2xl font-bold font-handwriting text-t-copper">영상 관리</h1>
+          <p className="text-t-muted mt-2">유튜브 영상 및 관련 모달 정보 관리</p>
         </div>
         <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
           <Plus size={16} /> 영상 추가
@@ -196,14 +196,14 @@ export default function AdminVideoPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {videos.map(video => (
-          <Card key={video.id} className="bg-[#121110]/50 border border-[#78716A]/20 overflow-hidden flex flex-col group relative">
+          <Card key={video.id} className="bg-[#FFFDF9] border border-[#78716A]/20 overflow-hidden flex flex-col group relative">
              <div className="aspect-video relative bg-black/50 border-b border-[#78716A]/20">
                 {video.thumbnailUrl ? (
                    // eslint-disable-next-line @next/next/no-img-element
                    <img src={video.thumbnailUrl} alt={video.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                 ) : (
                    <div className="w-full h-full flex items-center justify-center">
-                      <Video size={48} className="text-[#78716A]/30" />
+                      <Video size={48} className="text-t-muted" />
                    </div>
                 )}
                 {video.featured && (
@@ -212,12 +212,12 @@ export default function AdminVideoPage() {
              </div>
              
              <div className="p-4 flex flex-col flex-1">
-                <h3 className="font-bold text-white mb-2 line-clamp-1">{video.title}</h3>
-                <p className="text-xs text-[#78716A] line-clamp-2 mb-4 flex-1">{video.description}</p>
+                <h3 className="font-bold text-[#121110] mb-2 line-clamp-1">{video.title}</h3>
+                <p className="text-xs text-t-muted line-clamp-2 mb-4 flex-1">{video.description}</p>
                 
                 <div className="flex justify-end gap-2 pt-4 border-t border-[#78716A]/10 mt-auto">
-                   <button onClick={() => handleOpenModal(video)} className="p-2 text-[#78716A] hover:text-[#E8481C] transition-colors"><Edit2 size={16} /></button>
-                   <button onClick={() => handleDelete(video.id)} className="p-2 text-[#78716A] hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
+                   <button onClick={() => handleOpenModal(video)} className="p-2 text-t-muted hover:text-t-copper transition-colors"><Edit2 size={16} /></button>
+                   <button onClick={() => handleDelete(video.id)} className="p-2 text-t-muted hover:text-red-700 transition-colors"><Trash2 size={16} /></button>
                 </div>
              </div>
           </Card>
@@ -226,54 +226,54 @@ export default function AdminVideoPage() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4 overflow-y-auto">
-          <Card className="bg-[#121110] border border-[#78716A]/20 p-6 w-full max-w-2xl text-left my-8">
-            <h2 className="text-2xl font-bold text-[#E8481C] mb-6">
+          <Card className="bg-[#FFFDF9] border border-[#78716A]/20 p-6 w-full max-w-2xl text-left my-8">
+            <h2 className="text-2xl font-bold text-t-copper mb-6">
               {editingVideo ? '영상 수정' : '새 영상 추가'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-300">제목</label>
-                <Input required value={title} onChange={e => setTitle(e.target.value)} className="bg-black/30 border-[#78716A]/20 text-white" />
+                <label className="block text-sm font-medium mb-1 text-t-muted">제목</label>
+                <Input required value={title} onChange={e => setTitle(e.target.value)} className="bg-[#ECE7DC] border-[#78716A]/20 text-[#121110]" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-1 text-gray-300">설명 / 공지</label>
-                <textarea rows={4} value={description} onChange={e => setDescription(e.target.value)} className="w-full rounded-md bg-black/30 border border-[#78716A]/20 px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#E8481C]" placeholder="영상에 대한 설명이나 공지사항안내..." />
+                <label className="block text-sm font-medium mb-1 text-t-muted">설명 / 공지</label>
+                <textarea rows={4} value={description} onChange={e => setDescription(e.target.value)} className="w-full rounded-md bg-[#ECE7DC] border border-[#78716A]/20 px-3 py-2 text-[#121110] placeholder-[#6B665F] focus:outline-none focus:ring-1 focus:ring-[#E8481C]" placeholder="영상에 대한 설명이나 공지사항안내..." />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-300">유튜브 링크 (우선)</label>
+                    <label className="block text-sm font-medium mb-1 text-t-muted">유튜브 링크 (우선)</label>
                     <div className="flex relative items-center gap-2">
                        <div className="relative flex-1">
-                          <LinkIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" />
-                          <Input value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} placeholder="https://youtube.com/watch?..." className="bg-black/30 w-full border-[#78716A]/20 text-white pl-9" />
+                          <LinkIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-t-muted" />
+                          <Input value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} placeholder="https://youtube.com/watch?..." className="bg-[#ECE7DC] w-full border-[#78716A]/20 text-[#121110] pl-9" />
                        </div>
-                       <Button type="button" onClick={handleAutoFill} disabled={isFetchingMeta} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E8481C]">
+                       <Button type="button" onClick={handleAutoFill} disabled={isFetchingMeta} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-t-copper">
                           {isFetchingMeta ? '불러오는중..' : '자동 채우기'}
                        </Button>
                     </div>
                  </div>
                  
                  <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-300">또는 직접 첨부 (URL우선)</label>
-                    <Input type="file" accept="video/*" onChange={e => setVideoFile(e.target.files?.[0] || null)} className="bg-black/30 border-[#78716A]/20 text-white p-1 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#78716A]/20 file:text-white" />
+                    <label className="block text-sm font-medium mb-1 text-t-muted">또는 직접 첨부 (URL우선)</label>
+                    <Input type="file" accept="video/*" onChange={e => setVideoFile(e.target.files?.[0] || null)} className="bg-[#ECE7DC] border-[#78716A]/20 text-[#121110] p-1 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#78716A]/20 file:text-white" />
                  </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-300">커스텀 썸네일 직접 업로드</label>
-                    <Input type="file" accept="image/*" onChange={e => setThumbnailFile(e.target.files?.[0] || null)} className="bg-black/30 border-[#78716A]/20 text-white p-1 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#78716A]/20 file:text-white" />
+                    <label className="block text-sm font-medium mb-1 text-t-muted">커스텀 썸네일 직접 업로드</label>
+                    <Input type="file" accept="image/*" onChange={e => setThumbnailFile(e.target.files?.[0] || null)} className="bg-[#ECE7DC] border-[#78716A]/20 text-[#121110] p-1 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-[#78716A]/20 file:text-white" />
                  </div>
                  <div>
-                    <label className="block text-sm font-medium mb-1 text-gray-300">썸네일 URL (비워두면 자동추출)</label>
+                    <label className="block text-sm font-medium mb-1 text-t-muted">썸네일 URL (비워두면 자동추출)</label>
                     <div className="flex relative items-center gap-2">
                        <div className="relative flex-1">
-                          <ImageIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" />
-                          <Input value={thumbnailUrl} onChange={e => setThumbnailUrl(e.target.value)} placeholder="https://..." className="bg-black/30 w-full border-[#78716A]/20 text-white pl-9" />
+                          <ImageIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-t-muted" />
+                          <Input value={thumbnailUrl} onChange={e => setThumbnailUrl(e.target.value)} placeholder="https://..." className="bg-[#ECE7DC] w-full border-[#78716A]/20 text-[#121110] pl-9" />
                        </div>
-                       <Button type="button" onClick={generateAIThumbnail} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E8481C]">
+                       <Button type="button" onClick={generateAIThumbnail} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-t-copper">
                           AI생성
                        </Button>
                     </div>
@@ -281,13 +281,13 @@ export default function AdminVideoPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                 <input type="checkbox" id="featured" checked={featured} onChange={e => setFeatured(e.target.checked)} className="w-4 h-4 rounded bg-black/30 border-[#78716A]/20 accent-[#E8481C]" />
-                 <label htmlFor="featured" className="text-gray-300 text-sm">홈페이지 주요 섹션에 노출하기 (Featured)</label>
+                 <input type="checkbox" id="featured" checked={featured} onChange={e => setFeatured(e.target.checked)} className="w-4 h-4 rounded bg-[#ECE7DC] border-[#78716A]/20 accent-[#E8481C]" />
+                 <label htmlFor="featured" className="text-t-muted text-sm">홈페이지 주요 섹션에 노출하기 (Featured)</label>
               </div>
 
               <div className="border-t border-[#78716A]/20 pt-6">
                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-bold text-white">관계된 링크 (콜투액션)</h3>
+                    <h3 className="font-bold text-[#121110]">관계된 링크 (콜투액션)</h3>
                     <Button type="button" variant="outline" size="sm" onClick={addRelatedLink} className="text-xs">
                        <Plus size={14} className="mr-1" /> 추가
                     </Button>
@@ -295,7 +295,7 @@ export default function AdminVideoPage() {
                  
                  <div className="space-y-3">
                     {relatedLinks.map((link, index) => (
-                       <div key={index} className="flex gap-2 items-start bg-black/20 p-3 rounded-lg border border-[#78716A]/10">
+                       <div key={index} className="flex gap-2 items-start bg-[#ECE7DC] p-3 rounded-lg border border-[#78716A]/10">
                           <div className="flex-1 space-y-2">
                              <div className="flex gap-2">
                                 <select 
@@ -309,17 +309,17 @@ export default function AdminVideoPage() {
                                    <option value="merch">굿즈 구매</option>
                                    <option value="premium">프리미엄 구독</option>
                                 </select>
-                                <Input value={link.title} onChange={e => updateRelatedLink(index, 'title', e.target.value)} placeholder="제목 (ex: 악보 다운로드)" className="flex-1 h-8 text-xs bg-black/30 border-[#78716A]/20 text-white" />
+                                <Input value={link.title} onChange={e => updateRelatedLink(index, 'title', e.target.value)} placeholder="제목 (ex: 악보 다운로드)" className="flex-1 h-8 text-xs bg-[#ECE7DC] border-[#78716A]/20 text-[#121110]" />
                              </div>
-                             <Input value={link.url} onChange={e => updateRelatedLink(index, 'url', e.target.value)} placeholder="연결할 주소 (예: /sheets/123)" className="h-8 text-xs bg-black/30 border-[#78716A]/20 text-white" />
+                             <Input value={link.url} onChange={e => updateRelatedLink(index, 'url', e.target.value)} placeholder="연결할 주소 (예: /sheets/123)" className="h-8 text-xs bg-[#ECE7DC] border-[#78716A]/20 text-[#121110]" />
                           </div>
-                          <button type="button" onClick={() => removeRelatedLink(index)} className="p-2 text-[#78716A] hover:text-red-400">
+                          <button type="button" onClick={() => removeRelatedLink(index)} className="p-2 text-t-muted hover:text-red-700">
                              <Trash2 size={16} />
                           </button>
                        </div>
                     ))}
                     {relatedLinks.length === 0 && (
-                       <div className="text-xs text-[#78716A] text-center p-4">추가된 콜투액션(관련 사이트링크/악보/음원 등)이 없습니다.</div>
+                       <div className="text-xs text-t-muted text-center p-4">추가된 콜투액션(관련 사이트링크/악보/음원 등)이 없습니다.</div>
                     )}
                  </div>
               </div>

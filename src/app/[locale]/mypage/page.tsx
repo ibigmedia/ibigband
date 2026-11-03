@@ -62,7 +62,7 @@ export default function MyPage() {
           </div>
           <button
             onClick={async () => { await signOut(); router.replace('/'); }}
-            className="p-2 rounded-full hover:bg-[#2A2826]/10 text-t-muted transition-colors"
+            className="p-2 rounded-full hover:bg-[#ECE7DC] text-t-muted transition-colors"
             aria-label={t('signOutAria')}
           >
             <LogOut className="w-5 h-5" />

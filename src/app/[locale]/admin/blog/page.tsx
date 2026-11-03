@@ -158,8 +158,8 @@ export default function AdminBlogPage() {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold font-handwriting text-[#E8481C]">Blog Management</h1>
-          <p className="text-gray-400 mt-2">Publish and manage insights, news, and devotionals.</p>
+          <h1 className="text-2xl font-bold font-handwriting text-t-copper">Blog Management</h1>
+          <p className="text-t-muted mt-2">Publish and manage insights, news, and devotionals.</p>
         </div>
         {!isEditing && (
           <Button onClick={() => setIsEditing(true)}>
@@ -169,13 +169,13 @@ export default function AdminBlogPage() {
       </div>
 
       {isEditing ? (
-        <Card className="bg-[#121110]/50 border border-[#78716A]/20 p-6 text-white max-w-4xl">
+        <Card className="bg-[#FFFDF9] border border-[#78716A]/20 p-6 text-[#121110] max-w-4xl">
           <h3 className="text-xl font-bold mb-6">{currentId ? 'Edit Post' : 'New Post'}</h3>
           <form onSubmit={handleSave} className="space-y-6">
             <div className="space-y-6">
               {/* AI Auto Generate Section */}
-              <div className="p-4 mb-6 bg-black/10 rounded-ibig border border-dashed border-[#E8481C]/50">
-                <label className="block text-sm font-bold text-[#E8481C] mb-2 flex items-center">
+              <div className="p-4 mb-6 bg-[#ECE7DC] rounded-ibig border border-dashed border-[#E8481C]/50">
+                <label className="block text-sm font-bold text-t-copper mb-2 flex items-center">
                   ✨ AI 블로그 자동 생성기 (Gemini)
                 </label>
                 <div className="flex gap-2 mb-2">
@@ -183,13 +183,13 @@ export default function AdminBlogPage() {
                     value={aiTopic} 
                     onChange={e => setAiTopic(e.target.value)} 
                     placeholder="블로그 주제를 입력하세요 (예: 크리스마스 예배 준비)" 
-                    className="bg-black/20 text-white border-none flex-1"
+                    className="bg-[#ECE7DC] text-[#121110] border-none flex-1"
                   />
                   <Input 
                     value={aiKeywords} 
                     onChange={e => setAiKeywords(e.target.value)} 
                     placeholder="키워드 (예: 기쁨, 탄생, 찬양)" 
-                    className="bg-black/20 text-white border-none flex-1"
+                    className="bg-[#ECE7DC] text-[#121110] border-none flex-1"
                   />
                 </div>
                 <Button 
@@ -201,42 +201,42 @@ export default function AdminBlogPage() {
                   {aiLoading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin"/> 생성 중...</> : '내용 및 제목 자동 생성하기'}
                 </Button>
                 {imagePrompt && (
-                   <div className="mt-4 p-3 bg-black/20 rounded text-sm text-gray-300">
-                     <p className="font-bold text-[#E8481C] mb-1">썸네일 생성용 추천 프롬프트 (Midjourney / DALL-E):</p>
+                   <div className="mt-4 p-3 bg-[#ECE7DC] rounded text-sm text-t-muted">
+                     <p className="font-bold text-t-copper mb-1">썸네일 생성용 추천 프롬프트 (Midjourney / DALL-E):</p>
                      <p className="italic">{imagePrompt}</p>
                    </div>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm text-[#E8481C] mb-2">Title *</label>
-                <Input required value={title} onChange={e => setTitle(e.target.value)} placeholder="Post title..." className="bg-black/20 text-white border-none w-full text-xl py-4"/>
+                <label className="block text-sm text-t-copper mb-2">Title *</label>
+                <Input required value={title} onChange={e => setTitle(e.target.value)} placeholder="Post title..." className="bg-[#ECE7DC] text-[#121110] border-none w-full text-xl py-4"/>
               </div>
 
               <div>
-                <label className="block text-sm text-[#E8481C] mb-2">Content * (Supports Markdown / HTML later)</label>
+                <label className="block text-sm text-t-copper mb-2">Content * (Supports Markdown / HTML later)</label>
                 <textarea 
                   required
                   rows={15}
                   value={content} 
                   onChange={e => setContent(e.target.value)} 
                   placeholder="Write your amazing content here..." 
-                  className="w-full bg-black/20 border-none rounded-ibig p-6 text-white text-base focus:ring-2 focus:ring-[#E8481C]/50 outline-none resize-y"
+                  className="w-full bg-[#ECE7DC] border-none rounded-ibig p-6 text-[#121110] text-base focus:ring-2 focus:ring-[#E8481C]/50 outline-none resize-y"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-[#E8481C] mb-2">Tags (comma separated)</label>
-                <Input value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g. Worship, Event, Guide" className="bg-black/20 text-white border-none w-full"/>
+                <label className="block text-sm text-t-copper mb-2">Tags (comma separated)</label>
+                <Input value={tags} onChange={e => setTags(e.target.value)} placeholder="e.g. Worship, Event, Guide" className="bg-[#ECE7DC] text-[#121110] border-none w-full"/>
               </div>
 
               {/* Cover Image */}
-              <div className="p-4 bg-black/10 rounded-ibig border border-dashed border-[#78716A]/50">
-                <label className="block text-sm font-bold text-white mb-2 flex items-center">
+              <div className="p-4 bg-[#ECE7DC] rounded-ibig border border-dashed border-[#78716A]/50">
+                <label className="block text-sm font-bold text-[#121110] mb-2 flex items-center">
                   <ImageIcon className="w-4 h-4 mr-2"/> Cover Image {currentId && !imageFile ? '(Keep Existing)' : ''}
                 </label>
                 <input type="file" accept="image/*" onChange={e => setImageFile(e.target.files?.[0] || null)} className="text-sm file:mr-4 file:py-2 file:px-4 file:rounded-ibig file:border-0 file:text-sm file:font-semibold file:bg-[#E8481C] file:text-[#121110] hover:file:bg-[#E8481C]/80" />
-                {existingImageUrl && !imageFile && <p className="text-xs text-green-400 mt-2">✓ Existing Image will be kept.</p>}
+                {existingImageUrl && !imageFile && <p className="text-xs text-green-800 mt-2">✓ Existing Image will be kept.</p>}
               </div>
             </div>
 
@@ -251,27 +251,27 @@ export default function AdminBlogPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {blogs.length === 0 ? (
-            <div className="md:col-span-3 p-8 text-center text-gray-400 bg-[#121110]/50 rounded-2xl border border-[#78716A]/20">No blog posts found. Write one!</div>
+            <div className="md:col-span-3 p-8 text-center text-t-muted bg-[#FFFDF9] rounded-2xl border border-[#78716A]/20">No blog posts found. Write one!</div>
           ) : (
             blogs.map(blog => (
-              <Card key={blog.id} className="bg-[#121110]/50 border border-[#78716A]/20 flex flex-col justify-between overflow-hidden">
+              <Card key={blog.id} className="bg-[#FFFDF9] border border-[#78716A]/20 flex flex-col justify-between overflow-hidden">
                 {blog.imageUrl && (
                   <div className="h-40 w-full bg-cover bg-center border-b border-[#78716A]/20" style={{ backgroundImage: `url(${blog.imageUrl})` }}></div>
                 )}
                 <div className="p-6">
-                  <p className="text-xs text-[#78716A] mb-2">{new Date(blog.createdAt).toLocaleDateString()}</p>
-                  <h3 className="text-lg font-bold text-white mb-2 line-clamp-2">{blog.title}</h3>
-                  <p className="text-sm text-gray-400 line-clamp-3 mb-4">{blog.content}</p>
+                  <p className="text-xs text-t-muted mb-2">{new Date(blog.createdAt).toLocaleDateString()}</p>
+                  <h3 className="text-lg font-bold text-[#121110] mb-2 line-clamp-2">{blog.title}</h3>
+                  <p className="text-sm text-t-muted line-clamp-3 mb-4">{blog.content}</p>
                   
                   <div className="flex flex-wrap gap-2 mb-6">
                     {blog.tags.map(tag => (
-                      <span key={tag} className="text-xs px-2 py-1 bg-[#78716A]/20 text-[#E8481C] rounded">{tag}</span>
+                      <span key={tag} className="text-xs px-2 py-1 bg-[#78716A]/20 text-t-copper rounded">{tag}</span>
                     ))}
                   </div>
 
                   <div className="flex justify-between items-center pt-4 border-t border-[#78716A]/20">
-                    <button onClick={() => handleEdit(blog)} className="text-[#E8481C] hover:text-white flex items-center text-sm"><Edit className="w-4 h-4 mr-1"/> Edit</button>
-                    <button onClick={() => handleDelete(blog.id!)} className="text-red-400 hover:text-red-300 flex items-center text-sm"><Trash2 className="w-4 h-4 mr-1"/> Delete</button>
+                    <button onClick={() => handleEdit(blog)} className="text-t-copper hover:text-[#B3350F] flex items-center text-sm"><Edit className="w-4 h-4 mr-1"/> Edit</button>
+                    <button onClick={() => handleDelete(blog.id!)} className="text-red-700 hover:text-red-700 flex items-center text-sm"><Trash2 className="w-4 h-4 mr-1"/> Delete</button>
                   </div>
                 </div>
               </Card>

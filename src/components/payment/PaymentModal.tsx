@@ -58,7 +58,7 @@ export function PaymentModal({ isOpen, onClose }: PaymentModalProps) {
               {t.rich('successBody', { br: () => <br /> })}
             </p>
             <button 
-              className="bg-[#121110] text-white w-full py-3 rounded-lg font-bold"
+              className="bg-[#FFFDF9] text-[#121110] w-full py-3 rounded-lg font-bold"
               onClick={() => {
                 setIsSuccess(false);
                 onClose();

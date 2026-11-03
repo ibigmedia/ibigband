@@ -16,7 +16,7 @@ export default function AdminMailPage() {
   }, [user, userData, loading, router]);
 
   if (loading || !user || userData?.role !== 'admin') {
-    return <div className="p-8 text-white">Loading...</div>;
+    return <div className="p-8 text-[#121110]">Loading...</div>;
   }
 
   const [recipient, setRecipient] = useState('all');
@@ -32,17 +32,17 @@ export default function AdminMailPage() {
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#E8481C]">이메일 및 보고서 발송</h1>
-          <p className="text-white/60 mt-2">팀원, 외부 초청 스피커 등에게 시스템 메일을 전송합니다.</p>
+          <h1 className="text-3xl font-bold text-t-copper">이메일 및 보고서 발송</h1>
+          <p className="text-t-muted mt-2">팀원, 외부 초청 스피커 등에게 시스템 메일을 전송합니다.</p>
         </div>
       </div>
       
-      <div className="bg-[#121110] rounded-2xl p-8 border border-white/5 space-y-6">
+      <div className="bg-[#FFFDF9] rounded-2xl p-8 border border-[#E0DBD0] space-y-6">
         
         <div className="space-y-2">
-          <label className="text-sm text-white/60 font-medium">수신자 그룹</label>
+          <label className="text-sm text-t-muted font-medium">수신자 그룹</label>
           <select 
-            className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
+            className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
             value={recipient}
             onChange={(e) => setRecipient(e.target.value)}
           >
@@ -55,32 +55,32 @@ export default function AdminMailPage() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-white/60 font-medium">이메일 제목</label>
+          <label className="text-sm text-t-muted font-medium">이메일 제목</label>
           <input 
             type="text" 
             placeholder="[알림] 이번 주일 콘티 및 스케줄 브리핑"
-            className="w-full bg-[#1A1817] border border-white/10 text-white p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
+            className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-3 rounded-lg focus:outline-none focus:border-[#E8481C]"
             value={subject}
             onChange={(e) => setSubject(e.target.value)}
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm text-white/60 font-medium">내용 및 셑리스트 요약 (HTML 지원)</label>
+          <label className="text-sm text-t-muted font-medium">내용 및 셑리스트 요약 (HTML 지원)</label>
           <textarea 
             rows={10}
             placeholder="여기에 팀원들에게 전할 메시지, 또는 집회 결산 보고 내용을 작성하세요..."
-            className="w-full bg-[#1A1817] border border-white/10 text-white p-4 rounded-lg focus:outline-none focus:border-[#E8481C] resize-y"
+            className="w-full bg-[#F5F2EC] border border-[#E0DBD0] text-[#121110] p-4 rounded-lg focus:outline-none focus:border-[#E8481C] resize-y"
             value={content}
             onChange={(e) => setContent(e.target.value)}
           ></textarea>
         </div>
 
-        <div className="pt-4 flex justify-between items-center border-t border-white/5">
-           <p className="text-xs text-white/40">ⓘ 이메일 발송 엔진은 Resend API 연동을 통해 전송될 예정입니다.</p>
+        <div className="pt-4 flex justify-between items-center border-t border-[#E0DBD0]">
+           <p className="text-xs text-t-muted">ⓘ 이메일 발송 엔진은 Resend API 연동을 통해 전송될 예정입니다.</p>
            <button 
              onClick={handleSend}
-             className="bg-[#E8481C] text-[#1A1817] px-8 py-3 rounded-lg font-bold hover:bg-[#D4B384] transition-colors"
+             className="bg-[#E8481C] text-[#121110] px-8 py-3 rounded-lg font-bold hover:bg-[#E8481C] transition-colors"
            >
              메일 보내기
            </button>

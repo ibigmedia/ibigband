@@ -204,11 +204,11 @@ export default function UsersManagementPage() {
       {/* 헤더 */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold font-handwriting text-[#E8481C]">회원 관리</h1>
-          <p className="text-gray-400 mt-1 text-sm">총 {stats.total}명 · 승인 {stats.approved} · 대기 {stats.pending} · 프리미엄 {stats.premium}</p>
+          <h1 className="text-2xl font-bold font-handwriting text-t-copper">회원 관리</h1>
+          <p className="text-t-muted mt-1 text-sm">총 {stats.total}명 · 승인 {stats.approved} · 대기 {stats.pending} · 프리미엄 {stats.premium}</p>
         </div>
         <button onClick={() => { setLoading(true); fetchUsers(); }}
-          className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-sm font-bold transition-colors">
+          className="flex items-center gap-2 px-4 py-2 bg-[#FFFDF9] hover:bg-[#ECE7DC] text-[#121110] rounded-xl text-sm font-bold transition-colors">
           <RefreshCw size={14} /> 새로고침
         </button>
       </div>
@@ -216,11 +216,11 @@ export default function UsersManagementPage() {
       {/* 통계 카드 */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {[
-          { label: '전체 회원', value: stats.total, icon: <Users size={18} />, color: 'text-white', bg: 'bg-white/10' },
-          { label: '승인 대기', value: stats.pending, icon: <Clock size={18} />, color: 'text-yellow-400', bg: 'bg-yellow-500/10', onClick: () => setFilter('pending') },
-          { label: '밴드멤버', value: stats.member, icon: <Users size={18} />, color: 'text-purple-400', bg: 'bg-purple-500/10' },
-          { label: '관리자', value: stats.admin, icon: <Shield size={18} />, color: 'text-green-400', bg: 'bg-green-500/10' },
-          { label: '프리미엄', value: stats.premium, icon: <Crown size={18} />, color: 'text-[#E8481C]', bg: 'bg-[#E8481C]/10' },
+          { label: '전체 회원', value: stats.total, icon: <Users size={18} />, color: 'text-[#121110]', bg: 'bg-[#FFFDF9]' },
+          { label: '승인 대기', value: stats.pending, icon: <Clock size={18} />, color: 'text-amber-800', bg: 'bg-yellow-500/10', onClick: () => setFilter('pending') },
+          { label: '밴드멤버', value: stats.member, icon: <Users size={18} />, color: 'text-t-copper', bg: 'bg-purple-500/10' },
+          { label: '관리자', value: stats.admin, icon: <Shield size={18} />, color: 'text-green-800', bg: 'bg-green-500/10' },
+          { label: '프리미엄', value: stats.premium, icon: <Crown size={18} />, color: 'text-t-copper', bg: 'bg-[#E8481C]/10' },
         ].map(s => (
           <button key={s.label} onClick={s.onClick} className={`${s.bg} border border-[#78716A]/10 rounded-xl p-4 text-left transition-all hover:scale-[1.02] ${s.onClick ? 'cursor-pointer' : ''}`}>
             <div className={`flex items-center gap-2 ${s.color} mb-2`}>{s.icon}<span className="text-xs font-bold">{s.label}</span></div>
@@ -236,14 +236,14 @@ export default function UsersManagementPage() {
             className="w-full flex items-center justify-between px-5 py-4 hover:bg-yellow-500/5 transition-colors">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-yellow-500/20 rounded-lg flex items-center justify-center">
-                <AlertTriangle size={16} className="text-yellow-400" />
+                <AlertTriangle size={16} className="text-amber-800" />
               </div>
               <div className="text-left">
-                <p className="text-white font-bold text-sm">승인 대기 {pendingUsers.length}명</p>
-                <p className="text-yellow-400/60 text-xs">가입 신청을 검토하고 승인/거절하세요</p>
+                <p className="text-[#121110] font-bold text-sm">승인 대기 {pendingUsers.length}명</p>
+                <p className="text-amber-800/60 text-xs">가입 신청을 검토하고 승인/거절하세요</p>
               </div>
             </div>
-            {expandedPending ? <ChevronUp size={18} className="text-yellow-400" /> : <ChevronDown size={18} className="text-yellow-400" />}
+            {expandedPending ? <ChevronUp size={18} className="text-amber-800" /> : <ChevronDown size={18} className="text-amber-800" />}
           </button>
 
           {expandedPending && (
@@ -252,16 +252,16 @@ export default function UsersManagementPage() {
                 <div key={u.id} className="px-5 py-4 flex flex-col md:flex-row md:items-center gap-4">
                   {/* 프로필 */}
                   <div className="flex items-start gap-3 flex-1 min-w-0">
-                    <div className="w-11 h-11 rounded-full bg-yellow-500/20 text-yellow-400 flex items-center justify-center font-bold shrink-0 text-sm">
+                    <div className="w-11 h-11 rounded-full bg-yellow-500/20 text-amber-800 flex items-center justify-center font-bold shrink-0 text-sm">
                       {(u.displayName || u.email || 'U')[0].toUpperCase()}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-white font-bold text-sm truncate">{u.displayName || 'No Name'}</p>
-                      <p className="text-[#78716A] text-xs truncate">{u.email}</p>
+                      <p className="text-[#121110] font-bold text-sm truncate">{u.displayName || 'No Name'}</p>
+                      <p className="text-t-muted text-xs truncate">{u.email}</p>
                       {u.bio && (
-                        <p className="text-gray-400 text-xs mt-1.5 line-clamp-2 bg-black/20 rounded-lg px-3 py-2">{u.bio}</p>
+                        <p className="text-t-muted text-xs mt-1.5 line-clamp-2 bg-[#ECE7DC] rounded-lg px-3 py-2">{u.bio}</p>
                       )}
-                      <p className="text-[#78716A] text-[11px] mt-1">가입: {formatDate(u.createdAt)}</p>
+                      <p className="text-t-muted text-[11px] mt-1">가입: {formatDate(u.createdAt)}</p>
                     </div>
                   </div>
                   {/* 액션 */}
@@ -269,19 +269,19 @@ export default function UsersManagementPage() {
                     <button
                       onClick={() => handleApprove(u.id, u.displayName)}
                       disabled={actionLoading === u.id}
-                      className="flex items-center gap-1.5 px-5 py-2.5 bg-green-500/20 text-green-400 hover:bg-green-500/30 rounded-xl text-sm font-bold transition-colors disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-5 py-2.5 bg-green-500/20 text-green-800 hover:bg-green-500/30 rounded-xl text-sm font-bold transition-colors disabled:opacity-50"
                     >
                       {actionLoading === u.id ? <Loader2 size={14} className="animate-spin" /> : <UserCheck size={14} />} 승인
                     </button>
                     <button
                       onClick={() => handleReject(u.id, u.displayName)}
                       disabled={actionLoading === u.id}
-                      className="flex items-center gap-1.5 px-5 py-2.5 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-xl text-sm font-bold transition-colors disabled:opacity-50"
+                      className="flex items-center gap-1.5 px-5 py-2.5 bg-red-500/10 text-red-700 hover:bg-red-500/20 rounded-xl text-sm font-bold transition-colors disabled:opacity-50"
                     >
                       <UserX size={14} /> 거절
                     </button>
                     <button onClick={() => setEmailModal(u)}
-                      className="p-2.5 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-[#E8481C] rounded-xl transition-colors" title="이메일 보내기">
+                      className="p-2.5 bg-[#FFFDF9] hover:bg-[#ECE7DC] text-t-muted hover:text-t-copper rounded-xl transition-colors" title="이메일 보내기">
                       <Mail size={14} />
                     </button>
                   </div>
@@ -294,20 +294,20 @@ export default function UsersManagementPage() {
 
       {/* 검색 + 필터 */}
       <div className="flex flex-col md:flex-row gap-3">
-        <div className="flex items-center bg-[#121110]/50 border border-[#78716A]/20 rounded-xl px-4 flex-1 focus-within:border-[#E8481C] transition-colors">
-          <Search size={16} className="text-[#78716A] shrink-0" />
+        <div className="flex items-center bg-[#FFFDF9] border border-[#78716A]/20 rounded-xl px-4 flex-1 focus-within:border-[#E8481C] transition-colors">
+          <Search size={16} className="text-t-muted shrink-0" />
           <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
             placeholder="이름, 이메일, 자기소개로 검색..."
-            className="bg-transparent text-white px-3 py-3 w-full focus:outline-none placeholder:text-[#78716A]/60 text-sm" />
+            className="bg-transparent text-[#121110] px-3 py-3 w-full focus:outline-none placeholder:text-t-muted text-sm" />
           {searchQuery && (
-            <button onClick={() => setSearchQuery('')} className="text-[#78716A] hover:text-white p-1"><X size={14} /></button>
+            <button onClick={() => setSearchQuery('')} className="text-t-muted hover:text-[#B3350F] p-1"><X size={14} /></button>
           )}
         </div>
-        <div className="flex items-center gap-1.5 bg-[#121110]/50 border border-[#78716A]/20 rounded-xl p-1.5">
+        <div className="flex items-center gap-1.5 bg-[#FFFDF9] border border-[#78716A]/20 rounded-xl p-1.5">
           {(['all', 'pending', 'approved', 'rejected'] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                filter === f ? 'bg-[#E8481C] text-[#121110] shadow-sm' : 'text-gray-400 hover:text-white hover:bg-white/10'
+                filter === f ? 'bg-[#E8481C] text-[#121110] shadow-sm' : 'text-t-muted hover:text-[#B3350F] hover:bg-[#ECE7DC]'
               }`}>
               {f === 'all' ? `전체 (${stats.total})` : f === 'pending' ? `대기 (${stats.pending})` : f === 'approved' ? `승인 (${stats.approved})` : `거절 (${stats.rejected})`}
             </button>
@@ -320,11 +320,11 @@ export default function UsersManagementPage() {
         {/* 회원 목록 */}
         <div className={`flex-1 min-w-0 space-y-2 ${selectedUser ? 'hidden md:block md:max-w-[55%]' : ''}`}>
           {loading ? (
-            <div className="flex items-center justify-center py-20 text-[#78716A]">
+            <div className="flex items-center justify-center py-20 text-t-muted">
               <Loader2 size={20} className="animate-spin mr-2" /> 회원 데이터를 불러오는 중...
             </div>
           ) : filteredUsers.length === 0 ? (
-            <div className="text-center py-20 text-[#78716A] text-sm">
+            <div className="text-center py-20 text-t-muted text-sm">
               {searchQuery ? '검색 결과가 없습니다' : '해당 상태의 회원이 없습니다'}
             </div>
           ) : (
@@ -333,36 +333,36 @@ export default function UsersManagementPage() {
                 className={`w-full text-left rounded-xl border transition-all ${
                   selectedUser?.id === u.id
                     ? 'bg-[#E8481C]/10 border-[#E8481C]/30'
-                    : 'bg-[#121110]/50 border-[#78716A]/10 hover:border-[#78716A]/30 hover:bg-[#121110]/70'
+                    : 'bg-[#FFFDF9] border-[#78716A]/10 hover:border-[#78716A]/30 hover:bg-[#FFFDF9]'
                 } p-4`}>
                 <div className="flex items-center gap-3">
                   {u.photoURL ? (
                     <img src={u.photoURL} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
                   ) : (
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 text-sm ${
-                      u.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400'
-                      : u.role === 'admin' ? 'bg-green-500/20 text-green-400'
-                      : 'bg-[#78716A]/20 text-[#78716A]'
+                      u.status === 'pending' ? 'bg-yellow-500/20 text-amber-800'
+                      : u.role === 'admin' ? 'bg-green-500/20 text-green-800'
+                      : 'bg-[#78716A]/20 text-t-muted'
                     }`}>
                       {(u.displayName || u.email || 'U')[0].toUpperCase()}
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="text-white font-bold text-sm truncate">{u.displayName || 'No Name'}</span>
-                      {(u.grade === 'admin' || u.role === 'admin') && <Shield size={12} className="text-green-400 shrink-0" />}
-                      {u.grade === 'member' && <Users size={12} className="text-purple-400 shrink-0" />}
-                      {u.isPremium && <Crown size={12} className="text-[#E8481C] shrink-0" />}
+                      <span className="text-[#121110] font-bold text-sm truncate">{u.displayName || 'No Name'}</span>
+                      {(u.grade === 'admin' || u.role === 'admin') && <Shield size={12} className="text-green-800 shrink-0" />}
+                      {u.grade === 'member' && <Users size={12} className="text-t-copper shrink-0" />}
+                      {u.isPremium && <Crown size={12} className="text-t-copper shrink-0" />}
                     </div>
-                    <p className="text-[#78716A] text-xs truncate">{u.email}</p>
+                    <p className="text-t-muted text-xs truncate">{u.email}</p>
                   </div>
                   <div className="shrink-0">
                     {u.status === 'pending' ? (
-                      <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded-full text-[11px] font-bold">대기</span>
+                      <span className="px-2 py-0.5 bg-yellow-500/20 text-amber-800 rounded-full text-[11px] font-bold">대기</span>
                     ) : u.status === 'rejected' ? (
-                      <span className="px-2 py-0.5 bg-red-500/20 text-red-400 rounded-full text-[11px] font-bold">거절</span>
+                      <span className="px-2 py-0.5 bg-red-500/20 text-red-700 rounded-full text-[11px] font-bold">거절</span>
                     ) : (
-                      <span className="px-2 py-0.5 bg-blue-500/10 text-blue-400 rounded-full text-[11px] font-bold">승인</span>
+                      <span className="px-2 py-0.5 bg-blue-500/10 text-t-copper rounded-full text-[11px] font-bold">승인</span>
                     )}
                   </div>
                 </div>
@@ -377,9 +377,9 @@ export default function UsersManagementPage() {
             <Card className="bg-[#121110] border border-[#78716A]/20 overflow-hidden h-full md:h-auto md:sticky md:top-4 md:max-h-[calc(100vh-120px)] overflow-y-auto
               fixed inset-4 md:relative md:inset-auto z-50 md:z-auto">
               {/* 닫기 */}
-              <div className="flex items-center justify-between px-5 py-3 border-b border-[#78716A]/10 bg-black/20">
-                <span className="text-xs text-[#78716A] font-bold uppercase tracking-wider">회원 상세</span>
-                <button onClick={() => setSelectedUser(null)} className="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white">
+              <div className="flex items-center justify-between px-5 py-3 border-b border-[#78716A]/10 bg-[#ECE7DC]">
+                <span className="text-xs text-t-muted font-bold uppercase tracking-wider">회원 상세</span>
+                <button onClick={() => setSelectedUser(null)} className="p-1.5 hover:bg-[#ECE7DC] rounded-lg text-t-muted hover:text-[#B3350F]">
                   <X size={16} />
                 </button>
               </div>
@@ -391,34 +391,34 @@ export default function UsersManagementPage() {
                     <img src={selectedUser.photoURL} alt="" className="w-16 h-16 rounded-2xl object-cover" />
                   ) : (
                     <div className={`w-16 h-16 rounded-2xl flex items-center justify-center font-bold text-xl ${
-                      selectedUser.status === 'pending' ? 'bg-yellow-500/20 text-yellow-400'
-                      : selectedUser.role === 'admin' ? 'bg-green-500/20 text-green-400'
-                      : 'bg-[#78716A]/20 text-[#78716A]'
+                      selectedUser.status === 'pending' ? 'bg-yellow-500/20 text-amber-800'
+                      : selectedUser.role === 'admin' ? 'bg-green-500/20 text-green-800'
+                      : 'bg-[#78716A]/20 text-t-muted'
                     }`}>
                       {(selectedUser.displayName || 'U')[0].toUpperCase()}
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-white font-bold text-lg truncate">{selectedUser.displayName || 'No Name'}</h3>
-                    <p className="text-[#78716A] text-sm truncate">{selectedUser.email}</p>
+                    <h3 className="text-[#121110] font-bold text-lg truncate">{selectedUser.displayName || 'No Name'}</h3>
+                    <p className="text-t-muted text-sm truncate">{selectedUser.email}</p>
                     <div className="flex items-center gap-2 mt-2 flex-wrap">
                       {/* 등급 배지 */}
                       {(selectedUser.grade === 'admin' || selectedUser.role === 'admin') ? (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-green-500/20 text-green-400 rounded-full text-[11px] font-bold"><Shield size={10} />관리자</span>
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-green-500/20 text-green-800 rounded-full text-[11px] font-bold"><Shield size={10} />관리자</span>
                       ) : selectedUser.grade === 'member' ? (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-purple-500/20 text-purple-400 rounded-full text-[11px] font-bold"><Users size={10} />밴드멤버</span>
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-purple-500/20 text-t-copper rounded-full text-[11px] font-bold"><Users size={10} />밴드멤버</span>
                       ) : (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-gray-500/20 text-gray-400 rounded-full text-[11px] font-bold"><Users size={10} />기본회원</span>
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-gray-500/20 text-t-muted rounded-full text-[11px] font-bold"><Users size={10} />기본회원</span>
                       )}
                       {selectedUser.isPremium && (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-[#E8481C]/20 text-[#E8481C] rounded-full text-[11px] font-bold"><Crown size={10} />프리미엄</span>
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-[#E8481C]/20 text-t-copper rounded-full text-[11px] font-bold"><Crown size={10} />프리미엄</span>
                       )}
                       {/* 승인 상태 */}
                       {selectedUser.status === 'pending' && (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded-full text-[11px] font-bold"><Clock size={10} />승인 대기</span>
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-yellow-500/20 text-amber-800 rounded-full text-[11px] font-bold"><Clock size={10} />승인 대기</span>
                       )}
                       {selectedUser.status === 'rejected' && (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500/20 text-red-400 rounded-full text-[11px] font-bold"><XCircle size={10} />거절됨</span>
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-red-500/20 text-red-700 rounded-full text-[11px] font-bold"><XCircle size={10} />거절됨</span>
                       )}
                     </div>
                   </div>
@@ -428,7 +428,7 @@ export default function UsersManagementPage() {
               {/* 승인/거절 액션 (대기 상태일 때) */}
               {selectedUser.status === 'pending' && (
                 <div className="px-5 py-4 border-b border-[#78716A]/10 bg-yellow-500/5">
-                  <p className="text-yellow-400 text-xs font-bold mb-3">이 회원의 가입 신청을 검토하세요</p>
+                  <p className="text-amber-800 text-xs font-bold mb-3">이 회원의 가입 신청을 검토하세요</p>
                   <div className="flex gap-2">
                     <button onClick={() => handleApprove(selectedUser.id, selectedUser.displayName)}
                       disabled={actionLoading === selectedUser.id}
@@ -437,7 +437,7 @@ export default function UsersManagementPage() {
                     </button>
                     <button onClick={() => handleReject(selectedUser.id, selectedUser.displayName)}
                       disabled={actionLoading === selectedUser.id}
-                      className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-xl text-sm font-bold transition-colors disabled:opacity-50">
+                      className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-500/20 hover:bg-red-500/30 text-red-700 rounded-xl text-sm font-bold transition-colors disabled:opacity-50">
                       <UserX size={14} /> 거절하기
                     </button>
                   </div>
@@ -447,8 +447,8 @@ export default function UsersManagementPage() {
               {/* 자기소개 */}
               {selectedUser.bio && (
                 <div className="px-5 py-4 border-b border-[#78716A]/10">
-                  <p className="text-[#78716A] text-xs font-bold uppercase tracking-wider mb-2">자기소개</p>
-                  <p className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap bg-black/20 rounded-xl p-3">
+                  <p className="text-t-muted text-xs font-bold uppercase tracking-wider mb-2">자기소개</p>
+                  <p className="text-t-muted text-sm leading-relaxed whitespace-pre-wrap bg-[#ECE7DC] rounded-xl p-3">
                     {selectedUser.bio}
                   </p>
                 </div>
@@ -456,27 +456,27 @@ export default function UsersManagementPage() {
 
               {/* 상세 정보 */}
               <div className="px-5 py-4 border-b border-[#78716A]/10">
-                <p className="text-[#78716A] text-xs font-bold uppercase tracking-wider mb-3">회원 정보</p>
+                <p className="text-t-muted text-xs font-bold uppercase tracking-wider mb-3">회원 정보</p>
                 <div className="space-y-2.5 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-[#78716A]">UID</span>
-                    <span className="text-gray-400 font-mono text-xs">{selectedUser.id.slice(0, 16)}...</span>
+                    <span className="text-t-muted">UID</span>
+                    <span className="text-t-muted font-mono text-xs">{selectedUser.id.slice(0, 16)}...</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#78716A]">가입일</span>
-                    <span className="text-gray-300">{formatDate(selectedUser.createdAt)}</span>
+                    <span className="text-t-muted">가입일</span>
+                    <span className="text-t-muted">{formatDate(selectedUser.createdAt)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#78716A]">상태</span>
-                    <span className="text-gray-300">{selectedUser.status === 'pending' ? '승인 대기' : selectedUser.status === 'rejected' ? '거절됨' : '승인됨'}</span>
+                    <span className="text-t-muted">상태</span>
+                    <span className="text-t-muted">{selectedUser.status === 'pending' ? '승인 대기' : selectedUser.status === 'rejected' ? '거절됨' : '승인됨'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#78716A]">등급</span>
-                    <span className="text-gray-300">{(selectedUser.grade === 'admin' || selectedUser.role === 'admin') ? '관리자' : selectedUser.grade === 'member' ? '밴드멤버' : '기본회원'}</span>
+                    <span className="text-t-muted">등급</span>
+                    <span className="text-t-muted">{(selectedUser.grade === 'admin' || selectedUser.role === 'admin') ? '관리자' : selectedUser.grade === 'member' ? '밴드멤버' : '기본회원'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-[#78716A]">프리미엄</span>
-                    <span className="text-gray-300">{selectedUser.isPremium ? '예' : '아니오'}</span>
+                    <span className="text-t-muted">프리미엄</span>
+                    <span className="text-t-muted">{selectedUser.isPremium ? '예' : '아니오'}</span>
                   </div>
                 </div>
               </div>
@@ -484,7 +484,7 @@ export default function UsersManagementPage() {
               {/* 등급 변경 */}
               {selectedUser.status === 'approved' && (
                 <div className="px-5 py-4 border-b border-[#78716A]/10">
-                  <p className="text-[#78716A] text-xs font-bold uppercase tracking-wider mb-3">회원 등급</p>
+                  <p className="text-t-muted text-xs font-bold uppercase tracking-wider mb-3">회원 등급</p>
                   <div className="grid grid-cols-3 gap-2">
                     {([
                       { grade: 'basic' as const, label: '기본회원', icon: <Users size={14} />, color: 'gray', desc: '기본 접근' },
@@ -499,10 +499,10 @@ export default function UsersManagementPage() {
                           disabled={isActive || actionLoading === selectedUser.id}
                           className={`flex flex-col items-center gap-1.5 py-3 rounded-xl text-xs font-bold transition-all ${
                             isActive
-                              ? g.color === 'green' ? 'bg-green-500/20 text-green-400 ring-1 ring-green-500/40'
-                                : g.color === 'purple' ? 'bg-purple-500/20 text-purple-400 ring-1 ring-purple-500/40'
-                                : 'bg-white/10 text-white ring-1 ring-white/20'
-                              : 'bg-white/5 text-gray-500 hover:bg-white/10 hover:text-gray-300'
+                              ? g.color === 'green' ? 'bg-green-500/20 text-green-800 ring-1 ring-green-500/40'
+                                : g.color === 'purple' ? 'bg-purple-500/20 text-t-copper ring-1 ring-purple-500/40'
+                                : 'bg-[#FFFDF9] text-[#121110] ring-1 ring-white/20'
+                              : 'bg-[#FFFDF9] text-t-muted hover:bg-[#ECE7DC] hover:text-t-muted'
                           } disabled:cursor-default`}
                         >
                           {g.icon}
@@ -517,30 +517,30 @@ export default function UsersManagementPage() {
 
               {/* 관리 액션 */}
               <div className="px-5 py-4 border-b border-[#78716A]/10">
-                <p className="text-[#78716A] text-xs font-bold uppercase tracking-wider mb-3">관리 액션</p>
+                <p className="text-t-muted text-xs font-bold uppercase tracking-wider mb-3">관리 액션</p>
                 <div className="grid grid-cols-2 gap-2">
                   <button onClick={() => setEmailModal(selectedUser)}
-                    className="flex items-center justify-center gap-2 py-2.5 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-bold transition-colors">
+                    className="flex items-center justify-center gap-2 py-2.5 bg-[#FFFDF9] hover:bg-[#ECE7DC] text-[#121110] rounded-xl text-xs font-bold transition-colors">
                     <Mail size={13} /> 이메일 보내기
                   </button>
                   {selectedUser.status === 'approved' && (
                     <button onClick={() => handleTogglePremium(selectedUser.id, selectedUser.isPremium)}
                       disabled={actionLoading === selectedUser.id}
-                      className="flex items-center justify-center gap-2 py-2.5 bg-white/5 hover:bg-white/10 text-white rounded-xl text-xs font-bold transition-colors disabled:opacity-50">
+                      className="flex items-center justify-center gap-2 py-2.5 bg-[#FFFDF9] hover:bg-[#ECE7DC] text-[#121110] rounded-xl text-xs font-bold transition-colors disabled:opacity-50">
                       <Crown size={13} /> {selectedUser.isPremium ? '프리미엄 해제' : '프리미엄 부여'}
                     </button>
                   )}
                   {selectedUser.status === 'rejected' && (
                     <button onClick={() => handleApprove(selectedUser.id, selectedUser.displayName)}
                       disabled={actionLoading === selectedUser.id}
-                      className="flex items-center justify-center gap-2 py-2.5 bg-green-500/10 hover:bg-green-500/20 text-green-400 rounded-xl text-xs font-bold transition-colors disabled:opacity-50">
+                      className="flex items-center justify-center gap-2 py-2.5 bg-green-500/10 hover:bg-green-500/20 text-green-800 rounded-xl text-xs font-bold transition-colors disabled:opacity-50">
                       <UserCheck size={13} /> 승인으로 변경
                     </button>
                   )}
                   {selectedUser.status === 'approved' && (selectedUser.grade !== 'admin' && selectedUser.role !== 'admin') && (
                     <button onClick={() => handleReject(selectedUser.id, selectedUser.displayName)}
                       disabled={actionLoading === selectedUser.id}
-                      className="flex items-center justify-center gap-2 py-2.5 bg-red-500/5 hover:bg-red-500/10 text-red-400/60 hover:text-red-400 rounded-xl text-xs font-bold transition-colors disabled:opacity-50">
+                      className="flex items-center justify-center gap-2 py-2.5 bg-red-500/5 hover:bg-red-500/10 text-red-700/60 hover:text-red-700 rounded-xl text-xs font-bold transition-colors disabled:opacity-50">
                       <UserX size={13} /> 접근 차단
                     </button>
                   )}
@@ -549,23 +549,23 @@ export default function UsersManagementPage() {
 
               {/* 관리자 메모 */}
               <div className="px-5 py-4">
-                <p className="text-[#78716A] text-xs font-bold uppercase tracking-wider mb-3">관리자 메모</p>
+                <p className="text-t-muted text-xs font-bold uppercase tracking-wider mb-3">관리자 메모</p>
                 <div className="flex gap-2">
                   <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
                     placeholder="이 회원에 대한 메모 작성..."
                     onKeyDown={e => e.key === 'Enter' && handleSaveNote()}
-                    className="flex-1 bg-black/20 border border-[#78716A]/20 rounded-xl px-3 py-2 text-sm text-white placeholder:text-[#78716A]/50 focus:outline-none focus:border-[#E8481C]" />
+                    className="flex-1 bg-[#ECE7DC] border border-[#78716A]/20 rounded-xl px-3 py-2 text-sm text-[#121110] placeholder:text-t-muted focus:outline-none focus:border-[#E8481C]" />
                   <button onClick={handleSaveNote} disabled={noteSaving || !noteText.trim()}
-                    className="px-3 py-2 bg-[#E8481C] text-[#121110] rounded-xl text-xs font-bold hover:bg-[#D4B384] transition-colors disabled:opacity-50">
+                    className="px-3 py-2 bg-[#E8481C] text-[#121110] rounded-xl text-xs font-bold hover:bg-[#E8481C] transition-colors disabled:opacity-50">
                     {noteSaving ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                   </button>
                 </div>
                 {selectedUser.notes && selectedUser.notes.length > 0 && (
                   <div className="mt-3 space-y-2">
                     {selectedUser.notes.map((n: any, i: number) => (
-                      <div key={i} className="bg-black/20 rounded-lg px-3 py-2 text-xs text-gray-400">
-                        <p className="text-gray-300">{n.text}</p>
-                        <p className="text-[#78716A] text-[10px] mt-1">{formatDate(n.createdAt)}</p>
+                      <div key={i} className="bg-[#ECE7DC] rounded-lg px-3 py-2 text-xs text-t-muted">
+                        <p className="text-t-muted">{n.text}</p>
+                        <p className="text-t-muted text-[10px] mt-1">{formatDate(n.createdAt)}</p>
                       </div>
                     ))}
                   </div>
@@ -579,38 +579,38 @@ export default function UsersManagementPage() {
       {/* 이메일 발송 모달 */}
       {emailModal && (
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-4" onClick={() => setEmailModal(null)}>
-          <div className="bg-[#121110] border border-[#78716A]/20 rounded-2xl w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#FFFDF9] border border-[#78716A]/20 rounded-2xl w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-[#78716A]/10">
               <div>
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Mail size={18} className="text-[#E8481C]" /> 이메일 보내기
+                <h2 className="text-lg font-bold text-[#121110] flex items-center gap-2">
+                  <Mail size={18} className="text-t-copper" /> 이메일 보내기
                 </h2>
-                <p className="text-xs text-[#78716A] mt-1">수신: {emailModal.displayName} ({emailModal.email})</p>
+                <p className="text-xs text-t-muted mt-1">수신: {emailModal.displayName} ({emailModal.email})</p>
               </div>
-              <button onClick={() => setEmailModal(null)} className="p-1.5 hover:bg-white/10 rounded-lg text-gray-400"><X size={18} /></button>
+              <button onClick={() => setEmailModal(null)} className="p-1.5 hover:bg-[#ECE7DC] rounded-lg text-t-muted"><X size={18} /></button>
             </div>
 
             <div className="p-5 space-y-4">
               <div>
-                <label className="text-xs font-bold text-gray-400 block mb-1.5">제목</label>
+                <label className="text-xs font-bold text-t-muted block mb-1.5">제목</label>
                 <input type="text" value={emailSubject} onChange={e => setEmailSubject(e.target.value)}
                   placeholder="이메일 제목을 입력하세요"
-                  className="w-full bg-black/30 border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#E8481C]" />
+                  className="w-full bg-[#ECE7DC] border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-[#121110] focus:outline-none focus:border-[#E8481C]" />
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-400 block mb-1.5">내용</label>
+                <label className="text-xs font-bold text-t-muted block mb-1.5">내용</label>
                 <textarea value={emailBody} onChange={e => setEmailBody(e.target.value)}
                   placeholder="이메일 내용을 입력하세요..."
                   rows={6}
-                  className="w-full bg-black/30 border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#E8481C] resize-none" />
+                  className="w-full bg-[#ECE7DC] border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-[#121110] focus:outline-none focus:border-[#E8481C] resize-none" />
               </div>
               <div className="flex items-center gap-3 pt-2">
-                <div className="flex-1 text-xs text-[#78716A]">
+                <div className="flex-1 text-xs text-t-muted">
                   발신: hello@ibighome.com · ibiGband 브랜딩 적용
                 </div>
-                <button onClick={() => setEmailModal(null)} className="px-4 py-2.5 text-gray-400 hover:text-white text-sm font-bold">취소</button>
+                <button onClick={() => setEmailModal(null)} className="px-4 py-2.5 text-t-muted hover:text-[#B3350F] text-sm font-bold">취소</button>
                 <button onClick={handleSendEmail} disabled={emailSending || !emailSubject.trim() || !emailBody.trim()}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-[#E8481C] text-[#121110] rounded-xl text-sm font-bold hover:bg-[#D4B384] transition-colors disabled:opacity-50">
+                  className="flex items-center gap-2 px-6 py-2.5 bg-[#E8481C] text-[#121110] rounded-xl text-sm font-bold hover:bg-[#E8481C] transition-colors disabled:opacity-50">
                   {emailSending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />} 발송
                 </button>
               </div>

@@ -164,15 +164,15 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
         <div className="p-6 border-b border-black/5 shrink-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-xl">사이트 라이브러리에서 가져오기</h3>
-            <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+            <button onClick={onClose} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={20} /></button>
           </div>
 
           {/* Tabs */}
           <div className="flex gap-2 mb-4">
-            <button onClick={() => setTab('sheets')} className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'sheets' ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted hover:bg-black/5'}`}>
+            <button onClick={() => setTab('sheets')} className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'sheets' ? 'bg-[#FFFDF9] text-[#121110]' : 'bg-[#F5F2EC] text-t-muted hover:bg-[#ECE7DC]'}`}>
               <FileText size={14} className="inline mr-1.5 -mt-0.5" /> 악보
             </button>
-            <button onClick={() => setTab('music')} className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'music' ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted hover:bg-black/5'}`}>
+            <button onClick={() => setTab('music')} className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${tab === 'music' ? 'bg-[#FFFDF9] text-[#121110]' : 'bg-[#F5F2EC] text-t-muted hover:bg-[#ECE7DC]'}`}>
               <Music size={14} className="inline mr-1.5 -mt-0.5" /> 음악/MR
             </button>
           </div>
@@ -183,7 +183,7 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
             <input
               type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="제목 또는 아티스트 검색..."
-              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#121110]"
+              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#E0DBD0]"
             />
           </div>
         </div>
@@ -202,7 +202,7 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
                     onClick={() => !alreadyExists && toggleItem(item.sourceId!)}
                     className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                       alreadyExists
-                        ? 'bg-black/5 border-black/5 opacity-50 cursor-not-allowed'
+                        ? 'bg-[#ECE7DC] border-black/5 opacity-50 cursor-not-allowed'
                         : selected.has(item.sourceId!)
                         ? 'bg-[#E8481C]/10 border-[#E8481C] cursor-pointer'
                         : 'bg-white border-black/5 hover:border-[#78716A]/30 cursor-pointer'
@@ -210,14 +210,14 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
                   >
                     {/* Checkbox */}
                     <div className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 ${
-                      alreadyExists ? 'bg-black/10 border-black/10' :
-                      selected.has(item.sourceId!) ? 'bg-[#121110] border-[#121110]' : 'border-black/20'
+                      alreadyExists ? 'bg-[#ECE7DC] border-black/10' :
+                      selected.has(item.sourceId!) ? 'bg-[#FFFDF9] border-[#E0DBD0]' : 'border-black/20'
                     }`}>
-                      {(alreadyExists || selected.has(item.sourceId!)) && <Check size={12} className="text-white" />}
+                      {(alreadyExists || selected.has(item.sourceId!)) && <Check size={12} className="text-[#121110]" />}
                     </div>
 
                     {/* Icon */}
-                    <div className={`p-2 rounded-lg shrink-0 ${item.type === 'sheet' ? 'bg-[#121110]/10' : 'bg-[#E8481C]/20'}`}>
+                    <div className={`p-2 rounded-lg shrink-0 ${item.type === 'sheet' ? 'bg-[#FFFDF9]' : 'bg-[#E8481C]/20'}`}>
                       {item.type === 'sheet' ? <FileText size={16} className="text-[#121110]" /> : <FileAudio size={16} className="text-t-copper" />}
                     </div>
 
@@ -229,7 +229,7 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
 
                     {/* Badges */}
                     <div className="flex gap-1 shrink-0">
-                      {item.hasPdf && <span className="text-[12px] font-bold bg-[#121110]/10 px-1.5 py-0.5 rounded">PDF</span>}
+                      {item.hasPdf && <span className="text-[12px] font-bold bg-[#FFFDF9] px-1.5 py-0.5 rounded">PDF</span>}
                       {item.hasAudio && <span className="text-[12px] font-bold bg-[#E8481C]/30 px-1.5 py-0.5 rounded">MP3</span>}
                       {alreadyExists && <span className="text-[12px] font-bold bg-green-100 text-green-700 px-1.5 py-0.5 rounded">추가됨</span>}
                     </div>
@@ -250,7 +250,7 @@ export default function ImportModal({ isOpen, onClose, existingSourceIds, onImpo
             <button
               onClick={handleImport}
               disabled={selected.size === 0}
-              className="px-6 py-2.5 bg-[#121110] text-white rounded-xl font-bold text-sm hover:bg-[#2A2826] transition-colors disabled:opacity-30"
+              className="px-6 py-2.5 bg-[#FFFDF9] text-[#121110] rounded-xl font-bold text-sm hover:bg-[#ECE7DC] transition-colors disabled:opacity-30"
             >
               가져오기
             </button>

@@ -167,7 +167,7 @@ export default function SetListPage() {
       <h1 className="text-2xl font-handwriting text-t-gold mb-6">ibiGband</h1>
       <h2 className="text-2xl font-bold text-[#121110] mb-4">밴드 멤버 전용 페이지입니다</h2>
       <p className="text-t-muted mb-8 max-w-md">로그인 후 셋리스트, 악보, 미디어를 관리할 수 있습니다.</p>
-      <a href="/auth" className="bg-[#121110] text-white px-8 py-4 rounded-full font-bold hover:bg-[#2A2826] transition-colors">로그인 / 회원가입</a>
+      <a href="/auth" className="bg-[#FFFDF9] text-[#121110] px-8 py-4 rounded-full font-bold hover:bg-[#ECE7DC] transition-colors">로그인 / 회원가입</a>
     </div>
   );
 
@@ -212,10 +212,10 @@ export default function SetListPage() {
 
   const getTypeColor = (type: string) => {
     switch(type) {
-      case 'sheet': return 'bg-[#121110] text-white';
-      case 'mr': return 'bg-[#2A2826] text-white';
+      case 'sheet': return 'bg-[#FFFDF9] text-[#121110]';
+      case 'mr': return 'bg-[#ECE7DC] text-[#121110]';
       case 'bgm': return 'bg-[#E8481C] text-[#121110]';
-      case 'transcript': return 'bg-white border border-[#121110]/20 text-[#121110]';
+      case 'transcript': return 'bg-white border border-[#E0DBD0] text-[#121110]';
       case 'guide': return 'bg-blue-50 text-blue-700';
       default: return 'bg-gray-100 text-gray-700';
     }
@@ -696,11 +696,11 @@ export default function SetListPage() {
       {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
       <div className="lg:hidden flex bg-white p-1 shadow-sm border-b border-[#78716A]/10 shrink-0">
         <button onClick={() => setMobileView('files')}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'files' ? 'bg-[#121110] text-white shadow-md' : 'text-t-muted'}`}>
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'files' ? 'bg-[#FFFDF9] text-[#121110] shadow-md' : 'text-t-muted'}`}>
           <Library size={14} className="inline mr-1.5 -mt-0.5" />미디어풀
         </button>
         <button onClick={() => setMobileView('setlist')}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'setlist' ? 'bg-[#121110] text-white shadow-md' : 'text-t-muted'}`}>
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'setlist' ? 'bg-[#FFFDF9] text-[#121110] shadow-md' : 'text-t-muted'}`}>
           <Music size={14} className="inline mr-1.5 -mt-0.5" />셋리스트 <span className="text-[12px] opacity-70">({items.length})</span>
         </button>
       </div>
@@ -715,7 +715,7 @@ export default function SetListPage() {
             { key: 'schedule', icon: <Calendar size={18} />, label: '일정', active: activeTab === 'schedule' },
           ].map(t => (
             <button key={t.key} onClick={() => setActiveTab(t.key as any)}
-              className={`py-2 md:py-3 rounded-xl md:rounded-2xl flex flex-col items-center justify-center gap-1 md:gap-1.5 text-[13px] md:text-[13px] font-bold transition-all ${t.active ? (t.key === 'library' ? 'bg-[#121110] text-[#121110]' : 'bg-[#E8481C] text-[#121110]') + ' shadow-md' : 'text-t-muted hover:bg-black/5'}`}>
+              className={`py-2 md:py-3 rounded-xl md:rounded-2xl flex flex-col items-center justify-center gap-1 md:gap-1.5 text-[13px] md:text-[13px] font-bold transition-all ${t.active ? (t.key === 'library' ? 'bg-[#FFFDF9] text-[#121110]' : 'bg-[#E8481C] text-[#121110]') + ' shadow-md' : 'text-t-muted hover:bg-[#ECE7DC]'}`}>
               {t.icon} {t.label}
             </button>
           ))}
@@ -732,7 +732,7 @@ export default function SetListPage() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-t-muted font-bold">{libraryItems.length}개</span>
                     {libraryItems.length > 0 && (
-                      <button onClick={clearLibrary} className="text-sm text-red-400 hover:text-red-600 px-2 py-1.5 rounded-lg hover:bg-red-50" title="전체 삭제">
+                      <button onClick={clearLibrary} className="text-sm text-red-700 hover:text-red-600 px-2 py-1.5 rounded-lg hover:bg-red-50" title="전체 삭제">
                         <Trash2 size={14} />
                       </button>
                     )}
@@ -742,7 +742,7 @@ export default function SetListPage() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-t-muted" size={16} />
                   <input type="text" value={librarySearchQuery} onChange={e => setLibrarySearchQuery(e.target.value)}
                     placeholder="악보/음원 검색..."
-                    className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-9 pr-3 py-2.5 md:py-3 text-sm md:text-[15px] focus:outline-none focus:border-[#121110]" />
+                    className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-9 pr-3 py-2.5 md:py-3 text-sm md:text-[15px] focus:outline-none focus:border-[#E0DBD0]" />
                 </div>
               </div>
 
@@ -765,14 +765,14 @@ export default function SetListPage() {
                             onKeyDown={e => e.key === 'Enter' && renameLibraryItem(item.id, renameValue)}
                             className="flex-1 text-sm font-bold bg-white border border-[#E8481C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
                           <button onClick={() => renameLibraryItem(item.id, renameValue)} className="p-1.5 text-green-600 hover:bg-green-50 rounded"><Check size={16} /></button>
-                          <button onClick={() => setRenamingItemId(null)} className="p-1.5 text-t-muted hover:bg-black/5 rounded"><X size={16} /></button>
+                          <button onClick={() => setRenamingItemId(null)} className="p-1.5 text-t-muted hover:bg-[#ECE7DC] rounded"><X size={16} /></button>
                         </div>
                       ) : (
                         <p className="font-bold text-sm md:text-[15px] text-[#121110] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
                       )}
                       {item.author && <p className="text-xs md:text-[13px] text-t-muted truncate">{item.author}</p>}
                       <div className="flex gap-1 mt-1.5 md:mt-2 flex-wrap">
-                        {item.hasPdf && <span className="text-[12px] font-bold bg-[#121110]/10 text-[#121110] px-1.5 py-0.5 rounded">PDF</span>}
+                        {item.hasPdf && <span className="text-[12px] font-bold bg-[#FFFDF9] text-[#121110] px-1.5 py-0.5 rounded">PDF</span>}
                         {item.hasAudio && (
                           <button onClick={e => { e.stopPropagation(); togglePlay(item); }}
                             className="flex items-center gap-1 text-[12px] font-bold bg-[#E8481C]/30 hover:bg-[#E8481C]/60 text-t-copper px-1.5 py-0.5 rounded transition-colors">
@@ -788,9 +788,9 @@ export default function SetListPage() {
                     </div>
                     <div className="flex flex-col gap-1 md:grid md:grid-cols-2 md:gap-1.5 shrink-0">
                       <button onClick={() => addToSetlist(item)} className="p-1.5 md:p-2 bg-[#E8481C]/20 text-t-copper hover:bg-[#E8481C] hover:text-[#121110] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={14} /></button>
-                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 md:p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={13} /></button>
+                      <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 md:p-2 text-red-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={13} /></button>
                       <button onClick={() => saveItemToArchive(item)} className="hidden md:block p-2 text-t-muted hover:bg-[#E8481C]/20 hover:text-t-copper rounded-lg transition-colors" title="아카이브에 저장"><Archive size={15} /></button>
-                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="hidden md:block p-2 text-t-muted hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
+                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="hidden md:block p-2 text-t-muted hover:bg-[#ECE7DC] rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
                     </div>
                   </div>
                 ))}
@@ -798,11 +798,11 @@ export default function SetListPage() {
 
               <div className="px-2 py-2 md:p-4 border-t border-black/5 shrink-0 bg-[#F5F2EC] grid grid-cols-2 gap-2 md:gap-3 sticky bottom-0 z-10">
                 <button onClick={() => setActiveTab('upload')}
-                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-t-muted hover:text-[#121110] hover:border-[#121110] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-t-muted hover:text-[#121110] hover:border-[#E0DBD0] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
                   <UploadCloud size={16} /> 가져오기
                 </button>
                 <button onClick={() => setIsTextEditorOpen(true)}
-                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-t-muted hover:text-[#121110] hover:border-[#121110] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-t-muted hover:text-[#121110] hover:border-[#E0DBD0] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
                   <Type size={16} /> 텍스트 작성
                 </button>
               </div>
@@ -820,7 +820,7 @@ export default function SetListPage() {
                   placeholder="'마커스 주는 완전합니다 악보'"
                   className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-3 md:px-4 py-2.5 md:py-3 pr-12 text-sm focus:outline-none focus:border-[#E8481C]" />
                 <button onClick={doAiSearch} disabled={isAiSearching || !searchQuery}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#121110] text-t-gold p-2 rounded-lg disabled:opacity-50"><Search size={14} /></button>
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#FFFDF9] text-t-gold p-2 rounded-lg disabled:opacity-50"><Search size={14} /></button>
               </div>
 
               {/* Clipboard paste zone */}
@@ -905,7 +905,7 @@ export default function SetListPage() {
                   <input type="text" placeholder="메모 (선택)" value={newSchedule.memo || ''}
                     onChange={e => setNewSchedule({...newSchedule, memo: e.target.value})}
                     className="flex-1 bg-[#F5F2EC] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
-                  <button onClick={addSchedule} className="px-4 py-1.5 bg-[#121110] text-white rounded-lg text-xs font-bold hover:bg-[#2A2826] shrink-0">추가</button>
+                  <button onClick={addSchedule} className="px-4 py-1.5 bg-[#FFFDF9] text-[#121110] rounded-lg text-xs font-bold hover:bg-[#ECE7DC] shrink-0">추가</button>
                 </div>
               </div>
 
@@ -932,7 +932,7 @@ export default function SetListPage() {
                         {s.memo && <p className="text-[12px] text-t-muted mt-1 bg-[#F5F2EC] px-2 py-1 rounded-lg">{s.memo}</p>}
                       </div>
                       <button onClick={() => deleteSchedule(s.id)}
-                        className="p-1 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all shrink-0">
+                        className="p-1 text-red-700 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all shrink-0">
                         <Trash2 size={12} />
                       </button>
                     </div>
@@ -948,12 +948,12 @@ export default function SetListPage() {
             <div className="p-5 flex flex-col h-full bg-[#F5F2EC] overflow-y-auto">
               <div className="flex items-center justify-between mb-5 shrink-0">
                 <h3 className="font-bold text-base">미디어 가져오기</h3>
-                <button onClick={() => setActiveTab('library')} className="p-2 hover:bg-black/5 rounded-full"><X size={18} /></button>
+                <button onClick={() => setActiveTab('library')} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={18} /></button>
               </div>
               <div className="flex flex-col gap-3">
                 <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept=".pdf,audio/mpeg,audio/wav,image/jpeg,image/png,image/webp" />
                 {[
-                  { icon: <HardDrive size={24} />, bg: 'bg-[#121110]/5', label: '내 PC에서 업로드', desc: 'PDF, MP3, WAV', onClick: () => fileInputRef.current?.click() },
+                  { icon: <HardDrive size={24} />, bg: 'bg-[#FFFDF9]', label: '내 PC에서 업로드', desc: 'PDF, MP3, WAV', onClick: () => fileInputRef.current?.click() },
                   { icon: <Music size={24} className="text-t-copper" />, bg: 'bg-[#E8481C]/20', label: '사이트 악보/음악', desc: '선택하여 가져오기 (중복 제외)', onClick: () => { setIsImportModalOpen(true); setActiveTab('library'); } },
                   { icon: <Cloud size={24} className="text-blue-500" />, bg: 'bg-blue-50', label: 'Google Drive', desc: '클라우드 파일 선택', onClick: importFromGoogleDrive },
                   { icon: <Type size={24} className="text-amber-700" />, bg: 'bg-amber-50', label: '텍스트 직접 작성', desc: '기도문/멘트/원고 (AI 지원)', onClick: () => { setIsTextEditorOpen(true); setActiveTab('library'); } },
@@ -979,17 +979,17 @@ export default function SetListPage() {
           <header className="p-3 md:p-8 border-b border-black/5">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-1.5 md:gap-2 flex-wrap flex-1 min-w-0">
-                <span className="bg-[#121110] text-white text-[8px] md:text-[12px] font-bold px-2 md:px-2.5 py-0.5 rounded-full tracking-wider uppercase shrink-0">Smart Cue</span>
+                <span className="bg-[#FFFDF9] text-[#121110] text-[8px] md:text-[12px] font-bold px-2 md:px-2.5 py-0.5 rounded-full tracking-wider uppercase shrink-0">Smart Cue</span>
                 <span className="text-[12px] md:text-xs text-t-muted">{items.length}곡</span>
                 <span className="text-t-copper bg-[#E8481C]/30 text-[12px] md:text-[12px] font-bold px-1.5 md:px-2 py-0.5 rounded-full">{calculateTotalDuration()}</span>
               </div>
               <div className="flex gap-1 md:gap-2 items-center shrink-0">
                 <button onClick={() => setIsManagerOpen(true)} className="p-1.5 md:p-2 bg-[#F5F2EC] border border-black/5 rounded-lg md:rounded-xl hover:bg-[#E8481C]/20 transition-colors" title="셋리스트 관리"><FolderOpen size={15} /></button>
-                <button onClick={saveSetlist} className="bg-[#121110] text-t-gold px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[13px] md:text-sm font-bold hover:bg-[#2A2826]">저장</button>
+                <button onClick={saveSetlist} className="bg-[#FFFDF9] text-t-gold px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[13px] md:text-sm font-bold hover:bg-[#ECE7DC]">저장</button>
               </div>
             </div>
             <input value={setlistTitle} onChange={e => setSetlistTitle(e.target.value)}
-              className="text-lg md:text-3xl font-handwriting text-[#121110] bg-transparent border-none outline-none hover:bg-black/5 p-1 rounded-lg w-full" placeholder="셋리스트 제목" />
+              className="text-lg md:text-3xl font-handwriting text-[#121110] bg-transparent border-none outline-none hover:bg-[#ECE7DC] p-1 rounded-lg w-full" placeholder="셋리스트 제목" />
             <div className="flex gap-1.5 flex-wrap mt-2">
               <button onClick={handleExportCueSheet} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#F5F2EC] hover:bg-[#E8481C]/20 rounded-lg border border-black/5 text-[12px] md:text-[13px] font-bold">
                 <FileText size={12} /> 큐시트
@@ -1045,7 +1045,7 @@ export default function SetListPage() {
                                   </button>
                                 )}
                               </div>
-                              <button onClick={() => removeFromSetlist(item.id)} className="p-1 md:p-2 text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"><X size={14} /></button>
+                              <button onClick={() => removeFromSetlist(item.id)} className="p-1 md:p-2 text-red-700 hover:bg-red-50 hover:text-red-600 rounded-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"><X size={14} /></button>
                             </div>
                           </div>
                         )}
@@ -1065,10 +1065,10 @@ export default function SetListPage() {
           </div>
 
           {/* Footer bar */}
-          <div className="bg-[#121110] p-2 md:p-3 flex items-center justify-between gap-2 md:gap-4 text-white rounded-none md:rounded-b-[2rem] overflow-hidden">
+          <div className="bg-[#FFFDF9] p-2 md:p-3 flex items-center justify-between gap-2 md:gap-4 text-[#121110] rounded-none md:rounded-b-[2rem] overflow-hidden">
             <div className="flex items-center gap-3">
               <button onClick={() => playingItem && togglePlay(playingItem)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playingItem ? 'bg-[#E8481C] text-[#121110]' : 'bg-white/10 text-white/75 cursor-not-allowed'}`}>
+                className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playingItem ? 'bg-[#E8481C] text-[#121110]' : 'bg-[#FFFDF9] text-t-muted cursor-not-allowed'}`}>
                 {isPlaying ? <Pause size={16} /> : <Play fill="currentColor" size={16} className="ml-0.5" />}
               </button>
               <div className="min-w-0">
@@ -1077,8 +1077,8 @@ export default function SetListPage() {
               </div>
             </div>
             <div className="flex-1 max-w-xs hidden lg:flex items-center gap-2">
-              <span className="text-[12px] text-white/75 w-7 text-right">{audioCurrentTime}</span>
-              <div className={`h-1 flex-1 bg-white/10 rounded-full overflow-hidden ${playingItem ? 'cursor-pointer' : ''}`}
+              <span className="text-[12px] text-t-muted w-7 text-right">{audioCurrentTime}</span>
+              <div className={`h-1 flex-1 bg-[#FFFDF9] rounded-full overflow-hidden ${playingItem ? 'cursor-pointer' : ''}`}
                 onClick={e => { if (!audioRef.current || !playingItem) return; const r = e.currentTarget.getBoundingClientRect(); audioRef.current.currentTime = ((e.clientX - r.left) / r.width) * audioRef.current.duration; }}>
                 <div className="h-full bg-[#E8481C] transition-all" style={{ width: `${playingItem ? audioProgress : 0}%` }} />
               </div>
@@ -1102,7 +1102,7 @@ export default function SetListPage() {
               localStorage.setItem('ibigband_presenter_items', JSON.stringify(enriched));
               window.open('/setlist/presenter', '_blank');
             }}
-              className="hidden md:flex items-center gap-2 px-5 py-2 bg-white/10 hover:bg-white/20 rounded-xl text-xs font-bold whitespace-nowrap">
+              className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#FFFDF9] hover:bg-[#ECE7DC] rounded-xl text-xs font-bold whitespace-nowrap">
               <LayoutDashboard size={14} /> 프레젠터 뷰
             </button>
             <button onClick={async () => {
@@ -1142,14 +1142,14 @@ export default function SetListPage() {
         </div>
 
         {/* ===== 모바일 하단 FAB 바 (M3 스타일) ===== */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#121110] border-t border-white/10 px-2 py-2 safe-bottom">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#FFFDF9] border-t border-[#E0DBD0] px-2 py-2 safe-bottom">
           <div className="flex items-center justify-around gap-1">
             <button onClick={() => playingItem && togglePlay(playingItem)}
               className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all ${isPlaying ? 'bg-[#E8481C]/20' : ''}`}>
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center ${playingItem ? 'bg-[#E8481C] text-[#121110]' : 'bg-white/10 text-white/75'}`}>
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center ${playingItem ? 'bg-[#E8481C] text-[#121110]' : 'bg-[#FFFDF9] text-t-muted'}`}>
                 {isPlaying ? <Pause size={16} /> : <Play fill="currentColor" size={16} className="ml-0.5" />}
               </div>
-              <span className="text-[12px] text-white/80 font-medium">재생</span>
+              <span className="text-[12px] text-t-muted font-medium">재생</span>
             </button>
             <button onClick={async () => {
               if (items.length === 0) { alert('항목을 추가해주세요.'); return; }
@@ -1170,10 +1170,10 @@ export default function SetListPage() {
               window.open('/setlist/presenter', '_blank');
             }}
               className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 text-white/70">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-[#FFFDF9] text-t-muted">
                 <LayoutDashboard size={16} />
               </div>
-              <span className="text-[12px] text-white/80 font-medium">프레젠터</span>
+              <span className="text-[12px] text-t-muted font-medium">프레젠터</span>
             </button>
             <button onClick={async () => {
               if (items.length === 0) { alert('셋리스트에 곡을 추가해주세요.'); return; }
@@ -1201,14 +1201,14 @@ export default function SetListPage() {
               <div className="w-9 h-9 rounded-full flex items-center justify-center bg-violet-500/30 text-violet-200">
                 <FileText size={16} />
               </div>
-              <span className="text-[12px] text-white/80 font-medium">가사</span>
+              <span className="text-[12px] text-t-muted font-medium">가사</span>
             </button>
             <button onClick={() => setIsArchiveFullscreen(true)}
               className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 text-white/70">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-[#FFFDF9] text-t-muted">
                 <Archive size={16} />
               </div>
-              <span className="text-[12px] text-white/80 font-medium">아카이브</span>
+              <span className="text-[12px] text-t-muted font-medium">아카이브</span>
             </button>
           </div>
         </div>
@@ -1222,7 +1222,7 @@ export default function SetListPage() {
               <h2 className="font-bold text-base md:text-xl flex items-center gap-2">
                 <Archive className="text-t-gold" size={20} /> 아카이브
               </h2>
-              <button onClick={() => setIsArchiveFullscreen(false)} className="p-2 hover:bg-black/5 rounded-full"><X size={22} /></button>
+              <button onClick={() => setIsArchiveFullscreen(false)} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={22} /></button>
             </div>
             <div className="flex-1 overflow-hidden">
               <ArchivePanel
@@ -1300,10 +1300,10 @@ export default function SetListPage() {
               <h3 className="font-bold text-lg flex items-center gap-2"><FileText className="text-t-gold" /> 악보 미리보기</h3>
               <div className="flex items-center gap-2">
                 <a href={previewPdfUrl} target="_blank" rel="noopener noreferrer"
-                  className="text-xs font-bold text-t-muted hover:text-[#121110] px-3 py-1.5 rounded-lg hover:bg-black/5">
+                  className="text-xs font-bold text-t-muted hover:text-[#121110] px-3 py-1.5 rounded-lg hover:bg-[#ECE7DC]">
                   새 탭에서 열기
                 </a>
-                <button onClick={() => setPreviewPdfUrl(null)} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+                <button onClick={() => setPreviewPdfUrl(null)} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={20} /></button>
               </div>
             </div>
             <div className="flex-1 overflow-auto bg-[#F5F2EC] flex items-start justify-center p-4">
@@ -1389,11 +1389,11 @@ export default function SetListPage() {
             </div>
             <div className="p-4 border-t border-black/5 flex justify-end gap-2">
               <button onClick={() => setArchiveSaveItem(null)}
-                className="px-4 py-2 text-sm font-bold text-t-muted hover:bg-black/5 rounded-xl transition-colors">
+                className="px-4 py-2 text-sm font-bold text-t-muted hover:bg-[#ECE7DC] rounded-xl transition-colors">
                 취소
               </button>
               <button onClick={confirmArchiveSave}
-                className="px-5 py-2 bg-[#121110] text-white rounded-xl font-bold text-sm hover:bg-[#2A2826] transition-colors">
+                className="px-5 py-2 bg-[#FFFDF9] text-[#121110] rounded-xl font-bold text-sm hover:bg-[#ECE7DC] transition-colors">
                 저장
               </button>
             </div>
@@ -1407,7 +1407,7 @@ export default function SetListPage() {
           <div className="bg-white rounded-2xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-black/5 shrink-0">
               <h3 className="font-bold text-lg flex items-center gap-2"><Type className="text-t-gold" /> {previewText.title}</h3>
-              <button onClick={() => setPreviewText(null)} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+              <button onClick={() => setPreviewText(null)} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={20} /></button>
             </div>
             <div className="flex-1 overflow-y-auto p-6">
               <div className="whitespace-pre-wrap text-sm leading-relaxed text-[#121110]">{previewText.content}</div>

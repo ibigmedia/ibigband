@@ -80,14 +80,14 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
             <h3 className="font-bold text-xl flex items-center gap-2">
               <Type className="text-t-gold" /> 텍스트 작성
             </h3>
-            <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
+            <button onClick={onClose} className="p-2 hover:bg-[#ECE7DC] rounded-full"><X size={20} /></button>
           </div>
 
           {/* Type selector */}
           <div className="flex gap-2">
             <button
               onClick={() => setType('transcript')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${type === 'transcript' ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted'}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${type === 'transcript' ? 'bg-[#FFFDF9] text-[#121110]' : 'bg-[#F5F2EC] text-t-muted'}`}
             >
               <FileText size={14} /> 기도문 / 원고
             </button>
@@ -108,7 +108,7 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="제목 (예: 대표기도문, MC 오프닝 멘트)"
-            className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-[#121110]"
+            className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-[#E0DBD0]"
           />
 
           {/* AI Generation */}
@@ -126,7 +126,7 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
               <button
                 onClick={generateWithAI}
                 disabled={aiLoading || !aiPrompt.trim()}
-                className="px-4 py-2.5 bg-[#121110] text-t-gold rounded-xl text-sm font-bold hover:bg-[#2A2826] transition-colors disabled:opacity-40 flex items-center gap-1.5 shrink-0"
+                className="px-4 py-2.5 bg-[#FFFDF9] text-t-gold rounded-xl text-sm font-bold hover:bg-[#ECE7DC] transition-colors disabled:opacity-40 flex items-center gap-1.5 shrink-0"
               >
                 {aiLoading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
                 {aiLoading ? '생성 중...' : 'AI 생성'}
@@ -141,12 +141,12 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
               onChange={e => setContent(e.target.value)}
               placeholder="내용을 직접 입력하거나 AI로 생성하세요..."
               rows={12}
-              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm leading-relaxed focus:outline-none focus:border-[#121110] resize-none"
+              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm leading-relaxed focus:outline-none focus:border-[#E0DBD0] resize-none"
             />
             {content && (
               <button
                 onClick={handleCopy}
-                className="absolute top-3 right-3 p-2 bg-white border border-black/10 rounded-lg hover:bg-black/5 transition-colors"
+                className="absolute top-3 right-3 p-2 bg-white border border-black/10 rounded-lg hover:bg-[#ECE7DC] transition-colors"
                 title="복사"
               >
                 {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="text-t-muted" />}
@@ -161,7 +161,7 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
           <button
             onClick={handleAdd}
             disabled={!title.trim()}
-            className="px-6 py-2.5 bg-[#121110] text-white rounded-xl font-bold text-sm hover:bg-[#2A2826] transition-colors disabled:opacity-30"
+            className="px-6 py-2.5 bg-[#FFFDF9] text-[#121110] rounded-xl font-bold text-sm hover:bg-[#ECE7DC] transition-colors disabled:opacity-30"
           >
             라이브러리에 추가
           </button>

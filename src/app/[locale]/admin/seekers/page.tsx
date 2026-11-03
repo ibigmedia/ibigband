@@ -242,15 +242,15 @@ export default function AdminSeekersPage() {
   return (
       <div className="min-h-screen bg-[#F5F2EC] text-[#121110] p-4 md:p-8">
         <div className="max-w-6xl mx-auto space-y-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-[#121110]/10">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-[#E0DBD0]">
             <div>
               <h1 className="text-2xl font-bold">Seekers (구도자) 관리</h1>
-              <p className="text-sm text-[#78716A] mt-1">FAQ 항목, 답변, 추천 미디어(음악, 영상 등)를 편집하세요.</p>
+              <p className="text-sm text-t-muted mt-1">FAQ 항목, 답변, 추천 미디어(음악, 영상 등)를 편집하세요.</p>
             </div>
             {activeTab === 'list' && (
               <button
                 onClick={handleCreateNew}
-                className="flex items-center gap-2 bg-[#121110] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#121110]/80 transition-colors"
+                className="flex items-center gap-2 bg-[#FFFDF9] text-[#121110] px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#FFFDF9] transition-colors"
               >
                 <Plus size={18} />
                 새 질문 추가
@@ -261,48 +261,48 @@ export default function AdminSeekersPage() {
           <div className="flex gap-4 border-b border-[rgba(45,41,38,0.1)] mb-6 px-4">
             <button 
               onClick={() => setActiveTab('list')} 
-              className={`pb-3 px-2 transition-colors ${activeTab === 'list' ? 'border-b-2 border-[#B3350F] font-bold text-[#121110]' : 'text-[#78716A] hover:text-[#121110]'}`}
+              className={`pb-3 px-2 transition-colors ${activeTab === 'list' ? 'border-b-2 border-[#B3350F] font-bold text-[#121110]' : 'text-t-muted hover:text-[#121110]'}`}
             >
               질문 목록
             </button>
             <button 
               onClick={() => setActiveTab('settings')} 
-              className={`pb-3 px-2 transition-colors ${activeTab === 'settings' ? 'border-b-2 border-[#B3350F] font-bold text-[#121110]' : 'text-[#78716A] hover:text-[#121110]'}`}
+              className={`pb-3 px-2 transition-colors ${activeTab === 'settings' ? 'border-b-2 border-[#B3350F] font-bold text-[#121110]' : 'text-t-muted hover:text-[#121110]'}`}
             >
               페이지 설정 (히어로 & 추가 콘텐츠)
             </button>
           </div>
 
           {activeTab === 'list' ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-[#121110]/10 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border border-[#E0DBD0] overflow-hidden">
               {loading ? (
-              <div className="p-8 text-center text-[#78716A]">로딩 중...</div>
+              <div className="p-8 text-center text-t-muted">로딩 중...</div>
             ) : items.length === 0 ? (
-              <div className="p-8 text-center text-[#78716A]">등록된 질문이 없습니다.</div>
+              <div className="p-8 text-center text-t-muted">등록된 질문이 없습니다.</div>
             ) : (
               <div className="divide-y divide-[rgba(45,41,38,0.1)]">
                 {items.map(item => (
                   <div key={item.id} className="p-5 flex items-start sm:items-center justify-between gap-4 hover:bg-[#ECE7DC] transition-colors">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1">
-                        <span className="bg-[#121110]/5 text-[#78716A] text-[11px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                        <span className="bg-[#FFFDF9] text-t-muted text-[11px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                           {CATEGORIES.find(c => c.id === item.category)?.label || item.category}
                         </span>
                         <h3 className="font-bold text-lg text-[#121110] truncate">{item.question}</h3>
                       </div>
-                      <p className="text-sm text-[#78716A] truncate">{item.questionEn}</p>
+                      <p className="text-sm text-t-muted truncate">{item.questionEn}</p>
                       <p className="text-sm text-[#4a4845] mt-2 line-clamp-1">{item.shortAnswer}</p>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         onClick={() => handleEdit(item)}
-                        className="p-2 text-[#78716A] hover:bg-white rounded-lg hover:text-[#B3350F] transition-colors border border-transparent hover:border-[rgba(45,41,38,0.1)]"
+                        className="p-2 text-t-muted hover:bg-white rounded-lg hover:text-[#B3350F] transition-colors border border-transparent hover:border-[rgba(45,41,38,0.1)]"
                       >
                         <Edit2 size={18} />
                       </button>
                       <button
                         onClick={() => handleDelete(item.id)}
-                        className="p-2 text-[#78716A] hover:bg-white rounded-lg hover:text-red-500 transition-colors border border-transparent hover:border-[rgba(45,41,38,0.1)]"
+                        className="p-2 text-t-muted hover:bg-white rounded-lg hover:text-red-500 transition-colors border border-transparent hover:border-[rgba(45,41,38,0.1)]"
                       >
                         <Trash2 size={18} />
                       </button>
@@ -313,9 +313,9 @@ export default function AdminSeekersPage() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-sm border border-[#121110]/10 p-6 space-y-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-[#E0DBD0] p-6 space-y-8">
             {settingsLoading ? (
-               <div className="text-center text-[#78716A] p-8">로딩 중...</div>
+               <div className="text-center text-t-muted p-8">로딩 중...</div>
             ) : (
               <>
                 <div>
@@ -452,11 +452,11 @@ export default function AdminSeekersPage() {
                 <div>
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xl font-bold">배경 음악 플레이리스트 연동</h2>
-                    <p className="text-sm text-[#78716A]">음악 관리 메뉴에 등록된 음원 중 표시할 항목을 선택하세요.</p>
+                    <p className="text-sm text-t-muted">음악 관리 메뉴에 등록된 음원 중 표시할 항목을 선택하세요.</p>
                   </div>
                   
                   {musicList.length === 0 ? (
-                    <div className="text-sm text-[#78716A] p-4 bg-[#F5F2EC] rounded-xl border border-[rgba(45,41,38,0.1)]">
+                    <div className="text-sm text-t-muted p-4 bg-[#F5F2EC] rounded-xl border border-[rgba(45,41,38,0.1)]">
                       등록된 음악이 없습니다. &apos;음악 관리&apos; 메뉴에서 먼저 음원을 등록해주세요.
                     </div>
                   ) : (
@@ -476,12 +476,12 @@ export default function AdminSeekersPage() {
                           className={`p-4 rounded-xl cursor-pointer border transition-colors ${(settings.playlists || []).includes(music.id) ? 'bg-[#ECE7DC] border-[#B3350F]' : 'bg-[#F5F2EC] border-[rgba(45,41,38,0.1)] hover:border-[#B3350F]/50'}`}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border ${(settings.playlists || []).includes(music.id) ? 'bg-[#B3350F] border-[#B3350F] text-white' : 'bg-white border-[#121110]/20'}`}>
+                            <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border ${(settings.playlists || []).includes(music.id) ? 'bg-[#B3350F] border-[#B3350F] text-white' : 'bg-white border-[#E0DBD0]'}`}>
                               {(settings.playlists || []).includes(music.id) && <Check size={14} />}
                             </div>
                             <div className="min-w-0">
                               <p className="font-bold text-sm truncate">{music.title}</p>
-                              {music.artist && <p className="text-xs text-[#78716A] truncate">{music.artist}</p>}
+                              {music.artist && <p className="text-xs text-t-muted truncate">{music.artist}</p>}
                             </div>
                           </div>
                         </div>
@@ -494,7 +494,7 @@ export default function AdminSeekersPage() {
                   <button
                     onClick={handleSaveSettings}
                     disabled={isSaving}
-                    className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#121110] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
+                    className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#FFFDF9] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
                   >
                     {isSaving ? '저장 중...' : '설정 저장'}
                   </button>
@@ -507,11 +507,11 @@ export default function AdminSeekersPage() {
 
         {/* Edit Modal */}
         {isModalOpen && editingItem && (
-          <div className="fixed inset-0 bg-[#121110]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="fixed inset-0 bg-[#FFFDF9] backdrop-blur-sm z-[100] flex items-center justify-center p-4">
             <div className="bg-[#F5F2EC] w-full max-w-4xl rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
               <div className="flex items-center justify-between p-6 border-b border-[rgba(45,41,38,0.1)] shrink-0">
                 <h2 className="text-xl font-bold">{editingItem.id ? '질문 수정' : '새 질문 작성'}</h2>
-                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-[#121110]/5 rounded-full text-[#78716A]">
+                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-[#FFFDF9] rounded-full text-t-muted">
                   <X size={20} />
                 </button>
               </div>
@@ -538,7 +538,7 @@ export default function AdminSeekersPage() {
                       {aiLoading ? '생성 중...' : '생성하기'}
                     </button>
                   </div>
-                  <p className="text-[12px] text-[#78716A] mt-2">주의: 기존 작성 내용이 AI 결과로 덮여씌워집니다.</p>
+                  <p className="text-[12px] text-t-muted mt-2">주의: 기존 작성 내용이 AI 결과로 덮여씌워집니다.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -644,7 +644,7 @@ export default function AdminSeekersPage() {
                         <button
                           type="button"
                           onClick={() => removeMedia(index)}
-                          className="absolute right-3 top-3 p-1 text-red-400 hover:text-red-600 hover:bg-red-50 rounded"
+                          className="absolute right-3 top-3 p-1 text-red-700 hover:text-red-600 hover:bg-red-50 rounded"
                         >
                           <X size={16} />
                         </button>
@@ -707,7 +707,7 @@ export default function AdminSeekersPage() {
                       </div>
                     ))}
                     {editingItem.media?.length === 0 && (
-                      <p className="text-xs text-[#78716A]">추가된 미디어가 없습니다.</p>
+                      <p className="text-xs text-t-muted">추가된 미디어가 없습니다.</p>
                     )}
                   </div>
                 </div>
@@ -717,14 +717,14 @@ export default function AdminSeekersPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-[#78716A] hover:bg-[#ECE7DC] transition-colors"
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-t-muted hover:bg-[#ECE7DC] transition-colors"
                 >
                   취소
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#121110] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#FFFDF9] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
                 >
                   {isSaving ? '저장 중...' : '저장하기'}
                 </button>

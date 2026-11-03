@@ -6,7 +6,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex-1 bg-[#1A1817] text-white flex flex-col min-h-screen">
+    <div className="flex-1 bg-[#F5F2EC] text-[#121110] flex flex-col min-h-screen">
       <div className="flex flex-1 relative">
         <AdminSideNav />
         {/* 모바일 에서는 탭바만큼 공간 확보(pb-28), 상단은 헤더/네비(pt-8) */}
