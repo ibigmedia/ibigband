@@ -41,16 +41,16 @@ export default function Footer() {
           <div className="pt-2 md:pt-0 shrink-0">
             <h5 className="text-white text-[12px] md:text-sm font-bold mb-3 md:mb-8 uppercase tracking-tighter md:tracking-[0.2em] whitespace-nowrap">{t('supportHeading')}</h5>
             <ul className="text-[12px] md:text-base space-y-2 md:space-y-5 font-normal tracking-tighter md:tracking-normal">
-              <li className="cursor-pointer hover:text-white transition-colors flex items-center gap-1 whitespace-nowrap"><ExternalLink size={10} className="md:w-4 md:h-4"/> {t('partnership')}</li>
-              <li className="cursor-pointer hover:text-white transition-colors whitespace-nowrap">{t('privacy')}</li>
-              <li className="cursor-pointer hover:text-white transition-colors whitespace-nowrap">{t('support')}</li>
+              <li><a href="mailto:ibigmedia@gmail.com?subject=Partnership" className="hover:text-white transition-colors flex items-center gap-1 whitespace-nowrap"><ExternalLink size={10} className="md:w-4 md:h-4"/> {t('partnership')}</a></li>
+              <li className="whitespace-nowrap">{t('privacy')}</li>
+              <li><a href="mailto:ibigmedia@gmail.com?subject=Support" className="hover:text-white transition-colors whitespace-nowrap">{t('support')}</a></li>
             </ul>
           </div>
           <div className="pt-2 md:pt-0 shrink-0">
             <h5 className="text-white text-[12px] md:text-sm font-bold mb-3 md:mb-8 uppercase tracking-tighter md:tracking-[0.2em] whitespace-nowrap">{t('globalHeading')}</h5>
             <div className="flex gap-2 flex-wrap">
-              <a href="#" className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E8481C] hover:text-[#121110] transition-all"><Youtube size={16} className="md:w-6 md:h-6" /></a>
-              <a href="#" className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E8481C] hover:text-[#121110] transition-all"><Heart size={16} className="md:w-6 md:h-6" /></a>
+              <a href="https://www.youtube.com/@dkdlqlr" target="_blank" rel="noopener" aria-label="YouTube" className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E8481C] hover:text-[#121110] transition-all"><Youtube size={16} className="md:w-6 md:h-6" /></a>
+              <a href="https://www.ibigmission.org/partnership" target="_blank" rel="noopener" aria-label="후원 · Support" className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#E8481C] hover:text-[#121110] transition-all"><Heart size={16} className="md:w-6 md:h-6" /></a>
             </div>
           </div>
         </div>

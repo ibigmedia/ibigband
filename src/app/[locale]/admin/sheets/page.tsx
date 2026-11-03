@@ -437,7 +437,7 @@ export default function AdminSheetsPage() {
                    <label className="block text-xs font-bold text-t-copper uppercase tracking-wider mb-2">AI 자동 분석 (가사 입력)</label>
                    <div className="flex gap-2">
                      <input value={aiLyrics} onChange={e => setAiLyrics(e.target.value)} placeholder="가사를 붙여넣으면 연관 태그를 자동 추출합니다." className="flex-1 px-4 py-2 bg-[#FFFDF9] border border-[#E0DBD0] rounded-xl text-sm text-[#121110] focus:outline-none focus:border-[#E8481C]"/>
-                     <Button type="button" onClick={handleAITagging} disabled={aiLoading} className="bg-[#E8481C]/10 text-t-copper hover:bg-[#E8481C]/20 border border-[#E8481C]/30 rounded-xl whitespace-nowrap">
+                     <Button type="button" onClick={handleAITagging} disabled={aiLoading} className="!bg-[#E8481C]/10 !text-t-copper hover:!bg-[#E8481C]/20 border border-[#E8481C]/30 rounded-xl whitespace-nowrap">
                        {aiLoading ? '분석 중...' : '자동 생성'}
                      </Button>
                    </div>
@@ -569,7 +569,7 @@ export default function AdminSheetsPage() {
 
         {/* Action Footer */}
         <div className="px-8 py-5 border-t border-[#E0DBD0] bg-[#FFFDF9] flex justify-end gap-3 shrink-0">
-            <Button type="button" onClick={handleCreateNew} className="bg-transparent text-t-muted hover:text-[#B3350F] hover:bg-[#ECE7DC] font-bold">
+            <Button type="button" onClick={handleCreateNew} className="!bg-transparent !text-t-muted hover:!text-[#B3350F] hover:!bg-[#ECE7DC] font-bold">
                취소 및 초기화
             </Button>
             <Button type="submit" variant="secondary" onClick={handleSave} disabled={saving} className="hover:bg-[#E8481C] font-black px-10 rounded-xl shadow-lg shadow-[#E8481C]/20">

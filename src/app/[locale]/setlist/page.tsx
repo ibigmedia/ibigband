@@ -1128,7 +1128,7 @@ export default function SetListPage() {
               if (lyricsSlides.length === 0) { alert('가사가 포함된 곡이 없습니다.\n아카이브에서 AI 가사 추출을 먼저 실행해 주세요.'); return; }
               openLyricsPresentationEditor(lyricsSlides);
             }}
-              className="hidden md:flex items-center gap-2 px-5 py-2 bg-violet-500/20 hover:bg-violet-500/40 text-violet-200 rounded-xl text-xs font-bold whitespace-nowrap">
+              className="hidden md:flex items-center gap-2 px-5 py-2 bg-[#E8481C]/10 hover:bg-[#E8481C]/20 text-t-copper rounded-xl text-xs font-bold whitespace-nowrap">
               <FileText size={14} /> 가사 프레젠테이션
             </button>
           </div>
@@ -1198,7 +1198,7 @@ export default function SetListPage() {
               openLyricsPresentationEditor(lyricsSlides);
             }}
               className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl">
-              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-violet-500/30 text-violet-200">
+              <div className="w-9 h-9 rounded-full flex items-center justify-center bg-[#E8481C]/15 text-t-copper">
                 <FileText size={16} />
               </div>
               <span className="text-[12px] text-t-muted font-medium">가사</span>
