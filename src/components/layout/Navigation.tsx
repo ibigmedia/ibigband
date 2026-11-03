@@ -7,6 +7,7 @@ import { Settings, CreditCard, LogIn, LogOut, Menu, X, User } from 'lucide-react
 import { useAuth } from '@/lib/firebase/auth';
 import { PaymentModal } from '@/components/payment/PaymentModal';
 import LanguageSwitcher from './LanguageSwitcher';
+import BandMark from '@/components/layout/BandMark';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -30,12 +31,7 @@ export default function Navigation() {
       <nav className="fixed top-0 w-full z-50 bg-[#FAF9F6]/80 backdrop-blur-md px-5 md:px-8 py-3 md:py-5 flex justify-between items-center border-b border-[#78716A]/10">
         <Link href="/" className="flex items-center gap-2 md:gap-3 cursor-pointer">
           <div className="w-10 h-10 md:w-12 md:h-12 bg-[#2D2926] rounded-xl flex items-center justify-center overflow-hidden shrink-0">
-            <svg viewBox="0 0 100 100" className="w-6 h-6 md:w-7 md:h-7 fill-white">
-              <rect x="10" y="20" width="15" height="60" rx="4" />
-              <path d="M35 20 Q50 20 50 40 Q50 60 35 60 L35 20" />
-              <rect x="60" y="20" width="15" height="60" rx="4" />
-              <path d="M85 80 Q95 80 95 65 L95 35 Q95 20 85 20" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" />
-            </svg>
+            <BandMark className="w-8 h-8 md:w-10 md:h-10" />
           </div>
           <span className="text-3xl md:text-4xl font-handwriting font-bold tracking-tight mt-1">ibiGband</span>
         </Link>
