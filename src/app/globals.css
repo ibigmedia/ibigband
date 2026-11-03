@@ -7,7 +7,7 @@
   --color-background: #F5F2EC;
   --color-foreground: #121110;
   --font-sans: var(--font-inter), var(--font-noto-kr), "Apple SD Gothic Neo", system-ui, sans-serif;
-  --font-handwriting: var(--font-inter-tight), var(--font-noto-kr), "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-handwriting: var(--font-inter), var(--font-noto-kr), "Apple SD Gothic Neo", system-ui, sans-serif;
   
   --color-brand-cream: #F5F2EC;
   --color-brand-charcoal: #121110;

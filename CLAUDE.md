@@ -22,7 +22,7 @@
 - 배경: 종이색 #F5F2EC, 카드 #FFFDF9, 선 #E0DBD0
 - 글자: 먹색 #121110, 보조 글자는 `text-t-muted` · `text-t-soft`
 - 포인트: 주황 #E8481C(칠·표시), 녹슨 주황 #B3350F(밝은 바탕 글자·흰 글자 버튼)
-- 폰트: 제목 Inter Tight + Noto Sans KR 800, 본문 Inter + Noto Sans KR, 로고 글자만 손글씨(`font-wordmark`, Nanum Pen)
+- 폰트: 제목 Inter + Noto Sans KR 800, 본문 Inter + Noto Sans KR, 로고 글자만 손글씨(`font-wordmark`, Nanum Pen)
 - 글자색 토큰(`text-t-muted`, `text-t-copper`, `text-t-gold`, `text-t-soft`)은 바탕에 따라 값이 바뀐다. 새 어두운 구획은 globals.css의 범위 목록에 추가한다
 - 본문·보조 글자 대비 4.5:1 이상, 글자 12px 이상
 - 히어로 일러스트: `HeroBand`(SVG), 로고 마크: `BandMark`(SVG)

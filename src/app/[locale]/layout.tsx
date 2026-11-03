@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Inter_Tight, Nanum_Pen_Script, Noto_Sans_KR } from "next/font/google";
+import { Inter, Nanum_Pen_Script, Noto_Sans_KR } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -20,12 +20,6 @@ const nanumPen = Nanum_Pen_Script({
   weight: "400",
   variable: "--font-nanum-pen",
   preload: false,
-});
-
-const interTight = Inter_Tight({
-  variable: "--font-inter-tight",
-  subsets: ["latin"],
-  weight: ["500", "600", "800"],
 });
 
 const notoKr = Noto_Sans_KR({
@@ -103,7 +97,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </>
         )}
       </head>
-      <body className={`${inter.variable} ${nanumPen.variable} ${interTight.variable} ${notoKr.variable} antialiased font-sans bg-[#F5F2EC] text-[#121110] flex flex-col`}>
+      <body className={`${inter.variable} ${nanumPen.variable} ${notoKr.variable} antialiased font-sans bg-[#F5F2EC] text-[#121110] flex flex-col`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FH84HDL"
