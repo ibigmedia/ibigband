@@ -327,22 +327,22 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
         {batchMode && (
           <button onClick={(e) => { e.stopPropagation(); toggleSelect(item.archiveId); }} className="shrink-0">
             {selectedIds.has(item.archiveId)
-              ? <CheckSquare size={16} className="text-[#E6C79C]" />
-              : <Square size={16} className="text-[#78716A]" />}
+              ? <CheckSquare size={16} className="text-t-gold" />
+              : <Square size={16} className="text-t-muted" />}
           </button>
         )}
-        <div className="p-1.5 rounded-lg bg-[#2D2926]/10 shrink-0">
+        <div className="p-1.5 rounded-lg bg-[#121110]/10 shrink-0">
           {getTypeIcon(item.type)}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-bold text-xs md:text-sm text-[#2D2926] truncate">{item.title}</p>
+          <p className="font-bold text-xs md:text-sm text-[#121110] truncate">{item.title}</p>
         </div>
         <div className="flex items-center gap-1 md:gap-2 shrink-0 overflow-hidden">
-          <span className="text-[10px] md:text-xs text-[#78716A] truncate max-w-[60px] md:max-w-[80px]">{item.author || '미상'}</span>
-          {item.musicalKey && <span className="text-[9px] md:text-[10px] font-bold bg-blue-100 text-blue-700 px-1 md:px-1.5 py-0.5 rounded">{item.musicalKey}</span>}
-          {item.hasPdf && <span className="text-[9px] md:text-[10px] font-bold bg-[#2D2926]/10 px-1 md:px-1.5 py-0.5 rounded">PDF</span>}
-          {item.hasAudio && <span className="text-[9px] md:text-[10px] font-bold bg-[#E6C79C]/30 px-1 md:px-1.5 py-0.5 rounded">MP3</span>}
-          <ChevronDown size={14} className={`text-[#78716A] transition-transform shrink-0 ${expanded ? 'rotate-180' : ''}`} />
+          <span className="text-[12px] md:text-xs text-t-muted truncate max-w-[60px] md:max-w-[80px]">{item.author || '미상'}</span>
+          {item.musicalKey && <span className="text-[12px] md:text-[12px] font-bold bg-blue-100 text-blue-700 px-1 md:px-1.5 py-0.5 rounded">{item.musicalKey}</span>}
+          {item.hasPdf && <span className="text-[12px] md:text-[12px] font-bold bg-[#121110]/10 px-1 md:px-1.5 py-0.5 rounded">PDF</span>}
+          {item.hasAudio && <span className="text-[12px] md:text-[12px] font-bold bg-[#E8481C]/30 px-1 md:px-1.5 py-0.5 rounded">MP3</span>}
+          <ChevronDown size={14} className={`text-t-muted transition-transform shrink-0 ${expanded ? 'rotate-180' : ''}`} />
         </div>
       </div>
 
@@ -355,9 +355,9 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
                 <div className="flex items-center gap-1.5 mb-2">
                   <input type="text" value={editTitle} onChange={e => setEditTitle(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleRename(item.archiveId)}
-                    className="flex-1 text-sm font-bold bg-white border border-[#E6C79C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
+                    className="flex-1 text-sm font-bold bg-white border border-[#E8481C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
                   <button onClick={() => handleRename(item.archiveId)} className="p-1.5 text-green-600 hover:bg-green-50 rounded"><Check size={16} /></button>
-                  <button onClick={() => setEditingId(null)} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded"><X size={16} /></button>
+                  <button onClick={() => setEditingId(null)} className="p-1.5 text-t-muted hover:bg-black/5 rounded"><X size={16} /></button>
                 </div>
               ) : null}
               <div className="flex items-center gap-2 flex-wrap">
@@ -366,35 +366,35 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
                     <input type="text" value={editAuthor} onChange={e => setEditAuthor(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && handleSaveAuthor(item.archiveId)}
                       placeholder="아티스트/작곡자" autoFocus
-                      className="text-xs bg-white border border-[#E6C79C] rounded px-2 py-0.5 w-28 focus:outline-none" />
+                      className="text-xs bg-white border border-[#E8481C] rounded px-2 py-0.5 w-28 focus:outline-none" />
                     <button onClick={() => handleSaveAuthor(item.archiveId)} className="text-green-600"><Check size={12} /></button>
-                    <button onClick={() => setEditingAuthorId(null)} className="text-[#78716A]"><X size={12} /></button>
+                    <button onClick={() => setEditingAuthorId(null)} className="text-t-muted"><X size={12} /></button>
                   </div>
                 ) : (
                   <button onClick={() => { setEditingAuthorId(item.archiveId); setEditAuthor(item.author || ''); }}
-                    className="text-xs text-[#78716A] truncate hover:text-[#2D2926] hover:underline cursor-pointer" title="아티스트 수정">
+                    className="text-xs text-t-muted truncate hover:text-[#121110] hover:underline cursor-pointer" title="아티스트 수정">
                     {item.author || '미상'}
                   </button>
                 )}
                 <select value={item.category} onChange={e => handleChangeCategory(item.archiveId, e.target.value)}
-                  className="text-[11px] font-bold bg-[#E6C79C]/20 text-[#8C6B1C] px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+                  className="text-[13px] font-bold bg-[#E8481C]/20 text-t-copper px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
                   {CATEGORIES.filter(c => c.id !== 'all').map(c => (
                     <option key={c.id} value={c.id}>{c.label}</option>
                   ))}
                 </select>
                 <select value={item.musicalKey || ''} onChange={e => handleChangeKey(item.archiveId, e.target.value)}
-                  className="text-[11px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+                  className="text-[13px] font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
                   <option value="">키</option>
                   {MUSICAL_KEYS.filter(k => k).map(k => <option key={k} value={k}>{k}</option>)}
                 </select>
                 <select value={item.lang || ''} onChange={e => handleChangeLang(item.archiveId, e.target.value)}
-                  className="text-[11px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
+                  className="text-[13px] font-bold bg-purple-50 text-purple-700 px-2 py-0.5 rounded border-none focus:outline-none cursor-pointer">
                   {LANGUAGES.map(l => <option key={l.id || 'kr'} value={l.id}>{l.label}</option>)}
                 </select>
               </div>
               <div className="flex gap-1.5 mt-1.5 flex-wrap items-center">
                 {(item.tags || []).map(tag => (
-                  <span key={tag} className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-0.5">
+                  <span key={tag} className="text-[12px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-0.5">
                     {tag}
                     <button onClick={() => handleRemoveTag(item.archiveId, tag)} className="hover:text-red-500 ml-0.5"><X size={10} /></button>
                   </span>
@@ -404,13 +404,13 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
                     <input type="text" value={tagInputValue} onChange={e => setTagInputValue(e.target.value)}
                       onKeyDown={e => e.key === 'Enter' && handleAddTag(item.archiveId)}
                       placeholder="태그 입력" autoFocus
-                      className="text-[11px] bg-white border border-green-300 rounded px-2 py-0.5 w-20 focus:outline-none" />
+                      className="text-[13px] bg-white border border-green-300 rounded px-2 py-0.5 w-20 focus:outline-none" />
                     <button onClick={() => handleAddTag(item.archiveId)} className="text-green-600"><Check size={12} /></button>
-                    <button onClick={() => { setTagInputId(null); setTagInputValue(''); }} className="text-[#78716A]"><X size={12} /></button>
+                    <button onClick={() => { setTagInputId(null); setTagInputValue(''); }} className="text-t-muted"><X size={12} /></button>
                   </div>
                 ) : (
                   <button onClick={() => { setTagInputId(item.archiveId); setTagInputValue(''); }}
-                    className="text-[10px] text-[#78716A] hover:text-green-600 flex items-center gap-0.5 transition-colors" title="태그 추가">
+                    className="text-[12px] text-t-muted hover:text-green-600 flex items-center gap-0.5 transition-colors" title="태그 추가">
                     <Tag size={10} />+
                   </button>
                 )}
@@ -426,24 +426,24 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
                 )}
                 {item.hasAudio && onPlayAudio && (
                   <button onClick={() => onPlayAudio(item as LibraryItem)}
-                    className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C]/50 rounded-lg transition-colors" title="재생">
+                    className="p-2 bg-[#E8481C]/20 text-t-copper hover:bg-[#E8481C]/50 rounded-lg transition-colors" title="재생">
                     <Play size={16} fill="currentColor" />
                   </button>
                 )}
                 {onAddToSetlist && (
                   <button onClick={() => onAddToSetlist(item as LibraryItem)}
-                    className="p-2 bg-[#2D2926]/10 text-[#2D2926] hover:bg-[#2D2926] hover:text-white rounded-lg transition-colors" title="셋리스트에 추가">
+                    className="p-2 bg-[#121110]/10 text-[#121110] hover:bg-[#121110] hover:text-white rounded-lg transition-colors" title="셋리스트에 추가">
                     <ChevronRight size={16} />
                   </button>
                 )}
                 <button onClick={() => handleAddToLibrary(item)}
                   disabled={existingLibraryIds.has(item.sourceId || '')}
-                  className="p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-2 bg-[#E8481C]/20 text-t-copper hover:bg-[#E8481C] hover:text-[#121110] rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                   title={existingLibraryIds.has(item.sourceId || '') ? '이미 추가됨' : '미디어풀에 추가'}>
                   <Plus size={16} />
                 </button>
                 <button onClick={() => { setEditingId(item.archiveId); setEditTitle(item.title); }}
-                  className="p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경">
+                  className="p-2 text-t-muted hover:bg-black/5 rounded-lg transition-colors" title="이름 변경">
                   <Edit3 size={14} />
                 </button>
                 {(item.hasPdf || item.fileUrl) && (
@@ -470,26 +470,26 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
       )}
       {/* 가사 인라인 미리보기/수정 */}
       {lyricsViewId === item.archiveId && item.lyrics && (
-        <div className="col-span-full mt-2 bg-violet-50 border border-violet-200 rounded-lg p-3 text-xs text-[#2D2926]">
+        <div className="col-span-full mt-2 bg-violet-50 border border-violet-200 rounded-lg p-3 text-xs text-[#121110]">
           <div className="flex items-center justify-between mb-2">
             <span className="font-bold text-violet-700 flex items-center gap-1"><BookOpen size={12} /> 가사</span>
             <div className="flex items-center gap-1.5">
               {lyricsEditId === item.archiveId ? (
                 <>
                   <button onClick={() => handleSaveLyrics(item.archiveId)}
-                    className="text-[10px] font-bold bg-green-600 text-white px-2 py-0.5 rounded hover:bg-green-700">저장</button>
+                    className="text-[12px] font-bold bg-green-600 text-white px-2 py-0.5 rounded hover:bg-green-700">저장</button>
                   <button onClick={() => setLyricsEditId(null)}
-                    className="text-[10px] font-bold bg-gray-400 text-white px-2 py-0.5 rounded hover:bg-gray-500">취소</button>
+                    className="text-[12px] font-bold bg-gray-400 text-white px-2 py-0.5 rounded hover:bg-gray-500">취소</button>
                 </>
               ) : (
                 <button onClick={() => { setLyricsEditId(item.archiveId); setLyricsEditValue(item.lyrics || ''); }}
-                  className="text-[10px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded hover:bg-violet-200 flex items-center gap-0.5">
+                  className="text-[12px] font-bold bg-violet-100 text-violet-700 px-2 py-0.5 rounded hover:bg-violet-200 flex items-center gap-0.5">
                   <Edit3 size={10} /> 수정
                 </button>
               )}
               {onLyricsPresent && lyricsEditId !== item.archiveId && (
                 <button onClick={() => onLyricsPresent([{ title: item.title, author: item.author, text: item.lyrics! }])}
-                  className="text-[10px] font-bold bg-violet-600 text-white px-2 py-0.5 rounded hover:bg-violet-700">
+                  className="text-[12px] font-bold bg-violet-600 text-white px-2 py-0.5 rounded hover:bg-violet-700">
                   프레젠테이션
                 </button>
               )}
@@ -497,7 +497,7 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
           </div>
           {lyricsEditId === item.archiveId ? (
             <textarea value={lyricsEditValue} onChange={e => setLyricsEditValue(e.target.value)}
-              className="w-full bg-white border border-violet-300 rounded-lg p-2 text-xs text-[#2D2926] focus:outline-none focus:border-violet-500 min-h-[160px] resize-y"
+              className="w-full bg-white border border-violet-300 rounded-lg p-2 text-xs text-[#121110] focus:outline-none focus:border-violet-500 min-h-[160px] resize-y"
               placeholder="가사를 수정하세요..." />
           ) : (
             <div className="whitespace-pre-wrap max-h-48 overflow-y-auto">{item.lyrics}</div>
@@ -513,32 +513,32 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
       <div className="px-3 py-3 md:p-5 border-b border-black/5 shrink-0">
         <div className="flex items-center justify-between mb-2 md:mb-3">
           <h3 className="font-bold text-sm md:text-base flex items-center gap-2">
-            <Archive className="text-[#E6C79C]" size={18} /> 아카이브
+            <Archive className="text-t-gold" size={18} /> 아카이브
           </h3>
           <div className="flex items-center gap-1.5 md:gap-2">
             <button onClick={() => { setBatchMode(!batchMode); setSelectedIds(new Set()); setBatchAction(null); }}
-              className={`text-[10px] font-bold px-2 py-1 rounded-lg transition-all ${batchMode ? 'bg-[#2D2926] text-white' : 'bg-[#FAF9F6] text-[#78716A] hover:bg-black/5'}`}>
+              className={`text-[12px] font-bold px-2 py-1 rounded-lg transition-all ${batchMode ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted hover:bg-black/5'}`}>
               {batchMode ? '해제' : '일괄'}
             </button>
             {!fullscreen && onOpenFullscreen && (
-              <button onClick={onOpenFullscreen} className="text-[10px] font-bold px-2 py-1 rounded-lg bg-[#FAF9F6] text-[#78716A] hover:bg-black/5" title="전체화면으로 보기">
+              <button onClick={onOpenFullscreen} className="text-[12px] font-bold px-2 py-1 rounded-lg bg-[#F5F2EC] text-t-muted hover:bg-black/5" title="전체화면으로 보기">
                 <Maximize2 size={12} />
               </button>
             )}
-            <span className="text-[11px] md:text-xs text-[#78716A] font-bold">{filtered.length}개</span>
+            <span className="text-[13px] md:text-xs text-t-muted font-bold">{filtered.length}개</span>
           </div>
         </div>
         <div className="relative mb-2 md:mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" size={16} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-t-muted" size={16} />
           <input type="text" value={search} onChange={e => setSearch(e.target.value)}
             placeholder="검색..."
-            className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-9 pr-4 py-2 md:py-2.5 text-sm focus:outline-none focus:border-[#2D2926]" />
+            className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-9 pr-4 py-2 md:py-2.5 text-sm focus:outline-none focus:border-[#121110]" />
         </div>
         <div className="flex gap-1 md:gap-1.5 overflow-x-auto pb-1 scrollbar-hide">
           {CATEGORIES.map(c => (
             <button key={c.id} onClick={() => setCategory(c.id)}
-              className={`px-2 md:px-2.5 py-1 rounded-lg text-[10px] font-bold whitespace-nowrap transition-all ${
-                category === c.id ? 'bg-[#2D2926] text-white' : 'bg-[#FAF9F6] text-[#78716A] hover:bg-black/5'
+              className={`px-2 md:px-2.5 py-1 rounded-lg text-[12px] font-bold whitespace-nowrap transition-all ${
+                category === c.id ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted hover:bg-black/5'
               }`}>
               {c.icon} {c.label}
             </button>
@@ -546,25 +546,25 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
         </div>
         <div className="flex gap-1.5 md:gap-2 mt-2 flex-wrap">
           <select value={filterKey} onChange={e => setFilterKey(e.target.value)}
-            className="text-[10px] font-bold bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#2D2926]">
+            className="text-[12px] font-bold bg-[#F5F2EC] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#121110]">
             <option value="all">키 전체</option>
             <option value="">미지정</option>
             {MUSICAL_KEYS.filter(k => k).map(k => <option key={k} value={k}>{k}</option>)}
           </select>
           <select value={filterLang} onChange={e => setFilterLang(e.target.value)}
-            className="text-[10px] font-bold bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#2D2926]">
+            className="text-[12px] font-bold bg-[#F5F2EC] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#121110]">
             <option value="all">언어 전체</option>
             {LANGUAGES.map(l => <option key={l.id || 'kr'} value={l.id}>{l.label}</option>)}
           </select>
           {allTags.length > 0 && (
             <select value={filterTag} onChange={e => setFilterTag(e.target.value)}
-              className="text-[10px] font-bold bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#2D2926]">
+              className="text-[12px] font-bold bg-[#F5F2EC] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#121110]">
               <option value="">태그 전체</option>
               {allTags.map(t => <option key={t} value={t}>{t}</option>)}
             </select>
           )}
           <select value={groupBy} onChange={e => setGroupBy(e.target.value as any)}
-            className="text-[10px] font-bold bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#2D2926]">
+            className="text-[12px] font-bold bg-[#F5F2EC] border border-black/10 rounded-lg px-2 py-1 focus:outline-none focus:border-[#121110]">
             <option value="none">그룹 없음</option>
             <option value="author">🎤 아티스트별</option>
             <option value="key">🎹 키별</option>
@@ -574,49 +574,49 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
           </select>
           {(filterKey !== 'all' || filterLang !== 'all' || filterTag || groupBy !== 'none') && (
             <button onClick={() => { setFilterKey('all'); setFilterLang('all'); setFilterTag(''); setGroupBy('none'); }}
-              className="text-[10px] text-red-400 hover:text-red-600 font-bold">초기화</button>
+              className="text-[12px] text-red-400 hover:text-red-600 font-bold">초기화</button>
           )}
         </div>
       </div>
 
       {/* 일괄 수정 액션 바 */}
       {batchMode && selectedIds.size > 0 && (
-        <div className="p-3 bg-[#2D2926] text-white shrink-0 space-y-2">
+        <div className="p-3 bg-[#121110] text-white shrink-0 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold">{selectedIds.size}개 선택됨</span>
-            <button onClick={toggleSelectAll} className="text-[10px] underline">{selectedIds.size === filtered.length ? '전체 해제' : '전체 선택'}</button>
+            <button onClick={toggleSelectAll} className="text-[12px] underline">{selectedIds.size === filtered.length ? '전체 해제' : '전체 선택'}</button>
           </div>
           <div className="flex gap-1.5 flex-wrap">
-            <button onClick={() => { setBatchAction('key'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[10px] font-bold ${batchAction === 'key' ? 'bg-blue-500' : 'bg-white/20 hover:bg-white/30'}`}>키 변경</button>
-            <button onClick={() => { setBatchAction('lang'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[10px] font-bold ${batchAction === 'lang' ? 'bg-purple-500' : 'bg-white/20 hover:bg-white/30'}`}>언어 변경</button>
-            <button onClick={() => { setBatchAction('category'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[10px] font-bold ${batchAction === 'category' ? 'bg-amber-500' : 'bg-white/20 hover:bg-white/30'}`}>카테고리 변경</button>
-            <button onClick={() => { setBatchAction('tag'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[10px] font-bold ${batchAction === 'tag' ? 'bg-green-500' : 'bg-white/20 hover:bg-white/30'}`}>태그 추가</button>
+            <button onClick={() => { setBatchAction('key'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[12px] font-bold ${batchAction === 'key' ? 'bg-blue-500' : 'bg-white/20 hover:bg-white/30'}`}>키 변경</button>
+            <button onClick={() => { setBatchAction('lang'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[12px] font-bold ${batchAction === 'lang' ? 'bg-purple-500' : 'bg-white/20 hover:bg-white/30'}`}>언어 변경</button>
+            <button onClick={() => { setBatchAction('category'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[12px] font-bold ${batchAction === 'category' ? 'bg-amber-500' : 'bg-white/20 hover:bg-white/30'}`}>카테고리 변경</button>
+            <button onClick={() => { setBatchAction('tag'); setBatchValue(''); }} className={`px-2 py-1 rounded text-[12px] font-bold ${batchAction === 'tag' ? 'bg-green-500' : 'bg-white/20 hover:bg-white/30'}`}>태그 추가</button>
           </div>
           {batchAction && (
             <div className="flex items-center gap-2">
               {batchAction === 'key' && (
-                <select value={batchValue} onChange={e => setBatchValue(e.target.value)} className="text-[11px] font-bold bg-white text-[#2D2926] rounded px-2 py-1">
+                <select value={batchValue} onChange={e => setBatchValue(e.target.value)} className="text-[13px] font-bold bg-white text-[#121110] rounded px-2 py-1">
                   <option value="">키 선택</option>
                   {MUSICAL_KEYS.filter(k => k).map(k => <option key={k} value={k}>{k}</option>)}
                 </select>
               )}
               {batchAction === 'lang' && (
-                <select value={batchValue} onChange={e => setBatchValue(e.target.value)} className="text-[11px] font-bold bg-white text-[#2D2926] rounded px-2 py-1">
+                <select value={batchValue} onChange={e => setBatchValue(e.target.value)} className="text-[13px] font-bold bg-white text-[#121110] rounded px-2 py-1">
                   {LANGUAGES.map(l => <option key={l.id || 'kr'} value={l.id}>{l.label}</option>)}
                 </select>
               )}
               {batchAction === 'category' && (
-                <select value={batchValue} onChange={e => setBatchValue(e.target.value)} className="text-[11px] font-bold bg-white text-[#2D2926] rounded px-2 py-1">
+                <select value={batchValue} onChange={e => setBatchValue(e.target.value)} className="text-[13px] font-bold bg-white text-[#121110] rounded px-2 py-1">
                   <option value="">카테고리 선택</option>
                   {CATEGORIES.filter(c => c.id !== 'all').map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                 </select>
               )}
               {batchAction === 'tag' && (
                 <input type="text" value={batchValue} onChange={e => setBatchValue(e.target.value)} placeholder="태그 입력..."
-                  className="text-[11px] font-bold bg-white text-[#2D2926] rounded px-2 py-1 focus:outline-none" />
+                  className="text-[13px] font-bold bg-white text-[#121110] rounded px-2 py-1 focus:outline-none" />
               )}
               <button onClick={executeBatchAction} disabled={!batchValue && batchAction !== 'lang'}
-                className="px-3 py-1 bg-[#E6C79C] text-[#2D2926] rounded text-[10px] font-bold hover:bg-[#d4b589] disabled:opacity-40">
+                className="px-3 py-1 bg-[#E8481C] text-[#121110] rounded text-[12px] font-bold hover:bg-[#d4b589] disabled:opacity-40">
                 적용
               </button>
             </div>
@@ -626,25 +626,25 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
 
       <div className="flex-1 overflow-y-auto px-3 py-2 md:p-3">
         {loading ? (
-          <div className="flex items-center justify-center py-16"><Loader2 size={20} className="animate-spin text-[#78716A]" /></div>
+          <div className="flex items-center justify-center py-16"><Loader2 size={20} className="animate-spin text-t-muted" /></div>
         ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-10 text-[#78716A]">
+          <div className="flex flex-col items-center justify-center py-10 text-t-muted">
             <Archive size={28} className="mb-2 opacity-30" />
             <p className="text-sm font-bold">{search || category !== 'all' || filterTag ? '검색 결과 없음' : '아카이브가 비어있습니다'}</p>
-            <p className="text-[10px] mt-1">파일을 가져오면 자동으로 저장됩니다</p>
+            <p className="text-[12px] mt-1">파일을 가져오면 자동으로 저장됩니다</p>
           </div>
         ) : groupedItems ? (
           groupedItems.map(([groupName, groupItems]) => (
             <div key={groupName} className="mb-4">
               <div className="flex items-center gap-2 mb-2 px-1 sticky top-0 bg-white/90 backdrop-blur-sm py-1.5 z-10">
-                <Layers size={16} className="text-[#E6C79C]" />
-                <span className="text-sm font-bold text-[#2D2926]">{groupName}</span>
-                <span className="text-xs text-[#78716A] bg-[#FAF9F6] px-2 py-0.5 rounded">{groupItems.length}개</span>
+                <Layers size={16} className="text-t-gold" />
+                <span className="text-sm font-bold text-[#121110]">{groupName}</span>
+                <span className="text-xs text-t-muted bg-[#F5F2EC] px-2 py-0.5 rounded">{groupItems.length}개</span>
               </div>
               <div className={fullscreen ? 'grid grid-cols-2 gap-2' : 'space-y-2'}>
                 {groupItems.map(item => (
-                  <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-4 transition-all group ${
-                    batchMode && selectedIds.has(item.archiveId) ? 'border-[#E6C79C] bg-[#E6C79C]/10' : 'border-black/5 hover:border-[#E6C79C]'
+                  <div key={item.archiveId} className={`bg-[#F5F2EC] border rounded-xl p-4 transition-all group ${
+                    batchMode && selectedIds.has(item.archiveId) ? 'border-[#E8481C] bg-[#E8481C]/10' : 'border-black/5 hover:border-[#E8481C]'
                   }`}>
                     {renderItemContent(item)}
                   </div>
@@ -655,8 +655,8 @@ export default function ArchivePanel({ userId, onAddToLibrary, onAddToSetlist, o
         ) : (
           <div className={fullscreen ? 'grid grid-cols-2 gap-2' : 'space-y-2'}>
             {filtered.map(item => (
-              <div key={item.archiveId} className={`bg-[#FAF9F6] border rounded-xl p-4 transition-all group ${
-                batchMode && selectedIds.has(item.archiveId) ? 'border-[#E6C79C] bg-[#E6C79C]/10' : 'border-black/5 hover:border-[#E6C79C]'
+              <div key={item.archiveId} className={`bg-[#F5F2EC] border rounded-xl p-4 transition-all group ${
+                batchMode && selectedIds.has(item.archiveId) ? 'border-[#E8481C] bg-[#E8481C]/10' : 'border-black/5 hover:border-[#E8481C]'
               }`}>
                 {renderItemContent(item)}
               </div>

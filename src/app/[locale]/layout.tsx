@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Nanum_Pen_Script } from "next/font/google";
+import { Inter, Inter_Tight, Nanum_Pen_Script, Noto_Sans_KR } from "next/font/google";
 import Script from "next/script";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -19,6 +19,18 @@ const inter = Inter({
 const nanumPen = Nanum_Pen_Script({
   weight: "400",
   variable: "--font-nanum-pen",
+  preload: false,
+});
+
+const interTight = Inter_Tight({
+  variable: "--font-inter-tight",
+  subsets: ["latin"],
+  weight: ["500", "600", "800"],
+});
+
+const notoKr = Noto_Sans_KR({
+  variable: "--font-noto-kr",
+  weight: ["400", "500", "700", "800"],
   preload: false,
 });
 
@@ -63,7 +75,7 @@ export default async function RootLayout({
   // 환경 변수 값에 줄바꿈/공백이 섞여 들어와도 GA4가 거부하지 않도록 정리
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
   return (
-    <html lang={locale} className="bg-[#2D2926]">
+    <html lang={locale} className="bg-[#121110]">
       <head>
         {/* Google Tag Manager */}
         <Script id="gtm-head" strategy="afterInteractive">
@@ -91,7 +103,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           </>
         )}
       </head>
-      <body className={`${inter.variable} ${nanumPen.variable} antialiased font-sans bg-[#FAF9F6] text-[#2D2926] flex flex-col`}>
+      <body className={`${inter.variable} ${nanumPen.variable} ${interTight.variable} ${notoKr.variable} antialiased font-sans bg-[#F5F2EC] text-[#121110] flex flex-col`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5FH84HDL"
@@ -100,7 +112,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <NextIntlClientProvider>
           <AuthProvider>
             <Navigation />
-            <main className="pt-17 md:pt-20 flex flex-col bg-[#FAF9F6]">
+            <main className="pt-17 md:pt-20 flex flex-col bg-[#F5F2EC]">
               {children}
             </main>
             <GlobalMusicPlayer />

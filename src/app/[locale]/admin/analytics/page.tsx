@@ -31,7 +31,7 @@ export default function AnalyticsDashboardPage() {
       {/* 헤더 */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold font-handwriting text-[#E6C79C]">Analytics & SEO Dashboard</h1>
+          <h1 className="text-2xl font-bold font-handwriting text-[#E8481C]">Analytics & SEO Dashboard</h1>
           <p className="text-gray-400 mt-2">구글 애널리틱스, 서치콘솔 및 AI 마케팅 데이터 분석</p>
         </div>
         <Button variant="secondary" className="flex items-center gap-2" onClick={() => setShowSettingsModal(true)}>
@@ -84,21 +84,21 @@ export default function AnalyticsDashboardPage() {
 
       {/* 차트 영역 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
-        <Card className="bg-[#2D2926]/50 border border-[#78716A]/20 p-6">
+        <Card className="bg-[#121110]/50 border border-[#78716A]/20 p-6">
           <div className="flex items-center justify-between mb-6 border-b border-[#78716A]/10 pb-4">
             <h3 className="text-xl font-bold text-white flex gap-2 items-center">
-              <LineChart className="text-[#E6C79C]" /> 웹사이트 트래픽 (GA4)
+              <LineChart className="text-[#E8481C]" /> 웹사이트 트래픽 (GA4)
             </h3>
           </div>
           <div className="h-64 flex flex-col items-center justify-center bg-black/20 rounded-ibig border border-[#78716A]/10">
             {gaConnected ? (
               <>
-                <TrendingUp size={32} className="text-[#E6C79C]/30 mb-3" />
+                <TrendingUp size={32} className="text-[#E8481C]/30 mb-3" />
                 <p className="text-white/50 text-sm font-medium">데이터 수집 중...</p>
                 <p className="text-[#78716A] text-xs mt-1">GA4 콘솔에서 상세 리포트를 확인하세요</p>
                 <a href={`https://analytics.google.com/analytics/web/#/p${GA_ID.replace('G-', '')}/reports/intelligenthome`}
                   target="_blank" rel="noopener noreferrer"
-                  className="mt-3 text-xs text-[#E6C79C] flex items-center gap-1 hover:underline">
+                  className="mt-3 text-xs text-[#E8481C] flex items-center gap-1 hover:underline">
                   GA4 리포트 열기 <ExternalLink size={12} />
                 </a>
               </>
@@ -108,16 +108,16 @@ export default function AnalyticsDashboardPage() {
           </div>
         </Card>
 
-        <Card className="bg-[#2D2926]/50 border border-[#78716A]/20 p-6">
+        <Card className="bg-[#121110]/50 border border-[#78716A]/20 p-6">
           <div className="flex items-center justify-between mb-6 border-b border-[#78716A]/10 pb-4">
             <h3 className="text-xl font-bold text-white flex gap-2 items-center">
-              <BarChart className="text-[#E6C79C]" /> 인기 페이지 TOP 5
+              <BarChart className="text-[#E8481C]" /> 인기 페이지 TOP 5
             </h3>
           </div>
           <div className="h-64 flex flex-col items-center justify-center bg-black/20 rounded-ibig border border-[#78716A]/10">
             {gaConnected ? (
               <>
-                <Globe size={32} className="text-[#E6C79C]/30 mb-3" />
+                <Globe size={32} className="text-[#E8481C]/30 mb-3" />
                 <p className="text-white/50 text-sm font-medium">페이지 데이터 수집 중...</p>
                 <p className="text-[#78716A] text-xs mt-1">방문 데이터가 충분히 쌓이면 표시됩니다</p>
               </>
@@ -129,8 +129,8 @@ export default function AnalyticsDashboardPage() {
       </div>
 
       {/* 추적 이벤트 안내 */}
-      <Card className="bg-[#2D2926]/50 border border-[#78716A]/20 p-6 mt-8">
-        <h3 className="text-xl font-bold text-[#E6C79C] mb-4 flex gap-2 items-center">
+      <Card className="bg-[#121110]/50 border border-[#78716A]/20 p-6 mt-8">
+        <h3 className="text-xl font-bold text-[#E8481C] mb-4 flex gap-2 items-center">
           <HelpCircle size={20} /> GA4 자동 추적 항목
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -156,10 +156,10 @@ export default function AnalyticsDashboardPage() {
       {/* 설정 연동 모달 */}
       {showSettingsModal && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4" onClick={() => setShowSettingsModal(false)}>
-          <div className="bg-[#2D2926] border border-[#78716A]/20 rounded-2xl w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#121110] border border-[#78716A]/20 rounded-2xl w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-[#78716A]/10">
               <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                <Settings size={20} className="text-[#E6C79C]" /> Google Analytics 설정
+                <Settings size={20} className="text-[#E8481C]" /> Google Analytics 설정
               </h2>
               <button onClick={() => setShowSettingsModal(false)} className="p-1.5 hover:bg-white/10 rounded-lg text-gray-400">
                 <X size={18} />
@@ -197,7 +197,7 @@ export default function AnalyticsDashboardPage() {
                   )}
                 </div>
                 <p className="text-xs text-[#78716A] mt-2">
-                  환경변수 <code className="text-[#E6C79C]">NEXT_PUBLIC_GA_MEASUREMENT_ID</code>로 설정됨
+                  환경변수 <code className="text-[#E8481C]">NEXT_PUBLIC_GA_MEASUREMENT_ID</code>로 설정됨
                 </p>
               </div>
 
@@ -233,7 +233,7 @@ export default function AnalyticsDashboardPage() {
               <div className="flex gap-3">
                 <a href={`https://analytics.google.com/analytics/web/#/p${GA_ID.replace('G-', '')}/reports/intelligenthome`}
                   target="_blank" rel="noopener noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#E6C79C] text-[#2D2926] font-bold text-sm rounded-xl hover:bg-[#D4A373] transition-colors">
+                  className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#E8481C] text-[#121110] font-bold text-sm rounded-xl hover:bg-[#D4A373] transition-colors">
                   <ExternalLink size={14} /> GA4 대시보드 열기
                 </a>
                 <a href="https://tagmanager.google.com/"
@@ -255,20 +255,20 @@ function StatCard({ icon, title, description, connected }: {
   icon: React.ReactNode; title: string; description: string; connected: boolean;
 }) {
   return (
-    <Card className="bg-[#2D2926]/50 border border-[#78716A]/20 p-6 flex flex-col justify-between items-start text-white">
+    <Card className="bg-[#121110]/50 border border-[#78716A]/20 p-6 flex flex-col justify-between items-start text-white">
       <div>
-        <div className="flex items-center gap-2 text-[#E6C79C] mb-4">
+        <div className="flex items-center gap-2 text-[#E8481C] mb-4">
           {icon}
           <h3 className="font-bold">{title}</h3>
         </div>
         {connected ? (
           <>
-            <p className="text-4xl font-bold font-handwriting text-white/30">—</p>
+            <p className="text-3xl font-bold font-handwriting text-white/30">—</p>
             <p className="text-xs text-[#78716A] mt-2">데이터 수집 중 · GA4 콘솔에서 확인</p>
           </>
         ) : (
           <>
-            <p className="text-4xl font-bold font-handwriting text-white/20">—</p>
+            <p className="text-3xl font-bold font-handwriting text-white/20">—</p>
             <p className="text-xs text-[#78716A] mt-2">{description}</p>
           </>
         )}

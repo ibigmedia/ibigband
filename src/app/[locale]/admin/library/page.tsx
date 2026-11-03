@@ -22,10 +22,10 @@ export default function AdminLibraryPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-[#E6C79C]">라이브러리 및 파일 공유 시스템</h1>
+        <h1 className="text-3xl font-bold text-[#E8481C]">라이브러리 및 파일 공유 시스템</h1>
       </div>
       
-      <div className="bg-[#2D2926] rounded-2xl p-8 border border-white/10 text-white/70">
+      <div className="bg-[#121110] rounded-2xl p-8 border border-white/10 text-white/70">
         <p className="mb-4 text-lg text-white">데이터베이스 연동 파일 공유 시스템 대시보드입니다.</p>
         <ul className="list-disc pl-5 space-y-2">
           <li>구글 드라이브 통합 관리</li>

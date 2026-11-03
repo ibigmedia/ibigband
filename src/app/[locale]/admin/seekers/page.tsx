@@ -53,7 +53,7 @@ export default function AdminSeekersPage() {
   const [activeTab, setActiveTab] = useState<'list' | 'settings'>('list');
   const [settings, setSettings] = useState<any>({
     heroLabel: 'Seekers / 구도자',
-    heroTitle: 'Questions<br />worth <em className="italic text-[#C48C5E]">asking.</em>',
+    heroTitle: 'Questions<br />worth <em className="italic text-[#B3350F]">asking.</em>',
     heroSubtitle: '믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요.',
     heroPaddingTop: '9rem',
     heroPaddingBottom: '5rem',
@@ -240,9 +240,9 @@ export default function AdminSeekersPage() {
   };
 
   return (
-      <div className="min-h-screen bg-[#FAF9F6] text-[#2D2926] p-4 md:p-8">
+      <div className="min-h-screen bg-[#F5F2EC] text-[#121110] p-4 md:p-8">
         <div className="max-w-6xl mx-auto space-y-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-[#2D2926]/10">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl shadow-sm border border-[#121110]/10">
             <div>
               <h1 className="text-2xl font-bold">Seekers (구도자) 관리</h1>
               <p className="text-sm text-[#78716A] mt-1">FAQ 항목, 답변, 추천 미디어(음악, 영상 등)를 편집하세요.</p>
@@ -250,7 +250,7 @@ export default function AdminSeekersPage() {
             {activeTab === 'list' && (
               <button
                 onClick={handleCreateNew}
-                className="flex items-center gap-2 bg-[#2D2926] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#2D2926]/80 transition-colors"
+                className="flex items-center gap-2 bg-[#121110] text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-[#121110]/80 transition-colors"
               >
                 <Plus size={18} />
                 새 질문 추가
@@ -261,20 +261,20 @@ export default function AdminSeekersPage() {
           <div className="flex gap-4 border-b border-[rgba(45,41,38,0.1)] mb-6 px-4">
             <button 
               onClick={() => setActiveTab('list')} 
-              className={`pb-3 px-2 transition-colors ${activeTab === 'list' ? 'border-b-2 border-[#C48C5E] font-bold text-[#2D2926]' : 'text-[#78716A] hover:text-[#2D2926]'}`}
+              className={`pb-3 px-2 transition-colors ${activeTab === 'list' ? 'border-b-2 border-[#B3350F] font-bold text-[#121110]' : 'text-[#78716A] hover:text-[#121110]'}`}
             >
               질문 목록
             </button>
             <button 
               onClick={() => setActiveTab('settings')} 
-              className={`pb-3 px-2 transition-colors ${activeTab === 'settings' ? 'border-b-2 border-[#C48C5E] font-bold text-[#2D2926]' : 'text-[#78716A] hover:text-[#2D2926]'}`}
+              className={`pb-3 px-2 transition-colors ${activeTab === 'settings' ? 'border-b-2 border-[#B3350F] font-bold text-[#121110]' : 'text-[#78716A] hover:text-[#121110]'}`}
             >
               페이지 설정 (히어로 & 추가 콘텐츠)
             </button>
           </div>
 
           {activeTab === 'list' ? (
-            <div className="bg-white rounded-2xl shadow-sm border border-[#2D2926]/10 overflow-hidden">
+            <div className="bg-white rounded-2xl shadow-sm border border-[#121110]/10 overflow-hidden">
               {loading ? (
               <div className="p-8 text-center text-[#78716A]">로딩 중...</div>
             ) : items.length === 0 ? (
@@ -282,13 +282,13 @@ export default function AdminSeekersPage() {
             ) : (
               <div className="divide-y divide-[rgba(45,41,38,0.1)]">
                 {items.map(item => (
-                  <div key={item.id} className="p-5 flex items-start sm:items-center justify-between gap-4 hover:bg-[#F2EFE9] transition-colors">
+                  <div key={item.id} className="p-5 flex items-start sm:items-center justify-between gap-4 hover:bg-[#ECE7DC] transition-colors">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-3 mb-1">
-                        <span className="bg-[#2D2926]/5 text-[#78716A] text-[11px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                        <span className="bg-[#121110]/5 text-[#78716A] text-[11px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
                           {CATEGORIES.find(c => c.id === item.category)?.label || item.category}
                         </span>
-                        <h3 className="font-bold text-lg text-[#2D2926] truncate">{item.question}</h3>
+                        <h3 className="font-bold text-lg text-[#121110] truncate">{item.question}</h3>
                       </div>
                       <p className="text-sm text-[#78716A] truncate">{item.questionEn}</p>
                       <p className="text-sm text-[#4a4845] mt-2 line-clamp-1">{item.shortAnswer}</p>
@@ -296,7 +296,7 @@ export default function AdminSeekersPage() {
                     <div className="flex items-center gap-2 shrink-0">
                       <button
                         onClick={() => handleEdit(item)}
-                        className="p-2 text-[#78716A] hover:bg-white rounded-lg hover:text-[#C48C5E] transition-colors border border-transparent hover:border-[rgba(45,41,38,0.1)]"
+                        className="p-2 text-[#78716A] hover:bg-white rounded-lg hover:text-[#B3350F] transition-colors border border-transparent hover:border-[rgba(45,41,38,0.1)]"
                       >
                         <Edit2 size={18} />
                       </button>
@@ -313,7 +313,7 @@ export default function AdminSeekersPage() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-sm border border-[#2D2926]/10 p-6 space-y-8">
+          <div className="bg-white rounded-2xl shadow-sm border border-[#121110]/10 p-6 space-y-8">
             {settingsLoading ? (
                <div className="text-center text-[#78716A] p-8">로딩 중...</div>
             ) : (
@@ -322,30 +322,30 @@ export default function AdminSeekersPage() {
                   <h2 className="text-xl font-bold mb-4">히어로 섹션 설정</h2>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">작은 제목 (Label)</label>
+                      <label className="block text-sm font-bold text-[#121110] mb-1.5">작은 제목 (Label)</label>
                       <input
                         type="text"
-                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                         value={settings.heroLabel || ''}
                         onChange={e => setSettings({ ...settings, heroLabel: e.target.value })}
                         placeholder="Seekers / 구도자"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">메인 타이틀 (Title) * HTML 태그(br, em 등) 사용 가능</label>
+                      <label className="block text-sm font-bold text-[#121110] mb-1.5">메인 타이틀 (Title) * HTML 태그(br, em 등) 사용 가능</label>
                       <input
                         type="text"
-                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                         value={settings.heroTitle || ''}
                         onChange={e => setSettings({ ...settings, heroTitle: e.target.value })}
-                        placeholder="Questions<br />worth <em className='italic text-[#C48C5E]'>asking.</em>"
+                        placeholder="Questions<br />worth <em className='italic text-[#B3350F]'>asking.</em>"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">서브 타이틀 (Subtitle)</label>
+                      <label className="block text-sm font-bold text-[#121110] mb-1.5">서브 타이틀 (Subtitle)</label>
                       <input
                         type="text"
-                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                         value={settings.heroSubtitle || ''}
                         onChange={e => setSettings({ ...settings, heroSubtitle: e.target.value })}
                         placeholder="믿음이 없어도 괜찮아요. 질문이 있다면, 여기서 시작하세요."
@@ -354,29 +354,29 @@ export default function AdminSeekersPage() {
                     
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[rgba(45,41,38,0.1)]">
                       <div>
-                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">상단 여백 (Padding Top)</label>
+                        <label className="block text-sm font-bold text-[#121110] mb-1.5">상단 여백 (Padding Top)</label>
                         <input
                           type="text"
-                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                           value={settings.heroPaddingTop || ''}
                           onChange={e => setSettings({ ...settings, heroPaddingTop: e.target.value })}
                           placeholder="예: 9rem, 144px"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">하단 여백 (Padding Bottom)</label>
+                        <label className="block text-sm font-bold text-[#121110] mb-1.5">하단 여백 (Padding Bottom)</label>
                         <input
                           type="text"
-                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                           value={settings.heroPaddingBottom || ''}
                           onChange={e => setSettings({ ...settings, heroPaddingBottom: e.target.value })}
                           placeholder="예: 5rem, 80px"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">글 정렬 (Text Align)</label>
+                        <label className="block text-sm font-bold text-[#121110] mb-1.5">글 정렬 (Text Align)</label>
                         <select
-                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                           value={settings.heroTextAlign || 'center'}
                           onChange={e => setSettings({ ...settings, heroTextAlign: e.target.value })}
                         >
@@ -393,19 +393,19 @@ export default function AdminSeekersPage() {
                   <h2 className="text-xl font-bold mb-4">인용구 (Quotes) 설정</h2>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">인용구 내용 * HTML 태그(br 등) 사용 가능</label>
+                      <label className="block text-sm font-bold text-[#121110] mb-1.5">인용구 내용 * HTML 태그(br 등) 사용 가능</label>
                       <textarea
-                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm h-24"
+                        className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm h-24"
                         value={settings.quote || ''}
                         onChange={e => setSettings({ ...settings, quote: e.target.value })}
                         placeholder={"\"우리는 노래를 만드는 사람들입니다.<br />음악이 닿지 못하는 곳에 있는 무언가를<br />찾고 있기 때문에.\""}
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-bold text-[#2D2926] mb-1.5">글쓴이</label>
+                      <label className="block text-sm font-bold text-[#121110] mb-1.5">글쓴이</label>
                       <input
                         type="text"
-                        className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                        className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                         value={settings.quoteAuthor || ''}
                         onChange={e => setSettings({ ...settings, quoteAuthor: e.target.value })}
                         placeholder="— ibigband"
@@ -414,29 +414,29 @@ export default function AdminSeekersPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-[rgba(45,41,38,0.1)]">
                       <div>
-                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">상단 여백 (Padding Top)</label>
+                        <label className="block text-sm font-bold text-[#121110] mb-1.5">상단 여백 (Padding Top)</label>
                         <input
                           type="text"
-                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                           value={settings.quotePaddingTop || ''}
                           onChange={e => setSettings({ ...settings, quotePaddingTop: e.target.value })}
                           placeholder="예: 1.5rem, 24px"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">하단 여백 (Padding Bottom)</label>
+                        <label className="block text-sm font-bold text-[#121110] mb-1.5">하단 여백 (Padding Bottom)</label>
                         <input
                           type="text"
-                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                           value={settings.quotePaddingBottom || ''}
                           onChange={e => setSettings({ ...settings, quotePaddingBottom: e.target.value })}
                           placeholder="예: 4rem, 64px"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-bold text-[#2D2926] mb-1.5">글 정렬 (Text Align)</label>
+                        <label className="block text-sm font-bold text-[#121110] mb-1.5">글 정렬 (Text Align)</label>
                         <select
-                          className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] text-sm"
+                          className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] text-sm"
                           value={settings.quoteTextAlign || 'center'}
                           onChange={e => setSettings({ ...settings, quoteTextAlign: e.target.value })}
                         >
@@ -456,7 +456,7 @@ export default function AdminSeekersPage() {
                   </div>
                   
                   {musicList.length === 0 ? (
-                    <div className="text-sm text-[#78716A] p-4 bg-[#FAF9F6] rounded-xl border border-[rgba(45,41,38,0.1)]">
+                    <div className="text-sm text-[#78716A] p-4 bg-[#F5F2EC] rounded-xl border border-[rgba(45,41,38,0.1)]">
                       등록된 음악이 없습니다. &apos;음악 관리&apos; 메뉴에서 먼저 음원을 등록해주세요.
                     </div>
                   ) : (
@@ -473,10 +473,10 @@ export default function AdminSeekersPage() {
                                 : [...(settings.playlists || []), music.id]
                             });
                           }}
-                          className={`p-4 rounded-xl cursor-pointer border transition-colors ${(settings.playlists || []).includes(music.id) ? 'bg-[#F2EFE9] border-[#C48C5E]' : 'bg-[#FAF9F6] border-[rgba(45,41,38,0.1)] hover:border-[#C48C5E]/50'}`}
+                          className={`p-4 rounded-xl cursor-pointer border transition-colors ${(settings.playlists || []).includes(music.id) ? 'bg-[#ECE7DC] border-[#B3350F]' : 'bg-[#F5F2EC] border-[rgba(45,41,38,0.1)] hover:border-[#B3350F]/50'}`}
                         >
                           <div className="flex items-center gap-3">
-                            <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border ${(settings.playlists || []).includes(music.id) ? 'bg-[#C48C5E] border-[#C48C5E] text-white' : 'bg-white border-[#2D2926]/20'}`}>
+                            <div className={`w-5 h-5 rounded flex items-center justify-center shrink-0 border ${(settings.playlists || []).includes(music.id) ? 'bg-[#B3350F] border-[#B3350F] text-white' : 'bg-white border-[#121110]/20'}`}>
                               {(settings.playlists || []).includes(music.id) && <Check size={14} />}
                             </div>
                             <div className="min-w-0">
@@ -494,7 +494,7 @@ export default function AdminSeekersPage() {
                   <button
                     onClick={handleSaveSettings}
                     disabled={isSaving}
-                    className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#2D2926] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
+                    className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#121110] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
                   >
                     {isSaving ? '저장 중...' : '설정 저장'}
                   </button>
@@ -507,25 +507,25 @@ export default function AdminSeekersPage() {
 
         {/* Edit Modal */}
         {isModalOpen && editingItem && (
-          <div className="fixed inset-0 bg-[#2D2926]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-            <div className="bg-[#FAF9F6] w-full max-w-4xl rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
+          <div className="fixed inset-0 bg-[#121110]/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+            <div className="bg-[#F5F2EC] w-full max-w-4xl rounded-2xl shadow-xl flex flex-col max-h-[90vh]">
               <div className="flex items-center justify-between p-6 border-b border-[rgba(45,41,38,0.1)] shrink-0">
                 <h2 className="text-xl font-bold">{editingItem.id ? '질문 수정' : '새 질문 작성'}</h2>
-                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-[#2D2926]/5 rounded-full text-[#78716A]">
+                <button onClick={() => setIsModalOpen(false)} className="p-2 hover:bg-[#121110]/5 rounded-full text-[#78716A]">
                   <X size={20} />
                 </button>
               </div>
               
               <div className="p-6 overflow-y-auto grow space-y-8">
-                <div className="bg-[#F2EFE9] p-5 rounded-xl border border-[rgba(45,41,38,0.1)]">
-                  <h3 className="text-sm font-bold text-[#2D2926] mb-3 flex items-center gap-2">
-                    <Sparkles size={16} className="text-[#C48C5E]" />
+                <div className="bg-[#ECE7DC] p-5 rounded-xl border border-[rgba(45,41,38,0.1)]">
+                  <h3 className="text-sm font-bold text-[#121110] mb-3 flex items-center gap-2">
+                    <Sparkles size={16} className="text-[#B3350F]" />
                     AI 보조 작성
                   </h3>
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      className="flex-1 bg-white border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#C48C5E]"
+                      className="flex-1 bg-white border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#B3350F]"
                       placeholder="설명하고 싶은 주제 입력 (예: 기독교가 독단적인가요?)"
                       value={aiTopic}
                       onChange={e => setAiTopic(e.target.value)}
@@ -533,7 +533,7 @@ export default function AdminSeekersPage() {
                     <button
                       onClick={generateWithAI}
                       disabled={aiLoading}
-                      className="bg-[#C48C5E] text-white px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-[#a5744d] transition-colors"
+                      className="bg-[#B3350F] text-white px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-[#a5744d] transition-colors"
                     >
                       {aiLoading ? '생성 중...' : '생성하기'}
                     </button>
@@ -543,9 +543,9 @@ export default function AdminSeekersPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-bold text-[#2D2926] mb-1.5">구분(Category)</label>
+                    <label className="block text-sm font-bold text-[#121110] mb-1.5">구분(Category)</label>
                     <select
-                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#C48C5E] shadow-sm text-sm"
+                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#B3350F] shadow-sm text-sm"
                       value={editingItem.category}
                       onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value })}
                     >
@@ -553,10 +553,10 @@ export default function AdminSeekersPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-[#2D2926] mb-1.5">정렬 순서</label>
+                    <label className="block text-sm font-bold text-[#121110] mb-1.5">정렬 순서</label>
                     <input
                       type="number"
-                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#C48C5E] shadow-sm text-sm"
+                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#B3350F] shadow-sm text-sm"
                       value={editingItem.order}
                       onChange={(e) => setEditingItem({ ...editingItem, order: parseInt(e.target.value) || 0 })}
                     />
@@ -565,19 +565,19 @@ export default function AdminSeekersPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="block text-sm font-bold text-[#2D2926] mb-1.5">질문 (한글)</label>
+                    <label className="block text-sm font-bold text-[#121110] mb-1.5">질문 (한글)</label>
                     <input
                       type="text"
-                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#C48C5E] shadow-sm text-sm font-medium"
+                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#B3350F] shadow-sm text-sm font-medium"
                       value={editingItem.question}
                       onChange={(e) => setEditingItem({ ...editingItem, question: e.target.value })}
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-bold text-[#2D2926] mb-1.5">질문 (영문)</label>
+                    <label className="block text-sm font-bold text-[#121110] mb-1.5">질문 (영문)</label>
                     <input
                       type="text"
-                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#C48C5E] shadow-sm text-sm font-medium"
+                      className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#B3350F] shadow-sm text-sm font-medium"
                       value={editingItem.questionEn}
                       onChange={(e) => setEditingItem({ ...editingItem, questionEn: e.target.value })}
                     />
@@ -585,10 +585,10 @@ export default function AdminSeekersPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-[#2D2926] mb-1.5">검색 키워드 (띄어쓰기로 구분)</label>
+                  <label className="block text-sm font-bold text-[#121110] mb-1.5">검색 키워드 (띄어쓰기로 구분)</label>
                   <input
                     type="text"
-                    className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#C48C5E] shadow-sm text-sm"
+                    className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-2.5 outline-none focus:border-[#B3350F] shadow-sm text-sm"
                     value={editingItem.keywords}
                     onChange={(e) => setEditingItem({ ...editingItem, keywords: e.target.value })}
                     placeholder="예: 하나님 존재 증거 god evidence"
@@ -596,18 +596,18 @@ export default function AdminSeekersPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-[#2D2926] mb-1.5">짧은 핵심 문구 (Short Answer - &lt;br/&gt; 포함 가능)</label>
+                  <label className="block text-sm font-bold text-[#121110] mb-1.5">짧은 핵심 문구 (Short Answer - &lt;br/&gt; 포함 가능)</label>
                   <input
                     type="text"
-                    className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#C48C5E] shadow-sm font-serif italic text-base text-[#C48C5E]"
+                    className="w-full bg-white border border-[rgba(45,41,38,0.1)] rounded-xl px-4 py-3 outline-none focus:border-[#B3350F] shadow-sm font-serif italic text-base text-[#B3350F]"
                     value={editingItem.shortAnswer}
                     onChange={(e) => setEditingItem({ ...editingItem, shortAnswer: e.target.value })}
                   />
                 </div>
 
                 <div>
-                  <label className="block text-sm font-bold text-[#2D2926] mb-1.5">상세 답변 (워드프레스형 에디터)</label>
-                  <div className="bg-white rounded-xl overflow-hidden border border-[rgba(45,41,38,0.1)] focus-within:border-[#C48C5E] shadow-sm">
+                  <label className="block text-sm font-bold text-[#121110] mb-1.5">상세 답변 (워드프레스형 에디터)</label>
+                  <div className="bg-white rounded-xl overflow-hidden border border-[rgba(45,41,38,0.1)] focus-within:border-[#B3350F] shadow-sm">
                     <ReactQuill 
                       theme="snow"
                       value={editingItem.fullAnswer}
@@ -628,11 +628,11 @@ export default function AdminSeekersPage() {
 
                 <div className="border-t border-[rgba(45,41,38,0.1)] pt-6">
                   <div className="flex items-center justify-between mb-4">
-                    <label className="block text-sm font-bold text-[#2D2926]">관련 미디어 (유튜브 영상, 음원, 책, 팟캐스트)</label>
+                    <label className="block text-sm font-bold text-[#121110]">관련 미디어 (유튜브 영상, 음원, 책, 팟캐스트)</label>
                     <button
                       type="button"
                       onClick={addMediaRow}
-                      className="text-xs bg-white border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1 hover:bg-[#F2EFE9] transition-colors"
+                      className="text-xs bg-white border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1 hover:bg-[#ECE7DC] transition-colors"
                     >
                       + 항목 추가
                     </button>
@@ -651,7 +651,7 @@ export default function AdminSeekersPage() {
                         
                         <div className="w-[120px]">
                           <select
-                            className="w-full bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#C48C5E] text-xs"
+                            className="w-full bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#B3350F] text-xs"
                             value={m.type}
                             onChange={(e) => updateMedia(index, 'type', e.target.value as any)}
                           >
@@ -665,14 +665,14 @@ export default function AdminSeekersPage() {
                           <input
                             type="text"
                             placeholder="제목 (예: One Question ep.01)"
-                            className="bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#C48C5E] text-xs"
+                            className="bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#B3350F] text-xs"
                             value={m.title}
                             onChange={(e) => updateMedia(index, 'title', e.target.value)}
                           />
                           <input
                             type="text"
                             placeholder="부제목 (예: 3:24 또는 ibigband — 관련 수록곡)"
-                            className="bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#C48C5E] text-xs"
+                            className="bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#B3350F] text-xs"
                             value={m.subtitle}
                             onChange={(e) => updateMedia(index, 'subtitle', e.target.value)}
                           />
@@ -681,7 +681,7 @@ export default function AdminSeekersPage() {
                           <input
                             type="text"
                             placeholder="링크 Url (음악링크, 유튜브 링크, 도서 정보 링크 등)"
-                            className="w-full h-[34px] mb-2 bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#C48C5E] text-xs"
+                            className="w-full h-[34px] mb-2 bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#B3350F] text-xs"
                             value={m.link}
                             onChange={(e) => updateMedia(index, 'link', e.target.value)}
                           />
@@ -690,14 +690,14 @@ export default function AdminSeekersPage() {
                               <input
                                 type="text"
                                 placeholder="영상 커버 위 글씨 (ONE QUESTION) - 선택사항"
-                                className="bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#C48C5E] text-xs"
+                                className="bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#B3350F] text-xs"
                                 value={m.coverTitle || ''}
                                 onChange={(e) => updateMedia(index, 'coverTitle', e.target.value)}
                               />
                               <input
                                 type="text"
                                 placeholder="영상 커버 아래 글씨 ('Is there a God?') - 선택사항"
-                                className="bg-[#FAF9F6] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#C48C5E] text-xs font-serif italic"
+                                className="bg-[#F5F2EC] border border-[rgba(45,41,38,0.1)] rounded-lg px-3 py-1.5 outline-none focus:border-[#B3350F] text-xs font-serif italic"
                                 value={m.coverSubtitle || ''}
                                 onChange={(e) => updateMedia(index, 'coverSubtitle', e.target.value)}
                               />
@@ -717,14 +717,14 @@ export default function AdminSeekersPage() {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-[#78716A] hover:bg-[#F2EFE9] transition-colors"
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold text-[#78716A] hover:bg-[#ECE7DC] transition-colors"
                 >
                   취소
                 </button>
                 <button
                   onClick={handleSave}
                   disabled={isSaving}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#2D2926] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
+                  className="px-6 py-2.5 rounded-xl text-sm font-bold bg-[#121110] text-white hover:bg-black disabled:opacity-50 transition-colors shadow-sm"
                 >
                   {isSaving ? '저장 중...' : '저장하기'}
                 </button>

@@ -70,28 +70,28 @@ export default function AuthPage() {
   // 가입 완료 화면
   if (signupSuccess) {
     return (
-      <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#F5F2EC] flex items-center justify-center px-4">
         <div className="w-full max-w-md text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle size={32} className="text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-[#2D2926] mb-3">{t('successTitle')}</h1>
-          <p className="text-[#78716A] mb-2">
-            {t.rich('successEmailSent', { b: (chunks) => <strong className="text-[#2D2926]">{chunks}</strong>, email })}
+          <h1 className="text-2xl font-bold text-[#121110] mb-3">{t('successTitle')}</h1>
+          <p className="text-t-muted mb-2">
+            {t.rich('successEmailSent', { b: (chunks) => <strong className="text-[#121110]">{chunks}</strong>, email })}
           </p>
-          <p className="text-[#78716A] text-sm mb-8">
+          <p className="text-t-muted text-sm mb-8">
             {t('successApproval')}
           </p>
-          <div className="bg-[#E6C79C]/10 border border-[#E6C79C]/30 rounded-xl p-4 text-sm text-[#78716A] mb-8">
-            <p className="font-bold text-[#2D2926] mb-1">{t('stepsTitle')}</p>
+          <div className="bg-[#E8481C]/10 border border-[#E8481C]/30 rounded-xl p-4 text-sm text-t-muted mb-8">
+            <p className="font-bold text-[#121110] mb-1">{t('stepsTitle')}</p>
             <ol className="text-left space-y-1.5 list-decimal list-inside">
-              <li>{t('step1')} <span className="text-[#E6C79C] font-bold">{t('stepNow')}</span></li>
+              <li>{t('step1')} <span className="text-t-gold font-bold">{t('stepNow')}</span></li>
               <li>{t('step2')}</li>
               <li>{t('step3')}</li>
             </ol>
           </div>
           <button onClick={() => { setSignupSuccess(false); setMode('login'); }}
-            className="text-[#2D2926] font-bold hover:underline">
+            className="text-[#121110] font-bold hover:underline">
             {t('backToLogin')}
           </button>
         </div>
@@ -100,12 +100,12 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#F5F2EC] flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         {/* 헤더 */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
-            <div className="w-10 h-10 bg-[#2D2926] rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#121110] rounded-xl flex items-center justify-center">
               <svg viewBox="0 0 100 100" className="w-6 h-6 fill-white">
                 <rect x="10" y="20" width="15" height="60" rx="4" />
                 <path d="M35 20 Q50 20 50 40 Q50 60 35 60 L35 20" />
@@ -113,19 +113,19 @@ export default function AuthPage() {
                 <path d="M85 80 Q95 80 95 65 L95 35 Q95 20 85 20" fill="none" stroke="white" strokeWidth="8" strokeLinecap="round" />
               </svg>
             </div>
-            <span className="text-3xl font-handwriting font-bold tracking-tight">ibiGband</span>
+            <span className="text-2xl font-handwriting font-bold tracking-tight">ibiGband</span>
           </Link>
-          <h1 className="text-2xl font-bold text-[#2D2926]">
+          <h1 className="text-2xl font-bold text-[#121110]">
             {mode === 'login' ? t('titleLogin') : t('titleSignup')}
           </h1>
-          <p className="text-[#78716A] text-sm mt-1">
+          <p className="text-t-muted text-sm mt-1">
             {mode === 'login' ? t('subtitleLogin') : t('subtitleSignup')}
           </p>
         </div>
 
         {/* 구글 로그인 */}
         <button onClick={handleGoogleLogin} disabled={loading}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-[#78716A]/20 rounded-xl px-4 py-3.5 text-sm font-bold text-[#2D2926] hover:bg-gray-50 hover:shadow-md transition-all disabled:opacity-50">
+          className="w-full flex items-center justify-center gap-3 bg-white border border-[#78716A]/20 rounded-xl px-4 py-3.5 text-sm font-bold text-[#121110] hover:bg-gray-50 hover:shadow-md transition-all disabled:opacity-50">
           <svg viewBox="0 0 24 24" width="20" height="20">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -137,44 +137,44 @@ export default function AuthPage() {
 
         {/* 구분선 */}
         <div className="flex items-center gap-4 my-6">
-          <div className="flex-1 h-px bg-[#78716A]/20" />
-          <span className="text-xs text-[#78716A] font-medium">{t('orEmail')}</span>
-          <div className="flex-1 h-px bg-[#78716A]/20" />
+          <div className="flex-1 h-px bg-[#2A2826]/20" />
+          <span className="text-xs text-t-muted font-medium">{t('orEmail')}</span>
+          <div className="flex-1 h-px bg-[#2A2826]/20" />
         </div>
 
         {/* 이메일 폼 */}
         <form onSubmit={mode === 'login' ? handleEmailLogin : handleEmailSignup} className="space-y-4">
           {mode === 'signup' && (
             <div>
-              <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelName')}</label>
+              <label className="text-sm font-bold text-[#121110] block mb-1.5">{t('labelName')}</label>
               <div className="relative">
-                <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" />
+                <User size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-t-muted" />
                 <input type="text" value={name} onChange={e => setName(e.target.value)}
                   placeholder={t('placeholderName')}
-                  className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors" />
+                  className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#121110] transition-colors" />
               </div>
             </div>
           )}
 
           <div>
-            <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelEmail')}</label>
+            <label className="text-sm font-bold text-[#121110] block mb-1.5">{t('labelEmail')}</label>
             <div className="relative">
-              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" />
+              <Mail size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-t-muted" />
               <input type="email" value={email} onChange={e => setEmail(e.target.value)}
                 placeholder="name@example.com"
-                className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors" />
+                className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#121110] transition-colors" />
             </div>
           </div>
 
           <div>
-            <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelPassword')}</label>
+            <label className="text-sm font-bold text-[#121110] block mb-1.5">{t('labelPassword')}</label>
             <div className="relative">
-              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#78716A]" />
+              <Lock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-t-muted" />
               <input type={showPassword ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                 placeholder={mode === 'signup' ? t('placeholderPasswordSignup') : t('placeholderPasswordLogin')}
-                className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-11 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors" />
+                className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-11 py-3 text-sm focus:outline-none focus:border-[#121110] transition-colors" />
               <button type="button" onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#78716A] hover:text-[#2D2926]">
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-t-muted hover:text-[#121110]">
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </div>
@@ -182,13 +182,13 @@ export default function AuthPage() {
 
           {mode === 'signup' && (
             <div>
-              <label className="text-sm font-bold text-[#2D2926] block mb-1.5">{t('labelBio')}</label>
+              <label className="text-sm font-bold text-[#121110] block mb-1.5">{t('labelBio')}</label>
               <div className="relative">
-                <FileText size={16} className="absolute left-3.5 top-3.5 text-[#78716A]" />
+                <FileText size={16} className="absolute left-3.5 top-3.5 text-t-muted" />
                 <textarea value={bio} onChange={e => setBio(e.target.value)}
                   placeholder={t('placeholderBio')}
                   rows={3}
-                  className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#2D2926] transition-colors resize-none" />
+                  className="w-full bg-white border border-[#78716A]/20 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-[#121110] transition-colors resize-none" />
               </div>
             </div>
           )}
@@ -209,25 +209,25 @@ export default function AuthPage() {
           )}
 
           <button type="submit" disabled={loading}
-            className="w-full bg-[#2D2926] text-white py-3.5 rounded-xl font-bold text-sm hover:bg-[#78716A] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+            className="w-full bg-[#121110] text-white py-3.5 rounded-xl font-bold text-sm hover:bg-[#2A2826] transition-all disabled:opacity-50 flex items-center justify-center gap-2">
             {loading && <Loader2 size={16} className="animate-spin" />}
             {mode === 'login' ? t('titleLogin') : t('titleSignup')}
           </button>
         </form>
 
         {/* 모드 전환 */}
-        <div className="text-center mt-6 text-sm text-[#78716A]">
+        <div className="text-center mt-6 text-sm text-t-muted">
           {mode === 'login' ? (
             <>
               {t('switchToSignupQ')}{' '}
-              <button onClick={() => { setMode('signup'); setError(''); }} className="font-bold text-[#2D2926] hover:underline">
+              <button onClick={() => { setMode('signup'); setError(''); }} className="font-bold text-[#121110] hover:underline">
                 {t('titleSignup')}
               </button>
             </>
           ) : (
             <>
               {t('switchToLoginQ')}{' '}
-              <button onClick={() => { setMode('login'); setError(''); }} className="font-bold text-[#2D2926] hover:underline">
+              <button onClick={() => { setMode('login'); setError(''); }} className="font-bold text-[#121110] hover:underline">
                 {t('titleLogin')}
               </button>
             </>
@@ -235,7 +235,7 @@ export default function AuthPage() {
         </div>
 
         <div className="text-center mt-8">
-          <Link href="/" className="text-xs text-[#78716A] hover:text-[#2D2926] flex items-center justify-center gap-1">
+          <Link href="/" className="text-xs text-t-muted hover:text-[#121110] flex items-center justify-center gap-1">
             <ArrowLeft size={12} /> {t('backToMain')}
           </Link>
         </div>

@@ -191,45 +191,45 @@ export default function ArchivePage() {
     <div className="pt-12 md:pt-16 px-4 md:px-6 max-w-7xl mx-auto mb-16 md:mb-20">
       <div className="flex flex-col md:flex-row justify-between items-end gap-4 md:gap-6 mb-8 md:mb-12">
         <div className="text-left w-full">
-          <h2 className="text-3xl md:text-5xl font-handwriting text-[#2D2926] mb-2 md:mb-3">{t('title')}</h2>
-          <p className="text-[13px] md:text-base text-[#78716A]">{t('subtitle')}</p>
+          <h2 className="text-2xl md:text-4xl font-handwriting text-[#121110] mb-2 md:mb-3">{t('title')}</h2>
+          <p className="text-[13px] md:text-base text-t-muted">{t('subtitle')}</p>
         </div>
       </div>
 
       {/* Control Bar - Mobile Optimized Material 3 Layout */}
-      <div className="bg-[#2D2926]/95 backdrop-blur-xl p-3 md:p-4 rounded-[24px] shadow-lg border border-white/10 mb-6 md:mb-8 flex flex-col md:flex-row gap-3 md:gap-4 sticky top-[70px] md:top-[80px] z-10 w-full overflow-hidden items-center justify-between">
+      <div className="bg-[#121110]/95 backdrop-blur-xl p-3 md:p-4 rounded-[18px] shadow-lg border border-white/10 mb-6 md:mb-8 flex flex-col md:flex-row gap-3 md:gap-4 sticky top-[70px] md:top-[80px] z-10 w-full overflow-hidden items-center justify-between">
         
         {/* Mobile Top Row / Desktop Left Side: Search & View Modes */}
         <div className="flex gap-3 justify-between items-center w-full md:w-auto md:flex-1">
           <div className="relative flex-1 md:max-w-md lg:max-w-lg">
-            <Search className="absolute left-3 top-2.5 text-white/50" size={16} />
+            <Search className="absolute left-3 top-2.5 text-white/75" size={16} />
             <input 
               type="text" 
               placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-full text-[14px] md:text-sm text-white/90 focus:outline-none focus:border-white/30 focus:bg-[#2D2926] placeholder:text-white/40 transition-colors shadow-inner"
+              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-white/10 rounded-full text-[14px] md:text-sm text-white/90 focus:outline-none focus:border-white/30 focus:bg-[#121110] placeholder:text-white/75 transition-colors shadow-inner"
             />
           </div>
           
           <div className="flex p-1 bg-white/5 rounded-full shrink-0 border border-white/5 self-center md:hidden">
             <button 
               onClick={() => setViewMode('list')}
-              className={`p-1.5 rounded-full transition-all ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              className={`p-1.5 rounded-full transition-all ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/75 hover:text-white/90 hover:bg-white/10'}`}
               title={t('viewList')}
             >
               <LayoutList size={16} />
             </button>
             <button 
               onClick={() => setViewMode('grid')}
-              className={`p-1.5 rounded-full transition-all ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              className={`p-1.5 rounded-full transition-all ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/75 hover:text-white/90 hover:bg-white/10'}`}
               title={t('viewGrid')}
             >
               <LayoutGrid size={16} />
             </button>
             <button 
               onClick={() => setViewMode('category')}
-              className={`p-1.5 rounded-full transition-all ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              className={`p-1.5 rounded-full transition-all ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/75 hover:text-white/90 hover:bg-white/10'}`}
               title={t('viewCategory')}
             >
               <FolderTree size={16} />
@@ -242,30 +242,30 @@ export default function ArchivePage() {
           <div className="flex gap-2 w-full md:w-auto">
             <div className="relative flex-1 md:w-40">
               <select 
-                className="w-full px-3 py-2 bg-[#2D2926]/50 border border-white/10 rounded-xl md:rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer transition-colors focus:bg-[#2D2926] focus:border-white/30 hover:bg-white/10 appearance-none pr-8 truncate shadow-sm"
+                className="w-full px-3 py-2 bg-[#121110]/50 border border-white/10 rounded-xl md:rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer transition-colors focus:bg-[#121110] focus:border-white/30 hover:bg-white/10 appearance-none pr-8 truncate shadow-sm"
                 value={filterType}
                 onChange={(e) => setFilterType(e.target.value as any)}
               >
-                <option value="all" className="bg-[#2D2926]">{t('filterAll')}</option>
-                <option value="video" className="bg-[#2D2926]">{t('filterVideo')}</option>
-                <option value="blog" className="bg-[#2D2926]">{t('filterBlog')}</option>
-                <option value="sheet" className="bg-[#2D2926]">{t('filterSheet')}</option>
+                <option value="all" className="bg-[#121110]">{t('filterAll')}</option>
+                <option value="video" className="bg-[#121110]">{t('filterVideo')}</option>
+                <option value="blog" className="bg-[#121110]">{t('filterBlog')}</option>
+                <option value="sheet" className="bg-[#121110]">{t('filterSheet')}</option>
               </select>
-              <div className="absolute right-3 top-2.5 pointer-events-none text-white/40">
+              <div className="absolute right-3 top-2.5 pointer-events-none text-white/75">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </div>
             </div>
             
             <div className="relative flex-1 md:w-40">
               <select 
-                className="w-full px-3 py-2 bg-[#2D2926]/50 border border-white/10 rounded-xl md:rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer transition-colors focus:bg-[#2D2926] focus:border-white/30 hover:bg-white/10 appearance-none pr-8 truncate shadow-sm"
+                className="w-full px-3 py-2 bg-[#121110]/50 border border-white/10 rounded-xl md:rounded-full text-[13px] md:text-sm font-medium text-white/90 outline-none cursor-pointer transition-colors focus:bg-[#121110] focus:border-white/30 hover:bg-white/10 appearance-none pr-8 truncate shadow-sm"
                 value={filterTag}
                 onChange={(e) => setFilterTag(e.target.value)}
               >
-                <option value="all" className="bg-[#2D2926]">{t('tagAll')}</option>
-                {allTags.map(tag => <option key={tag} value={tag} className="bg-[#2D2926]">#{tag}</option>)}
+                <option value="all" className="bg-[#121110]">{t('tagAll')}</option>
+                {allTags.map(tag => <option key={tag} value={tag} className="bg-[#121110]">#{tag}</option>)}
               </select>
-              <div className="absolute right-3 top-2.5 pointer-events-none text-white/40">
+              <div className="absolute right-3 top-2.5 pointer-events-none text-white/75">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </div>
             </div>
@@ -274,21 +274,21 @@ export default function ArchivePage() {
           <div className="hidden md:flex p-1 bg-white/5 rounded-full shrink-0 border border-white/5 ml-2">
             <button 
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-full transition-all ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              className={`p-2 rounded-full transition-all ${viewMode === 'list' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/75 hover:text-white/90 hover:bg-white/10'}`}
               title={t('viewList')}
             >
               <LayoutList size={18} />
             </button>
             <button 
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-full transition-all ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              className={`p-2 rounded-full transition-all ${viewMode === 'grid' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/75 hover:text-white/90 hover:bg-white/10'}`}
               title={t('viewGrid')}
             >
               <LayoutGrid size={18} />
             </button>
             <button 
               onClick={() => setViewMode('category')}
-              className={`p-2 rounded-full transition-all ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/50 hover:text-white/90 hover:bg-white/10'}`}
+              className={`p-2 rounded-full transition-all ${viewMode === 'category' ? 'bg-white/20 shadow-sm text-white scale-105' : 'text-white/75 hover:text-white/90 hover:bg-white/10'}`}
               title={t('viewCategory')}
             >
               <FolderTree size={18} />
@@ -298,14 +298,14 @@ export default function ArchivePage() {
       </div>
 
       {loading ? (
-        <div className="py-20 text-center text-[#78716A] animate-pulse">Loading Archive...</div>
+        <div className="py-20 text-center text-t-muted animate-pulse">Loading Archive...</div>
       ) : filteredItems.length === 0 ? (
-        <div className="py-20 text-center text-[#78716A]">{t('noResults')}</div>
+        <div className="py-20 text-center text-t-muted">{t('noResults')}</div>
       ) : (
         <>
           {viewMode === 'list' && (
             <div className="flex flex-col md:gap-4 w-full">
-              <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 border-b border-[#78716A]/10 text-xs font-bold text-[#78716A] tracking-wider uppercase w-full">
+              <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 border-b border-[#78716A]/10 text-xs font-bold text-t-muted tracking-wider uppercase w-full">
                 <div className="col-span-6 lg:col-span-5">{t('colInfo')}</div>
                 <div className="col-span-2 text-center">{t('colType')}</div>
                 <div className="col-span-3 text-center">{t('colTags')}</div>
@@ -319,36 +319,36 @@ export default function ArchivePage() {
                     className="block group h-full"
                     onClick={(e) => handleItemClick(e, item)}
                   >
-                    <div className="py-4 md:py-4 px-1 md:px-6 md:bg-white md:hover:bg-[#FAF9F6] md:border md:border-[#78716A]/5 md:rounded-[32px] transition-all md:shadow-sm md:group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative w-full">
+                    <div className="py-4 md:py-4 px-1 md:px-6 md:bg-white md:hover:bg-[#F5F2EC] md:border md:border-[#78716A]/5 md:rounded-[18px] transition-all md:shadow-sm md:group-hover:shadow-md flex flex-col md:grid md:grid-cols-12 md:gap-4 md:items-center relative w-full">
                       
                       {/* ======== 모바일 뷰 최적화 레이아웃 ======== */}
                       <div className="flex gap-3.5 md:hidden w-full items-start">
-                        <div className="w-[100px] h-[70px] rounded-[10px] bg-[#2D2926] overflow-hidden shrink-0 relative flex-none shadow-sm">
+                        <div className="w-[100px] h-[70px] rounded-[10px] bg-[#121110] overflow-hidden shrink-0 relative flex-none shadow-sm">
                           {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                             <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-[#FAF9F6] border border-[#78716A]/10 text-[#78716A] text-[10px] italic">No Img</div>
+                            <div className="w-full h-full flex items-center justify-center bg-[#F5F2EC] border border-[#78716A]/10 text-t-muted text-[12px] italic">No Img</div>
                           )}
-                          <div className="absolute top-1 left-1 bg-white/90 backdrop-blur-sm p-1 rounded-md shadow-sm text-[#2D2926]">
+                          <div className="absolute top-1 left-1 bg-white/90 backdrop-blur-sm p-1 rounded-md shadow-sm text-[#121110]">
                             {getTypeIcon(item.type)}
                           </div>
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-start">
                           <div className="flex justify-between items-start gap-2 mb-1">
-                            <h3 className="font-bold text-[#2D2926] text-[15px] leading-snug line-clamp-2">
+                            <h3 className="font-bold text-[#121110] text-[15px] leading-snug line-clamp-2">
                               {item.title}
                             </h3>
-                            <ArrowUpRight size={15} className="text-[#C48C5E] shrink-0 mt-0.5" />
+                            <ArrowUpRight size={15} className="text-t-copper shrink-0 mt-0.5" />
                           </div>
-                          <p className="text-[12px] text-[#78716A] line-clamp-1 mb-2 w-[90%]">{item.description}</p>
+                          <p className="text-[12px] text-t-muted line-clamp-1 mb-2 w-[90%]">{item.description}</p>
                           <div className="flex flex-wrap items-center gap-1.5 mt-auto">
-                            <span className="text-[9px] font-bold text-[#2D2926] uppercase bg-white border border-[#78716A]/10 shadow-sm px-1.5 py-0.5 rounded">
+                            <span className="text-[12px] font-bold text-[#121110] uppercase bg-white border border-[#78716A]/10 shadow-sm px-1.5 py-0.5 rounded">
                               {getTypeName(item.type)}
                             </span>
                             {item.tags.slice(0, 2).map(tag => (
-                              <span key={tag} className="text-[10px] text-[#78716A] truncate max-w-[60px]">#{tag}</span>
+                              <span key={tag} className="text-[12px] text-t-muted truncate max-w-[60px]">#{tag}</span>
                             ))}
-                            {item.tags.length > 2 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 2}</span>}
+                            {item.tags.length > 2 && <span className="text-[12px] text-t-muted">+{item.tags.length - 2}</span>}
                           </div>
                         </div>
                       </div>
@@ -356,35 +356,35 @@ export default function ArchivePage() {
                       {/* ======== 데스크탑 뷰 레이아웃 ======== */}
                       <div className="hidden md:contents">
                         <div className="col-span-6 lg:col-span-5 flex items-center gap-4">
-                          <div className="w-16 h-12 rounded-lg bg-[#2D2926] overflow-hidden shrink-0 relative">
+                          <div className="w-16 h-12 rounded-lg bg-[#121110] overflow-hidden shrink-0 relative">
                             {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                               <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gray-100 text-[#78716A] text-[10px] italic">No Img</div>
+                              <div className="w-full h-full flex items-center justify-center bg-gray-100 text-t-muted text-[12px] italic">No Img</div>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-[#2D2926] text-[15px] truncate">{item.title}</h3>
-                            <p className="text-xs text-[#78716A] truncate mt-0.5">{item.description}</p>
+                            <h3 className="font-bold text-[#121110] text-[15px] truncate">{item.title}</h3>
+                            <p className="text-xs text-t-muted truncate mt-0.5">{item.description}</p>
                           </div>
                         </div>
                         
-                        <div className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-1 bg-[#FAF9F6] rounded-full w-fit mx-auto border border-[#78716A]/10">
+                        <div className="col-span-2 flex items-center justify-center gap-1.5 px-3 py-1 bg-[#F5F2EC] rounded-full w-fit mx-auto border border-[#78716A]/10">
                           {getTypeIcon(item.type)}
-                          <span className="text-[11px] font-bold text-[#2D2926] uppercase">{getTypeName(item.type)}</span>
+                          <span className="text-[13px] font-bold text-[#121110] uppercase">{getTypeName(item.type)}</span>
                         </div>
 
                         <div className="col-span-3 flex flex-wrap items-center justify-center gap-1">
                           {item.tags.slice(0, 3).map(tag => (
-                            <span key={tag} className="text-[10px] text-[#78716A] bg-white border border-[#78716A]/10 px-2 py-0.5 rounded-full">
+                            <span key={tag} className="text-[12px] text-t-muted bg-white border border-[#78716A]/10 px-2 py-0.5 rounded-full">
                               #{tag}
                             </span>
                           ))}
-                          {item.tags.length > 3 && <span className="text-[10px] text-[#78716A]">+{item.tags.length - 3}</span>}
+                          {item.tags.length > 3 && <span className="text-[12px] text-t-muted">+{item.tags.length - 3}</span>}
                         </div>
 
                         <div className="col-span-1 lg:col-span-2 flex justify-end">
-                          <div className="w-8 h-8 rounded-full bg-[#FAF9F6] border border-[#78716A]/10 flex items-center justify-center group-hover:bg-[#E6C79C] group-hover:text-white transition-colors text-[#2D2926]">
+                          <div className="w-8 h-8 rounded-full bg-[#F5F2EC] border border-[#78716A]/10 flex items-center justify-center group-hover:bg-[#E8481C] group-hover:text-white transition-colors text-[#121110]">
                             <ArrowUpRight size={16} />
                           </div>
                         </div>
@@ -399,31 +399,31 @@ export default function ArchivePage() {
           {viewMode === 'grid' && (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
               {filteredItems.map(item => (
-                <Link key={item.id} href={item.link} className="group flex flex-col bg-white rounded-2xl md:rounded-[24px] shadow-sm border border-[#78716A]/5 overflow-hidden hover:shadow-md transition-all h-full">
-                  <div className="relative aspect-video w-full bg-[#FAF9F6]">
+                <Link key={item.id} href={item.link} className="group flex flex-col bg-white rounded-2xl md:rounded-[18px] shadow-sm border border-[#78716A]/5 overflow-hidden hover:shadow-md transition-all h-full">
+                  <div className="relative aspect-video w-full bg-[#F5F2EC]">
                     {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                       <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#78716A] italic font-light text-sm">No Image</div>
+                      <div className="w-full h-full flex items-center justify-center text-t-muted italic font-normal text-sm">No Image</div>
                     )}
                     <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
                       {getTypeIcon(item.type)}
-                      <span className="text-[10px] font-bold text-[#2D2926] uppercase">{getTypeName(item.type)}</span>
+                      <span className="text-[12px] font-bold text-[#121110] uppercase">{getTypeName(item.type)}</span>
                     </div>
                   </div>
                   <div className="p-4 md:p-5 flex-1 flex flex-col">
-                    <h3 className="font-bold text-[#2D2926] text-[15px] md:text-lg leading-tight mb-1.5 md:mb-2 line-clamp-2 group-hover:text-[#C48C5E] transition-colors">{item.title}</h3>
-                    <p className="text-xs text-[#78716A] line-clamp-2 mb-3 md:mb-4 flex-1">{item.description}</p>
+                    <h3 className="font-bold text-[#121110] text-[15px] md:text-lg leading-tight mb-1.5 md:mb-2 line-clamp-2 group-hover:text-t-copper transition-colors">{item.title}</h3>
+                    <p className="text-xs text-t-muted line-clamp-2 mb-3 md:mb-4 flex-1">{item.description}</p>
                     {item.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mb-3">
                         {item.tags.slice(0, 3).map(tag => (
-                          <span key={tag} className="text-[10px] text-[#78716A] bg-[#FAF9F6] border border-[#78716A]/10 px-1.5 py-0.5 rounded-sm">#{tag}</span>
+                          <span key={tag} className="text-[12px] text-t-muted bg-[#F5F2EC] border border-[#78716A]/10 px-1.5 py-0.5 rounded-sm">#{tag}</span>
                         ))}
                       </div>
                     )}
                     <div className="flex justify-between items-center pt-2 md:pt-3 border-t border-[#78716A]/5 mt-auto">
-                      <span className="text-[10px] text-[#78716A]">{new Date(item.createdAt).toLocaleDateString('ko-KR')}</span>
-                      <ArrowUpRight size={14} className="text-[#78716A] group-hover:text-[#2D2926]" />
+                      <span className="text-[12px] text-t-muted">{new Date(item.createdAt).toLocaleDateString('ko-KR')}</span>
+                      <ArrowUpRight size={14} className="text-t-muted group-hover:text-[#121110]" />
                     </div>
                   </div>
                 </Link>
@@ -436,22 +436,22 @@ export default function ArchivePage() {
               {Object.keys(groupedItems).map(type => (
                 <div key={type} className="bg-white p-4 md:p-8 rounded-[20px] md:rounded-3xl shadow-sm border border-[#78716A]/5">
                   <div className="flex items-center gap-2.5 md:gap-3 mb-4 md:mb-6 pb-3 md:pb-4 border-b border-[#78716A]/10">
-                    <div className="p-2 md:p-3 bg-[#FAF9F6] rounded-lg md:rounded-xl">{getTypeIcon(type as MediaType)}</div>
-                    <h3 className="text-xl md:text-2xl font-bold text-[#2D2926]">{getTypeName(type as MediaType)} <span className="text-xs md:text-sm font-normal text-[#78716A] ml-2">{t('countItems', { count: groupedItems[type].length })}</span></h3>
+                    <div className="p-2 md:p-3 bg-[#F5F2EC] rounded-lg md:rounded-xl">{getTypeIcon(type as MediaType)}</div>
+                    <h3 className="text-xl md:text-2xl font-bold text-[#121110]">{getTypeName(type as MediaType)} <span className="text-xs md:text-sm font-normal text-t-muted ml-2">{t('countItems', { count: groupedItems[type].length })}</span></h3>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                     {groupedItems[type].map(item => (
-                      <Link key={item.id} href={item.link} className="flex gap-3 md:gap-4 items-center group p-2 md:p-3 rounded-2xl hover:bg-[#FAF9F6] border border-transparent hover:border-[#78716A]/10 transition-all">
-                        <div className="w-[80px] h-[55px] md:w-20 md:h-14 rounded-lg overflow-hidden bg-[#2D2926] shrink-0 border border-[#78716A]/10">
+                      <Link key={item.id} href={item.link} className="flex gap-3 md:gap-4 items-center group p-2 md:p-3 rounded-2xl hover:bg-[#F5F2EC] border border-transparent hover:border-[#78716A]/10 transition-all">
+                        <div className="w-[80px] h-[55px] md:w-20 md:h-14 rounded-lg overflow-hidden bg-[#121110] shrink-0 border border-[#78716A]/10">
                           {item.thumbnailUrl && item.thumbnailUrl !== '/default-blog.jpg' ? (
                             <img src={item.thumbnailUrl} alt={item.title} className="w-full h-full object-cover" />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center bg-[#FAF9F6] text-[#78716A] text-[8px] italic">No Img</div>
+                            <div className="w-full h-full flex items-center justify-center bg-[#F5F2EC] text-t-muted text-[8px] italic">No Img</div>
                           )}
                         </div>
                         <div className="min-w-0 flex-1 pr-1">
-                          <h4 className="font-bold text-[13px] md:text-sm text-[#2D2926] truncate group-hover:text-[#C48C5E] transition-colors">{item.title}</h4>
-                          <p className="text-[11px] text-[#78716A] truncate mt-0.5">{item.description}</p>
+                          <h4 className="font-bold text-[13px] md:text-sm text-[#121110] truncate group-hover:text-t-copper transition-colors">{item.title}</h4>
+                          <p className="text-[13px] text-t-muted truncate mt-0.5">{item.description}</p>
                         </div>
                       </Link>
                     ))}

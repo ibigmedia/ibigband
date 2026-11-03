@@ -161,24 +161,24 @@ export default function SetListPage() {
   };
 
   // --- Loading / Auth ---
-  if (loading || !isMounted) return <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center font-bold text-xl text-[#2D2926]">Loading...</div>;
+  if (loading || !isMounted) return <div className="min-h-screen bg-[#F5F2EC] flex items-center justify-center font-bold text-xl text-[#121110]">Loading...</div>;
   if (!user) return (
-    <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center p-6 text-center">
-      <h1 className="text-3xl font-handwriting text-[#E6C79C] mb-6">ibiGband</h1>
-      <h2 className="text-2xl font-bold text-[#2D2926] mb-4">밴드 멤버 전용 페이지입니다</h2>
-      <p className="text-[#78716A] mb-8 max-w-md">로그인 후 셋리스트, 악보, 미디어를 관리할 수 있습니다.</p>
-      <a href="/auth" className="bg-[#2D2926] text-white px-8 py-4 rounded-full font-bold hover:bg-[#78716A] transition-colors">로그인 / 회원가입</a>
+    <div className="min-h-screen bg-[#F5F2EC] flex flex-col items-center justify-center p-6 text-center">
+      <h1 className="text-2xl font-handwriting text-t-gold mb-6">ibiGband</h1>
+      <h2 className="text-2xl font-bold text-[#121110] mb-4">밴드 멤버 전용 페이지입니다</h2>
+      <p className="text-t-muted mb-8 max-w-md">로그인 후 셋리스트, 악보, 미디어를 관리할 수 있습니다.</p>
+      <a href="/auth" className="bg-[#121110] text-white px-8 py-4 rounded-full font-bold hover:bg-[#2A2826] transition-colors">로그인 / 회원가입</a>
     </div>
   );
 
   // 밴드멤버 이상만 접근 가능
   const userGrade = userData?.grade || (userData?.role === 'admin' ? 'admin' : 'basic');
   if (userGrade === 'basic') return (
-    <div className="min-h-screen bg-[#FAF9F6] flex flex-col items-center justify-center p-6 text-center">
-      <h1 className="text-3xl font-handwriting text-[#E6C79C] mb-6">ibiGband</h1>
-      <h2 className="text-2xl font-bold text-[#2D2926] mb-4">밴드 멤버 전용 페이지입니다</h2>
-      <p className="text-[#78716A] mb-4 max-w-md">셋리스트 기능은 <strong className="text-[#2D2926]">밴드멤버</strong> 등급 이상부터 이용 가능합니다.</p>
-      <p className="text-[#78716A] text-sm max-w-md">관리자에게 등급 변경을 요청해 주세요.</p>
+    <div className="min-h-screen bg-[#F5F2EC] flex flex-col items-center justify-center p-6 text-center">
+      <h1 className="text-2xl font-handwriting text-t-gold mb-6">ibiGband</h1>
+      <h2 className="text-2xl font-bold text-[#121110] mb-4">밴드 멤버 전용 페이지입니다</h2>
+      <p className="text-t-muted mb-4 max-w-md">셋리스트 기능은 <strong className="text-[#121110]">밴드멤버</strong> 등급 이상부터 이용 가능합니다.</p>
+      <p className="text-t-muted text-sm max-w-md">관리자에게 등급 변경을 요청해 주세요.</p>
     </div>
   );
 
@@ -212,10 +212,10 @@ export default function SetListPage() {
 
   const getTypeColor = (type: string) => {
     switch(type) {
-      case 'sheet': return 'bg-[#2D2926] text-white';
-      case 'mr': return 'bg-[#78716A] text-white';
-      case 'bgm': return 'bg-[#E6C79C] text-[#2D2926]';
-      case 'transcript': return 'bg-white border border-[#2D2926]/20 text-[#2D2926]';
+      case 'sheet': return 'bg-[#121110] text-white';
+      case 'mr': return 'bg-[#2A2826] text-white';
+      case 'bgm': return 'bg-[#E8481C] text-[#121110]';
+      case 'transcript': return 'bg-white border border-[#121110]/20 text-[#121110]';
       case 'guide': return 'bg-blue-50 text-blue-700';
       default: return 'bg-gray-100 text-gray-700';
     }
@@ -461,18 +461,18 @@ export default function SetListPage() {
 
     // Build HTML body
     let html = `<div style="font-family:Arial,sans-serif;max-width:700px;margin:0 auto">
-      <h2 style="color:#2D2926;border-bottom:2px solid #E6C79C;padding-bottom:10px">${setlistTitle}</h2>`;
+      <h2 style="color:#121110;border-bottom:2px solid #E8481C;padding-bottom:10px">${setlistTitle}</h2>`;
 
     if (params.includeOverview) {
       const rows = items.map((item, i) =>
         `<tr><td style="padding:6px 8px;border-bottom:1px solid #eee;text-align:center;font-weight:bold">${i + 1}</td>
-         <td style="padding:6px 8px;border-bottom:1px solid #eee"><span style="background:#f0ebe4;padding:2px 6px;border-radius:4px;font-size:11px">${getTypeLabel(item.type)}</span></td>
+         <td style="padding:6px 8px;border-bottom:1px solid #eee"><span style="background:#ECE7DC;padding:2px 6px;border-radius:4px;font-size:11px">${getTypeLabel(item.type)}</span></td>
          <td style="padding:6px 8px;border-bottom:1px solid #eee;font-weight:bold">${item.title}</td>
          <td style="padding:6px 8px;border-bottom:1px solid #eee;color:#78716A">${item.author || ''}</td>
          <td style="padding:6px 8px;border-bottom:1px solid #eee;text-align:center">${item.duration || '-'}</td></tr>`
       ).join('');
       html += `<p style="color:#78716A">${items.length}곡 · 예상 시간 ${calculateTotalDuration()}</p>
-        <table style="width:100%;border-collapse:collapse"><thead><tr style="background:#2D2926;color:white">
+        <table style="width:100%;border-collapse:collapse"><thead><tr style="background:#121110;color:white">
         <th style="padding:8px">#</th><th style="padding:8px">구분</th><th style="padding:8px">제목</th><th style="padding:8px">아티스트</th><th style="padding:8px">시간</th>
         </tr></thead><tbody>${rows}</tbody></table>`;
     }
@@ -483,21 +483,21 @@ export default function SetListPage() {
       };
       const sRows = schedules.map(s => {
         const dateStr = s.date ? `${s.date.slice(5).replace('-', '/')} ` : '';
-        return `<tr style="border-bottom:1px solid #f0ebe4">
+        return `<tr style="border-bottom:1px solid #ECE7DC">
           <td style="padding:10px 8px;font-weight:bold;color:#8C6B1C;white-space:nowrap;vertical-align:top">${dateStr}${s.time}</td>
           <td style="padding:10px 8px;vertical-align:top">
-            <span style="background:#f0ebe4;padding:2px 8px;border-radius:4px;font-size:11px;color:#78716A">${schedTypeLabels[s.type] || s.type}</span>
+            <span style="background:#ECE7DC;padding:2px 8px;border-radius:4px;font-size:11px;color:#78716A">${schedTypeLabels[s.type] || s.type}</span>
           </td>
           <td style="padding:10px 8px;vertical-align:top">
-            <strong style="color:#2D2926">${s.title}</strong>
+            <strong style="color:#121110">${s.title}</strong>
             ${s.location ? `<br><span style="font-size:12px;color:#78716A">📍 ${s.location}</span>` : ''}
             ${s.memo ? `<br><span style="font-size:11px;color:#9CA3AF;font-style:italic">💬 ${s.memo}</span>` : ''}
           </td>
         </tr>`;
       }).join('');
-      html += `<h3 style="margin-top:24px;color:#2D2926;border-bottom:2px solid #E6C79C;padding-bottom:8px">📅 일정 타임라인</h3>
+      html += `<h3 style="margin-top:24px;color:#121110;border-bottom:2px solid #E8481C;padding-bottom:8px">📅 일정 타임라인</h3>
         <table style="width:100%;border-collapse:collapse">
-          <thead><tr style="background:#2D2926;color:white">
+          <thead><tr style="background:#121110;color:white">
             <th style="padding:8px;text-align:left">시간</th>
             <th style="padding:8px;text-align:left">구분</th>
             <th style="padding:8px;text-align:left">내용</th>
@@ -671,12 +671,12 @@ export default function SetListPage() {
     const typeLabels: Record<string, string> = { event: '🙏 예배/집회', practice: '🎵 팀 연습', rehearsal: '🎧 리허설', travel: '🚗 이동/집결', notice: '📢 공지사항' };
     const rows = schedules.map(s =>
       `<tr><td style="padding:8px;font-weight:bold;color:#8C6B1C;white-space:nowrap">${s.date} ${s.time}</td>
-       <td style="padding:8px"><span style="background:#f0ebe4;padding:2px 8px;border-radius:4px;font-size:12px">${typeLabels[s.type] || s.type}</span></td>
+       <td style="padding:8px"><span style="background:#ECE7DC;padding:2px 8px;border-radius:4px;font-size:12px">${typeLabels[s.type] || s.type}</span></td>
        <td style="padding:8px;font-weight:bold">${s.title}</td>
        <td style="padding:8px;color:#78716A">${s.location ? '📍 ' + s.location : ''}</td></tr>`
     ).join('');
     const html = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
-      <h2 style="border-bottom:2px solid #E6C79C;padding-bottom:8px">📅 ibiGband 일정 안내</h2>
+      <h2 style="border-bottom:2px solid #E8481C;padding-bottom:8px">📅 ibiGband 일정 안내</h2>
       <table style="width:100%;border-collapse:collapse">${rows}</table>
       <p style="color:#78716A;font-size:11px;margin-top:20px">ibiGband Smart Setlist</p></div>`;
     try {
@@ -696,12 +696,12 @@ export default function SetListPage() {
       {/* ===== 모바일 상단 뷰 전환 탭 ===== */}
       <div className="lg:hidden flex bg-white p-1 shadow-sm border-b border-[#78716A]/10 shrink-0">
         <button onClick={() => setMobileView('files')}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'files' ? 'bg-[#2D2926] text-white shadow-md' : 'text-[#78716A]'}`}>
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'files' ? 'bg-[#121110] text-white shadow-md' : 'text-t-muted'}`}>
           <Library size={14} className="inline mr-1.5 -mt-0.5" />미디어풀
         </button>
         <button onClick={() => setMobileView('setlist')}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'setlist' ? 'bg-[#2D2926] text-white shadow-md' : 'text-[#78716A]'}`}>
-          <Music size={14} className="inline mr-1.5 -mt-0.5" />셋리스트 <span className="text-[10px] opacity-70">({items.length})</span>
+          className={`flex-1 py-2.5 rounded-xl text-xs font-bold text-center transition-all ${mobileView === 'setlist' ? 'bg-[#121110] text-white shadow-md' : 'text-t-muted'}`}>
+          <Music size={14} className="inline mr-1.5 -mt-0.5" />셋리스트 <span className="text-[12px] opacity-70">({items.length})</span>
         </button>
       </div>
 
@@ -715,22 +715,22 @@ export default function SetListPage() {
             { key: 'schedule', icon: <Calendar size={18} />, label: '일정', active: activeTab === 'schedule' },
           ].map(t => (
             <button key={t.key} onClick={() => setActiveTab(t.key as any)}
-              className={`py-2 md:py-3 rounded-xl md:rounded-2xl flex flex-col items-center justify-center gap-1 md:gap-1.5 text-[11px] md:text-[13px] font-bold transition-all ${t.active ? (t.key === 'library' ? 'bg-[#2D2926] text-white' : 'bg-[#E6C79C] text-[#2D2926]') + ' shadow-md' : 'text-[#78716A] hover:bg-black/5'}`}>
+              className={`py-2 md:py-3 rounded-xl md:rounded-2xl flex flex-col items-center justify-center gap-1 md:gap-1.5 text-[13px] md:text-[13px] font-bold transition-all ${t.active ? (t.key === 'library' ? 'bg-[#121110] text-[#121110]' : 'bg-[#E8481C] text-[#121110]') + ' shadow-md' : 'text-t-muted hover:bg-black/5'}`}>
               {t.icon} {t.label}
             </button>
           ))}
         </div>
 
-        <div className="bg-[#FAF9F6] md:bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-auto flex flex-col min-w-0">
+        <div className="bg-[#F5F2EC] md:bg-white flex-1 md:rounded-3xl md:shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:border md:border-[#78716A]/10 overflow-auto flex flex-col min-w-0">
 
           {/* Library tab */}
           {activeTab === 'library' && (
             <div className="flex flex-col h-full">
               <div className="px-2 py-2 md:px-5 md:py-5 border-b border-black/5 shrink-0">
                 <div className="flex items-center justify-between mb-2 md:mb-3">
-                  <h3 className="font-bold text-base md:text-lg flex items-center gap-2"><LayoutDashboard className="text-[#E6C79C]" size={20} /> 미디어 풀</h3>
+                  <h3 className="font-bold text-base md:text-lg flex items-center gap-2"><LayoutDashboard className="text-t-gold" size={20} /> 미디어 풀</h3>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm text-[#78716A] font-bold">{libraryItems.length}개</span>
+                    <span className="text-sm text-t-muted font-bold">{libraryItems.length}개</span>
                     {libraryItems.length > 0 && (
                       <button onClick={clearLibrary} className="text-sm text-red-400 hover:text-red-600 px-2 py-1.5 rounded-lg hover:bg-red-50" title="전체 삭제">
                         <Trash2 size={14} />
@@ -739,22 +739,22 @@ export default function SetListPage() {
                   </div>
                 </div>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" size={16} />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-t-muted" size={16} />
                   <input type="text" value={librarySearchQuery} onChange={e => setLibrarySearchQuery(e.target.value)}
                     placeholder="악보/음원 검색..."
-                    className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-9 pr-3 py-2.5 md:py-3 text-sm md:text-[15px] focus:outline-none focus:border-[#2D2926]" />
+                    className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-9 pr-3 py-2.5 md:py-3 text-sm md:text-[15px] focus:outline-none focus:border-[#121110]" />
                 </div>
               </div>
 
               <div className="flex-1 overflow-y-auto px-0 py-1 md:p-4 divide-y divide-black/5">
                 {filteredLibrary.length === 0 && (
-                  <div className="flex flex-col items-center justify-center py-12 text-[#78716A]">
+                  <div className="flex flex-col items-center justify-center py-12 text-t-muted">
                     <Library size={36} className="mb-3 opacity-30" />
                     <p className="text-base font-bold">{librarySearchQuery ? '검색 결과 없음' : '라이브러리가 비어있습니다'}</p>
                   </div>
                 )}
                 {filteredLibrary.map(item => (
-                  <div key={item.id} className="bg-white md:bg-[#FAF9F6] md:border md:border-black/5 md:rounded-xl px-3 py-2.5 md:p-4 hover:bg-[#FAF9F6] md:hover:border-[#E6C79C] transition-all group flex items-start gap-2 md:gap-3">
+                  <div key={item.id} className="bg-white md:bg-[#F5F2EC] md:border md:border-black/5 md:rounded-xl px-3 py-2.5 md:p-4 hover:bg-[#F5F2EC] md:hover:border-[#E8481C] transition-all group flex items-start gap-2 md:gap-3">
                     <div className={`mt-0.5 shrink-0 p-1.5 md:p-2 rounded-lg cursor-pointer ${getTypeColor(item.type)}`} onClick={() => handleItemClick(item)}>
                       {getTypeIcon(item.type as ItemType, 16)}
                     </div>
@@ -763,46 +763,46 @@ export default function SetListPage() {
                         <div className="flex items-center gap-1.5 mb-1">
                           <input type="text" value={renameValue} onChange={e => setRenameValue(e.target.value)}
                             onKeyDown={e => e.key === 'Enter' && renameLibraryItem(item.id, renameValue)}
-                            className="flex-1 text-sm font-bold bg-white border border-[#E6C79C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
+                            className="flex-1 text-sm font-bold bg-white border border-[#E8481C] rounded-lg px-2.5 py-1.5 focus:outline-none" autoFocus />
                           <button onClick={() => renameLibraryItem(item.id, renameValue)} className="p-1.5 text-green-600 hover:bg-green-50 rounded"><Check size={16} /></button>
-                          <button onClick={() => setRenamingItemId(null)} className="p-1.5 text-[#78716A] hover:bg-black/5 rounded"><X size={16} /></button>
+                          <button onClick={() => setRenamingItemId(null)} className="p-1.5 text-t-muted hover:bg-black/5 rounded"><X size={16} /></button>
                         </div>
                       ) : (
-                        <p className="font-bold text-sm md:text-[15px] text-[#2D2926] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
+                        <p className="font-bold text-sm md:text-[15px] text-[#121110] truncate cursor-pointer" onClick={() => handleItemClick(item)}>{item.title}</p>
                       )}
-                      {item.author && <p className="text-xs md:text-[13px] text-[#78716A] truncate">{item.author}</p>}
+                      {item.author && <p className="text-xs md:text-[13px] text-t-muted truncate">{item.author}</p>}
                       <div className="flex gap-1 mt-1.5 md:mt-2 flex-wrap">
-                        {item.hasPdf && <span className="text-[10px] font-bold bg-[#2D2926]/10 text-[#2D2926] px-1.5 py-0.5 rounded">PDF</span>}
+                        {item.hasPdf && <span className="text-[12px] font-bold bg-[#121110]/10 text-[#121110] px-1.5 py-0.5 rounded">PDF</span>}
                         {item.hasAudio && (
                           <button onClick={e => { e.stopPropagation(); togglePlay(item); }}
-                            className="flex items-center gap-1 text-[10px] font-bold bg-[#E6C79C]/30 hover:bg-[#E6C79C]/60 text-[#8C6B1C] px-1.5 py-0.5 rounded transition-colors">
+                            className="flex items-center gap-1 text-[12px] font-bold bg-[#E8481C]/30 hover:bg-[#E8481C]/60 text-t-copper px-1.5 py-0.5 rounded transition-colors">
                             {playingItem?.id === item.id && isPlaying ? <Pause size={10} /> : <Play fill="currentColor" size={10} />} MP3
                           </button>
                         )}
                         {item.youtubeUrl && (
                           <button onClick={e => { e.stopPropagation(); window.open(item.youtubeUrl, '_blank'); }}
-                            className="text-[10px] font-bold bg-red-100 text-red-700 px-1.5 py-0.5 rounded">YT</button>
+                            className="text-[12px] font-bold bg-red-100 text-red-700 px-1.5 py-0.5 rounded">YT</button>
                         )}
-                        {item.type === 'transcript' && <span className="text-[10px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">텍스트</span>}
+                        {item.type === 'transcript' && <span className="text-[12px] font-bold bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded">텍스트</span>}
                       </div>
                     </div>
                     <div className="flex flex-col gap-1 md:grid md:grid-cols-2 md:gap-1.5 shrink-0">
-                      <button onClick={() => addToSetlist(item)} className="p-1.5 md:p-2 bg-[#E6C79C]/20 text-[#8C6B1C] hover:bg-[#E6C79C] hover:text-[#2D2926] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={14} /></button>
+                      <button onClick={() => addToSetlist(item)} className="p-1.5 md:p-2 bg-[#E8481C]/20 text-t-copper hover:bg-[#E8481C] hover:text-[#121110] rounded-lg transition-colors" title="셋리스트에 추가"><Plus size={14} /></button>
                       <button onClick={() => removeFromLibrary(item.id)} className="p-1.5 md:p-2 text-red-300 hover:bg-red-50 hover:text-red-500 rounded-lg transition-colors" title="삭제"><Trash2 size={13} /></button>
-                      <button onClick={() => saveItemToArchive(item)} className="hidden md:block p-2 text-[#78716A] hover:bg-[#E6C79C]/20 hover:text-[#8C6B1C] rounded-lg transition-colors" title="아카이브에 저장"><Archive size={15} /></button>
-                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="hidden md:block p-2 text-[#78716A] hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
+                      <button onClick={() => saveItemToArchive(item)} className="hidden md:block p-2 text-t-muted hover:bg-[#E8481C]/20 hover:text-t-copper rounded-lg transition-colors" title="아카이브에 저장"><Archive size={15} /></button>
+                      <button onClick={() => { setRenamingItemId(item.id); setRenameValue(item.title); }} className="hidden md:block p-2 text-t-muted hover:bg-black/5 rounded-lg transition-colors" title="이름 변경"><Edit3 size={15} /></button>
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="px-2 py-2 md:p-4 border-t border-black/5 shrink-0 bg-[#FAF9F6] grid grid-cols-2 gap-2 md:gap-3 sticky bottom-0 z-10">
+              <div className="px-2 py-2 md:p-4 border-t border-black/5 shrink-0 bg-[#F5F2EC] grid grid-cols-2 gap-2 md:gap-3 sticky bottom-0 z-10">
                 <button onClick={() => setActiveTab('upload')}
-                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-t-muted hover:text-[#121110] hover:border-[#121110] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
                   <UploadCloud size={16} /> 가져오기
                 </button>
                 <button onClick={() => setIsTextEditorOpen(true)}
-                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-[#78716A] hover:text-[#2D2926] hover:border-[#2D2926] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
+                  className="py-2 md:py-3.5 border border-dashed border-[#78716A]/30 rounded-xl text-t-muted hover:text-[#121110] hover:border-[#121110] transition-all flex items-center justify-center gap-1.5 text-xs md:text-sm font-bold">
                   <Type size={16} /> 텍스트 작성
                 </button>
               </div>
@@ -812,33 +812,33 @@ export default function SetListPage() {
           {/* AI Search tab */}
           {activeTab === 'ai-search' && (
             <div className="px-2 py-2 md:p-6 flex flex-col h-full" onPaste={handleImagePaste}>
-              <h3 className="font-bold text-base md:text-lg mb-2 flex items-center gap-2"><Sparkles className="text-[#E6C79C]" /> AI 악보 검색</h3>
-              <p className="text-xs text-[#78716A] mb-3 md:mb-4">곡 제목, 아티스트, 가사를 입력하면 웹에서 악보를 찾아줍니다.</p>
+              <h3 className="font-bold text-base md:text-lg mb-2 flex items-center gap-2"><Sparkles className="text-t-gold" /> AI 악보 검색</h3>
+              <p className="text-xs text-t-muted mb-3 md:mb-4">곡 제목, 아티스트, 가사를 입력하면 웹에서 악보를 찾아줍니다.</p>
               <div className="relative mb-3 md:mb-4">
                 <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                   onKeyDown={e => e.key === 'Enter' && doAiSearch()}
                   placeholder="'마커스 주는 완전합니다 악보'"
-                  className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl px-3 md:px-4 py-2.5 md:py-3 pr-12 text-sm focus:outline-none focus:border-[#E6C79C]" />
+                  className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-3 md:px-4 py-2.5 md:py-3 pr-12 text-sm focus:outline-none focus:border-[#E8481C]" />
                 <button onClick={doAiSearch} disabled={isAiSearching || !searchQuery}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#2D2926] text-[#E6C79C] p-2 rounded-lg disabled:opacity-50"><Search size={14} /></button>
+                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#121110] text-t-gold p-2 rounded-lg disabled:opacity-50"><Search size={14} /></button>
               </div>
 
               {/* Clipboard paste zone */}
-              <div className="mb-3 md:mb-4 border-2 border-dashed border-[#E6C79C]/40 rounded-xl p-3 md:p-4 text-center bg-[#E6C79C]/5 hover:bg-[#E6C79C]/10 transition-colors">
-                <ClipboardPaste size={18} className="mx-auto text-[#8C6B1C] mb-1" />
-                <p className="text-xs font-bold text-[#8C6B1C]">이미지 붙여넣기</p>
-                <p className="text-[10px] text-[#78716A]">웹에서 복사한 악보 이미지를 Ctrl+V로 붙여넣으세요</p>
+              <div className="mb-3 md:mb-4 border-2 border-dashed border-[#E8481C]/40 rounded-xl p-3 md:p-4 text-center bg-[#E8481C]/5 hover:bg-[#E8481C]/10 transition-colors">
+                <ClipboardPaste size={18} className="mx-auto text-t-copper mb-1" />
+                <p className="text-xs font-bold text-t-copper">이미지 붙여넣기</p>
+                <p className="text-[12px] text-t-muted">웹에서 복사한 악보 이미지를 Ctrl+V로 붙여넣으세요</p>
               </div>
 
               <div className="flex-1 flex flex-col items-center justify-center text-center opacity-40 px-4">
                 {isAiSearching ? (
                   <div className="animate-pulse flex flex-col items-center gap-3">
-                    <Sparkles size={28} className="text-[#E6C79C] animate-spin" />
+                    <Sparkles size={28} className="text-t-gold animate-spin" />
                     <p className="text-sm font-bold">검색 중...</p>
                   </div>
                 ) : (
                   <>
-                    <Search size={32} className="text-[#78716A] mb-3" />
+                    <Search size={32} className="text-t-muted mb-3" />
                     <p className="text-sm font-semibold mb-1">Perplexity AI 기반 검색</p>
                     <p className="text-xs">검색 결과에서 악보 PDF/이미지를 다운로드한 뒤<br/>로컬 파일 업로드로 라이브러리에 추가하세요.</p>
                   </>
@@ -869,10 +869,10 @@ export default function SetListPage() {
 
           {/* Schedule tab */}
           {activeTab === 'schedule' && (
-            <div className="px-3 py-3 md:p-5 flex flex-col h-full bg-[#FAF9F6]">
+            <div className="px-3 py-3 md:p-5 flex flex-col h-full bg-[#F5F2EC]">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-bold text-base flex items-center gap-2"><Clock className="text-[#E6C79C]" size={18} /> 타임라인</h3>
-                <button onClick={shareScheduleEmail} className="text-xs font-bold text-[#78716A] hover:text-[#2D2926] flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-white transition-colors">
+                <h3 className="font-bold text-base flex items-center gap-2"><Clock className="text-t-gold" size={18} /> 타임라인</h3>
+                <button onClick={shareScheduleEmail} className="text-xs font-bold text-t-muted hover:text-[#121110] flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-white transition-colors">
                   <Send size={12} /> 이메일 공유
                 </button>
               </div>
@@ -881,7 +881,7 @@ export default function SetListPage() {
               <div className="bg-white p-3 rounded-xl border border-black/5 mb-3 shadow-sm shrink-0 space-y-2">
                 <div className="flex gap-2">
                   <select value={newSchedule.type} onChange={e => setNewSchedule({...newSchedule, type: e.target.value as any})}
-                    className="flex-1 bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-2 text-xs font-bold focus:outline-none">
+                    className="flex-1 bg-[#F5F2EC] border border-black/10 rounded-lg px-2 py-2 text-xs font-bold focus:outline-none">
                     <option value="event">🙏 예배/집회</option>
                     <option value="practice">🎵 팀 연습</option>
                     <option value="rehearsal">🎧 리허설</option>
@@ -891,21 +891,21 @@ export default function SetListPage() {
                 </div>
                 <div className="flex gap-2">
                   <input type="date" value={newSchedule.date} onChange={e => setNewSchedule({...newSchedule, date: e.target.value})}
-                    className="w-1/2 bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:outline-none" />
+                    className="w-1/2 bg-[#F5F2EC] border border-black/10 rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:outline-none" />
                   <input type="time" value={newSchedule.time} onChange={e => setNewSchedule({...newSchedule, time: e.target.value})}
-                    className="w-1/2 bg-[#FAF9F6] border border-black/10 rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:outline-none" />
+                    className="w-1/2 bg-[#F5F2EC] border border-black/10 rounded-lg px-2 py-1.5 text-xs font-bold text-center focus:outline-none" />
                 </div>
                 <input type="text" placeholder="일정 내용" value={newSchedule.title || ''}
                   onChange={e => setNewSchedule({...newSchedule, title: e.target.value})}
-                  className="w-full bg-[#FAF9F6] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
+                  className="w-full bg-[#F5F2EC] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
                 <input type="text" placeholder="📍 장소" value={newSchedule.location || ''}
                   onChange={e => setNewSchedule({...newSchedule, location: e.target.value})}
-                  className="w-full bg-[#FAF9F6] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
+                  className="w-full bg-[#F5F2EC] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
                 <div className="flex gap-2">
                   <input type="text" placeholder="메모 (선택)" value={newSchedule.memo || ''}
                     onChange={e => setNewSchedule({...newSchedule, memo: e.target.value})}
-                    className="flex-1 bg-[#FAF9F6] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
-                  <button onClick={addSchedule} className="px-4 py-1.5 bg-[#2D2926] text-white rounded-lg text-xs font-bold hover:bg-[#78716A] shrink-0">추가</button>
+                    className="flex-1 bg-[#F5F2EC] border border-black/10 rounded-lg px-3 py-1.5 text-xs focus:outline-none" />
+                  <button onClick={addSchedule} className="px-4 py-1.5 bg-[#121110] text-white rounded-lg text-xs font-bold hover:bg-[#2A2826] shrink-0">추가</button>
                 </div>
               </div>
 
@@ -913,23 +913,23 @@ export default function SetListPage() {
               <div className="flex-1 overflow-y-auto space-y-2">
                 {schedules.map((s, i) => {
                   const schedTypeLabels: Record<string, string> = { event: '🙏 예배/집회', practice: '🎵 연습', rehearsal: '🎧 리허설', travel: '🚗 이동', notice: '📢 공지' };
-                  const schedTypeBg: Record<string, string> = { event: 'bg-[#E6C79C]/20 text-[#8C6B1C]', practice: 'bg-blue-50 text-blue-600', rehearsal: 'bg-purple-50 text-purple-600', travel: 'bg-green-50 text-green-600', notice: 'bg-amber-50 text-amber-700' };
+                  const schedTypeBg: Record<string, string> = { event: 'bg-[#E8481C]/20 text-t-copper', practice: 'bg-blue-50 text-blue-600', rehearsal: 'bg-purple-50 text-purple-600', travel: 'bg-green-50 text-green-600', notice: 'bg-amber-50 text-amber-700' };
                   return (
                     <div key={s.id} className="relative group flex items-start gap-3 bg-white p-3 rounded-xl border border-black/5 shadow-sm hover:shadow-md transition-shadow">
-                      {i < schedules.length - 1 && <div className="absolute left-[30px] top-full h-2 border-l-2 border-dashed border-[#E6C79C]/50 z-0" />}
-                      <div className="text-[#8C6B1C] font-bold text-[11px] bg-[#E6C79C]/20 px-2 py-1 rounded-lg shrink-0 w-[52px] text-center">{s.time}</div>
+                      {i < schedules.length - 1 && <div className="absolute left-[30px] top-full h-2 border-l-2 border-dashed border-[#E8481C]/50 z-0" />}
+                      <div className="text-t-copper font-bold text-[13px] bg-[#E8481C]/20 px-2 py-1 rounded-lg shrink-0 w-[52px] text-center">{s.time}</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-1.5 mb-0.5">
-                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${schedTypeBg[s.type] || 'bg-gray-100 text-gray-600'}`}>
+                          <span className={`text-[12px] font-bold px-1.5 py-0.5 rounded ${schedTypeBg[s.type] || 'bg-gray-100 text-gray-600'}`}>
                             {schedTypeLabels[s.type] || s.type}
                           </span>
-                          <p className="font-bold text-[12px] text-[#2D2926] truncate">{s.title}</p>
+                          <p className="font-bold text-[12px] text-[#121110] truncate">{s.title}</p>
                         </div>
-                        <div className="flex gap-2 mt-0.5 text-[10px] text-[#78716A] flex-wrap">
+                        <div className="flex gap-2 mt-0.5 text-[12px] text-t-muted flex-wrap">
                           {s.date && <span className="flex items-center gap-0.5"><Calendar size={8} /> {s.date}</span>}
                           {s.location && <span className="flex items-center gap-0.5"><MapPin size={8} /> {s.location}</span>}
                         </div>
-                        {s.memo && <p className="text-[10px] text-[#78716A] mt-1 bg-[#FAF9F6] px-2 py-1 rounded-lg">{s.memo}</p>}
+                        {s.memo && <p className="text-[12px] text-t-muted mt-1 bg-[#F5F2EC] px-2 py-1 rounded-lg">{s.memo}</p>}
                       </div>
                       <button onClick={() => deleteSchedule(s.id)}
                         className="p-1 text-red-300 hover:text-red-500 hover:bg-red-50 rounded-lg opacity-0 group-hover:opacity-100 transition-all shrink-0">
@@ -938,14 +938,14 @@ export default function SetListPage() {
                     </div>
                   );
                 })}
-                {schedules.length === 0 && <p className="text-center text-xs text-[#78716A] py-8">등록된 일정이 없습니다.</p>}
+                {schedules.length === 0 && <p className="text-center text-xs text-t-muted py-8">등록된 일정이 없습니다.</p>}
               </div>
             </div>
           )}
 
           {/* Upload tab */}
           {activeTab === 'upload' && (
-            <div className="p-5 flex flex-col h-full bg-[#FAF9F6] overflow-y-auto">
+            <div className="p-5 flex flex-col h-full bg-[#F5F2EC] overflow-y-auto">
               <div className="flex items-center justify-between mb-5 shrink-0">
                 <h3 className="font-bold text-base">미디어 가져오기</h3>
                 <button onClick={() => setActiveTab('library')} className="p-2 hover:bg-black/5 rounded-full"><X size={18} /></button>
@@ -953,16 +953,16 @@ export default function SetListPage() {
               <div className="flex flex-col gap-3">
                 <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept=".pdf,audio/mpeg,audio/wav,image/jpeg,image/png,image/webp" />
                 {[
-                  { icon: <HardDrive size={24} />, bg: 'bg-[#2D2926]/5', label: '내 PC에서 업로드', desc: 'PDF, MP3, WAV', onClick: () => fileInputRef.current?.click() },
-                  { icon: <Music size={24} className="text-[#8C6B1C]" />, bg: 'bg-[#E6C79C]/20', label: '사이트 악보/음악', desc: '선택하여 가져오기 (중복 제외)', onClick: () => { setIsImportModalOpen(true); setActiveTab('library'); } },
+                  { icon: <HardDrive size={24} />, bg: 'bg-[#121110]/5', label: '내 PC에서 업로드', desc: 'PDF, MP3, WAV', onClick: () => fileInputRef.current?.click() },
+                  { icon: <Music size={24} className="text-t-copper" />, bg: 'bg-[#E8481C]/20', label: '사이트 악보/음악', desc: '선택하여 가져오기 (중복 제외)', onClick: () => { setIsImportModalOpen(true); setActiveTab('library'); } },
                   { icon: <Cloud size={24} className="text-blue-500" />, bg: 'bg-blue-50', label: 'Google Drive', desc: '클라우드 파일 선택', onClick: importFromGoogleDrive },
                   { icon: <Type size={24} className="text-amber-700" />, bg: 'bg-amber-50', label: '텍스트 직접 작성', desc: '기도문/멘트/원고 (AI 지원)', onClick: () => { setIsTextEditorOpen(true); setActiveTab('library'); } },
                 ].map((opt, i) => (
                   <div key={i} onClick={opt.onClick}
                     className="w-full py-6 border border-black/10 rounded-2xl flex flex-col items-center justify-center bg-white hover:shadow-md transition-all cursor-pointer group">
                     <div className={`${opt.bg} p-3 rounded-full mb-2 group-hover:-translate-y-1 transition-transform`}>{opt.icon}</div>
-                    <p className="font-bold text-sm text-[#2D2926]">{opt.label}</p>
-                    <p className="text-[10px] text-[#78716A]">{opt.desc}</p>
+                    <p className="font-bold text-sm text-[#121110]">{opt.label}</p>
+                    <p className="text-[12px] text-t-muted">{opt.desc}</p>
                   </div>
                 ))}
               </div>
@@ -979,32 +979,32 @@ export default function SetListPage() {
           <header className="p-3 md:p-8 border-b border-black/5">
             <div className="flex items-center justify-between gap-2 mb-2">
               <div className="flex items-center gap-1.5 md:gap-2 flex-wrap flex-1 min-w-0">
-                <span className="bg-[#2D2926] text-white text-[8px] md:text-[9px] font-bold px-2 md:px-2.5 py-0.5 rounded-full tracking-wider uppercase shrink-0">Smart Cue</span>
-                <span className="text-[10px] md:text-xs text-[#78716A]">{items.length}곡</span>
-                <span className="text-[#8C6B1C] bg-[#E6C79C]/30 text-[9px] md:text-[10px] font-bold px-1.5 md:px-2 py-0.5 rounded-full">{calculateTotalDuration()}</span>
+                <span className="bg-[#121110] text-white text-[8px] md:text-[12px] font-bold px-2 md:px-2.5 py-0.5 rounded-full tracking-wider uppercase shrink-0">Smart Cue</span>
+                <span className="text-[12px] md:text-xs text-t-muted">{items.length}곡</span>
+                <span className="text-t-copper bg-[#E8481C]/30 text-[12px] md:text-[12px] font-bold px-1.5 md:px-2 py-0.5 rounded-full">{calculateTotalDuration()}</span>
               </div>
               <div className="flex gap-1 md:gap-2 items-center shrink-0">
-                <button onClick={() => setIsManagerOpen(true)} className="p-1.5 md:p-2 bg-[#FAF9F6] border border-black/5 rounded-lg md:rounded-xl hover:bg-[#E6C79C]/20 transition-colors" title="셋리스트 관리"><FolderOpen size={15} /></button>
-                <button onClick={saveSetlist} className="bg-[#2D2926] text-[#E6C79C] px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[11px] md:text-sm font-bold hover:bg-[#78716A]">저장</button>
+                <button onClick={() => setIsManagerOpen(true)} className="p-1.5 md:p-2 bg-[#F5F2EC] border border-black/5 rounded-lg md:rounded-xl hover:bg-[#E8481C]/20 transition-colors" title="셋리스트 관리"><FolderOpen size={15} /></button>
+                <button onClick={saveSetlist} className="bg-[#121110] text-t-gold px-2.5 md:px-4 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[13px] md:text-sm font-bold hover:bg-[#2A2826]">저장</button>
               </div>
             </div>
             <input value={setlistTitle} onChange={e => setSetlistTitle(e.target.value)}
-              className="text-xl md:text-4xl font-handwriting text-[#2D2926] bg-transparent border-none outline-none hover:bg-black/5 p-1 rounded-lg w-full" placeholder="셋리스트 제목" />
+              className="text-lg md:text-3xl font-handwriting text-[#121110] bg-transparent border-none outline-none hover:bg-black/5 p-1 rounded-lg w-full" placeholder="셋리스트 제목" />
             <div className="flex gap-1.5 flex-wrap mt-2">
-              <button onClick={handleExportCueSheet} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 rounded-lg border border-black/5 text-[10px] md:text-[11px] font-bold">
+              <button onClick={handleExportCueSheet} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#F5F2EC] hover:bg-[#E8481C]/20 rounded-lg border border-black/5 text-[12px] md:text-[13px] font-bold">
                 <FileText size={12} /> 큐시트
               </button>
-              <button onClick={handleExportMasterPdf} disabled={isExporting} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 rounded-lg border border-black/5 text-[10px] md:text-[11px] font-bold disabled:opacity-50">
+              <button onClick={handleExportMasterPdf} disabled={isExporting} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#F5F2EC] hover:bg-[#E8481C]/20 rounded-lg border border-black/5 text-[12px] md:text-[13px] font-bold disabled:opacity-50">
                 <Printer size={12} /> {isExporting ? '생성중...' : '마스터PDF'}
               </button>
-              <button onClick={() => setIsEmailModalOpen(true)} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#FAF9F6] hover:bg-[#E6C79C]/20 rounded-lg border border-black/5 text-[10px] md:text-[11px] font-bold">
+              <button onClick={() => setIsEmailModalOpen(true)} className="flex items-center gap-1 px-2.5 md:px-3 py-1.5 bg-[#F5F2EC] hover:bg-[#E8481C]/20 rounded-lg border border-black/5 text-[12px] md:text-[13px] font-bold">
                 <Mail size={12} /> 공유
               </button>
             </div>
           </header>
 
           {/* D&D list */}
-          <div className="p-2.5 md:p-8 flex-1 bg-[#FAF9F6]/50 overflow-x-hidden">
+          <div className="p-2.5 md:p-8 flex-1 bg-[#F5F2EC]/50 overflow-x-hidden">
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="cue-sheet">
                 {(provided) => (
@@ -1013,34 +1013,34 @@ export default function SetListPage() {
                       <Draggable key={item.id} draggableId={item.id} index={index}>
                         {(prov, snap) => (
                           <div ref={prov.innerRef} {...prov.draggableProps}
-                            className={`group relative bg-white border rounded-2xl p-2 md:p-4 flex flex-row gap-1.5 md:gap-5 items-center transition-all overflow-hidden ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E6C79C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
-                            <div {...prov.dragHandleProps} className="p-0.5 md:p-1.5 text-black/20 hover:text-[#2D2926] cursor-grab shrink-0"><MoreVertical size={16} /></div>
+                            className={`group relative bg-white border rounded-2xl p-2 md:p-4 flex flex-row gap-1.5 md:gap-5 items-center transition-all overflow-hidden ${snap.isDragging ? 'shadow-2xl scale-[1.02] border-[#E8481C] z-50' : 'border-[#78716A]/10 hover:shadow-md'}`}>
+                            <div {...prov.dragHandleProps} className="p-0.5 md:p-1.5 text-black/20 hover:text-[#121110] cursor-grab shrink-0"><MoreVertical size={16} /></div>
                             <div className="flex items-center gap-1 md:gap-3 shrink-0 cursor-pointer" onClick={() => handleItemClick(item)}>
-                              <span className="text-lg md:text-3xl font-handwriting text-black/15 w-5 md:w-8 text-center">{index + 1}</span>
+                              <span className="text-lg md:text-2xl font-handwriting text-black/15 w-5 md:w-8 text-center">{index + 1}</span>
                               <div className={`p-1.5 md:p-3 rounded-lg md:rounded-xl shrink-0 ${getTypeColor(item.type)}`}>{getTypeIcon(item.type as ItemType, 16)}</div>
                             </div>
                             <div className="flex-1 min-w-0 cursor-pointer" onClick={() => handleItemClick(item)}>
                               <div className="flex flex-wrap items-center gap-1 md:gap-2 mb-0.5 md:mb-1">
-                                <span className={`text-[8px] md:text-[10px] font-bold px-1.5 md:px-2.5 py-0.5 rounded-full uppercase ${getTypeColor(item.type)}`}>{getTypeLabel(item.type)}</span>
-                                <h3 className="font-bold text-xs md:text-lg truncate text-[#2D2926]">{item.title}</h3>
-                                {item.author && <span className="text-[10px] md:text-sm text-[#78716A] hidden sm:inline">· {item.author}</span>}
+                                <span className={`text-[8px] md:text-[12px] font-bold px-1.5 md:px-2.5 py-0.5 rounded-full uppercase ${getTypeColor(item.type)}`}>{getTypeLabel(item.type)}</span>
+                                <h3 className="font-bold text-xs md:text-lg truncate text-[#121110]">{item.title}</h3>
+                                {item.author && <span className="text-[12px] md:text-sm text-t-muted hidden sm:inline">· {item.author}</span>}
                               </div>
-                              <p className="text-[10px] md:text-sm text-[#78716A] line-clamp-1">{item.note}</p>
+                              <p className="text-[12px] md:text-sm text-t-muted line-clamp-1">{item.note}</p>
                             </div>
                             <div className="flex items-center gap-0.5 md:gap-4 shrink-0">
-                              <div className="flex gap-0 md:gap-3 text-[#78716A]">
+                              <div className="flex gap-0 md:gap-3 text-t-muted">
                                 {item.hasAudio && (
-                                  <button onClick={() => togglePlay(item)} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#2D2926] hover:bg-[#E6C79C]/20 transition-colors">
+                                  <button onClick={() => togglePlay(item)} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#121110] hover:bg-[#E8481C]/20 transition-colors">
                                     {playingItem?.id === item.id && isPlaying ? <Pause size={14} /> : <Play fill="currentColor" size={14} />}
                                   </button>
                                 )}
                                 {item.hasPdf && item.fileUrl && (
-                                  <button onClick={() => setPreviewPdfUrl(item.fileUrl!)} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#2D2926] hover:bg-blue-50 transition-colors">
+                                  <button onClick={() => setPreviewPdfUrl(item.fileUrl!)} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#121110] hover:bg-blue-50 transition-colors">
                                     <FileText size={14} />
                                   </button>
                                 )}
                                 {(item.type === 'transcript' || item.type === 'guide') && (
-                                  <button onClick={() => setPreviewText({ title: item.title, content: item.note || '(내용 없음)' })} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#2D2926] hover:bg-amber-50 transition-colors">
+                                  <button onClick={() => setPreviewText({ title: item.title, content: item.note || '(내용 없음)' })} className="p-1 md:px-2 md:py-1 rounded-lg hover:text-[#121110] hover:bg-amber-50 transition-colors">
                                     <Eye size={14} />
                                   </button>
                                 )}
@@ -1053,8 +1053,8 @@ export default function SetListPage() {
                     ))}
                     {provided.placeholder}
                     {items.length === 0 && (
-                      <div className="py-20 text-center text-[#78716A] border-2 border-dashed border-black/10 rounded-2xl">
-                        <p className="font-handwriting text-2xl mb-1">셋리스트가 비어있습니다</p>
+                      <div className="py-20 text-center text-t-muted border-2 border-dashed border-black/10 rounded-2xl">
+                        <p className="font-handwriting text-xl mb-1">셋리스트가 비어있습니다</p>
                         <p className="text-sm">라이브러리에서 + 버튼으로 항목을 추가하세요.</p>
                       </div>
                     )}
@@ -1065,22 +1065,22 @@ export default function SetListPage() {
           </div>
 
           {/* Footer bar */}
-          <div className="bg-[#2D2926] p-2 md:p-3 flex items-center justify-between gap-2 md:gap-4 text-white rounded-none md:rounded-b-[2rem] overflow-hidden">
+          <div className="bg-[#121110] p-2 md:p-3 flex items-center justify-between gap-2 md:gap-4 text-white rounded-none md:rounded-b-[2rem] overflow-hidden">
             <div className="flex items-center gap-3">
               <button onClick={() => playingItem && togglePlay(playingItem)}
-                className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playingItem ? 'bg-[#E6C79C] text-[#2D2926]' : 'bg-white/10 text-white/30 cursor-not-allowed'}`}>
+                className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${playingItem ? 'bg-[#E8481C] text-[#121110]' : 'bg-white/10 text-white/75 cursor-not-allowed'}`}>
                 {isPlaying ? <Pause size={16} /> : <Play fill="currentColor" size={16} className="ml-0.5" />}
               </button>
               <div className="min-w-0">
-                <p className="text-[10px] text-[#E6C79C] font-bold">PRACTICE</p>
+                <p className="text-[12px] text-t-gold font-bold">PRACTICE</p>
                 <p className="text-xs font-semibold truncate">{playingItem?.title || '음원 선택'}</p>
               </div>
             </div>
             <div className="flex-1 max-w-xs hidden lg:flex items-center gap-2">
-              <span className="text-[9px] text-white/40 w-7 text-right">{audioCurrentTime}</span>
+              <span className="text-[12px] text-white/75 w-7 text-right">{audioCurrentTime}</span>
               <div className={`h-1 flex-1 bg-white/10 rounded-full overflow-hidden ${playingItem ? 'cursor-pointer' : ''}`}
                 onClick={e => { if (!audioRef.current || !playingItem) return; const r = e.currentTarget.getBoundingClientRect(); audioRef.current.currentTime = ((e.clientX - r.left) / r.width) * audioRef.current.duration; }}>
-                <div className="h-full bg-[#E6C79C] transition-all" style={{ width: `${playingItem ? audioProgress : 0}%` }} />
+                <div className="h-full bg-[#E8481C] transition-all" style={{ width: `${playingItem ? audioProgress : 0}%` }} />
               </div>
             </div>
             <button onClick={async () => {
@@ -1142,14 +1142,14 @@ export default function SetListPage() {
         </div>
 
         {/* ===== 모바일 하단 FAB 바 (M3 스타일) ===== */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#2D2926] border-t border-white/10 px-2 py-2 safe-bottom">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#121110] border-t border-white/10 px-2 py-2 safe-bottom">
           <div className="flex items-center justify-around gap-1">
             <button onClick={() => playingItem && togglePlay(playingItem)}
-              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all ${isPlaying ? 'bg-[#E6C79C]/20' : ''}`}>
-              <div className={`w-9 h-9 rounded-full flex items-center justify-center ${playingItem ? 'bg-[#E6C79C] text-[#2D2926]' : 'bg-white/10 text-white/30'}`}>
+              className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl transition-all ${isPlaying ? 'bg-[#E8481C]/20' : ''}`}>
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center ${playingItem ? 'bg-[#E8481C] text-[#121110]' : 'bg-white/10 text-white/75'}`}>
                 {isPlaying ? <Pause size={16} /> : <Play fill="currentColor" size={16} className="ml-0.5" />}
               </div>
-              <span className="text-[10px] text-white/60 font-medium">재생</span>
+              <span className="text-[12px] text-white/80 font-medium">재생</span>
             </button>
             <button onClick={async () => {
               if (items.length === 0) { alert('항목을 추가해주세요.'); return; }
@@ -1173,7 +1173,7 @@ export default function SetListPage() {
               <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 text-white/70">
                 <LayoutDashboard size={16} />
               </div>
-              <span className="text-[10px] text-white/60 font-medium">프레젠터</span>
+              <span className="text-[12px] text-white/80 font-medium">프레젠터</span>
             </button>
             <button onClick={async () => {
               if (items.length === 0) { alert('셋리스트에 곡을 추가해주세요.'); return; }
@@ -1201,14 +1201,14 @@ export default function SetListPage() {
               <div className="w-9 h-9 rounded-full flex items-center justify-center bg-violet-500/30 text-violet-200">
                 <FileText size={16} />
               </div>
-              <span className="text-[10px] text-white/60 font-medium">가사</span>
+              <span className="text-[12px] text-white/80 font-medium">가사</span>
             </button>
             <button onClick={() => setIsArchiveFullscreen(true)}
               className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-2xl">
               <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 text-white/70">
                 <Archive size={16} />
               </div>
-              <span className="text-[10px] text-white/60 font-medium">아카이브</span>
+              <span className="text-[12px] text-white/80 font-medium">아카이브</span>
             </button>
           </div>
         </div>
@@ -1220,7 +1220,7 @@ export default function SetListPage() {
           <div className="bg-white rounded-t-3xl md:rounded-2xl w-full max-w-6xl h-[95vh] md:h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             <div className="flex items-center justify-between p-4 md:p-5 border-b border-black/5 shrink-0">
               <h2 className="font-bold text-base md:text-xl flex items-center gap-2">
-                <Archive className="text-[#E6C79C]" size={20} /> 아카이브
+                <Archive className="text-t-gold" size={20} /> 아카이브
               </h2>
               <button onClick={() => setIsArchiveFullscreen(false)} className="p-2 hover:bg-black/5 rounded-full"><X size={22} /></button>
             </div>
@@ -1297,16 +1297,16 @@ export default function SetListPage() {
         <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4" onClick={() => setPreviewPdfUrl(null)}>
           <div className="bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-4 border-b border-black/5 shrink-0">
-              <h3 className="font-bold text-lg flex items-center gap-2"><FileText className="text-[#E6C79C]" /> 악보 미리보기</h3>
+              <h3 className="font-bold text-lg flex items-center gap-2"><FileText className="text-t-gold" /> 악보 미리보기</h3>
               <div className="flex items-center gap-2">
                 <a href={previewPdfUrl} target="_blank" rel="noopener noreferrer"
-                  className="text-xs font-bold text-[#78716A] hover:text-[#2D2926] px-3 py-1.5 rounded-lg hover:bg-black/5">
+                  className="text-xs font-bold text-t-muted hover:text-[#121110] px-3 py-1.5 rounded-lg hover:bg-black/5">
                   새 탭에서 열기
                 </a>
                 <button onClick={() => setPreviewPdfUrl(null)} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
               </div>
             </div>
-            <div className="flex-1 overflow-auto bg-[#FAF9F6] flex items-start justify-center p-4">
+            <div className="flex-1 overflow-auto bg-[#F5F2EC] flex items-start justify-center p-4">
               {previewPdfUrl.match(/\.(jpg|jpeg|png|gif|webp|bmp)/i) || previewPdfUrl.includes('paste') ? (
                 <img src={previewPdfUrl} alt="악보 이미지" className="max-w-full h-auto rounded-lg shadow-md" />
               ) : (
@@ -1323,20 +1323,20 @@ export default function SetListPage() {
           <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="p-5 border-b border-black/5">
               <h3 className="font-bold text-base flex items-center gap-2">
-                <Archive className="text-[#E6C79C]" size={18} /> 아카이브에 저장
+                <Archive className="text-t-gold" size={18} /> 아카이브에 저장
               </h3>
-              <p className="text-xs text-[#78716A] mt-1 truncate">{archiveSaveItem.title}</p>
+              <p className="text-xs text-t-muted mt-1 truncate">{archiveSaveItem.title}</p>
             </div>
             <div className="p-5 space-y-3">
               <div>
-                <label className="text-[11px] font-bold text-[#78716A] block mb-1">키 (Key)</label>
+                <label className="text-[13px] font-bold text-t-muted block mb-1">키 (Key)</label>
                 <div className="flex flex-wrap gap-1.5">
                   {['', 'C', 'Cm', 'D', 'Dm', 'E', 'Em', 'F', 'Fm', 'G', 'Gm', 'A', 'Am', 'B', 'Bm', 'Db', 'Eb', 'Gb', 'Ab', 'Bb', 'C#', 'D#', 'F#', 'G#', 'A#', 'C#m', 'D#m', 'F#m', 'G#m', 'A#m', 'Dbm', 'Ebm', 'Gbm', 'Abm', 'Bbm'].map(k => (
                     <button key={k || 'none'} onClick={() => setArchiveSaveKey(k)}
-                      className={`px-2 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                      className={`px-2 py-1 rounded-lg text-[13px] font-bold transition-all ${
                         archiveSaveKey === k
                           ? 'bg-blue-600 text-white'
-                          : 'bg-[#FAF9F6] text-[#78716A] hover:bg-blue-50'
+                          : 'bg-[#F5F2EC] text-t-muted hover:bg-blue-50'
                       }`}>
                       {k || '없음'}
                     </button>
@@ -1344,14 +1344,14 @@ export default function SetListPage() {
                 </div>
               </div>
               <div>
-                <label className="text-[11px] font-bold text-[#78716A] block mb-1">언어</label>
+                <label className="text-[13px] font-bold text-t-muted block mb-1">언어</label>
                 <div className="flex gap-2">
                   {[{ id: '', label: '한글' }, { id: 'EN', label: 'English' }, { id: 'SP', label: 'Spanish' }].map(l => (
                     <button key={l.id || 'kr'} onClick={() => setArchiveSaveLang(l.id)}
-                      className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
+                      className={`px-3 py-1.5 rounded-lg text-[13px] font-bold transition-all ${
                         archiveSaveLang === l.id
                           ? 'bg-purple-600 text-white'
-                          : 'bg-[#FAF9F6] text-[#78716A] hover:bg-purple-50'
+                          : 'bg-[#F5F2EC] text-t-muted hover:bg-purple-50'
                       }`}>
                       {l.label}
                     </button>
@@ -1359,10 +1359,10 @@ export default function SetListPage() {
                 </div>
               </div>
               <div>
-                <label className="text-[11px] font-bold text-[#78716A] block mb-1">사용자 태그</label>
+                <label className="text-[13px] font-bold text-t-muted block mb-1">사용자 태그</label>
                 <div className="flex flex-wrap gap-1.5 mb-2">
                   {archiveSaveTags.map(tag => (
-                    <span key={tag} className="text-[10px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-1">
+                    <span key={tag} className="text-[12px] font-bold bg-green-100 text-green-700 px-2 py-0.5 rounded flex items-center gap-1">
                       {tag}
                       <button onClick={() => setArchiveSaveTags(prev => prev.filter(t => t !== tag))} className="hover:text-red-500"><X size={8} /></button>
                     </span>
@@ -1378,22 +1378,22 @@ export default function SetListPage() {
                       }
                     }}
                     placeholder="태그 입력 후 Enter..."
-                    className="flex-1 text-[11px] bg-[#FAF9F6] border border-black/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-green-400" />
+                    className="flex-1 text-[13px] bg-[#F5F2EC] border border-black/10 rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-green-400" />
                   <button onClick={() => {
                     const tag = archiveTagInput.trim();
                     if (tag && !archiveSaveTags.includes(tag)) setArchiveSaveTags(prev => [...prev, tag]);
                     setArchiveTagInput('');
-                  }} className="px-2.5 py-1.5 bg-green-100 text-green-700 rounded-lg text-[10px] font-bold hover:bg-green-200">추가</button>
+                  }} className="px-2.5 py-1.5 bg-green-100 text-green-700 rounded-lg text-[12px] font-bold hover:bg-green-200">추가</button>
                 </div>
               </div>
             </div>
             <div className="p-4 border-t border-black/5 flex justify-end gap-2">
               <button onClick={() => setArchiveSaveItem(null)}
-                className="px-4 py-2 text-sm font-bold text-[#78716A] hover:bg-black/5 rounded-xl transition-colors">
+                className="px-4 py-2 text-sm font-bold text-t-muted hover:bg-black/5 rounded-xl transition-colors">
                 취소
               </button>
               <button onClick={confirmArchiveSave}
-                className="px-5 py-2 bg-[#2D2926] text-white rounded-xl font-bold text-sm hover:bg-[#78716A] transition-colors">
+                className="px-5 py-2 bg-[#121110] text-white rounded-xl font-bold text-sm hover:bg-[#2A2826] transition-colors">
                 저장
               </button>
             </div>
@@ -1406,15 +1406,15 @@ export default function SetListPage() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4" onClick={() => setPreviewText(null)}>
           <div className="bg-white rounded-2xl w-full max-w-lg max-h-[80vh] flex flex-col shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-black/5 shrink-0">
-              <h3 className="font-bold text-lg flex items-center gap-2"><Type className="text-[#E6C79C]" /> {previewText.title}</h3>
+              <h3 className="font-bold text-lg flex items-center gap-2"><Type className="text-t-gold" /> {previewText.title}</h3>
               <button onClick={() => setPreviewText(null)} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
             </div>
             <div className="flex-1 overflow-y-auto p-6">
-              <div className="whitespace-pre-wrap text-sm leading-relaxed text-[#2D2926]">{previewText.content}</div>
+              <div className="whitespace-pre-wrap text-sm leading-relaxed text-[#121110]">{previewText.content}</div>
             </div>
             <div className="p-4 border-t border-black/5 shrink-0 flex justify-end">
               <button onClick={() => { navigator.clipboard.writeText(previewText.content); alert('복사되었습니다!'); }}
-                className="px-4 py-2 bg-[#FAF9F6] border border-black/10 rounded-xl text-sm font-bold hover:bg-[#E6C79C]/20 transition-colors">
+                className="px-4 py-2 bg-[#F5F2EC] border border-black/10 rounded-xl text-sm font-bold hover:bg-[#E8481C]/20 transition-colors">
                 복사
               </button>
             </div>

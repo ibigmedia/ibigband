@@ -123,11 +123,11 @@ export default function UsersManagementPage() {
           subject: emailSubject,
           html: `
             <div style="font-family:-apple-system,sans-serif;max-width:520px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e2dd;">
-              <div style="background:#2D2926;padding:24px 32px;text-align:center;">
-                <span style="font-size:24px;font-weight:bold;color:#E6C79C;">ibiGband</span>
+              <div style="background:#121110;padding:24px 32px;text-align:center;">
+                <span style="font-size:24px;font-weight:bold;color:#E8481C;">ibiGband</span>
               </div>
               <div style="padding:32px;">
-                <p style="color:#2D2926;font-size:15px;line-height:1.7;margin:0;">${emailBody.replace(/\n/g, '<br/>')}</p>
+                <p style="color:#121110;font-size:15px;line-height:1.7;margin:0;">${emailBody.replace(/\n/g, '<br/>')}</p>
               </div>
               <div style="padding:16px 32px;background:#f5f4f0;text-align:center;border-top:1px solid #e5e2dd;">
                 <p style="color:#78716A;font-size:11px;margin:0;">&copy; ibiGband · Contemporary Warmth Archive</p>
@@ -204,7 +204,7 @@ export default function UsersManagementPage() {
       {/* 헤더 */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-handwriting text-[#E6C79C]">회원 관리</h1>
+          <h1 className="text-2xl font-bold font-handwriting text-[#E8481C]">회원 관리</h1>
           <p className="text-gray-400 mt-1 text-sm">총 {stats.total}명 · 승인 {stats.approved} · 대기 {stats.pending} · 프리미엄 {stats.premium}</p>
         </div>
         <button onClick={() => { setLoading(true); fetchUsers(); }}
@@ -220,7 +220,7 @@ export default function UsersManagementPage() {
           { label: '승인 대기', value: stats.pending, icon: <Clock size={18} />, color: 'text-yellow-400', bg: 'bg-yellow-500/10', onClick: () => setFilter('pending') },
           { label: '밴드멤버', value: stats.member, icon: <Users size={18} />, color: 'text-purple-400', bg: 'bg-purple-500/10' },
           { label: '관리자', value: stats.admin, icon: <Shield size={18} />, color: 'text-green-400', bg: 'bg-green-500/10' },
-          { label: '프리미엄', value: stats.premium, icon: <Crown size={18} />, color: 'text-[#E6C79C]', bg: 'bg-[#E6C79C]/10' },
+          { label: '프리미엄', value: stats.premium, icon: <Crown size={18} />, color: 'text-[#E8481C]', bg: 'bg-[#E8481C]/10' },
         ].map(s => (
           <button key={s.label} onClick={s.onClick} className={`${s.bg} border border-[#78716A]/10 rounded-xl p-4 text-left transition-all hover:scale-[1.02] ${s.onClick ? 'cursor-pointer' : ''}`}>
             <div className={`flex items-center gap-2 ${s.color} mb-2`}>{s.icon}<span className="text-xs font-bold">{s.label}</span></div>
@@ -281,7 +281,7 @@ export default function UsersManagementPage() {
                       <UserX size={14} /> 거절
                     </button>
                     <button onClick={() => setEmailModal(u)}
-                      className="p-2.5 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-[#E6C79C] rounded-xl transition-colors" title="이메일 보내기">
+                      className="p-2.5 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-[#E8481C] rounded-xl transition-colors" title="이메일 보내기">
                       <Mail size={14} />
                     </button>
                   </div>
@@ -294,7 +294,7 @@ export default function UsersManagementPage() {
 
       {/* 검색 + 필터 */}
       <div className="flex flex-col md:flex-row gap-3">
-        <div className="flex items-center bg-[#2D2926]/50 border border-[#78716A]/20 rounded-xl px-4 flex-1 focus-within:border-[#E6C79C] transition-colors">
+        <div className="flex items-center bg-[#121110]/50 border border-[#78716A]/20 rounded-xl px-4 flex-1 focus-within:border-[#E8481C] transition-colors">
           <Search size={16} className="text-[#78716A] shrink-0" />
           <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
             placeholder="이름, 이메일, 자기소개로 검색..."
@@ -303,11 +303,11 @@ export default function UsersManagementPage() {
             <button onClick={() => setSearchQuery('')} className="text-[#78716A] hover:text-white p-1"><X size={14} /></button>
           )}
         </div>
-        <div className="flex items-center gap-1.5 bg-[#2D2926]/50 border border-[#78716A]/20 rounded-xl p-1.5">
+        <div className="flex items-center gap-1.5 bg-[#121110]/50 border border-[#78716A]/20 rounded-xl p-1.5">
           {(['all', 'pending', 'approved', 'rejected'] as const).map(f => (
             <button key={f} onClick={() => setFilter(f)}
               className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                filter === f ? 'bg-[#E6C79C] text-[#2D2926] shadow-sm' : 'text-gray-400 hover:text-white hover:bg-white/10'
+                filter === f ? 'bg-[#E8481C] text-[#121110] shadow-sm' : 'text-gray-400 hover:text-white hover:bg-white/10'
               }`}>
               {f === 'all' ? `전체 (${stats.total})` : f === 'pending' ? `대기 (${stats.pending})` : f === 'approved' ? `승인 (${stats.approved})` : `거절 (${stats.rejected})`}
             </button>
@@ -332,8 +332,8 @@ export default function UsersManagementPage() {
               <button key={u.id} onClick={() => setSelectedUser(u)}
                 className={`w-full text-left rounded-xl border transition-all ${
                   selectedUser?.id === u.id
-                    ? 'bg-[#E6C79C]/10 border-[#E6C79C]/30'
-                    : 'bg-[#2D2926]/50 border-[#78716A]/10 hover:border-[#78716A]/30 hover:bg-[#2D2926]/70'
+                    ? 'bg-[#E8481C]/10 border-[#E8481C]/30'
+                    : 'bg-[#121110]/50 border-[#78716A]/10 hover:border-[#78716A]/30 hover:bg-[#121110]/70'
                 } p-4`}>
                 <div className="flex items-center gap-3">
                   {u.photoURL ? (
@@ -352,7 +352,7 @@ export default function UsersManagementPage() {
                       <span className="text-white font-bold text-sm truncate">{u.displayName || 'No Name'}</span>
                       {(u.grade === 'admin' || u.role === 'admin') && <Shield size={12} className="text-green-400 shrink-0" />}
                       {u.grade === 'member' && <Users size={12} className="text-purple-400 shrink-0" />}
-                      {u.isPremium && <Crown size={12} className="text-[#E6C79C] shrink-0" />}
+                      {u.isPremium && <Crown size={12} className="text-[#E8481C] shrink-0" />}
                     </div>
                     <p className="text-[#78716A] text-xs truncate">{u.email}</p>
                   </div>
@@ -374,7 +374,7 @@ export default function UsersManagementPage() {
         {/* 상세 패널 */}
         {selectedUser && (
           <div className={`${selectedUser ? 'fixed inset-0 z-50 bg-black/60 md:relative md:inset-auto md:z-auto md:bg-transparent' : ''} md:w-[45%] md:min-w-[380px]`}>
-            <Card className="bg-[#2D2926] border border-[#78716A]/20 overflow-hidden h-full md:h-auto md:sticky md:top-4 md:max-h-[calc(100vh-120px)] overflow-y-auto
+            <Card className="bg-[#121110] border border-[#78716A]/20 overflow-hidden h-full md:h-auto md:sticky md:top-4 md:max-h-[calc(100vh-120px)] overflow-y-auto
               fixed inset-4 md:relative md:inset-auto z-50 md:z-auto">
               {/* 닫기 */}
               <div className="flex items-center justify-between px-5 py-3 border-b border-[#78716A]/10 bg-black/20">
@@ -411,7 +411,7 @@ export default function UsersManagementPage() {
                         <span className="flex items-center gap-1 px-2 py-0.5 bg-gray-500/20 text-gray-400 rounded-full text-[11px] font-bold"><Users size={10} />기본회원</span>
                       )}
                       {selectedUser.isPremium && (
-                        <span className="flex items-center gap-1 px-2 py-0.5 bg-[#E6C79C]/20 text-[#E6C79C] rounded-full text-[11px] font-bold"><Crown size={10} />프리미엄</span>
+                        <span className="flex items-center gap-1 px-2 py-0.5 bg-[#E8481C]/20 text-[#E8481C] rounded-full text-[11px] font-bold"><Crown size={10} />프리미엄</span>
                       )}
                       {/* 승인 상태 */}
                       {selectedUser.status === 'pending' && (
@@ -554,9 +554,9 @@ export default function UsersManagementPage() {
                   <input type="text" value={noteText} onChange={e => setNoteText(e.target.value)}
                     placeholder="이 회원에 대한 메모 작성..."
                     onKeyDown={e => e.key === 'Enter' && handleSaveNote()}
-                    className="flex-1 bg-black/20 border border-[#78716A]/20 rounded-xl px-3 py-2 text-sm text-white placeholder:text-[#78716A]/50 focus:outline-none focus:border-[#E6C79C]" />
+                    className="flex-1 bg-black/20 border border-[#78716A]/20 rounded-xl px-3 py-2 text-sm text-white placeholder:text-[#78716A]/50 focus:outline-none focus:border-[#E8481C]" />
                   <button onClick={handleSaveNote} disabled={noteSaving || !noteText.trim()}
-                    className="px-3 py-2 bg-[#E6C79C] text-[#2D2926] rounded-xl text-xs font-bold hover:bg-[#D4B384] transition-colors disabled:opacity-50">
+                    className="px-3 py-2 bg-[#E8481C] text-[#121110] rounded-xl text-xs font-bold hover:bg-[#D4B384] transition-colors disabled:opacity-50">
                     {noteSaving ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
                   </button>
                 </div>
@@ -579,11 +579,11 @@ export default function UsersManagementPage() {
       {/* 이메일 발송 모달 */}
       {emailModal && (
         <div className="fixed inset-0 z-[100] bg-black/70 flex items-center justify-center p-4" onClick={() => setEmailModal(null)}>
-          <div className="bg-[#2D2926] border border-[#78716A]/20 rounded-2xl w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-[#121110] border border-[#78716A]/20 rounded-2xl w-full max-w-lg shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-5 border-b border-[#78716A]/10">
               <div>
                 <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                  <Mail size={18} className="text-[#E6C79C]" /> 이메일 보내기
+                  <Mail size={18} className="text-[#E8481C]" /> 이메일 보내기
                 </h2>
                 <p className="text-xs text-[#78716A] mt-1">수신: {emailModal.displayName} ({emailModal.email})</p>
               </div>
@@ -595,14 +595,14 @@ export default function UsersManagementPage() {
                 <label className="text-xs font-bold text-gray-400 block mb-1.5">제목</label>
                 <input type="text" value={emailSubject} onChange={e => setEmailSubject(e.target.value)}
                   placeholder="이메일 제목을 입력하세요"
-                  className="w-full bg-black/30 border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#E6C79C]" />
+                  className="w-full bg-black/30 border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#E8481C]" />
               </div>
               <div>
                 <label className="text-xs font-bold text-gray-400 block mb-1.5">내용</label>
                 <textarea value={emailBody} onChange={e => setEmailBody(e.target.value)}
                   placeholder="이메일 내용을 입력하세요..."
                   rows={6}
-                  className="w-full bg-black/30 border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#E6C79C] resize-none" />
+                  className="w-full bg-black/30 border border-[#78716A]/20 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-[#E8481C] resize-none" />
               </div>
               <div className="flex items-center gap-3 pt-2">
                 <div className="flex-1 text-xs text-[#78716A]">
@@ -610,7 +610,7 @@ export default function UsersManagementPage() {
                 </div>
                 <button onClick={() => setEmailModal(null)} className="px-4 py-2.5 text-gray-400 hover:text-white text-sm font-bold">취소</button>
                 <button onClick={handleSendEmail} disabled={emailSending || !emailSubject.trim() || !emailBody.trim()}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-[#E6C79C] text-[#2D2926] rounded-xl text-sm font-bold hover:bg-[#D4B384] transition-colors disabled:opacity-50">
+                  className="flex items-center gap-2 px-6 py-2.5 bg-[#E8481C] text-[#121110] rounded-xl text-sm font-bold hover:bg-[#D4B384] transition-colors disabled:opacity-50">
                   {emailSending ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />} 발송
                 </button>
               </div>

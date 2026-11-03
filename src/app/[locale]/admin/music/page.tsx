@@ -276,7 +276,7 @@ export default function AdminMusicPage() {
         <div className="p-5 border-b border-[#27272A] bg-[#1A1A1A] flex flex-col gap-4">
           <div className="flex items-center justify-between">
              <h2 className="text-xl font-bold text-white flex items-center gap-2">
-               <Music className="w-5 h-5 text-[#E6C79C]"/> 앨범 목록
+               <Music className="w-5 h-5 text-[#E8481C]"/> 앨범 목록
              </h2>
              <span className="text-xs bg-[#27272A] px-2 py-1 rounded-md text-[#A1A1AA]">{albums.length} 개</span>
           </div>
@@ -295,13 +295,13 @@ export default function AdminMusicPage() {
               <div 
                 key={album.id} 
                 onClick={() => selectAlbum(album)}
-                className={`p-3 rounded-2xl lg:rounded-xl border cursor-pointer transition-all flex gap-4 ${currentId === album.id ? 'bg-[#27272A] border-[#E6C79C]/50 shadow-lg' : 'bg-transparent border-[#27272A]/50 hover:bg-[#1A1A1A] hover:border-[#27272A]'}`}
+                className={`p-3 rounded-2xl lg:rounded-xl border cursor-pointer transition-all flex gap-4 ${currentId === album.id ? 'bg-[#27272A] border-[#E8481C]/50 shadow-lg' : 'bg-transparent border-[#27272A]/50 hover:bg-[#1A1A1A] hover:border-[#27272A]'}`}
               >
                 <div className="w-16 h-16 rounded-xl bg-black border border-[#3F3F46] flex shrink-0 items-center justify-center overflow-hidden relative">
                   {album.coverUrl ? <Image src={album.coverUrl} alt={album.title} fill sizes="(max-width: 768px) 100vw, 33vw" className="object-cover"/> : <ImageIcon className="w-5 h-5 text-[#71717A]"/>}
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col justify-center">
-                  <span className="text-[10px] text-[#C48C5E] font-bold uppercase mb-1">{album.type}</span>
+                  <span className="text-[10px] text-[#B3350F] font-bold uppercase mb-1">{album.type}</span>
                   <h4 className="text-white font-bold text-[15px] lg:text-sm truncate leading-tight">{album.title}</h4>
                   <p className="text-xs text-[#A1A1AA] truncate mt-1">출시: {album.releaseDate}</p>
                 </div>
@@ -340,7 +340,7 @@ export default function AdminMusicPage() {
                  <div className="bg-[#1A1A1A] border border-[#27272A] rounded-2xl p-6">
                     <div className="flex items-center justify-between border-b border-[#27272A] pb-3 mb-6">
                        <h3 className="text-lg font-bold text-white">1. 트랙 관리</h3>
-                       <Button onClick={addTrack} variant="secondary" className="h-10 text-sm font-black rounded-xl px-4 md:px-5 hover:bg-[#D4A373] shadow-md shadow-[#E6C79C]/10 text-[#000]">
+                       <Button onClick={addTrack} variant="secondary" className="h-10 text-sm font-black rounded-xl px-4 md:px-5 hover:bg-[#D4A373] shadow-md shadow-[#E8481C]/10 text-[#000]">
                           <Plus className="w-4 h-4 md:w-5 md:h-5 mr-1.5"/> 트랙 추가
                        </Button>
                     </div>
@@ -353,15 +353,15 @@ export default function AdminMusicPage() {
                              <div key={trackIdx} className="bg-[#0A0A0A] border border-[#3F3F46] rounded-xl p-5 relative">
                                 {/* Track Header */}
                                 <div className="flex items-center justify-between mb-4">
-                                   <h4 className="text-[#E6C79C] font-bold">Track {trackIdx + 1}</h4>
+                                   <h4 className="text-[#E8481C] font-bold">Track {trackIdx + 1}</h4>
                                    <button onClick={() => removeTrack(trackIdx)} className="text-[#71717A] hover:text-red-400"><Trash2 className="w-4 h-4"/></button>
                                 </div>
                                 
                                 {/* Audio File Upload (Moved to top) for the first version */}
-                                <div className="mb-6 p-4 border border-dashed border-[#E6C79C]/30 rounded-lg bg-[#E6C79C]/5">
-                                   <label className="block text-xs font-bold text-[#E6C79C] uppercase mb-3">음원 파일 업로드 (MP3)</label>
+                                <div className="mb-6 p-4 border border-dashed border-[#E8481C]/30 rounded-lg bg-[#E8481C]/5">
+                                   <label className="block text-xs font-bold text-[#E8481C] uppercase mb-3">음원 파일 업로드 (MP3)</label>
                                    <div className="flex flex-col md:flex-row md:items-center gap-3">
-                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, 0, e.target.files?.[0] as File)} className="text-sm file:mr-4 file:py-2.5 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-black file:bg-[#E6C79C] file:text-[#0A0A0A] hover:file:bg-[#D4A373] transition-colors cursor-pointer text-slate-300"/>
+                                      <input type="file" accept="audio/*" onChange={e => handleAudioUpload(trackIdx, 0, e.target.files?.[0] as File)} className="text-sm file:mr-4 file:py-2.5 file:px-6 file:rounded-xl file:border-0 file:text-sm file:font-black file:bg-[#E8481C] file:text-[#0A0A0A] hover:file:bg-[#D4A373] transition-colors cursor-pointer text-slate-300"/>
                                       {track.versions[0]?.audioUrl ? (
                                          <span className="text-[10px] text-green-400 flex items-center bg-green-400/10 px-2 py-0.5 rounded-full"><CheckCircle className="w-3 h-3 mr-1"/> 업로드됨</span>
                                       ) : (
@@ -374,11 +374,11 @@ export default function AdminMusicPage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                    <div>
                                       <label className="block text-[10px] text-[#A1A1AA] uppercase mb-1">트랙 기본 제목</label>
-                                      <input value={track.title} onChange={e => updateTrack(trackIdx, 'title', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E6C79C]"/>
+                                      <input value={track.title} onChange={e => updateTrack(trackIdx, 'title', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E8481C]"/>
                                    </div>
                                    <div>
                                       <label className="block text-[10px] text-[#A1A1AA] uppercase mb-1">길이 (예: 5:30)</label>
-                                      <input value={track.duration} onChange={e => updateTrack(trackIdx, 'duration', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E6C79C]"/>
+                                      <input value={track.duration} onChange={e => updateTrack(trackIdx, 'duration', e.target.value)} className="w-full px-3 py-2 bg-[#1A1A1A] border border-[#27272A] rounded-lg text-sm text-white outline-none focus:border-[#E8481C]"/>
                                    </div>
                                 </div>
 
@@ -386,10 +386,10 @@ export default function AdminMusicPage() {
                                 <div className="mb-6 bg-[#1A1A1A] rounded-lg p-4 border border-[#27272A]">
                                    <label className="block text-[10px] text-white font-bold uppercase mb-3">크레딧 (옵션)</label>
                                    <div className="grid grid-cols-2 gap-3">
-                                      <input placeholder="작사/작곡 (Words & Music)" value={track.credits.composer || ''} onChange={e => updateTrackCredit(trackIdx, 'composer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                      <input placeholder="편곡 (Arranger)" value={track.credits.arranger || ''} onChange={e => updateTrackCredit(trackIdx, 'arranger', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                      <input placeholder="연주 (Instruments)" value={track.credits.instruments || ''} onChange={e => updateTrackCredit(trackIdx, 'instruments', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
-                                      <input placeholder="제작 (Producer)" value={track.credits.producer || ''} onChange={e => updateTrackCredit(trackIdx, 'producer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
+                                      <input placeholder="작사/작곡 (Words & Music)" value={track.credits.composer || ''} onChange={e => updateTrackCredit(trackIdx, 'composer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E8481C]"/>
+                                      <input placeholder="편곡 (Arranger)" value={track.credits.arranger || ''} onChange={e => updateTrackCredit(trackIdx, 'arranger', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E8481C]"/>
+                                      <input placeholder="연주 (Instruments)" value={track.credits.instruments || ''} onChange={e => updateTrackCredit(trackIdx, 'instruments', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E8481C]"/>
+                                      <input placeholder="제작 (Producer)" value={track.credits.producer || ''} onChange={e => updateTrackCredit(trackIdx, 'producer', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E8481C]"/>
                                    </div>
                                 </div>
 
@@ -397,12 +397,12 @@ export default function AdminMusicPage() {
                                 <div>
                                    <div className="flex items-center justify-between mb-3">
                                       <h5 className="text-xs font-bold text-white uppercase">버전 및 음원 (언어별)</h5>
-                                      <button type="button" onClick={() => addVersion(trackIdx)} className="text-[10px] flex items-center text-[#E6C79C] hover:underline"><Plus className="w-3 h-3 mr-0.5"/> 언어 추가</button>
+                                      <button type="button" onClick={() => addVersion(trackIdx)} className="text-[10px] flex items-center text-[#E8481C] hover:underline"><Plus className="w-3 h-3 mr-0.5"/> 언어 추가</button>
                                    </div>
                                    
                                    <div className="space-y-4">
                                       {track.versions.map((version, verIdx) => (
-                                         <div key={verIdx} className="bg-[#1A1A1A] border-l-2 border-[#E6C79C] pl-4 py-3 pr-3 relative">
+                                         <div key={verIdx} className="bg-[#1A1A1A] border-l-2 border-[#E8481C] pl-4 py-3 pr-3 relative">
                                             {track.versions.length > 1 && (
                                                <button onClick={() => removeVersion(trackIdx, verIdx)} className="absolute top-2 right-2 text-[#71717A] hover:text-red-400"><XIcon className="w-3 h-3"/></button>
                                             )}
@@ -412,7 +412,7 @@ export default function AdminMusicPage() {
                                                   <option value="en">English (en)</option>
                                                   <option value="es">Español (es)</option>
                                                </select>
-                                               <input placeholder="버전별 곡 제목" value={version.title} onChange={e => updateVersion(trackIdx, verIdx, 'title', e.target.value)} className="col-span-2 px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C]"/>
+                                               <input placeholder="버전별 곡 제목" value={version.title} onChange={e => updateVersion(trackIdx, verIdx, 'title', e.target.value)} className="col-span-2 px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E8481C]"/>
                                             </div>
 
                                             {verIdx !== 0 && (
@@ -432,11 +432,11 @@ export default function AdminMusicPage() {
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                                <div>
                                                   <label className="block text-[10px] text-[#A1A1AA] mb-1">가사 (Lyrics)</label>
-                                                  <textarea value={version.lyrics} onChange={e => updateVersion(trackIdx, verIdx, 'lyrics', e.target.value)} rows={4} className="w-full px-3 py-2 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C] resize-none" placeholder="엔터로 단락을 구분하세요"/>
+                                                  <textarea value={version.lyrics} onChange={e => updateVersion(trackIdx, verIdx, 'lyrics', e.target.value)} rows={4} className="w-full px-3 py-2 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E8481C] resize-none" placeholder="엔터로 단락을 구분하세요"/>
                                                </div>
                                                <div>
                                                   <label className="block text-[10px] text-[#A1A1AA] mb-1">해당 버전 보컬 (Vocal)</label>
-                                                  <input value={version.vocal || ''} onChange={e => updateVersion(trackIdx, verIdx, 'vocal', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E6C79C] mb-2"/>
+                                                  <input value={version.vocal || ''} onChange={e => updateVersion(trackIdx, verIdx, 'vocal', e.target.value)} className="w-full px-3 py-1.5 bg-[#0A0A0A] border border-[#27272A] rounded-md text-xs text-white outline-none focus:border-[#E8481C] mb-2"/>
                                                   
                                                   <div className="text-[10px] text-[#A1A1AA] bg-[#27272A]/50 p-2 rounded-md leading-relaxed mt-2">
                                                      <strong>가사 입력 팁:</strong> 단락 구분을 위해 엔터를 두 번 입력하세요. 곡 안에서 줄바꿈은 엔터 한 번입니다.
@@ -462,12 +462,12 @@ export default function AdminMusicPage() {
                        <div className="col-span-1 lg:col-span-2 space-y-4">
                           <div>
                             <label className="block text-xs font-bold text-[#A1A1AA] uppercase mb-2">음반 제목 *</label>
-                            <input value={title} onChange={e => setTitle(e.target.value)} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E6C79C]" placeholder="음반 제목"/>
+                            <input value={title} onChange={e => setTitle(e.target.value)} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E8481C]" placeholder="음반 제목"/>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                              <div>
                                 <label className="block text-xs font-bold text-[#A1A1AA] uppercase mb-2">분류 *</label>
-                                <select value={type} onChange={e => setType(e.target.value as 'Single' | 'EP' | 'Album')} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E6C79C]">
+                                <select value={type} onChange={e => setType(e.target.value as 'Single' | 'EP' | 'Album')} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E8481C]">
                                    <option value="Single">Single (싱글)</option>
                                    <option value="EP">EP (미니앨범)</option>
                                    <option value="Album">Album (정규앨범)</option>
@@ -475,12 +475,12 @@ export default function AdminMusicPage() {
                              </div>
                              <div>
                                 <label className="block text-xs font-bold text-[#A1A1AA] uppercase mb-2">출시일 (YYYY.MM.DD) *</label>
-                                <input value={releaseDate} onChange={e => setReleaseDate(e.target.value)} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E6C79C]"/>
+                                <input value={releaseDate} onChange={e => setReleaseDate(e.target.value)} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E8481C]"/>
                              </div>
                           </div>
                           <div>
                             <label className="block text-xs font-bold text-[#A1A1AA] uppercase mb-2">간단한 소개 (손글씨 폰트로 노출됨)</label>
-                            <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E6C79C] resize-none" placeholder="앨범 소개를 적어주세요..."/>
+                            <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} className="w-full px-4 py-2.5 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white outline-none focus:border-[#E8481C] resize-none" placeholder="앨범 소개를 적어주세요..."/>
                           </div>
                        </div>
                        
@@ -515,7 +515,7 @@ export default function AdminMusicPage() {
                   <Button type="button" onClick={() => setCurrentId(null)} className="hidden lg:block bg-transparent text-[#A1A1AA] hover:text-white hover:bg-white/5 font-bold">
                      취소
                   </Button>
-                  <Button type="button" onClick={handleSave} disabled={saving} variant="secondary" className="hover:bg-[#D4A373] font-black px-10 rounded-xl shadow-lg shadow-[#E6C79C]/20 text-sm h-11">
+                  <Button type="button" onClick={handleSave} disabled={saving} variant="secondary" className="hover:bg-[#D4A373] font-black px-10 rounded-xl shadow-lg shadow-[#E8481C]/20 text-sm h-11">
                      {saving ? <><Loader2 className="w-5 h-5 mr-2 animate-spin"/> 저장 중...</> : <><Save className="w-5 h-5 mr-2"/> 음반 저장</>}
                   </Button>
               </div>

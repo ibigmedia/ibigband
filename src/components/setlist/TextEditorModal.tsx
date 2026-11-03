@@ -78,7 +78,7 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
         <div className="p-6 border-b border-black/5 shrink-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-xl flex items-center gap-2">
-              <Type className="text-[#E6C79C]" /> 텍스트 작성
+              <Type className="text-t-gold" /> 텍스트 작성
             </h3>
             <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
           </div>
@@ -87,13 +87,13 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
           <div className="flex gap-2">
             <button
               onClick={() => setType('transcript')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${type === 'transcript' ? 'bg-[#2D2926] text-white' : 'bg-[#FAF9F6] text-[#78716A]'}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${type === 'transcript' ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted'}`}
             >
               <FileText size={14} /> 기도문 / 원고
             </button>
             <button
               onClick={() => setType('guide')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${type === 'guide' ? 'bg-blue-600 text-white' : 'bg-[#FAF9F6] text-[#78716A]'}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all ${type === 'guide' ? 'bg-blue-600 text-white' : 'bg-[#F5F2EC] text-t-muted'}`}
             >
               <Mic size={14} /> 진행 멘트 / 가이드
             </button>
@@ -108,12 +108,12 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
             value={title}
             onChange={e => setTitle(e.target.value)}
             placeholder="제목 (예: 대표기도문, MC 오프닝 멘트)"
-            className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-[#2D2926]"
+            className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm font-bold focus:outline-none focus:border-[#121110]"
           />
 
           {/* AI Generation */}
-          <div className="bg-gradient-to-r from-[#E6C79C]/10 to-[#FAF9F6] rounded-2xl p-4 border border-[#E6C79C]/20">
-            <p className="text-xs font-bold text-[#8C6B1C] mb-2 flex items-center gap-1"><Sparkles size={12} /> AI 생성 도우미</p>
+          <div className="bg-gradient-to-r from-[#E8481C]/10 to-[#F5F2EC] rounded-2xl p-4 border border-[#E8481C]/20">
+            <p className="text-xs font-bold text-t-copper mb-2 flex items-center gap-1"><Sparkles size={12} /> AI 생성 도우미</p>
             <div className="flex gap-2">
               <input
                 type="text"
@@ -121,12 +121,12 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
                 onChange={e => setAiPrompt(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && !aiLoading && generateWithAI()}
                 placeholder="예: 부활절 감사 기도문, 헌금 안내 멘트, 새가족 환영 인사"
-                className="flex-1 bg-white border border-black/10 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#E6C79C]"
+                className="flex-1 bg-white border border-black/10 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-[#E8481C]"
               />
               <button
                 onClick={generateWithAI}
                 disabled={aiLoading || !aiPrompt.trim()}
-                className="px-4 py-2.5 bg-[#2D2926] text-[#E6C79C] rounded-xl text-sm font-bold hover:bg-[#78716A] transition-colors disabled:opacity-40 flex items-center gap-1.5 shrink-0"
+                className="px-4 py-2.5 bg-[#121110] text-t-gold rounded-xl text-sm font-bold hover:bg-[#2A2826] transition-colors disabled:opacity-40 flex items-center gap-1.5 shrink-0"
               >
                 {aiLoading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
                 {aiLoading ? '생성 중...' : 'AI 생성'}
@@ -141,7 +141,7 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
               onChange={e => setContent(e.target.value)}
               placeholder="내용을 직접 입력하거나 AI로 생성하세요..."
               rows={12}
-              className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl px-4 py-3 text-sm leading-relaxed focus:outline-none focus:border-[#2D2926] resize-none"
+              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl px-4 py-3 text-sm leading-relaxed focus:outline-none focus:border-[#121110] resize-none"
             />
             {content && (
               <button
@@ -149,7 +149,7 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
                 className="absolute top-3 right-3 p-2 bg-white border border-black/10 rounded-lg hover:bg-black/5 transition-colors"
                 title="복사"
               >
-                {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="text-[#78716A]" />}
+                {copied ? <Check size={14} className="text-green-600" /> : <Copy size={14} className="text-t-muted" />}
               </button>
             )}
           </div>
@@ -157,11 +157,11 @@ export default function TextEditorModal({ isOpen, onClose, onAdd }: Props) {
 
         {/* Footer */}
         <div className="p-4 border-t border-black/5 shrink-0 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2.5 text-[#78716A] font-bold text-sm hover:text-[#2D2926]">취소</button>
+          <button onClick={onClose} className="px-4 py-2.5 text-t-muted font-bold text-sm hover:text-[#121110]">취소</button>
           <button
             onClick={handleAdd}
             disabled={!title.trim()}
-            className="px-6 py-2.5 bg-[#2D2926] text-white rounded-xl font-bold text-sm hover:bg-[#78716A] transition-colors disabled:opacity-30"
+            className="px-6 py-2.5 bg-[#121110] text-white rounded-xl font-bold text-sm hover:bg-[#2A2826] transition-colors disabled:opacity-30"
           >
             라이브러리에 추가
           </button>

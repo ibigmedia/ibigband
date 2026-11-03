@@ -295,7 +295,7 @@ export default function AdminSheetsPage() {
         <div className="p-5 border-b border-[#27272A] bg-[#1A1A1A] flex flex-col gap-4">
           <div className="flex items-center justify-between">
              <h2 className="text-xl font-bold text-white flex items-center gap-2">
-               <LayoutGrid className="w-5 h-5 text-[#E6C79C]"/> 라이브러리 목록
+               <LayoutGrid className="w-5 h-5 text-[#E8481C]"/> 라이브러리 목록
              </h2>
              <span className="text-xs bg-[#27272A] px-2 py-1 rounded-md text-[#A1A1AA]">{sheets.length} 개</span>
           </div>
@@ -305,7 +305,7 @@ export default function AdminSheetsPage() {
                placeholder="검색..." 
                value={searchTerm}
                onChange={e => setSearchTerm(e.target.value)}
-               className="w-full pl-9 pr-4 py-3 lg:py-2 bg-[#27272A] border border-[#3F3F46] rounded-2xl lg:rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#E6C79C]"
+               className="w-full pl-9 pr-4 py-3 lg:py-2 bg-[#27272A] border border-[#3F3F46] rounded-2xl lg:rounded-xl text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#E8481C]"
              />
           </div>
           <Button variant="secondary" onClick={() => { handleCreateNew(); setCurrentId('new'); }} className="w-full hover:bg-[#D4A373] font-bold rounded-2xl py-3 lg:py-2 flex items-center justify-center gap-2">
@@ -323,7 +323,7 @@ export default function AdminSheetsPage() {
               <div 
                 key={sheet.id} 
                 onClick={() => selectSheet(sheet)}
-                className={`p-3 rounded-2xl lg:rounded-xl border cursor-pointer transition-all flex gap-3 ${currentId === sheet.id ? 'bg-[#27272A] border-[#E6C79C]/50 shadow-lg' : 'bg-transparent border-[#27272A]/50 hover:bg-[#1A1A1A] hover:border-[#27272A]'}`}
+                className={`p-3 rounded-2xl lg:rounded-xl border cursor-pointer transition-all flex gap-3 ${currentId === sheet.id ? 'bg-[#27272A] border-[#E8481C]/50 shadow-lg' : 'bg-transparent border-[#27272A]/50 hover:bg-[#1A1A1A] hover:border-[#27272A]'}`}
               >
                 <div className="w-14 h-14 lg:w-12 lg:h-12 rounded-xl bg-black border border-[#3F3F46] flex shrink-0 items-center justify-center overflow-hidden">
                   {sheet.thumbnailUrl ? <img src={sheet.thumbnailUrl} className="w-full h-full object-cover"/> : <Music className="w-5 h-5 text-[#71717A]"/>}
@@ -338,7 +338,7 @@ export default function AdminSheetsPage() {
                 </div>
                 <button
                   onClick={(e) => copyShareLink(sheet.id!, e)}
-                  className="p-3 text-[#71717A] hover:text-[#E6C79C] hover:bg-[#E6C79C]/10 rounded-xl shrink-0 self-center transition-colors"
+                  className="p-3 text-[#71717A] hover:text-[#E8481C] hover:bg-[#E8481C]/10 rounded-xl shrink-0 self-center transition-colors"
                   title="YouTube 등에 공유할 링크 복사"
                 >
                   {copiedId === sheet.id ? <Check className="w-5 h-5 lg:w-4 lg:h-4 text-green-400"/> : <Copy className="w-5 h-5 lg:w-4 lg:h-4"/>}
@@ -368,7 +368,7 @@ export default function AdminSheetsPage() {
              <button
                type="button"
                onClick={() => copyShareLink(currentId)}
-               className="hidden lg:flex px-3 py-1 bg-white/5 border border-white/10 hover:bg-[#E6C79C]/10 hover:border-[#E6C79C]/40 hover:text-[#E6C79C] rounded-full text-xs text-[#A1A1AA] items-center gap-2 transition-all"
+               className="hidden lg:flex px-3 py-1 bg-white/5 border border-white/10 hover:bg-[#E8481C]/10 hover:border-[#E8481C]/40 hover:text-[#E8481C] rounded-full text-xs text-[#A1A1AA] items-center gap-2 transition-all"
                title="YouTube 등에 공유할 링크 복사"
              >
                {copiedId === currentId ? (
@@ -385,30 +385,30 @@ export default function AdminSheetsPage() {
            {/* Section 1: Basic Info */}
            <section>
               <div className="flex items-center gap-2 mb-6">
-                 <div className="w-8 h-8 rounded-full bg-[#E6C79C]/10 flex items-center justify-center border border-[#E6C79C]/30"><FileText className="w-4 h-4 text-[#E6C79C]"/></div>
+                 <div className="w-8 h-8 rounded-full bg-[#E8481C]/10 flex items-center justify-center border border-[#E8481C]/30"><FileText className="w-4 h-4 text-[#E8481C]"/></div>
                  <h3 className="text-lg font-bold text-white">1. 기본 정보</h3>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A]">
                  <div className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">제목 (Title) *</label>
-                      <input required value={title} onChange={e => setTitle(e.target.value)} placeholder="예: 어메이징 그레이스 편곡" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] focus:ring-1 focus:ring-[#E6C79C] transition-all"/>
+                      <input required value={title} onChange={e => setTitle(e.target.value)} placeholder="예: 어메이징 그레이스 편곡" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E8481C] focus:ring-1 focus:ring-[#E8481C] transition-all"/>
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">아티스트 / 편곡자</label>
-                      <input value={artistId} onChange={e => setArtistId(e.target.value)} placeholder="예: 아이빅밴드" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] focus:ring-1 focus:ring-[#E6C79C] transition-all"/>
+                      <input value={artistId} onChange={e => setArtistId(e.target.value)} placeholder="예: 아이빅밴드" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E8481C] focus:ring-1 focus:ring-[#E8481C] transition-all"/>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2 flex justify-between">연관 음반 <Disc3 className="w-3 h-3"/></label>
-                        <select value={albumId} onChange={e => { setAlbumId(e.target.value); setTrackId(''); }} className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] transition-all appearance-none cursor-pointer">
+                        <select value={albumId} onChange={e => { setAlbumId(e.target.value); setTrackId(''); }} className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E8481C] transition-all appearance-none cursor-pointer">
                           <option value="">선택 안함</option>
                           {albums.map(a => <option key={a.id} value={a.id}>{a.title}</option>)}
                         </select>
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2">연관 곡 (트랙)</label>
-                        <select value={trackId} onChange={e => setTrackId(e.target.value)} disabled={!albumId} className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white disabled:opacity-50 focus:outline-none focus:border-[#E6C79C] transition-all appearance-none cursor-pointer">
+                        <select value={trackId} onChange={e => setTrackId(e.target.value)} disabled={!albumId} className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white disabled:opacity-50 focus:outline-none focus:border-[#E8481C] transition-all appearance-none cursor-pointer">
                           <option value="">선택 안함</option>
                           {albums.find(a => a.id === albumId)?.tracks.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
                         </select>
@@ -419,25 +419,25 @@ export default function AdminSheetsPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2 flex justify-between">BPM <Activity className="w-3 h-3"/></label>
-                        <input type="number" value={bpm} onChange={e => setBpm(e.target.value)} placeholder="120" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] transition-all"/>
+                        <input type="number" value={bpm} onChange={e => setBpm(e.target.value)} placeholder="120" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E8481C] transition-all"/>
                       </div>
                       <div>
                         <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2 flex justify-between">Key <Hash className="w-3 h-3"/></label>
-                        <input value={musicKey} onChange={e => setMusicKey(e.target.value)} placeholder="G" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] transition-all"/>
+                        <input value={musicKey} onChange={e => setMusicKey(e.target.value)} placeholder="G" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E8481C] transition-all"/>
                       </div>
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-[#A1A1AA] uppercase tracking-wider mb-2 flex justify-between">분위기 태그 <TagIcon className="w-3 h-3"/></label>
-                      <input value={moodTags} onChange={e => setMoodTags(e.target.value)} placeholder="예: 잔잔한, 어쿠스틱" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E6C79C] transition-all"/>
+                      <input value={moodTags} onChange={e => setMoodTags(e.target.value)} placeholder="예: 잔잔한, 어쿠스틱" className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white focus:outline-none focus:border-[#E8481C] transition-all"/>
                     </div>
                  </div>
 
                  {/* AI Extraction Row */}
                  <div className="col-span-1 lg:col-span-2 pt-4 border-t border-[#3F3F46]">
-                   <label className="block text-xs font-bold text-[#E6C79C] uppercase tracking-wider mb-2">AI 자동 분석 (가사 입력)</label>
+                   <label className="block text-xs font-bold text-[#E8481C] uppercase tracking-wider mb-2">AI 자동 분석 (가사 입력)</label>
                    <div className="flex gap-2">
-                     <input value={aiLyrics} onChange={e => setAiLyrics(e.target.value)} placeholder="가사를 붙여넣으면 연관 태그를 자동 추출합니다." className="flex-1 px-4 py-2 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-sm text-white focus:outline-none focus:border-[#E6C79C]"/>
-                     <Button type="button" onClick={handleAITagging} disabled={aiLoading} className="bg-[#E6C79C]/10 text-[#E6C79C] hover:bg-[#E6C79C]/20 border border-[#E6C79C]/30 rounded-xl whitespace-nowrap">
+                     <input value={aiLyrics} onChange={e => setAiLyrics(e.target.value)} placeholder="가사를 붙여넣으면 연관 태그를 자동 추출합니다." className="flex-1 px-4 py-2 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-sm text-white focus:outline-none focus:border-[#E8481C]"/>
+                     <Button type="button" onClick={handleAITagging} disabled={aiLoading} className="bg-[#E8481C]/10 text-[#E8481C] hover:bg-[#E8481C]/20 border border-[#E8481C]/30 rounded-xl whitespace-nowrap">
                        {aiLoading ? '분석 중...' : '자동 생성'}
                      </Button>
                    </div>
@@ -553,12 +553,12 @@ export default function AdminSheetsPage() {
               <div className="bg-[#1A1A1A] p-6 rounded-2xl border border-[#27272A] flex flex-col lg:flex-row items-center justify-between gap-6">
                  <div className="flex-1 space-y-2">
                     <h4 className="text-sm font-bold text-white">가격 설정 (USD)</h4>
-                    <input type="number" min="0" step="0.01" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00 (무료)" className="w-full lg:w-32 px-4 py-2 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white text-center focus:outline-none focus:border-[#E6C79C]"/>
+                    <input type="number" min="0" step="0.01" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00 (무료)" className="w-full lg:w-32 px-4 py-2 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl text-white text-center focus:outline-none focus:border-[#E8481C]"/>
                  </div>
                  <div className="flex-1 flex items-center justify-end">
-                    <label className="flex items-center cursor-pointer p-4 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl hover:border-[#E6C79C]/50 transition-colors">
-                      <input type="checkbox" checked={isPremiumOnly} onChange={e => setIsPremiumOnly(e.target.checked)} className="w-5 h-5 accent-[#E6C79C] cursor-pointer" />
-                      <span className="ml-3 text-sm font-bold text-[#E6C79C]">프리미엄 콘텐츠 (회원 전용)</span>
+                    <label className="flex items-center cursor-pointer p-4 bg-[#0A0A0A] border border-[#3F3F46] rounded-xl hover:border-[#E8481C]/50 transition-colors">
+                      <input type="checkbox" checked={isPremiumOnly} onChange={e => setIsPremiumOnly(e.target.checked)} className="w-5 h-5 accent-[#E8481C] cursor-pointer" />
+                      <span className="ml-3 text-sm font-bold text-[#E8481C]">프리미엄 콘텐츠 (회원 전용)</span>
                     </label>
                  </div>
               </div>
@@ -572,7 +572,7 @@ export default function AdminSheetsPage() {
             <Button type="button" onClick={handleCreateNew} className="bg-transparent text-[#A1A1AA] hover:text-white hover:bg-white/5 font-bold">
                취소 및 초기화
             </Button>
-            <Button type="submit" variant="secondary" onClick={handleSave} disabled={saving} className="hover:bg-[#D4A373] font-black px-10 rounded-xl shadow-lg shadow-[#E6C79C]/20">
+            <Button type="submit" variant="secondary" onClick={handleSave} disabled={saving} className="hover:bg-[#D4A373] font-black px-10 rounded-xl shadow-lg shadow-[#E8481C]/20">
                {saving ? <><Loader2 className="w-5 h-5 mr-2 animate-spin"/> 저장 중...</> : <><Save className="w-5 h-5 mr-2"/> 이대로 저장하기 (저장 완료 후 클릭)</>}
             </Button>
         </div>

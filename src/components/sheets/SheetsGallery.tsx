@@ -205,15 +205,15 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
   };
 
   return (
-    <div className="flex-1 bg-[#0A0A0A] text-[#F4F4F5] pt-12 md:pt-16 pb-16">
+    <div className="flex-1 bg-[#F5F2EC] text-[#121110] pt-12 md:pt-16 pb-16">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E6C79C] to-[#C9A675] mb-4">
+            <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#E8481C] to-[#E8481C] mb-4">
               {t('galleryTitle')}
             </h1>
-            <p className="text-lg text-[#A1A1AA] max-w-2xl">
+            <p className="text-lg text-t-soft max-w-2xl">
               {t('gallerySubtitle')}
             </p>
           </div>
@@ -222,12 +222,12 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
         {/* Search and Filter */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
           <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#A1A1AA]" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-t-soft" />
             <Input
               placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 bg-white/5 border-white/10 text-white placeholder:text-[#A1A1AA]"
+              className="pl-12 bg-[#FFFDF9] border-[#E0DBD0] text-[#121110] placeholder:text-t-soft"
             />
           </div>
           <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
@@ -235,8 +235,8 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
               onClick={() => setSelectedTag(null)}
               className={`px-4 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                 selectedTag === null
-                  ? 'bg-[#E6C79C] text-black'
-                  : 'bg-white/5 text-[#A1A1AA] hover:bg-white/10 hover:text-white border border-white/5'
+                  ? 'bg-[#E8481C] text-black'
+                  : 'bg-[#FFFDF9] text-t-soft hover:bg-[#ECE7DC] hover:text-[#B3350F] border border-[#E0DBD0]'
               }`}
             >
               {t('filterAll')}
@@ -247,8 +247,8 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                 onClick={() => setSelectedTag(tag)}
                 className={`px-4 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-all ${
                   selectedTag === tag
-                    ? 'bg-[#E6C79C] text-black'
-                    : 'bg-white/5 text-[#A1A1AA] hover:bg-white/10 hover:text-white border border-white/5'
+                    ? 'bg-[#E8481C] text-black'
+                    : 'bg-[#FFFDF9] text-t-soft hover:bg-[#ECE7DC] hover:text-[#B3350F] border border-[#E0DBD0]'
                 }`}
               >
                 {tag}
@@ -260,7 +260,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
         {/* Gallery Grid */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="w-8 h-8 rounded-full border-2 border-[#E6C79C] border-t-transparent animate-spin"></div>
+            <div className="w-8 h-8 rounded-full border-2 border-[#E8481C] border-t-transparent animate-spin"></div>
           </div>
         ) : error ? (
           <div className="text-center py-20 bg-red-500/10 rounded-3xl border border-red-500/20">
@@ -268,10 +268,10 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
             <p className="text-red-400 max-w-md mx-auto">{error}</p>
           </div>
         ) : filteredSheets.length === 0 ? (
-          <div className="text-center py-20 bg-white/5 rounded-3xl border border-white/10">
-            <Music className="w-12 h-12 text-[#A1A1AA] mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-bold text-white mb-2">{t('notFoundTitle')}</h3>
-            <p className="text-[#A1A1AA]">{t('notFoundHint')}</p>
+          <div className="text-center py-20 bg-[#FFFDF9] rounded-3xl border border-[#E0DBD0]">
+            <Music className="w-12 h-12 text-t-soft mx-auto mb-4 opacity-50" />
+            <h3 className="text-xl font-bold text-[#121110] mb-2">{t('notFoundTitle')}</h3>
+            <p className="text-t-soft">{t('notFoundHint')}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -279,10 +279,10 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
               <div
                 key={sheet.id}
                 onClick={() => openSheet(sheet)}
-                className="group cursor-pointer bg-white/5 border border-white/10 rounded-3xl overflow-hidden hover:bg-white/10 transition-all duration-300 hover:shadow-[0_0_30px_rgba(230,199,156,0.1)] hover:-translate-y-1 flex flex-col pt-1"
+                className="group cursor-pointer bg-[#FFFDF9] border border-[#E0DBD0] rounded-3xl overflow-hidden hover:bg-[#ECE7DC] transition-all duration-300 hover:shadow-[0_0_30px_rgba(230,199,156,0.1)] hover:-translate-y-1 flex flex-col pt-1"
               >
                 {/* Thumbnail Area — 게스트의 프리미엄 카드만 하단 부분 블러, 로그인 시 선명 */}
-                <div className="aspect-[4/5] relative bg-[#0A0A0A] overflow-hidden m-4 rounded-xl border border-white/5 flex items-center justify-center">
+                <div className="aspect-[4/5] relative bg-[#F5F2EC] overflow-hidden m-4 rounded-xl border border-[#E0DBD0] flex items-center justify-center">
                   {sheet.thumbnailUrl ? (
                     <>
                       <img
@@ -322,21 +322,21 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                         className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
                       />
                       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                        <div className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-white/20">
-                          <PlayCircle className="w-6 h-6 text-[#E6C79C] fill-[#E6C79C]/20" />
+                        <div className="w-12 h-12 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center border border-[#E0DBD0]">
+                          <PlayCircle className="w-6 h-6 text-t-gold fill-[#E8481C]/20" />
                         </div>
                       </div>
                     </>
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <Music className="w-12 h-12 text-white/10" />
+                      <Music className="w-12 h-12 text-[#121110]" />
                     </div>
                   )}
 
                   {/* Category/Level Badge */}
                   <div className="absolute top-3 left-3 flex gap-2">
                     {sheet.isPremiumOnly && (
-                      <span className="px-3 py-1 text-[10px] font-black uppercase tracking-wider bg-[#E6C79C] text-black rounded-full shadow-lg">
+                      <span className="px-3 py-1 text-[12px] font-black uppercase tracking-wider bg-[#E8481C] text-black rounded-full shadow-lg">
                         Premium
                       </span>
                     )}
@@ -355,30 +355,30 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                 {/* Content Area */}
                 <div className="px-6 pb-6 flex-1 flex flex-col">
                   <div className="mb-4">
-                    <h3 className="text-2xl md:text-3xl text-white mb-1 line-clamp-1 tracking-normal leading-tight group-hover:text-[#E6C79C] transition-colors font-handwriting">
+                    <h3 className="text-xl md:text-2xl text-[#121110] mb-1 line-clamp-1 tracking-normal leading-tight group-hover:text-t-gold transition-colors font-handwriting">
                       {sheet.title}
                     </h3>
-                    <p className="text-[#A1A1AA] text-sm flex items-center gap-1 font-medium">
+                    <p className="text-t-soft text-sm flex items-center gap-1 font-medium">
                       <Music className="w-3.5 h-3.5" /> {sheet.artistId || t('unknownArtist')}
                     </p>
                   </div>
 
                   {/* Indicators (잠긴 sheet도 파일 존재 여부 표시) */}
                   <div className="flex gap-2 mb-4">
-                    {(sheet.hasPdf ?? Boolean(sheet.pdfUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 font-bold">{t('badgePdf')}</span>}
-                    {(sheet.hasAudio ?? Boolean(sheet.audioUrl)) && <span className="text-[10px] px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20 font-bold">{t('badgeAudio')}</span>}
+                    {(sheet.hasPdf ?? Boolean(sheet.pdfUrl)) && <span className="text-[12px] px-2 py-0.5 rounded-md bg-green-500/10 text-green-800 border border-green-500/20 font-bold">{t('badgePdf')}</span>}
+                    {(sheet.hasAudio ?? Boolean(sheet.audioUrl)) && <span className="text-[12px] px-2 py-0.5 rounded-md bg-[#F8D9CC] text-[#B3350F] border border-[#F8D9CC] font-bold">{t('badgeAudio')}</span>}
                   </div>
 
                   {/* Metadata Tags */}
                   <div className="flex flex-wrap gap-2 mb-6">
                     {sheet.bpm && (
-                      <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-white/5 text-[#A1A1AA]">
-                        <Activity className="w-3 h-3 text-[#E6C79C]" /> {sheet.bpm} BPM
+                      <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-[#FFFDF9] text-t-soft">
+                        <Activity className="w-3 h-3 text-t-gold" /> {sheet.bpm} BPM
                       </span>
                     )}
                     {sheet.key && (
-                      <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-white/5 text-[#A1A1AA]">
-                        <Hash className="w-3 h-3 text-[#E6C79C]" /> {sheet.key}
+                      <span className="inline-flex items-center gap-1 text-xs px-2 py-1 rounded-lg bg-[#FFFDF9] text-t-soft">
+                        <Hash className="w-3 h-3 text-t-gold" /> {sheet.key}
                       </span>
                     )}
                   </div>
@@ -386,7 +386,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                   {/* Footer & Action */}
                   <div className="flex items-center justify-between mt-auto">
                     <div className="flex flex-col">
-                      <span className="text-lg font-black text-white">
+                      <span className="text-lg font-black text-[#121110]">
                         {sheet.price === '0' || sheet.price === '' || !sheet.price ? t('free') : `$${sheet.price}`}
                       </span>
                     </div>
@@ -396,7 +396,7 @@ export default function SheetsGallery({ initialSheetId }: SheetsGalleryProps) {
                         e.stopPropagation();
                         openSheet(sheet);
                       }}
-                      className="bg-[#E6C79C] text-black hover:bg-[#C9A675] rounded-full px-5 transition-all text-sm font-black shadow-lg shadow-[#E6C79C]/20"
+                      className="bg-[#E8481C] !text-[#121110] hover:bg-[#E8481C] rounded-full px-5 transition-all text-sm font-black shadow-lg shadow-[#E8481C]/20"
                     >
                       {t('details')}
                     </Button>

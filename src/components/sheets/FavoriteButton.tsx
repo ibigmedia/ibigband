@@ -84,7 +84,7 @@ export default function FavoriteButton({
         className={
           favorited
             ? 'fill-red-500 text-red-500'
-            : 'text-white/50 hover:text-white/80'
+            : 'text-white/75 hover:text-white/80'
         }
       />
     </button>

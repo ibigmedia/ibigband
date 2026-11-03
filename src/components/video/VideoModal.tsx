@@ -50,11 +50,11 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
 
   const getLinkColors = (type: string) => {
     switch (type) {
-      case 'sheet': return 'bg-[#2D2926] text-white hover:bg-black';
-      case 'music': return 'bg-[#FAF9F6] border border-[#78716A]/20 text-[#2D2926] hover:bg-[#E6C79C]/20';
-      case 'premium': return 'bg-gradient-to-r from-[#E6C79C] to-[#C48C5E] text-white hover:opacity-90';
-      case 'merch': return 'bg-[#E6C79C]/20 text-[#2D2926] hover:bg-[#E6C79C]/40 border border-[#E6C79C]/30';
-      default: return 'bg-white border border-[#78716A]/20 text-[#2D2926] hover:bg-gray-50';
+      case 'sheet': return 'bg-[#121110] text-white hover:bg-black';
+      case 'music': return 'bg-[#F5F2EC] border border-[#78716A]/20 text-[#121110] hover:bg-[#E8481C]/20';
+      case 'premium': return 'bg-gradient-to-r from-[#E8481C] to-[#B3350F] text-white hover:opacity-90';
+      case 'merch': return 'bg-[#E8481C]/20 text-[#121110] hover:bg-[#E8481C]/40 border border-[#E8481C]/30';
+      default: return 'bg-white border border-[#78716A]/20 text-[#121110] hover:bg-gray-50';
     }
   };
 
@@ -90,7 +90,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
               className="w-full h-full object-contain absolute inset-0"
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-white/50">
+            <div className="w-full h-full flex flex-col items-center justify-center text-white/75">
               <Video size={48} className="mb-4" />
               <p>{t('notFound')}</p>
             </div>
@@ -98,15 +98,15 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
         </div>
 
         {/* Information Section */}
-        <div className="w-full md:w-1/3 bg-[#FAF9F6] border-l border-[#78716A]/10 p-6 md:p-8 flex flex-col overflow-y-auto">
+        <div className="w-full md:w-1/3 bg-[#F5F2EC] border-l border-[#78716A]/10 p-6 md:p-8 flex flex-col overflow-y-auto">
           <div className="mb-6 mb-auto pb-6 border-b border-[#78716A]/10">
-            <span className="text-[10px] uppercase font-bold text-[#C48C5E] tracking-widest bg-[#E6C79C]/20 px-3 py-1.5 rounded-full inline-block mb-4">
+            <span className="text-[12px] uppercase font-bold text-t-copper tracking-widest bg-[#E8481C]/20 px-3 py-1.5 rounded-full inline-block mb-4">
               {youtubeId ? 'YOUTUBE' : 'ibiGmedia'}
             </span>
-            <h2 className="text-2xl font-bold text-[#2D2926] mb-4 leading-tight">
+            <h2 className="text-2xl font-bold text-[#121110] mb-4 leading-tight">
               {video.title}
             </h2>
-            <div className="text-[#78716A] text-sm whitespace-pre-wrap font-light leading-relaxed">
+            <div className="text-t-muted text-sm whitespace-pre-wrap font-normal leading-relaxed">
               {video.description}
             </div>
           </div>
@@ -114,7 +114,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
           <div className="space-y-4">
             {video.relatedLinks && video.relatedLinks.length > 0 && (
               <>
-                <h3 className="text-sm font-bold text-[#2D2926] uppercase tracking-wider mb-2">{t('relatedHeading')}</h3>
+                <h3 className="text-sm font-bold text-[#121110] uppercase tracking-wider mb-2">{t('relatedHeading')}</h3>
                 <div className="flex flex-col gap-2">
                   {video.relatedLinks.map((link, idx) => (
                     <Link
@@ -134,10 +134,10 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
             )}
 
             <div className="mt-8 pt-6 border-t border-[#78716A]/10">
-              <div className="bg-white border border-[#E6C79C]/30 p-4 rounded-2xl flex flex-col items-center text-center">
-                <div className="w-12 h-12 bg-[#2D2926] rounded-full flex items-center justify-center text-[#E6C79C] font-bold text-xl mb-3 shadow-lg">i</div>
-                <h4 className="font-bold text-[#2D2926] mb-1">{t('ytCardTitle')}</h4>
-                <p className="text-xs text-[#78716A] mb-3">{t('ytCardBody')}</p>
+              <div className="bg-white border border-[#E8481C]/30 p-4 rounded-2xl flex flex-col items-center text-center">
+                <div className="w-12 h-12 bg-[#121110] rounded-full flex items-center justify-center text-t-gold font-bold text-xl mb-3 shadow-lg">i</div>
+                <h4 className="font-bold text-[#121110] mb-1">{t('ytCardTitle')}</h4>
+                <p className="text-xs text-t-muted mb-3">{t('ytCardBody')}</p>
                 <a 
                   href="https://www.youtube.com/@dkdlqlr" 
                   target="_blank" 

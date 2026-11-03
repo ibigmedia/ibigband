@@ -85,12 +85,12 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
         <div className="p-6 border-b border-black/5 shrink-0">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-xl flex items-center gap-2">
-              <FolderOpen className="text-[#E6C79C]" /> 저장된 셋리스트
+              <FolderOpen className="text-t-gold" /> 저장된 셋리스트
             </h3>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => { onNew(); onClose(); }}
-                className="px-4 py-2 bg-[#2D2926] text-white rounded-xl text-sm font-bold hover:bg-[#78716A] transition-colors"
+                className="px-4 py-2 bg-[#121110] text-white rounded-xl text-sm font-bold hover:bg-[#2A2826] transition-colors"
               >
                 + 새로 만들기
               </button>
@@ -100,11 +100,11 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
 
           {/* Search */}
           <div className="relative mb-3">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" size={16} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-t-muted" size={16} />
             <input
               type="text" value={search} onChange={e => setSearch(e.target.value)}
               placeholder="셋리스트 검색..."
-              className="w-full bg-[#FAF9F6] border border-black/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#2D2926]"
+              className="w-full bg-[#F5F2EC] border border-black/10 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#121110]"
             />
           </div>
 
@@ -115,7 +115,7 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
                 key={c.id}
                 onClick={() => setCategory(c.id)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${
-                  category === c.id ? 'bg-[#2D2926] text-white' : 'bg-[#FAF9F6] text-[#78716A] hover:bg-black/5'
+                  category === c.id ? 'bg-[#121110] text-white' : 'bg-[#F5F2EC] text-t-muted hover:bg-black/5'
                 }`}
               >
                 {c.label}
@@ -127,7 +127,7 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
         {/* List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
           {filtered.length === 0 && (
-            <p className="text-center text-sm text-[#78716A] py-12">
+            <p className="text-center text-sm text-t-muted py-12">
               {setlists.length === 0 ? '저장된 셋리스트가 없습니다.' : '검색 결과가 없습니다.'}
             </p>
           )}
@@ -136,19 +136,19 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
               key={sl.id}
               className={`flex items-center gap-4 p-4 rounded-xl border transition-all group cursor-pointer hover:shadow-sm ${
                 sl.id === currentSetlistId
-                  ? 'bg-[#E6C79C]/10 border-[#E6C79C]'
+                  ? 'bg-[#E8481C]/10 border-[#E8481C]'
                   : 'bg-white border-black/5 hover:border-[#78716A]/30'
               }`}
               onClick={() => handleLoad(sl.id)}
             >
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h4 className="font-bold text-[15px] text-[#2D2926] truncate">{sl.title || '제목 없음'}</h4>
+                  <h4 className="font-bold text-[15px] text-[#121110] truncate">{sl.title || '제목 없음'}</h4>
                   {sl.id === currentSetlistId && (
-                    <span className="text-[9px] font-bold bg-[#E6C79C] text-[#2D2926] px-2 py-0.5 rounded-full shrink-0">현재</span>
+                    <span className="text-[12px] font-bold bg-[#E8481C] text-[#121110] px-2 py-0.5 rounded-full shrink-0">현재</span>
                   )}
                 </div>
-                <div className="flex items-center gap-3 text-xs text-[#78716A]">
+                <div className="flex items-center gap-3 text-xs text-t-muted">
                   <span className="flex items-center gap-1"><Music size={10} /> {sl.items?.length || 0}곡</span>
                   {sl.createdAt && <span className="flex items-center gap-1"><Calendar size={10} /> {formatDate(sl.createdAt)}</span>}
                   {sl.category && (
@@ -169,7 +169,7 @@ export default function SetlistManagerModal({ isOpen, onClose, setlists, current
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-black/5 shrink-0 text-center text-xs text-[#78716A]">
+        <div className="p-4 border-t border-black/5 shrink-0 text-center text-xs text-t-muted">
           총 {setlists.length}개 셋리스트
         </div>
       </div>

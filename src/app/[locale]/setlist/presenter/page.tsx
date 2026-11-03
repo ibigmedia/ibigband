@@ -131,7 +131,7 @@ export default function PresenterPage() {
         <div className="text-center">
           <Music size={48} className="mx-auto mb-4 opacity-30" />
           <p className="text-xl font-bold">셋리스트 데이터가 없습니다</p>
-          <p className="text-gray-400 mt-2">셋리스트 페이지에서 프레젠터 뷰를 실행해 주세요.</p>
+          <p className="text-t-soft mt-2">셋리스트 페이지에서 프레젠터 뷰를 실행해 주세요.</p>
         </div>
       </div>
     );
@@ -157,17 +157,17 @@ export default function PresenterPage() {
             <div className="min-w-0">
               <h2 className="text-lg md:text-2xl font-bold tracking-tight truncate">{slide.songTitle}</h2>
               {slide.songAuthor && (
-                <p className="text-[#E6C79C] text-xs md:text-sm mt-0.5 truncate">{slide.songAuthor}</p>
+                <p className="text-t-gold text-xs md:text-sm mt-0.5 truncate">{slide.songAuthor}</p>
               )}
             </div>
-            <div className="flex items-center gap-3 md:gap-5 text-xs md:text-sm text-gray-400 shrink-0 ml-4">
+            <div className="flex items-center gap-3 md:gap-5 text-xs md:text-sm text-t-soft shrink-0 ml-4">
               <span>{slide.songIndex + 1} / {slide.totalSongs}곡</span>
               {slide.type === 'lyrics' && slide.totalSections && (
-                <span className="text-[#E6C79C]">
+                <span className="text-t-gold">
                   {(slide.sectionIndex ?? 0) + 1} / {slide.totalSections}절
                 </span>
               )}
-              <span className="text-white/30">{current + 1}/{slides.length}</span>
+              <span className="text-white/75">{current + 1}/{slides.length}</span>
             </div>
           </div>
         </div>
@@ -183,7 +183,7 @@ export default function PresenterPage() {
               {slide.songTitle}
             </p>
             {slide.songAuthor && (
-              <p className="text-xl md:text-3xl text-[#E6C79C] mt-4 md:mt-6 font-handwriting tracking-wider">
+              <p className="text-lg md:text-2xl text-t-gold mt-4 md:mt-6 font-handwriting tracking-wider">
                 {slide.songAuthor}
               </p>
             )}
@@ -227,8 +227,8 @@ export default function PresenterPage() {
                 onClick={() => goToSong(s.index)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap shrink-0 ${
                   s.index === slide.songIndex
-                    ? 'bg-[#E6C79C] text-[#2D2926]'
-                    : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                    ? 'bg-[#E8481C] text-[#121110]'
+                    : 'bg-white/10 text-t-soft hover:bg-white/20'
                 }`}>
                 {s.index + 1}. {s.title.length > 10 ? s.title.slice(0, 10) + '…' : s.title}
               </button>
@@ -259,7 +259,7 @@ export default function PresenterPage() {
               <div className="flex items-center gap-1 bg-white/10 rounded-lg px-2 py-1">
                 <button onClick={() => setFontSize(s => Math.max(s - 4, 24))}
                   className="p-1 hover:bg-white/20 rounded text-xs font-bold">A-</button>
-                <span className="text-[10px] text-gray-400 w-7 text-center">{fontSize}</span>
+                <span className="text-[12px] text-t-soft w-7 text-center">{fontSize}</span>
                 <button onClick={() => setFontSize(s => Math.min(s + 4, 96))}
                   className="p-1 hover:bg-white/20 rounded text-xs font-bold">A+</button>
               </div>
@@ -280,13 +280,13 @@ export default function PresenterPage() {
               <button key={i}
                 onClick={() => goTo(i)}
                 className={`h-1 rounded-full flex-1 transition-all ${
-                  i === current ? 'bg-[#E6C79C]' : i < current ? 'bg-white/30' : 'bg-white/10'
+                  i === current ? 'bg-[#E8481C]' : i < current ? 'bg-white/30' : 'bg-white/10'
                 }`} />
             ))}
           </div>
 
           {/* 단축키 안내 */}
-          <div className="text-center mt-2 text-[10px] text-gray-600">
+          <div className="text-center mt-2 text-[12px] text-gray-600">
             ←→ / Space 슬라이드 이동 · +/- 글자 크기 · F 전체화면 · ESC UI 토글 · 화면 클릭 = 다음
           </div>
         </div>

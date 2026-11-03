@@ -1,28 +1,77 @@
 @import "tailwindcss";
 
-@theme inline {
-  --color-background: #FAF9F6;
-  --color-foreground: #2D2926;
-  --font-sans: var(--font-inter), "Pretendard", -apple-system, BlinkMacSystemFont, "system-ui", Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
-  --font-handwriting: var(--font-nanum-pen), cursive;
-  --font-nanum-pen: var(--font-nanum-pen);
-  
-  --color-brand-cream: #FAF9F6;
-  --color-brand-charcoal: #2D2926;
-  --color-brand-taupe: #78716A;
-  --color-brand-gold: #E6C79C;
+/* 라이트 모드 전용: 운영체제 다크 설정을 따르지 않는다 */
+@custom-variant dark (&:where(.dark, .dark *));
 
-  --radius-ibig: 24px;
+@theme inline {
+  --color-background: #F5F2EC;
+  --color-foreground: #121110;
+  --font-sans: var(--font-inter), var(--font-noto-kr), "Apple SD Gothic Neo", system-ui, sans-serif;
+  --font-handwriting: var(--font-inter-tight), var(--font-noto-kr), "Apple SD Gothic Neo", system-ui, sans-serif;
+  
+  --color-brand-cream: #F5F2EC;
+  --color-brand-charcoal: #121110;
+  --color-brand-taupe: #5B5751;
+  --color-brand-gold: #E8481C;
+
+  /* 글자색은 바탕에 따라 바뀐다(아래 :root · 어두운 구획). 칠·테두리에는 위 브랜드 색을 그대로 쓴다 */
+  --color-t-muted: var(--t-muted);
+  --color-t-copper: var(--t-copper);
+  --color-t-gold: var(--t-gold);
+  --color-t-soft: var(--t-soft);
+
+  /* 기본 글자 크기와 줄 간격 */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.9375rem;
+  --text-sm--line-height: 1.6;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.7;
+
+  --radius-ibig: 18px;
 }
+
+/* 밝은 바탕 글자색: 모두 4.5:1 이상 */
+:root,
+[class~="bg-white"], [class~="bg-[#F5F2EC]"], [class~="bg-[#FFFDF9]"], [class~="bg-[#FFFDF9]"], [class~="bg-[#ECE7DC]"],
+[class~="bg-slate-50"], [class~="bg-slate-100"], [class~="bg-gray-100"] {
+  --t-muted: #2A2826; /* 7.4:1 */
+  --t-copper: #B3350F; /* 5.7:1 */
+  --t-gold: #B3350F; /* 5.7:1 */
+  --t-soft: #6B665F; /* 5.1:1 */
+}
+/* 어두운 구획에서는 같은 이름이 밝은 값이 된다 */
+[class~="bg-[#121110]"], [class~="bg-black"], [class*="bg-black/"], [class~="bg-[#0A0A0A]"], [class~="bg-[#1A1A1A]"],
+[class~="bg-[#1A1817]"], [class~="bg-[#141414]"], [class~="bg-[#27272A]"], [class~="bg-[#2A2826]"],
+[class~="bg-zinc-800"], [class~="bg-zinc-900"], [class~="bg-zinc-950"] {
+  --t-muted: #B9B3A8;
+  --t-copper: #FF9470;
+  --t-gold: #E8481C;
+  --t-soft: #B9B3A8;
+}
+
+/* 주황 칠 위 글자는 먹색(5.6:1) */
+[class~="bg-[#E8481C]"] { --t-muted: #121110; --t-copper: #121110; --t-gold: #121110; --t-soft: #121110; }
+
 
 body {
   background: var(--color-background);
   color: var(--color-foreground);
+  font-size: 1.0625rem;
+  line-height: 1.7;
 }
+:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
 
-.font-handwriting {
+.font-handwriting, h1, h2, h3, h4 {
   font-family: var(--font-handwriting);
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
+h1, h2, h3 { text-wrap: balance; }
+/* 로고 글자는 손글씨 유지 */
+.font-wordmark { font-family: var(--font-nanum-pen), cursive; font-weight: 700; }
+:focus-visible { outline: 3px solid #E8481C; outline-offset: 3px; }
+::selection { background: #F8D9CC; color: #121110; }
 
 .rounded-ibig { 
   border-radius: var(--radius-ibig); 
@@ -42,5 +91,9 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--color-brand-gold); border-radius: 10px; }
 .glass-effect { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
 
-/* Force HMR rebuild */
-
+/* 히어로 일러스트: 선 굵기 고정, 처음 한 번 그려지는 효과 */
+.hero-band * { vector-effect: non-scaling-stroke; }
+@media (max-width: 640px) { .hero-band { stroke-width: 1.4; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-band path, .hero-band circle { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: draw 2.4s ease forwards; }
+}

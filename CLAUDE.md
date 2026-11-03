@@ -18,12 +18,14 @@
 - ibigmission.org에서 ibigband 음악섹션 연동
 
 ## 디자인 시스템
-- 테마: 라이트 모드 전용
-- 배경: 크림 화이트 (#FDFBF7)
-- 포인트 컬러: warm gold
-- 헤딩 폰트: 손글씨 계열 (Caveat 또는 유사)
-- 바디 폰트: clean sans-serif
-- 스타일: 미니멀, 따뜻한 톤, 넓은 여백
+- 컨셉: 길잡이(giljabi.com)와 같은 계열. 라이트 모드 전용
+- 배경: 종이색 #F5F2EC, 카드 #FFFDF9, 선 #E0DBD0
+- 글자: 먹색 #121110, 보조 글자는 `text-t-muted` · `text-t-soft`
+- 포인트: 주황 #E8481C(칠·표시), 녹슨 주황 #B3350F(밝은 바탕 글자·흰 글자 버튼)
+- 폰트: 제목 Inter Tight + Noto Sans KR 800, 본문 Inter + Noto Sans KR, 로고 글자만 손글씨(`font-wordmark`, Nanum Pen)
+- 글자색 토큰(`text-t-muted`, `text-t-copper`, `text-t-gold`, `text-t-soft`)은 바탕에 따라 값이 바뀐다. 새 어두운 구획은 globals.css의 범위 목록에 추가한다
+- 본문·보조 글자 대비 4.5:1 이상, 글자 12px 이상
+- 히어로 일러스트: `HeroBand`(SVG), 로고 마크: `BandMark`(SVG)
 - 절대 금지: 다크모드, 인디고/퍼플/파란 계열
 
 ## 주요 기능
@@ -42,7 +44,7 @@
 - Firebase Firestore 스키마 변경 시 반드시 확인
 - MP3 파일은 Firebase Storage 경로 유지
 - API 엔드포인트 변경 시 giljabi.com, ibigmission.org 영향 확인
-- 항상 design.md 또는 위 디자인 시스템 참고
+- 항상 위 디자인 시스템 참고
 
 ## 소통 규칙
 - 모든 주석, 질문, 보고, 커밋 메시지를 **한국어**로 작성

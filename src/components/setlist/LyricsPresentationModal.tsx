@@ -283,7 +283,7 @@ export default function LyricsPresentationModal({ isOpen, onClose, initialSlides
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans KR',sans-serif;background:#111}
 .slide{width:960px;height:540px;background:#0a0a0a;margin:20px auto;padding:40px 60px;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative;page-break-after:always;border:1px solid #333}
-.slide-header{position:absolute;top:20px;left:40px;right:40px;color:#E6C79C;font-size:14px;font-weight:700;display:flex;justify-content:space-between}
+.slide-header{position:absolute;top:20px;left:40px;right:40px;color:#E8481C;font-size:14px;font-weight:700;display:flex;justify-content:space-between}
 .slide-header .page{color:#666;font-size:11px}
 .slide-body{color:white;font-weight:700;line-height:1.7;width:100%}
 .slide h1{color:white;font-size:36px;font-weight:700}
@@ -323,7 +323,7 @@ ${slidesHtml.join('\n')}
               <h3 className="font-bold text-base md:text-lg flex items-center gap-2">
                 <Presentation size={18} className="text-violet-600" /> 가사 프레젠테이션
               </h3>
-              <p className="text-[10px] md:text-xs text-[#78716A] mt-0.5 truncate">{setlistTitle} · {slides.length}곡</p>
+              <p className="text-[12px] md:text-xs text-t-muted mt-0.5 truncate">{setlistTitle} · {slides.length}곡</p>
             </div>
             <button onClick={onClose} className="p-2 hover:bg-black/5 rounded-full"><X size={20} /></button>
           </div>
@@ -337,7 +337,7 @@ ${slidesHtml.join('\n')}
               {slides.map((slide, i) => (
                 <div key={i} className={`border rounded-xl p-3 transition-all ${
                   editingIndex === i ? 'border-violet-400 bg-violet-50' :
-                  previewIndex === i ? 'border-[#E6C79C] bg-[#E6C79C]/5' : 'border-black/5 bg-[#FAF9F6] hover:border-[#E6C79C]'
+                  previewIndex === i ? 'border-[#E8481C] bg-[#E8481C]/5' : 'border-black/5 bg-[#F5F2EC] hover:border-[#E8481C]'
                 }`}>
                   {editingIndex === i ? (
                     <div className="space-y-2">
@@ -345,7 +345,7 @@ ${slidesHtml.join('\n')}
                         className="w-full text-sm font-bold bg-white border border-violet-300 rounded-lg px-3 py-1.5 focus:outline-none focus:border-violet-500"
                         placeholder="곡 제목" />
                       <textarea value={editText} onChange={e => setEditText(e.target.value)}
-                        className="w-full bg-white border border-violet-300 rounded-lg p-2 text-xs text-[#2D2926] focus:outline-none focus:border-violet-500 min-h-40 resize-y"
+                        className="w-full bg-white border border-violet-300 rounded-lg p-2 text-xs text-[#121110] focus:outline-none focus:border-violet-500 min-h-40 resize-y"
                         placeholder="가사를 입력하세요. 빈 줄로 섹션(절/후렴)을 구분합니다." />
                       <div className="flex gap-1.5">
                         <button onClick={saveEdit}
@@ -353,23 +353,23 @@ ${slidesHtml.join('\n')}
                           <Check size={12} /> 확인
                         </button>
                         <button onClick={() => setEditingIndex(null)}
-                          className="text-xs font-bold bg-gray-200 text-[#2D2926] px-3 py-1 rounded-lg hover:bg-gray-300">취소</button>
+                          className="text-xs font-bold bg-gray-200 text-[#121110] px-3 py-1 rounded-lg hover:bg-gray-300">취소</button>
                       </div>
                     </div>
                   ) : (
                     <div className="flex items-start gap-2">
                       <div className="flex flex-col gap-0.5 shrink-0 mt-1">
                         <button onClick={() => moveSlide(i, -1)} disabled={i === 0}
-                          className="p-0.5 text-[#78716A] hover:text-[#2D2926] disabled:opacity-20"><ChevronUp size={12} /></button>
-                        <span className="text-[10px] font-bold text-[#78716A] text-center">{i + 1}</span>
+                          className="p-0.5 text-t-muted hover:text-[#121110] disabled:opacity-20"><ChevronUp size={12} /></button>
+                        <span className="text-[12px] font-bold text-t-muted text-center">{i + 1}</span>
                         <button onClick={() => moveSlide(i, 1)} disabled={i === slides.length - 1}
-                          className="p-0.5 text-[#78716A] hover:text-[#2D2926] disabled:opacity-20"><ChevronDown size={12} /></button>
+                          className="p-0.5 text-t-muted hover:text-[#121110] disabled:opacity-20"><ChevronDown size={12} /></button>
                       </div>
                       <div className="flex-1 min-w-0 cursor-pointer" onClick={() => { setPreviewIndex(i); setPreviewSection(0); }}>
-                        <p className="font-bold text-sm text-[#2D2926] truncate">{slide.title}</p>
-                        {slide.author && <p className="text-[10px] text-[#78716A]">{slide.author}</p>}
-                        <p className="text-[10px] text-[#78716A] mt-0.5 line-clamp-2">{slide.text.slice(0, 100)}{slide.text.length > 100 ? '...' : ''}</p>
-                        <p className="text-[9px] text-violet-500 mt-0.5">
+                        <p className="font-bold text-sm text-[#121110] truncate">{slide.title}</p>
+                        {slide.author && <p className="text-[12px] text-t-muted">{slide.author}</p>}
+                        <p className="text-[12px] text-t-muted mt-0.5 line-clamp-2">{slide.text.slice(0, 100)}{slide.text.length > 100 ? '...' : ''}</p>
+                        <p className="text-[12px] text-violet-500 mt-0.5">
                           {slide.text.split(/\n\s*\n/).filter(s => s.trim()).length}개 섹션
                           {slide.align && slide.align !== 'center' ? ` · ${slide.align === 'left' ? '좌측' : '우측'} 정렬` : ''}
                           {slide.fontSize && slide.fontSize > 0 ? ` · ${slide.fontSize}px` : ''}
@@ -378,11 +378,11 @@ ${slidesHtml.join('\n')}
                       <div className="flex flex-col gap-0.5 shrink-0">
                         <div className="flex gap-0.5">
                           <button onClick={() => startEdit(i)}
-                            className="p-1 text-[#78716A] hover:bg-violet-50 hover:text-violet-600 rounded" title="수정">
+                            className="p-1 text-t-muted hover:bg-violet-50 hover:text-violet-600 rounded" title="수정">
                             <Edit3 size={12} />
                           </button>
                           <button onClick={() => duplicateSlide(i)}
-                            className="p-1 text-[#78716A] hover:bg-blue-50 hover:text-blue-600 rounded" title="복제">
+                            className="p-1 text-t-muted hover:bg-blue-50 hover:text-blue-600 rounded" title="복제">
                             <Copy size={12} />
                           </button>
                           <button onClick={() => removeSlide(i)}
@@ -393,19 +393,19 @@ ${slidesHtml.join('\n')}
                         {/* 정렬 + 폰트 크기 */}
                         <div className="flex gap-0.5 items-center">
                           <button onClick={() => setSlideAlign(i, 'left')}
-                            className={`p-0.5 rounded ${slide.align === 'left' ? 'bg-violet-100 text-violet-700' : 'text-gray-400 hover:text-gray-600'}`} title="좌측 정렬">
+                            className={`p-0.5 rounded ${slide.align === 'left' ? 'bg-violet-100 text-violet-700' : 'text-t-soft hover:text-gray-600'}`} title="좌측 정렬">
                             <AlignLeft size={10} />
                           </button>
                           <button onClick={() => setSlideAlign(i, 'center')}
-                            className={`p-0.5 rounded ${(!slide.align || slide.align === 'center') ? 'bg-violet-100 text-violet-700' : 'text-gray-400 hover:text-gray-600'}`} title="중앙 정렬">
+                            className={`p-0.5 rounded ${(!slide.align || slide.align === 'center') ? 'bg-violet-100 text-violet-700' : 'text-t-soft hover:text-gray-600'}`} title="중앙 정렬">
                             <AlignCenter size={10} />
                           </button>
                           <button onClick={() => setSlideAlign(i, 'right')}
-                            className={`p-0.5 rounded ${slide.align === 'right' ? 'bg-violet-100 text-violet-700' : 'text-gray-400 hover:text-gray-600'}`} title="우측 정렬">
+                            className={`p-0.5 rounded ${slide.align === 'right' ? 'bg-violet-100 text-violet-700' : 'text-t-soft hover:text-gray-600'}`} title="우측 정렬">
                             <AlignRight size={10} />
                           </button>
                           <select value={slide.fontSize || 0} onChange={e => setSlideFontSize(i, Number(e.target.value))}
-                            className="text-[9px] bg-[#FAF9F6] border border-black/10 rounded px-1 py-0.5 focus:outline-none w-12" title="폰트 크기">
+                            className="text-[12px] bg-[#F5F2EC] border border-black/10 rounded px-1 py-0.5 focus:outline-none w-12" title="폰트 크기">
                             {FONT_SIZE_OPTIONS.map(fs => (
                               <option key={fs} value={fs}>{fs === 0 ? '자동' : `${fs}px`}</option>
                             ))}
@@ -418,7 +418,7 @@ ${slidesHtml.join('\n')}
               ))}
 
               <button onClick={addEmptySlide}
-                className="w-full border border-dashed border-black/10 rounded-xl py-3 text-xs font-bold text-[#78716A] hover:border-violet-400 hover:text-violet-600 transition-colors flex items-center justify-center gap-1">
+                className="w-full border border-dashed border-black/10 rounded-xl py-3 text-xs font-bold text-t-muted hover:border-violet-400 hover:text-violet-600 transition-colors flex items-center justify-center gap-1">
                 <Plus size={14} /> 빈 슬라이드 추가
               </button>
             </div>
@@ -431,10 +431,10 @@ ${slidesHtml.join('\n')}
                 <div className="flex-1 flex items-center justify-center p-8">
                   <div className="w-full max-w-lg aspect-video bg-[#0a0a0a] rounded-xl border border-white/10 flex flex-col items-center justify-center p-8 relative overflow-hidden">
                     <div className="absolute top-3 left-4 right-4 flex justify-between">
-                      <span className="text-[#E6C79C] text-[10px] font-bold truncate max-w-[70%]">
+                      <span className="text-t-gold text-[12px] font-bold truncate max-w-[70%]">
                         {slides[previewIndex].title}{slides[previewIndex].author ? ` — ${slides[previewIndex].author}` : ''}
                       </span>
-                      <span className="text-gray-500 text-[9px]">{previewSection + 1}/{previewSections.length}</span>
+                      <span className="text-t-muted text-[12px]">{previewSection + 1}/{previewSections.length}</span>
                     </div>
                     <div className={`font-bold leading-relaxed w-full ${
                       slides[previewIndex].align === 'left' ? 'text-left' :
@@ -449,22 +449,22 @@ ${slidesHtml.join('\n')}
                     {previewSections.map((_, si) => (
                       <button key={si} onClick={() => setPreviewSection(si)}
                         className={`h-1.5 rounded-full flex-1 transition-all ${
-                          si === previewSection ? 'bg-[#E6C79C]' : 'bg-white/15'
+                          si === previewSection ? 'bg-[#E8481C]' : 'bg-white/15'
                         }`} />
                     ))}
                   </div>
                   <div className="flex gap-2 justify-center">
                     <button onClick={() => setPreviewSection(Math.max(0, previewSection - 1))}
                       disabled={previewSection === 0}
-                      className="text-xs text-white/60 hover:text-white disabled:opacity-30 px-2 py-1">← 이전</button>
+                      className="text-xs text-white/80 hover:text-white disabled:opacity-30 px-2 py-1">← 이전</button>
                     <button onClick={() => setPreviewSection(Math.min(previewSections.length - 1, previewSection + 1))}
                       disabled={previewSection >= previewSections.length - 1}
-                      className="text-xs text-white/60 hover:text-white disabled:opacity-30 px-2 py-1">다음 →</button>
+                      className="text-xs text-white/80 hover:text-white disabled:opacity-30 px-2 py-1">다음 →</button>
                   </div>
                 </div>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center text-gray-500 text-sm">
+              <div className="flex-1 flex items-center justify-center text-t-muted text-sm">
                 좌측에서 곡을 클릭하면 미리보기가 표시됩니다
               </div>
             )}
@@ -474,31 +474,31 @@ ${slidesHtml.join('\n')}
         {/* 하단 액션 바 */}
         <div className="p-3 md:p-4 border-t border-black/5 shrink-0">
           <div className="flex items-center justify-between gap-2 mb-0 md:mb-0">
-            <p className="text-[10px] md:text-xs text-[#78716A] shrink-0">
+            <p className="text-[12px] md:text-xs text-t-muted shrink-0">
               {slides.reduce((acc, s) => acc + s.text.split(/\n\s*\n/).filter(x => x.trim()).length, 0)}개 슬라이드
             </p>
           </div>
           <div className="flex gap-1.5 md:gap-2 flex-wrap justify-end mt-2">
             {onSyncToArchive && (
               <button onClick={handleSyncSave} disabled={syncing || slides.length === 0}
-                className="px-3 md:px-4 py-2 md:py-2.5 bg-green-50 text-green-700 rounded-xl text-[11px] md:text-xs font-bold hover:bg-green-100 disabled:opacity-40 flex items-center gap-1">
+                className="px-3 md:px-4 py-2 md:py-2.5 bg-green-50 text-green-700 rounded-xl text-[13px] md:text-xs font-bold hover:bg-green-100 disabled:opacity-40 flex items-center gap-1">
                 {syncing ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                 <span className="hidden sm:inline">아카이브</span> 저장
               </button>
             )}
             <button onClick={exportPdf} disabled={exporting !== null || slides.length === 0}
-              className="px-3 md:px-4 py-2 md:py-2.5 bg-red-50 text-red-700 rounded-xl text-[11px] md:text-xs font-bold hover:bg-red-100 disabled:opacity-40 flex items-center gap-1">
+              className="px-3 md:px-4 py-2 md:py-2.5 bg-red-50 text-red-700 rounded-xl text-[13px] md:text-xs font-bold hover:bg-red-100 disabled:opacity-40 flex items-center gap-1">
               {exporting === 'pdf' ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />}
               PDF
             </button>
             <button onClick={exportGoogleSlides} disabled={exporting !== null || slides.length === 0}
-              className="px-3 md:px-4 py-2 md:py-2.5 bg-blue-50 text-blue-700 rounded-xl text-[11px] md:text-xs font-bold hover:bg-blue-100 disabled:opacity-40 flex items-center gap-1">
+              className="px-3 md:px-4 py-2 md:py-2.5 bg-blue-50 text-blue-700 rounded-xl text-[13px] md:text-xs font-bold hover:bg-blue-100 disabled:opacity-40 flex items-center gap-1">
               {exporting === 'gslides' ? <Loader2 size={14} className="animate-spin" /> : <Presentation size={14} />}
               <span className="hidden sm:inline">Google Slides</span><span className="sm:hidden">HTML</span>
             </button>
             <button onClick={() => { onLaunchPresenter(slides); }}
               disabled={slides.length === 0}
-              className="px-3 md:px-5 py-2 md:py-2.5 bg-violet-600 text-white rounded-xl text-[11px] md:text-xs font-bold hover:bg-violet-700 disabled:opacity-40 flex items-center gap-1">
+              className="px-3 md:px-5 py-2 md:py-2.5 bg-violet-600 text-white rounded-xl text-[13px] md:text-xs font-bold hover:bg-violet-700 disabled:opacity-40 flex items-center gap-1">
               <Play size={14} /> 시작
             </button>
           </div>
@@ -537,7 +537,7 @@ function renderLyricsWithMarkers(text: string) {
     const trimmed = line.trim();
     if (SECTION_MARKER_RE.test(trimmed)) {
       return (
-        <div key={i} className="text-white/30 font-normal" style={{ fontSize: '0.55em', marginTop: '0.3em', marginBottom: '0.1em' }}>
+        <div key={i} className="text-white/75 font-normal" style={{ fontSize: '0.55em', marginTop: '0.3em', marginBottom: '0.1em' }}>
           {trimmed}
         </div>
       );

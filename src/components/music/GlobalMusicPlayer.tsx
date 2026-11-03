@@ -113,7 +113,7 @@ export default function GlobalMusicPlayer() {
   const renderLyrics = (lyrics?: string) => {
     if (!lyrics) return null;
     return lyrics.split('\n\n').map((paragraph, i) => (
-      <p key={i} className="mb-4 lg:mb-6 text-slate-700">
+      <p key={i} className="mb-4 lg:mb-6 text-[#2A2826]">
         {paragraph.split('\n').map((line, j) => (
           <span key={j} className="block">{line}</span>
         ))}
@@ -206,13 +206,13 @@ export default function GlobalMusicPlayer() {
           onClick={closeAlbumModal}
         >
           <div 
-            className="w-full h-full max-w-[1280px] bg-white md:rounded-[40px] relative overflow-hidden flex flex-col shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in slide-in-from-bottom-10 md:slide-in-from-bottom-4 duration-500 transform-gpu"
+            className="w-full h-full max-w-[1280px] bg-white md:rounded-[18px] relative overflow-hidden flex flex-col shadow-[0_20px_60px_rgba(0,0,0,0.15)] animate-in slide-in-from-bottom-10 md:slide-in-from-bottom-4 duration-500 transform-gpu"
             onClick={(e) => e.stopPropagation()}
           >
              {/* Close Modal Button */}
              <button 
                onClick={closeAlbumModal}
-               className="absolute top-4 right-4 z-50 w-10 h-10 md:w-12 md:h-12 bg-white/80 backdrop-blur-md shadow-sm border border-slate-100 hover:bg-slate-100 text-slate-800 rounded-full flex justify-center items-center transition-all duration-300"
+               className="absolute top-4 right-4 z-50 w-10 h-10 md:w-12 md:h-12 bg-white/80 backdrop-blur-md shadow-sm border border-[#E0DBD0] hover:bg-[#ECE7DC] text-[#121110] rounded-full flex justify-center items-center transition-all duration-300"
              >
                <X className="w-5 h-5" />
              </button>
@@ -222,71 +222,71 @@ export default function GlobalMusicPlayer() {
                 
                 {/* LEFT: Album Info and Tracks (Mobile: Stacked, Desktop: Split or single col) */}
                 {/* Making it 2 columns on lg, 1 column on md */}
-                <div className="lg:w-5/12 flex flex-col md:flex-row lg:flex-col bg-[#FDFCFB] border-b lg:border-b-0 lg:border-r border-slate-100 relative shrink-0 h-auto lg:h-full">
+                <div className="lg:w-5/12 flex flex-col md:flex-row lg:flex-col bg-[#FFFDF9] border-b lg:border-b-0 lg:border-r border-[#E0DBD0] relative shrink-0 h-auto lg:h-full">
                    <div className="flex flex-col w-full h-full lg:overflow-y-auto hide-scrollbar">
                       
                       {/* Album Info Section */}
                       <div className="p-6 md:p-10 flex flex-col sm:flex-row lg:flex-col gap-6 lg:gap-8 items-start">
                          <div className="flex flex-col lg:flex-row gap-6 w-full items-center lg:items-end">
-                            <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-40 lg:h-40 aspect-square rounded-[24px] overflow-hidden shadow-lg relative shrink-0 mx-auto sm:mx-0 group">
+                            <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-40 lg:h-40 aspect-square rounded-[18px] overflow-hidden shadow-lg relative shrink-0 mx-auto sm:mx-0 group">
                                <Image src={selectedAlbum.coverUrl} alt={selectedAlbum.title} fill className="object-cover" sizes="(max-width: 768px) 128px, 160px" />
                                
                                {/* Waveform Overlay when playing */}
                                {isPlaying && (
                                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center gap-1.5 z-10 animate-in fade-in duration-300">
                                    <div className="w-1.5 h-6 bg-white/90 rounded-full animate-waveform-1"></div>
-                                   <div className="w-1.5 h-10 bg-[#C48C5E] rounded-full animate-waveform-2"></div>
+                                   <div className="w-1.5 h-10 bg-[#B3350F] rounded-full animate-waveform-2"></div>
                                    <div className="w-1.5 h-5 bg-white/90 rounded-full animate-waveform-3"></div>
-                                   <div className="w-1.5 h-8 bg-[#C48C5E] rounded-full animate-waveform-4"></div>
+                                   <div className="w-1.5 h-8 bg-[#B3350F] rounded-full animate-waveform-4"></div>
                                  </div>
                                )}
                             </div>
                             
                             {/* PC Only: Track Credits */}
-                            <div className="hidden lg:flex flex-col flex-1 mb-2 bg-slate-50 border border-slate-100 p-4 rounded-2xl w-full">
-                               <h4 className="font-bold text-[10px] text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-2 mb-2">Track Credits</h4>
+                            <div className="hidden lg:flex flex-col flex-1 mb-2 bg-[#ECE7DC] border border-[#E0DBD0] p-4 rounded-2xl w-full">
+                               <h4 className="font-bold text-[12px] text-t-soft uppercase tracking-widest border-b border-[#E0DBD0] pb-2 mb-2">Track Credits</h4>
                                {activeTrack.credits && Object.values(activeTrack.credits).some(v => v) ? (
                                  <div className="flex flex-col gap-1.5 text-xs">
-                                   {activeTrack.credits.producer && <div className="flex justify-between gap-2"><span className="text-slate-400 shrink-0">Producer</span><span className="text-right text-slate-700 truncate font-semibold">{activeTrack.credits.producer}</span></div>}
-                                   {activeTrack.credits.composer && <div className="flex justify-between gap-2"><span className="text-slate-400 shrink-0">Composer</span><span className="text-right text-slate-700 truncate font-semibold">{activeTrack.credits.composer}</span></div>}
-                                   {activeTrack.credits.arranger && <div className="flex justify-between gap-2"><span className="text-slate-400 shrink-0">Arranger</span><span className="text-right text-slate-700 truncate font-semibold">{activeTrack.credits.arranger}</span></div>}
+                                   {activeTrack.credits.producer && <div className="flex justify-between gap-2"><span className="text-t-soft shrink-0">Producer</span><span className="text-right text-[#2A2826] truncate font-semibold">{activeTrack.credits.producer}</span></div>}
+                                   {activeTrack.credits.composer && <div className="flex justify-between gap-2"><span className="text-t-soft shrink-0">Composer</span><span className="text-right text-[#2A2826] truncate font-semibold">{activeTrack.credits.composer}</span></div>}
+                                   {activeTrack.credits.arranger && <div className="flex justify-between gap-2"><span className="text-t-soft shrink-0">Arranger</span><span className="text-right text-[#2A2826] truncate font-semibold">{activeTrack.credits.arranger}</span></div>}
                                  </div>
                                ) : (
-                                 <span className="text-xs text-slate-400 italic">No credits provided.</span>
+                                 <span className="text-xs text-t-soft italic">No credits provided.</span>
                                )}
                             </div>
                          </div>
                          <div className="flex-1 text-center sm:text-left lg:text-left flex flex-col w-full">
-                            <span className="text-[#C48C5E] text-[10px] font-bold uppercase tracking-widest block mb-2 border border-[#C48C5E]/30 bg-[#C48C5E]/5 px-3 py-1 rounded-full w-max mx-auto sm:mx-0">
+                            <span className="text-t-copper text-[12px] font-bold uppercase tracking-widest block mb-2 border border-[#B3350F]/30 bg-[#B3350F]/5 px-3 py-1 rounded-full w-max mx-auto sm:mx-0">
                                {selectedAlbum.type}
                             </span>
-                            <h2 className="text-3xl md:text-5xl lg:text-4xl font-handwriting text-slate-900 leading-tight mb-3">{selectedAlbum.title}</h2>
-                            <p className="text-slate-500 text-sm leading-relaxed line-clamp-3 md:line-clamp-none mb-4 lg:mb-0 lg:leading-loose">{selectedAlbum.description}</p>
+                            <h2 className="text-2xl md:text-4xl lg:text-3xl font-handwriting text-[#121110] leading-tight mb-3">{selectedAlbum.title}</h2>
+                            <p className="text-t-muted text-sm leading-relaxed line-clamp-3 md:line-clamp-none mb-4 lg:mb-0 lg:leading-loose">{selectedAlbum.description}</p>
                             
                             {/* Mobile Play/Pause & Language Controls */}
                             <div className="flex flex-col w-full lg:hidden mt-2 gap-4">
                                <div className="flex items-center gap-4">
                                   <button 
                                     onClick={togglePlay}
-                                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#C48C5E] text-white flex items-center justify-center active:scale-95 transition-all shadow-[0_4px_15px_rgba(196,140,94,0.4)] shrink-0"
+                                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[#B3350F] text-white flex items-center justify-center active:scale-95 transition-all shadow-[0_4px_15px_rgba(196,140,94,0.4)] shrink-0"
                                   >
                                     {isPlaying ? <Pause className="w-6 h-6 sm:w-7 sm:h-7 fill-current" /> : <Play className="w-6 h-6 sm:w-7 sm:h-7 fill-current ml-1" />}
                                   </button>
                                   
                                   <div className="flex flex-col min-w-0 flex-1 opacity-90">
-                                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Now Playing</span>
-                                     <h3 className="font-handwriting text-2xl sm:text-3xl text-slate-900 truncate">{currentVersion.title.normalize('NFC')}</h3>
+                                     <span className="text-[12px] text-t-soft font-bold uppercase tracking-widest mb-1">Now Playing</span>
+                                     <h3 className="font-handwriting text-xl sm:text-2xl text-[#121110] truncate">{currentVersion.title.normalize('NFC')}</h3>
                                   </div>
                                </div>
 
                                {activeTrack.versions.length > 1 && (
-                                  <div className="flex bg-slate-100/80 p-1 rounded-2xl w-fit">
+                                  <div className="flex bg-[#ECE7DC]/80 p-1 rounded-2xl w-fit">
                                     {activeTrack.versions.map((ver) => (
                                       <button
                                         key={ver.lang}
                                         onClick={() => { setActiveLang(ver.lang); setProgress(0); }}
-                                        className={`px-3 py-1.5 rounded-xl text-[11px] font-bold transition-all ${
-                                          activeLang === ver.lang ? 'bg-white text-[#C48C5E] shadow-sm' : 'text-slate-500'
+                                        className={`px-3 py-1.5 rounded-xl text-[13px] font-bold transition-all ${
+                                          activeLang === ver.lang ? 'bg-white text-t-copper shadow-sm' : 'text-t-muted'
                                         }`}
                                       >
                                          {langNames[ver.lang]}
@@ -300,7 +300,7 @@ export default function GlobalMusicPlayer() {
 
                       {/* Tracklist Section */}
                       <div className="px-4 md:px-8 pb-6 flex-1">
-                         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest px-2 mb-3">Tracklist</h3>
+                         <h3 className="text-xs font-bold text-t-soft uppercase tracking-widest px-2 mb-3">Tracklist</h3>
                          <div className="flex flex-col gap-1">
                             {selectedAlbum.tracks.map((track, i) => {
                               const isActive = activeTrack.id === track.id;
@@ -310,20 +310,20 @@ export default function GlobalMusicPlayer() {
                                   onClick={() => handleTrackSelect(track)}
                                   className={`flex items-center gap-3 py-2 px-3 rounded-2xl cursor-pointer transition-all duration-300 ${
                                     isActive 
-                                      ? 'bg-[#C48C5E] text-white shadow-md transform scale-[1.02]' 
-                                      : 'hover:bg-white text-slate-700 hover:shadow-sm border border-transparent hover:border-slate-100'
+                                      ? 'bg-[#B3350F] text-white shadow-md transform scale-[1.02]' 
+                                      : 'hover:bg-white text-[#2A2826] hover:shadow-sm border border-transparent hover:border-[#E0DBD0]'
                                   }`}
                                 >
-                                   <div className={`w-5 text-center font-bold text-sm ${isActive ? 'text-white' : 'text-slate-400'}`}>
+                                   <div className={`w-5 text-center font-bold text-sm ${isActive ? 'text-white' : 'text-t-soft'}`}>
                                      {isActive && isPlaying ? <Play className="w-4 h-4 mx-auto fill-current animate-pulse"/> : `${i+1}`}
                                    </div>
                                    <div className="flex-1 min-w-0">
-                                      <p className={`font-handwriting font-normal text-xl md:text-2xl leading-none truncate ${isActive ? 'text-white' : 'text-slate-800'}`}>{track.title?.normalize('NFC') || track.title}</p>
+                                      <p className={`font-handwriting font-normal text-lg md:text-xl leading-none truncate ${isActive ? 'text-white' : 'text-[#121110]'}`}>{track.title?.normalize('NFC') || track.title}</p>
                                       {track.versions.length > 1 && !isActive && (
-                                         <p className="text-[10px] text-slate-400 md:font-medium mt-1">{track.versions.length} versions</p>
+                                         <p className="text-[12px] text-t-soft md:font-medium mt-1">{track.versions.length} versions</p>
                                       )}
                                    </div>
-                                   <div className={`text-xs font-medium pl-2 ${isActive ? 'text-white/80' : 'text-slate-400'}`}>{track.duration}</div>
+                                   <div className={`text-xs font-medium pl-2 ${isActive ? 'text-white/80' : 'text-t-soft'}`}>{track.duration}</div>
                                 </div>
                               )
                             })}
@@ -334,9 +334,9 @@ export default function GlobalMusicPlayer() {
                       <div className="px-6 md:px-8 pb-8 lg:hidden shrink-0">
                          <button 
                            onClick={() => setShowLyricsMobile(true)}
-                           className="w-full py-4 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-2xl flex items-center justify-center gap-2 transition-colors border border-slate-200 shadow-sm"
+                           className="w-full py-4 bg-white hover:bg-[#ECE7DC] text-[#121110] font-bold rounded-2xl flex items-center justify-center gap-2 transition-colors border border-[#E0DBD0] shadow-sm"
                          >
-                            <FileText className="w-5 h-5 text-[#C48C5E]"/> {t('playerViewLyrics')}
+                            <FileText className="w-5 h-5 text-t-copper"/> {t('playerViewLyrics')}
                          </button>
                       </div>
 
@@ -350,23 +350,23 @@ export default function GlobalMusicPlayer() {
                    </div>
                    
                    {/* Now Playing Header (Sticky on mobile) */}
-                   <div className="sticky top-0 z-30 px-6 py-5 md:px-10 md:py-8 bg-white/95 backdrop-blur-xl border-b border-slate-100 flex flex-col lg:flex-row justify-between lg:items-center gap-6 shadow-sm lg:shadow-none">
+                   <div className="sticky top-0 z-30 px-6 py-5 md:px-10 md:py-8 bg-white/95 backdrop-blur-xl border-b border-[#E0DBD0] flex flex-col lg:flex-row justify-between lg:items-center gap-6 shadow-sm lg:shadow-none">
                       <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-3 mb-2">
-                             <span className="text-[#C48C5E] font-bold tracking-widest text-xs uppercase">Now Playing</span>
-                             <span className="hidden lg:flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100/80 px-2.5 py-1 rounded-md border border-slate-200/60">
-                                <kbd className="font-sans font-bold border border-slate-200 rounded shadow-[0_1px_0_rgba(0,0,0,0.1)] px-1.5 pb-[2px] bg-white text-slate-600 leading-none">Space</kbd>
+                             <span className="text-t-copper font-bold tracking-widest text-xs uppercase">Now Playing</span>
+                             <span className="hidden lg:flex items-center gap-1.5 text-xs font-medium text-t-muted bg-[#ECE7DC]/80 px-2.5 py-1 rounded-md border border-[#E0DBD0]/60">
+                                <kbd className="font-sans font-bold border border-[#E0DBD0] rounded shadow-[0_1px_0_rgba(0,0,0,0.1)] px-1.5 pb-[2px] bg-white text-[#2A2826] leading-none">Space</kbd>
                                 {t('playerSpacebar')}
                              </span>
                           </div>
-                         <h2 className="text-slate-900 text-3xl md:text-4xl lg:text-4xl leading-tight font-handwriting flex items-center lg:items-baseline flex-wrap gap-x-3 gap-y-1">
-                            <span className="text-slate-900 truncate max-w-[300px] xl:max-w-[400px]" title={currentVersion.title.normalize('NFC')}>{currentVersion.title.normalize('NFC')}</span>
+                         <h2 className="text-[#121110] text-2xl md:text-3xl lg:text-3xl leading-tight font-handwriting flex items-center lg:items-baseline flex-wrap gap-x-3 gap-y-1">
+                            <span className="text-[#121110] truncate max-w-[300px] xl:max-w-[400px]" title={currentVersion.title.normalize('NFC')}>{currentVersion.title.normalize('NFC')}</span>
                          </h2>
                       </div>
                       
                       <div className="flex items-center gap-4 flex-wrap pb-2 md:pb-0">
                          {activeTrack.versions.length > 1 && (
-                           <div className="flex bg-slate-100 p-1.5 rounded-2xl relative shadow-inner">
+                           <div className="flex bg-[#ECE7DC] p-1.5 rounded-2xl relative shadow-inner">
                              <div className="absolute inset-y-1.5 bg-white rounded-[10px] shadow-sm transition-all duration-300" style={{
                                 width: `calc(100% / ${activeTrack.versions.length} - 12px)`,
                                 left: `calc((100% / ${activeTrack.versions.length}) * ${activeTrack.versions.findIndex(v => v.lang === activeLang)} + 6px)`
@@ -379,7 +379,7 @@ export default function GlobalMusicPlayer() {
                                    setProgress(0);
                                  }}
                                  className={`relative z-10 px-4 py-2 flex items-center gap-2 rounded-[10px] text-xs font-bold transition-all duration-300 ${
-                                   activeLang === ver.lang ? 'text-[#C48C5E]' : 'text-slate-500 hover:text-slate-800'
+                                   activeLang === ver.lang ? 'text-t-copper' : 'text-t-muted hover:text-[#121110]'
                                  }`}
                                >
                                   {activeLang === ver.lang && <Languages className="w-4 h-4"/>}
@@ -389,29 +389,29 @@ export default function GlobalMusicPlayer() {
                            </div>
                          )}
                          
-                         <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-2xl border border-slate-100 ml-auto md:ml-2 hidden sm:flex">
-                            <button onClick={() => setLyricsScale(Math.max(0.6, lyricsScale - 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white rounded-[10px] transition-colors">A-</button>
+                         <div className="flex items-center gap-1 bg-[#ECE7DC] p-1 rounded-2xl border border-[#E0DBD0] ml-auto md:ml-2 hidden sm:flex">
+                            <button onClick={() => setLyricsScale(Math.max(0.6, lyricsScale - 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-t-muted hover:text-[#121110] hover:bg-white rounded-[10px] transition-colors">A-</button>
                             <div className="w-px h-4 bg-slate-200"></div>
-                            <button onClick={() => setLyricsScale(Math.min(2.0, lyricsScale + 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-white rounded-[10px] transition-colors">A+</button>
+                            <button onClick={() => setLyricsScale(Math.min(2.0, lyricsScale + 0.2))} className="w-8 h-8 flex items-center justify-center text-sm font-bold text-t-muted hover:text-[#121110] hover:bg-white rounded-[10px] transition-colors">A+</button>
                          </div>
 
                          <button 
                            onClick={togglePlay}
-                           className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#C48C5E] text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#C48C5E]/30 shrink-0"
+                           className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-[#B3350F] text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-lg shadow-[#B3350F]/30 shrink-0"
                          >
                            {isPlaying ? <Pause className="w-6 h-6 md:w-7 md:h-7 fill-current" /> : <Play className="w-6 h-6 md:w-7 md:h-7 fill-current ml-1" />}
                          </button>
                       </div>
                    </div>
                    
-                   <div className="relative z-30 w-full h-1 bg-slate-100">
-                      <div className="h-full bg-[#C48C5E] transition-all duration-300 ease-linear rounded-r-full" style={{ width: `${progress}%` }}></div>
+                   <div className="relative z-30 w-full h-1 bg-[#ECE7DC]">
+                      <div className="h-full bg-[#B3350F] transition-all duration-300 ease-linear rounded-r-full" style={{ width: `${progress}%` }}></div>
                    </div>
 
                    {/* Lyrics Text */}
                    <div className="relative z-10 flex-1 overflow-y-auto hide-scrollbar scroll-smooth p-10 lg:p-14 pb-32 mask-image-y min-h-[300px]">
                       <div 
-                        className="text-slate-800 font-handwriting font-normal tracking-wide antialiased transition-all duration-300 transform-gpu"
+                        className="text-[#121110] font-handwriting font-normal tracking-wide antialiased transition-all duration-300 transform-gpu"
                         style={{ 
                            fontSize: `calc(${1.0 * lyricsScale}rem + 0.8vw)`, 
                            lineHeight: 1.25
@@ -430,22 +430,22 @@ export default function GlobalMusicPlayer() {
                  onClick={() => setShowLyricsMobile(false)}
                >
                  <div 
-                   className="w-full h-[85vh] bg-[#FDFCFB] rounded-t-[32px] flex flex-col shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 transform-gpu"
+                   className="w-full h-[85vh] bg-[#FFFDF9] rounded-t-[32px] flex flex-col shadow-2xl animate-in slide-in-from-bottom-[100%] duration-300 transform-gpu"
                    onClick={e => e.stopPropagation()}
                  >
-                    <div className="px-6 py-5 border-b border-slate-100 flex justify-between items-center bg-white/80 backdrop-blur-md rounded-t-[32px]">
+                    <div className="px-6 py-5 border-b border-[#E0DBD0] flex justify-between items-center bg-white/80 backdrop-blur-md rounded-t-[32px]">
                        <div>
-                          <p className="text-[10px] font-bold text-[#C48C5E] tracking-widest uppercase mb-0.5">{t('playerLyricsLabel')}</p>
-                          <h3 className="text-2xl font-handwriting text-slate-900 leading-none">{currentVersion.title.normalize('NFC')}</h3>
+                          <p className="text-[12px] font-bold text-t-copper tracking-widest uppercase mb-0.5">{t('playerLyricsLabel')}</p>
+                          <h3 className="text-xl font-handwriting text-[#121110] leading-none">{currentVersion.title.normalize('NFC')}</h3>
                        </div>
-                       <button onClick={() => setShowLyricsMobile(false)} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 hover:bg-slate-200 transition-colors">
+                       <button onClick={() => setShowLyricsMobile(false)} className="w-10 h-10 rounded-full bg-[#ECE7DC] flex items-center justify-center text-[#2A2826] hover:bg-slate-200 transition-colors">
                           <X className="w-5 h-5"/>
                        </button>
                     </div>
                     
 
                     <div className="flex-1 overflow-y-auto hide-scrollbar p-6 md:p-8 pb-20 scroll-smooth">
-                       <div className="text-slate-800 font-handwriting font-normal" style={{ fontSize: `calc(${1.2 * lyricsScale}rem + 1vw)`, lineHeight: 1.35 }}>
+                       <div className="text-[#121110] font-handwriting font-normal" style={{ fontSize: `calc(${1.2 * lyricsScale}rem + 1vw)`, lineHeight: 1.35 }}>
                           {renderLyrics(currentVersion.lyrics)}
                        </div>
                     </div>
@@ -458,7 +458,7 @@ export default function GlobalMusicPlayer() {
 
       {/* MINI PLAYER */}
       {!selectedAlbum && activeTrack && currentVersion && activeTrackAlbum && (
-         <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-200 px-4 md:px-8 py-4 z-[90] flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.08)] animate-in slide-in-from-bottom-full duration-500">
+         <div className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-[#E0DBD0] px-4 md:px-8 py-4 z-[90] flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.08)] animate-in slide-in-from-bottom-full duration-500">
             <div className="flex items-center gap-4 cursor-pointer group flex-1 min-w-0" onClick={() => openAlbumModal(activeTrackAlbum, currentVersion.lang)}>
                <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl overflow-hidden relative shadow-sm shrink-0">
                   <Image src={activeTrackAlbum.coverUrl} alt="cover" fill className="object-cover group-hover:scale-110 transition-transform duration-300" sizes="56px" />
@@ -468,18 +468,18 @@ export default function GlobalMusicPlayer() {
                      {Array.from({ length: marqueeRepeatCount }).map((_, i) => (
                        <div key={i} className="flex items-center gap-8 md:gap-12 shrink-0 pr-8 md:pr-12">
                           <div className="flex items-baseline gap-2 shrink-0">
-                            <h4 className="font-handwriting text-2xl md:text-3xl font-bold text-slate-800 leading-none group-hover:text-[#C48C5E] transition-colors">{currentVersion.title?.normalize('NFC') || currentVersion.title}</h4>
-                            <span className="text-[10px] md:text-[11px] uppercase tracking-widest text-[#C48C5E] font-bold hidden md:inline-block">
+                            <h4 className="font-handwriting text-xl md:text-2xl font-bold text-[#121110] leading-none group-hover:text-t-copper transition-colors">{currentVersion.title?.normalize('NFC') || currentVersion.title}</h4>
+                            <span className="text-[12px] md:text-[13px] uppercase tracking-widest text-t-copper font-bold hidden md:inline-block">
                                {activeTrackAlbum.type === 'Album' ? t('playerViewAlbum') : t('playerViewType', { type: activeTrackAlbum.type })}
                             </span>
                           </div>
                           {activeTrackAlbum.description && (
-                             <span className="text-slate-600 text-[20px] md:text-[24px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
+                             <span className="text-[#2A2826] text-[15px] md:text-[18px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
                                 {activeTrackAlbum.description?.normalize('NFC') || activeTrackAlbum.description}
                              </span>
                           )}
                           {(activeTrack.credits?.composer || activeTrack.credits?.arranger || activeTrack.credits?.producer || currentVersion.vocal) && (
-                             <span className="text-slate-500 text-[22px] md:text-[26px] font-handwriting leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
+                             <span className="text-t-muted text-[22px] md:text-[26px] leading-none shrink-0 tracking-wide mt-1 hidden md:inline-block">
                                 {[
                                   activeTrack.credits?.composer ? `${t('creditComposer')}: ${activeTrack.credits?.composer}` : null,
                                   activeTrack.credits?.arranger ? `${t('creditArranger')}: ${activeTrack.credits?.arranger}` : null,
@@ -494,19 +494,19 @@ export default function GlobalMusicPlayer() {
                </div>
             </div>
 
-            <div className="flex items-center gap-2 md:gap-3 shrink-0 pl-3 md:pl-5 border-l border-slate-200 ml-2">
+            <div className="flex items-center gap-2 md:gap-3 shrink-0 pl-3 md:pl-5 border-l border-[#E0DBD0] ml-2">
                <button 
                  onClick={(e) => { e.stopPropagation(); if (hasPrevTrack) playPrevTrack(); }} 
                  disabled={!hasPrevTrack}
                  className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-colors ${
                    hasPrevTrack 
-                     ? 'bg-slate-50 text-slate-500 hover:bg-[#C48C5E] hover:text-white cursor-pointer' 
-                     : 'bg-slate-50 text-slate-300 cursor-not-allowed opacity-50'
+                     ? 'bg-[#ECE7DC] text-t-muted hover:bg-[#B3350F] hover:text-white cursor-pointer' 
+                     : 'bg-[#ECE7DC] text-t-soft cursor-not-allowed opacity-50'
                  }`}
                >
                  <SkipBack className="w-4 h-4 md:w-5 md:h-5 fill-current" />
                </button>
-               <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#C48C5E] text-white flex items-center justify-center hover:scale-105 transition-transform shadow-[0_4px_15px_rgba(196,140,94,0.4)]">
+               <button onClick={(e) => { e.stopPropagation(); togglePlay(); }} className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-[#B3350F] text-white flex items-center justify-center hover:scale-105 transition-transform shadow-[0_4px_15px_rgba(196,140,94,0.4)]">
                  {isPlaying ? <Pause className="w-5 h-5 md:w-6 md:h-6 fill-current" /> : <Play className="w-5 h-5 md:w-6 md:h-6 fill-current ml-1" />}
                </button>
                <button 
@@ -514,14 +514,14 @@ export default function GlobalMusicPlayer() {
                  disabled={!hasNextTrack}
                  className={`w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-colors ${
                    hasNextTrack 
-                     ? 'bg-slate-50 text-slate-500 hover:bg-[#C48C5E] hover:text-white cursor-pointer' 
-                     : 'bg-slate-50 text-slate-300 cursor-not-allowed opacity-50'
+                     ? 'bg-[#ECE7DC] text-t-muted hover:bg-[#B3350F] hover:text-white cursor-pointer' 
+                     : 'bg-[#ECE7DC] text-t-soft cursor-not-allowed opacity-50'
                  }`}
                >
                  <SkipForward className="w-4 h-4 md:w-5 md:h-5 fill-current" />
                </button>
                <div className="w-px h-6 bg-slate-200 mx-1"></div>
-               <button onClick={(e) => { e.stopPropagation(); stopPlayback(); }} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 hover:text-slate-800 transition-colors">
+               <button onClick={(e) => { e.stopPropagation(); stopPlayback(); }} className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-[#ECE7DC] text-t-muted flex items-center justify-center hover:bg-slate-200 hover:text-[#121110] transition-colors">
                  <X className="w-5 h-5" />
                </button>
             </div>
@@ -529,11 +529,6 @@ export default function GlobalMusicPlayer() {
       )}
 
       <style dangerouslySetInnerHTML={{__html:`
-        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
-        
-        .font-handwriting {
-          font-family: 'Nanum Pen Script', cursive;
-        }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .mask-image-y {

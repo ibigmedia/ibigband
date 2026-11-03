@@ -36,33 +36,33 @@ export default function MyPage() {
 
   if (loading || !user) {
     return (
-      <div className="flex-1 bg-[#FDFBF7] flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 rounded-full border-2 border-[#E6C79C] border-t-transparent animate-spin" />
+      <div className="flex-1 bg-[#FFFDF9] flex items-center justify-center min-h-[60vh]">
+        <div className="w-8 h-8 rounded-full border-2 border-[#E8481C] border-t-transparent animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 bg-[#FDFBF7] pt-12 md:pt-16 pb-16">
+    <div className="flex-1 bg-[#FFFDF9] pt-12 md:pt-16 pb-16">
       <div className="max-w-4xl mx-auto px-6 lg:px-8">
         {/* 프로필 헤더 */}
         <div className="flex items-center gap-5 mb-10">
-          <div className="w-16 h-16 rounded-full bg-[#E6C79C]/20 flex items-center justify-center border-2 border-[#E6C79C]/30">
+          <div className="w-16 h-16 rounded-full bg-[#E8481C]/20 flex items-center justify-center border-2 border-[#E8481C]/30">
             {user.photoURL ? (
               <img src={user.photoURL} alt="" className="w-full h-full rounded-full object-cover" />
             ) : (
-              <User className="w-7 h-7 text-[#C9A675]" />
+              <User className="w-7 h-7 text-t-gold" />
             )}
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#2D2926]">
+            <h1 className="text-2xl md:text-3xl font-bold text-[#121110]">
               {userData?.displayName || t('userFallback')}
             </h1>
-            <p className="text-[#78716A] text-sm">{userData?.email}</p>
+            <p className="text-t-muted text-sm">{userData?.email}</p>
           </div>
           <button
             onClick={async () => { await signOut(); router.replace('/'); }}
-            className="p-2 rounded-full hover:bg-[#78716A]/10 text-[#78716A] transition-colors"
+            className="p-2 rounded-full hover:bg-[#2A2826]/10 text-t-muted transition-colors"
             aria-label={t('signOutAria')}
           >
             <LogOut className="w-5 h-5" />
@@ -73,21 +73,21 @@ export default function MyPage() {
         <section>
           <div className="flex items-center gap-2 mb-6">
             <Heart className="w-5 h-5 text-red-500 fill-red-500" />
-            <h2 className="text-xl font-bold text-[#2D2926]">{t('favoritesTitle')}</h2>
-            <span className="text-sm text-[#78716A] ml-1">({favorites.length})</span>
+            <h2 className="text-xl font-bold text-[#121110]">{t('favoritesTitle')}</h2>
+            <span className="text-sm text-t-muted ml-1">({favorites.length})</span>
           </div>
 
           {favLoading ? (
             <div className="flex justify-center py-16">
-              <div className="w-8 h-8 rounded-full border-2 border-[#E6C79C] border-t-transparent animate-spin" />
+              <div className="w-8 h-8 rounded-full border-2 border-[#E8481C] border-t-transparent animate-spin" />
             </div>
           ) : favorites.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-2xl border border-[#78716A]/10">
-              <Music className="w-10 h-10 text-[#78716A]/30 mx-auto mb-3" />
-              <p className="text-[#78716A] font-medium">{t('favoritesEmpty')}</p>
+              <Music className="w-10 h-10 text-t-muted/30 mx-auto mb-3" />
+              <p className="text-t-muted font-medium">{t('favoritesEmpty')}</p>
               <button
                 onClick={() => router.push('/sheets')}
-                className="mt-4 text-sm text-[#C9A675] hover:text-[#A68B5B] font-medium transition-colors"
+                className="mt-4 text-sm text-t-gold hover:text-[#B3350F] font-medium transition-colors"
               >
                 {t('browseSheets')} &rarr;
               </button>
@@ -110,7 +110,7 @@ export default function MyPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Music className="w-10 h-10 text-[#78716A]/20" />
+                        <Music className="w-10 h-10 text-t-muted/20" />
                       </div>
                     )}
                     {/* 하트 해제 버튼 */}
@@ -125,10 +125,10 @@ export default function MyPage() {
 
                   {/* 정보 */}
                   <div className="p-4">
-                    <h3 className="font-bold text-[#2D2926] line-clamp-1 group-hover:text-[#C9A675] transition-colors font-handwriting text-xl">
+                    <h3 className="font-bold text-[#121110] line-clamp-1 group-hover:text-t-gold transition-colors font-handwriting text-lg">
                       {fav.title}
                     </h3>
-                    <p className="text-sm text-[#78716A] mt-1 line-clamp-1">
+                    <p className="text-sm text-t-muted mt-1 line-clamp-1">
                       {fav.artistId || t('unknownArtist')}
                     </p>
                   </div>

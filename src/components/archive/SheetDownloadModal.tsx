@@ -30,18 +30,18 @@ export function SheetDownloadModal({ sheet, isOpen, onClose, onOpenPaymentModal 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       <div className="bg-white rounded-ibig p-8 max-w-md w-full shadow-2xl relative">
-        <button onClick={onClose} className="absolute top-6 right-6 text-[#78716A] hover:text-[#2D2926]">
+        <button onClick={onClose} className="absolute top-6 right-6 text-t-muted hover:text-[#121110]">
           <X size={24} />
         </button>
         
-        <h3 className="text-2xl font-handwriting mb-2">{sheet.title}</h3>
-        <p className="text-sm text-[#78716A] mb-8 font-light italic">Key: {sheet.key} | BPM: {sheet.bpm}</p>
+        <h3 className="text-xl font-handwriting mb-2">{sheet.title}</h3>
+        <p className="text-sm text-t-muted mb-8 font-normal italic">Key: {sheet.key} | BPM: {sheet.bpm}</p>
 
         {isPremiumRequired ? (
-          <div className="bg-[#E6C79C]/10 border border-[#E6C79C] p-6 rounded-2xl mb-6 text-center">
-            <AlertCircle className="mx-auto text-[#E6C79C] mb-3" size={32} />
-            <p className="text-sm text-[#2D2926] font-bold mb-2">{t('premiumTitle')}</p>
-            <p className="text-xs text-[#78716A] font-light mb-6 leading-relaxed">
+          <div className="bg-[#E8481C]/10 border border-[#E8481C] p-6 rounded-2xl mb-6 text-center">
+            <AlertCircle className="mx-auto text-t-gold mb-3" size={32} />
+            <p className="text-sm text-[#121110] font-bold mb-2">{t('premiumTitle')}</p>
+            <p className="text-xs text-t-muted font-normal mb-6 leading-relaxed">
               {t.rich('premiumBody', { br: () => <br /> })}
             </p>
             <Button variant="secondary" className="w-full" onClick={() => {
@@ -60,7 +60,7 @@ export function SheetDownloadModal({ sheet, isOpen, onClose, onOpenPaymentModal 
         )}
 
         {!user && (
-          <p className="text-[10px] text-center text-[#78716A] mt-4">
+          <p className="text-[12px] text-center text-t-muted mt-4">
             {t('loginNote')}
           </p>
         )}

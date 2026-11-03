@@ -112,7 +112,7 @@ export default function LyricsPresenterPage() {
         <div className="text-center">
           <Type size={48} className="mx-auto mb-4 opacity-30" />
           <p className="text-xl font-bold">가사 데이터가 없습니다</p>
-          <p className="text-gray-400 mt-2">셋리스트 페이지에서 가사 프레젠테이션을 실행해 주세요.</p>
+          <p className="text-t-soft mt-2">셋리스트 페이지에서 가사 프레젠테이션을 실행해 주세요.</p>
         </div>
       </div>
     );
@@ -132,12 +132,12 @@ export default function LyricsPresenterPage() {
             <div>
               <h2 className="text-2xl font-bold tracking-tight">{currentSlide.title}</h2>
               {currentSlide.author && (
-                <p className="text-[#E6C79C] text-sm mt-0.5">{currentSlide.author}</p>
+                <p className="text-t-gold text-sm mt-0.5">{currentSlide.author}</p>
               )}
             </div>
-            <div className="flex items-center gap-4 text-sm text-gray-400">
+            <div className="flex items-center gap-4 text-sm text-t-soft">
               <span>{currentSong + 1} / {slides.length}곡</span>
-              <span className="text-[#E6C79C]">{currentSection + 1} / {sections.length}</span>
+              <span className="text-t-gold">{currentSection + 1} / {sections.length}</span>
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@ export default function LyricsPresenterPage() {
                 <button key={i}
                   onClick={(e) => { e.stopPropagation(); setCurrentSong(i); setCurrentSection(0); }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                    i === currentSong ? 'bg-[#E6C79C] text-[#2D2926]' : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                    i === currentSong ? 'bg-[#E8481C] text-[#121110]' : 'bg-white/10 text-t-soft hover:bg-white/20'
                   }`}>
                   {i + 1}. {s.title.length > 12 ? s.title.slice(0, 12) + '…' : s.title}
                 </button>
@@ -176,7 +176,7 @@ export default function LyricsPresenterPage() {
               <div className="flex items-center gap-1 bg-white/10 rounded-lg px-2 py-1">
                 <button onClick={(e) => { e.stopPropagation(); setFontSize(s => Math.max(s - 4, 24)); }}
                   className="p-1 hover:bg-white/20 rounded text-sm font-bold">A-</button>
-                <span className="text-xs text-gray-400 w-8 text-center">{fontSize}</span>
+                <span className="text-xs text-t-soft w-8 text-center">{fontSize}</span>
                 <button onClick={(e) => { e.stopPropagation(); setFontSize(s => Math.min(s + 4, 96)); }}
                   className="p-1 hover:bg-white/20 rounded text-sm font-bold">A+</button>
               </div>
@@ -200,13 +200,13 @@ export default function LyricsPresenterPage() {
               <button key={i}
                 onClick={(e) => { e.stopPropagation(); setCurrentSection(i); }}
                 className={`h-1.5 rounded-full flex-1 transition-all ${
-                  i === currentSection ? 'bg-[#E6C79C]' : i < currentSection ? 'bg-white/30' : 'bg-white/10'
+                  i === currentSection ? 'bg-[#E8481C]' : i < currentSection ? 'bg-white/30' : 'bg-white/10'
                 }`} />
             ))}
           </div>
 
           {/* 단축키 안내 */}
-          <div className="text-center mt-2 text-[10px] text-gray-500">
+          <div className="text-center mt-2 text-[12px] text-t-muted">
             ←→ 섹션 이동 · ↑↓ 곡 이동 · +/- 글자 크기 · F 전체화면 · ESC 컨트롤 토글
           </div>
         </div>

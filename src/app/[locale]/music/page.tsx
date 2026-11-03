@@ -157,7 +157,7 @@ export default function MusicPage() {
     >
       <div 
         onClick={() => openAlbumModal(album, defaultLang)}
-        className="cursor-pointer w-full aspect-square rounded-[24px] overflow-hidden mb-4 relative shadow-[0_8px_30px_rgb(0,0,0,0.06)] bg-white border border-slate-100"
+        className="cursor-pointer w-full aspect-square rounded-[18px] overflow-hidden mb-4 relative shadow-[0_8px_30px_rgb(0,0,0,0.06)] bg-white border border-[#E0DBD0]"
       >
         <Image 
           src={album.coverUrl} 
@@ -167,33 +167,33 @@ export default function MusicPage() {
           sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw" 
         />
         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex justify-center items-center backdrop-blur-sm">
-           <div className="w-14 h-14 rounded-full bg-white/90 text-[#C48C5E] flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 delay-100 shadow-[0_8px_20px_rgba(0,0,0,0.1)]">
+           <div className="w-14 h-14 rounded-full bg-white/90 text-t-copper flex items-center justify-center transform scale-75 group-hover:scale-100 transition-transform duration-300 delay-100 shadow-[0_8px_20px_rgba(0,0,0,0.1)]">
               <Play className="w-6 h-6 fill-current ml-1" />
            </div>
         </div>
         <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
-           <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-slate-800 shadow-sm">
+           <span className="text-[12px] md:text-xs font-bold uppercase tracking-widest bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full text-[#121110] shadow-sm">
               {album.type}
            </span>
            {album.tracks.some(tr => tr.versions.length > 1) && (
-              <span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest bg-[#C48C5E]/90 backdrop-blur-md px-2.5 py-1 rounded-full text-white shadow-sm flex items-center gap-1">
+              <span className="text-[12px] md:text-[12px] font-bold uppercase tracking-widest bg-[#B3350F]/90 backdrop-blur-md px-2.5 py-1 rounded-full text-white shadow-sm flex items-center gap-1">
                  <Globe2 className="w-3 h-3" /> Global
               </span>
            )}
         </div>
         {album.type === 'Single' && (
             <div className="absolute bottom-3 left-3 right-3 flex justify-start">
-               <span className="bg-black/40 backdrop-blur-md text-white/80 text-[10px] md:text-xs font-medium px-2 py-1 rounded max-w-full truncate shadow-sm">
+               <span className="bg-black/40 backdrop-blur-md text-white/80 text-[12px] md:text-xs font-medium px-2 py-1 rounded max-w-full truncate shadow-sm">
                   {album.title}
                </span>
             </div>
          )}
       </div>
-      <h3 className="font-bold text-base md:text-lg text-slate-900 leading-tight mb-1 shrink-0 group-hover:text-[#C48C5E] transition-colors line-clamp-1">
+      <h3 className="font-bold text-base md:text-lg text-[#121110] leading-tight mb-1 shrink-0 group-hover:text-t-copper transition-colors line-clamp-1">
          {album.type === 'Single' && album.tracks?.[0] ? ((album.tracks[0].versions || []).find((v: {lang: string, title: string}) => v.lang === 'ko')?.title || album.tracks[0].title) : album.title}
       </h3>
       
-      <p className="font-handwriting text-slate-600 text-[17px] md:text-[19px] leading-relaxed line-clamp-2 md:line-clamp-3 mb-4 flex-1">
+      <p className="text-[#2A2826] text-[15px] md:text-base leading-relaxed line-clamp-2 md:line-clamp-3 mb-4 flex-1">
         {album.description}
       </p>
 
@@ -202,7 +202,7 @@ export default function MusicPage() {
           e.stopPropagation();
           openAlbumModal(album, defaultLang);
         }}
-        className="mt-auto self-start bg-transparent hover:bg-[#2D2926]/5 border border-[#78716A]/15 text-[#78716A] text-[11px] font-medium uppercase px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
+        className="mt-auto self-start bg-transparent hover:bg-[#121110]/5 border border-[#78716A]/15 text-t-muted text-[13px] font-medium uppercase px-3 py-1.5 rounded-full transition-colors flex items-center gap-1"
       >
         {t('listenAlbum')} <ArrowRight className="w-3 h-3" />
       </button>
@@ -210,7 +210,7 @@ export default function MusicPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-slate-800 font-sans">
+    <div className="min-h-screen bg-[#FFFDF9] text-[#121110] font-sans">
       
       {/* MAIN LAYOUT */}
       <main className="max-w-[1400px] mx-auto px-4 lg:px-8 pb-32 pt-12 md:pt-16 flex flex-col gap-12 lg:gap-16">
@@ -218,15 +218,15 @@ export default function MusicPage() {
         {/* Header & Tabs */}
         <header className="flex flex-col gap-8">
           <div className="max-w-2xl">
-            <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 mb-4 font-serif">
-              Music<span className="text-[#C48C5E]">.</span>
+            <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight text-[#121110] mb-4 font-serif">
+              Music<span className="text-t-copper">.</span>
             </h1>
-            <p className="text-slate-500 leading-relaxed text-sm md:text-base font-medium">
+            <p className="text-t-muted leading-relaxed text-sm md:text-base font-medium">
                {t('subtitle')}
             </p>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 snap-x border-b border-slate-200">
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-2 snap-x border-b border-[#E0DBD0]">
             {([
                { id: 'overview', label: t('tabOverview') },
                { id: 'Album', label: t('tabAlbum') },
@@ -239,8 +239,8 @@ export default function MusicPage() {
                 onClick={() => setActiveTab(tab.id as ViewTab)}
                 className={`snap-start shrink-0 px-5 py-3 font-bold text-sm md:text-base border-b-2 transition-all duration-300 whitespace-nowrap ${
                   activeTab === tab.id 
-                  ? 'border-[#C48C5E] text-[#C48C5E]' 
-                  : 'border-transparent text-slate-400 hover:text-slate-700 hover:border-slate-300'
+                  ? 'border-[#B3350F] text-t-copper' 
+                  : 'border-transparent text-t-soft hover:text-[#2A2826] hover:border-slate-300'
                 }`}
               >
                 {tab.label}
@@ -258,8 +258,8 @@ export default function MusicPage() {
              {albums.some(a => a.type === 'Album') && (
                 <section>
                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">{t('sectionAlbums')} {t('descAlbums') && <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">{t('descAlbums')}</span>}</h2>
-                      <button onClick={() => setActiveTab('Album')} className="text-[#C48C5E] text-sm font-bold flex items-center hover:underline">
+                      <h2 className="text-2xl font-bold font-serif text-[#121110] tracking-tight">{t('sectionAlbums')} {t('descAlbums') && <span className="text-t-soft font-sans ml-2 block sm:inline text-lg font-medium">{t('descAlbums')}</span>}</h2>
+                      <button onClick={() => setActiveTab('Album')} className="text-t-copper text-sm font-bold flex items-center hover:underline">
                          {t('more')} <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
@@ -273,8 +273,8 @@ export default function MusicPage() {
              {albums.some(a => a.type === 'EP') && (
                 <section>
                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">EP {t('descEP') && <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">{t('descEP')}</span>}</h2>
-                      <button onClick={() => setActiveTab('EP')} className="text-[#C48C5E] text-sm font-bold flex items-center hover:underline">
+                      <h2 className="text-2xl font-bold font-serif text-[#121110] tracking-tight">EP {t('descEP') && <span className="text-t-soft font-sans ml-2 block sm:inline text-lg font-medium">{t('descEP')}</span>}</h2>
+                      <button onClick={() => setActiveTab('EP')} className="text-t-copper text-sm font-bold flex items-center hover:underline">
                          {t('more')} <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
@@ -288,8 +288,8 @@ export default function MusicPage() {
              {albums.some(a => a.type === 'Single') && (
                 <section>
                    <div className="flex items-center justify-between mb-6">
-                      <h2 className="text-2xl font-bold font-serif text-slate-900 tracking-tight">{t('sectionSingles')} {t('descSingles') && <span className="text-slate-300 font-sans ml-2 block sm:inline text-lg font-medium">{t('descSingles')}</span>}</h2>
-                      <button onClick={() => setActiveTab('Single')} className="text-[#C48C5E] text-sm font-bold flex items-center hover:underline">
+                      <h2 className="text-2xl font-bold font-serif text-[#121110] tracking-tight">{t('sectionSingles')} {t('descSingles') && <span className="text-t-soft font-sans ml-2 block sm:inline text-lg font-medium">{t('descSingles')}</span>}</h2>
+                      <button onClick={() => setActiveTab('Single')} className="text-t-copper text-sm font-bold flex items-center hover:underline">
                          {t('more')} <ChevronRight className="w-4 h-4 ml-1" />
                       </button>
                    </div>
@@ -307,7 +307,7 @@ export default function MusicPage() {
              {albums.filter(a => a.type === activeTab).map(a => renderAlbumCard(a))}
              
              {albums.filter(a => a.type === activeTab).length === 0 && (
-                <div className="col-span-full py-20 text-center text-slate-400">
+                <div className="col-span-full py-20 text-center text-t-soft">
                    <Music className="w-12 h-12 mx-auto mb-3 opacity-20" />
                    <p>{t('emptyType', { type: activeTab })}</p>
                 </div>
@@ -320,15 +320,15 @@ export default function MusicPage() {
           <div className="flex flex-col gap-8 animate-in fade-in duration-500">
              
              {/* Sub Filter for Global Tab */}
-             <div className="flex gap-2 mb-2 border border-slate-200 bg-white p-1.5 rounded-full w-max shadow-sm">
+             <div className="flex gap-2 mb-2 border border-[#E0DBD0] bg-white p-1.5 rounded-full w-max shadow-sm">
                 {(['All', 'en', 'es'] as const).map(lang => (
                    <button
                      key={lang}
                      onClick={() => setGlobalLangFilter(lang)}
                      className={`px-5 py-2 rounded-full text-xs md:text-sm font-bold transition-all duration-300 ${
                         globalLangFilter === lang 
-                        ? 'bg-[#C48C5E] text-white shadow-md' 
-                        : 'text-slate-500 hover:bg-slate-50 hover:text-slate-800'
+                        ? 'bg-[#B3350F] text-white shadow-md' 
+                        : 'text-t-muted hover:bg-[#ECE7DC] hover:text-[#121110]'
                      }`}
                    >
                      {lang === 'All' ? t('globalAll') : lang === 'en' ? t('globalEn') : t('globalEs')}
@@ -343,7 +343,7 @@ export default function MusicPage() {
                 )}
 
                 {getGlobalAlbums().length === 0 && (
-                   <div className="col-span-full py-20 text-center text-slate-400">
+                   <div className="col-span-full py-20 text-center text-t-soft">
                       <Globe2 className="w-12 h-12 mx-auto mb-3 opacity-20" />
                       <p>{t('emptyGlobal')}</p>
                    </div>
@@ -355,11 +355,6 @@ export default function MusicPage() {
       </main>
 
       <style dangerouslySetInnerHTML={{__html:`
-        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap');
-        
-        .font-handwriting {
-          font-family: 'Nanum Pen Script', cursive;
-        }
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .mask-image-y {

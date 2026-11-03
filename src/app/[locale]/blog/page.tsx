@@ -40,11 +40,11 @@ export default function BlogPage() {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col bg-[#FAF9F6]">
+    <div className="flex-1 flex flex-col bg-[#F5F2EC]">
       {/* Header Section */}
       <section className="pt-16 pb-8 px-6 text-center border-b border-[#78716A]/10 bg-white">
-        <h1 className="text-5xl md:text-7xl font-handwriting mb-4 text-[#E6C79C]">ibiGband Journal</h1>
-        <p className="text-[#78716A] text-lg font-light italic max-w-2xl mx-auto">
+        <h1 className="text-4xl md:text-6xl font-handwriting mb-4 text-t-gold">ibiGband Journal</h1>
+        <p className="text-t-muted text-lg font-normal italic max-w-2xl mx-auto">
           {t('subtitle')}
         </p>
       </section>
@@ -53,17 +53,17 @@ export default function BlogPage() {
       <section className="pt-16 pb-32 px-6 max-w-7xl mx-auto w-full">
         {loading ? (
           <div className="flex justify-center items-center py-40">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#E6C79C]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#E8481C]"></div>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {blogs.map((blog) => (
               <article 
                 key={blog.id} 
-                className="bg-white rounded-2xl md:rounded-[24px] overflow-hidden shadow-sm border border-[#78716A]/5 hover:shadow-md md:hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-row md:flex-col group"
+                className="bg-white rounded-2xl md:rounded-[18px] overflow-hidden shadow-sm border border-[#78716A]/5 hover:shadow-md md:hover:-translate-y-2 transition-all duration-300 cursor-pointer flex flex-row md:flex-col group"
                 onClick={() => router.push(`/blog/${blog.id}`)}
               >
-                <div className="w-1/3 md:w-full aspect-[3/4] md:aspect-[4/3] relative overflow-hidden bg-slate-100 shrink-0">
+                <div className="w-1/3 md:w-full aspect-[3/4] md:aspect-[4/3] relative overflow-hidden bg-[#ECE7DC] shrink-0">
                   {blog.imageUrl ? (
                     <Image 
                       src={blog.imageUrl} 
@@ -73,7 +73,7 @@ export default function BlogPage() {
                       unoptimized 
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-[#78716A]/30">
+                    <div className="absolute inset-0 flex items-center justify-center text-t-muted/30">
                       <FileText size={24} className="md:w-16 md:h-16"/>
                     </div>
                   )}
@@ -81,28 +81,28 @@ export default function BlogPage() {
                 </div>
                 <div className="p-4 md:p-6 md:px-8 flex flex-col flex-1 justify-center bg-white">
                   <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-2 md:mb-4">
-                    <span className="text-[10px] md:text-xs font-bold text-[#E6C79C] uppercase tracking-wider">
+                    <span className="text-[12px] md:text-xs font-bold text-t-gold uppercase tracking-wider">
                       {blog.category || 'Journal'}
                     </span>
                     <div className="hidden md:flex gap-1.5 flex-wrap">
                       {blog.tags && blog.tags.slice(0, 2).map((tag: string, index: number) => (
-                        <span key={index} className="text-xs text-[#78716A] bg-gray-100 px-2 py-1 rounded-sm">
+                        <span key={index} className="text-xs text-t-muted bg-gray-100 px-2 py-1 rounded-sm">
                           #{tag}
                         </span>
                       ))}
                     </div>
                   </div>
-                  <h3 className="font-bold text-[15px] md:text-2xl text-[#2D2926] leading-tight line-clamp-2 md:line-clamp-2 mb-2 md:mb-4 group-hover:text-[#E6C79C] transition-colors">
+                  <h3 className="font-bold text-[15px] md:text-2xl text-[#121110] leading-tight line-clamp-2 md:line-clamp-2 mb-2 md:mb-4 group-hover:text-t-gold transition-colors">
                     {blog.title}
                   </h3>
-                  <p className="text-[12px] md:text-base text-[#78716A] line-clamp-2 md:line-clamp-3 font-light leading-relaxed mb-0 md:mb-6 flex-1">
+                  <p className="text-[12px] md:text-base text-t-muted line-clamp-2 md:line-clamp-3 font-normal leading-relaxed mb-0 md:mb-6 flex-1">
                     {blog.excerpt || blog.content?.replace(/<[^>]+>/g, '') || ''}
                   </p>
                   <div className="hidden md:flex items-center justify-between mt-auto pt-6 border-t border-[#78716A]/10">
-                    <div className="flex items-center text-xs text-[#78716A] gap-2 font-medium">
+                    <div className="flex items-center text-xs text-t-muted gap-2 font-medium">
                       
                     </div>
-                    <div className="text-[#2D2926] bg-[#FAF9F6] p-2 rounded-full group-hover:bg-[#E6C79C]/20 transition-colors">
+                    <div className="text-[#121110] bg-[#F5F2EC] p-2 rounded-full group-hover:bg-[#E8481C]/20 transition-colors">
                       <ArrowRight size={16} />
                     </div>
                   </div>
@@ -110,9 +110,9 @@ export default function BlogPage() {
               </article>
             ))}
             {blogs.length === 0 && (
-              <div className="col-span-full flex flex-col items-center justify-center py-32 text-[#78716A]">
+              <div className="col-span-full flex flex-col items-center justify-center py-32 text-t-muted">
                 <BookOpen size={64} className="mb-6 opacity-20" />
-                <p className="text-xl font-handwriting">{t('empty')}</p>
+                <p className="text-lg font-handwriting">{t('empty')}</p>
               </div>
             )}
           </div>

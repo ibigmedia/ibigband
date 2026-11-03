@@ -26,7 +26,7 @@ export default function PremiumPage() {
         <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white sm:text-4xl">
           {t('title')}
         </h1>
-        <p className="mt-4 text-lg text-gray-500 dark:text-gray-400">
+        <p className="mt-4 text-lg text-t-muted dark:text-t-soft">
           {t('subtitle')}
         </p>
       </div>
@@ -38,7 +38,7 @@ export default function PremiumPage() {
           </h3>
           <div className="flex items-baseline text-5xl font-extrabold text-gray-900 dark:text-white">
             $9.99
-            <span className="ml-1 text-xl font-medium text-gray-500 dark:text-gray-400">{t('perMonth')}</span>
+            <span className="ml-1 text-xl font-medium text-t-muted dark:text-t-soft">{t('perMonth')}</span>
           </div>
 
           <ul className="mt-8 space-y-4">
@@ -47,7 +47,7 @@ export default function PremiumPage() {
                 <div className="flex-shrink-0">
                   <CheckCircle2 className="h-6 w-6 text-green-500" />
                 </div>
-                <p className="ml-3 text-base text-gray-700 dark:text-gray-300">{benefit}</p>
+                <p className="ml-3 text-base text-gray-700 dark:text-t-soft">{benefit}</p>
               </li>
             ))}
           </ul>

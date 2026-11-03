@@ -186,7 +186,7 @@ export default function AdminVideoPage() {
     <div className="space-y-8 pb-20">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold font-handwriting text-[#E6C79C]">영상 관리</h1>
+          <h1 className="text-2xl font-bold font-handwriting text-[#E8481C]">영상 관리</h1>
           <p className="text-gray-400 mt-2">유튜브 영상 및 관련 모달 정보 관리</p>
         </div>
         <Button onClick={() => handleOpenModal()} className="flex items-center gap-2">
@@ -196,7 +196,7 @@ export default function AdminVideoPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {videos.map(video => (
-          <Card key={video.id} className="bg-[#2D2926]/50 border border-[#78716A]/20 overflow-hidden flex flex-col group relative">
+          <Card key={video.id} className="bg-[#121110]/50 border border-[#78716A]/20 overflow-hidden flex flex-col group relative">
              <div className="aspect-video relative bg-black/50 border-b border-[#78716A]/20">
                 {video.thumbnailUrl ? (
                    // eslint-disable-next-line @next/next/no-img-element
@@ -207,7 +207,7 @@ export default function AdminVideoPage() {
                    </div>
                 )}
                 {video.featured && (
-                    <span className="absolute top-2 right-2 bg-[#E6C79C] text-[#2D2926] text-[10px] font-bold px-2 py-1 rounded">FEATURED</span>
+                    <span className="absolute top-2 right-2 bg-[#E8481C] text-[#121110] text-[10px] font-bold px-2 py-1 rounded">FEATURED</span>
                 )}
              </div>
              
@@ -216,7 +216,7 @@ export default function AdminVideoPage() {
                 <p className="text-xs text-[#78716A] line-clamp-2 mb-4 flex-1">{video.description}</p>
                 
                 <div className="flex justify-end gap-2 pt-4 border-t border-[#78716A]/10 mt-auto">
-                   <button onClick={() => handleOpenModal(video)} className="p-2 text-[#78716A] hover:text-[#E6C79C] transition-colors"><Edit2 size={16} /></button>
+                   <button onClick={() => handleOpenModal(video)} className="p-2 text-[#78716A] hover:text-[#E8481C] transition-colors"><Edit2 size={16} /></button>
                    <button onClick={() => handleDelete(video.id)} className="p-2 text-[#78716A] hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
                 </div>
              </div>
@@ -226,8 +226,8 @@ export default function AdminVideoPage() {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4 overflow-y-auto">
-          <Card className="bg-[#2D2926] border border-[#78716A]/20 p-6 w-full max-w-2xl text-left my-8">
-            <h2 className="text-2xl font-bold text-[#E6C79C] mb-6">
+          <Card className="bg-[#121110] border border-[#78716A]/20 p-6 w-full max-w-2xl text-left my-8">
+            <h2 className="text-2xl font-bold text-[#E8481C] mb-6">
               {editingVideo ? '영상 수정' : '새 영상 추가'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -238,7 +238,7 @@ export default function AdminVideoPage() {
 
               <div>
                 <label className="block text-sm font-medium mb-1 text-gray-300">설명 / 공지</label>
-                <textarea rows={4} value={description} onChange={e => setDescription(e.target.value)} className="w-full rounded-md bg-black/30 border border-[#78716A]/20 px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#E6C79C]" placeholder="영상에 대한 설명이나 공지사항안내..." />
+                <textarea rows={4} value={description} onChange={e => setDescription(e.target.value)} className="w-full rounded-md bg-black/30 border border-[#78716A]/20 px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-[#E8481C]" placeholder="영상에 대한 설명이나 공지사항안내..." />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -249,7 +249,7 @@ export default function AdminVideoPage() {
                           <LinkIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" />
                           <Input value={youtubeUrl} onChange={e => setYoutubeUrl(e.target.value)} placeholder="https://youtube.com/watch?..." className="bg-black/30 w-full border-[#78716A]/20 text-white pl-9" />
                        </div>
-                       <Button type="button" onClick={handleAutoFill} disabled={isFetchingMeta} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E6C79C]">
+                       <Button type="button" onClick={handleAutoFill} disabled={isFetchingMeta} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E8481C]">
                           {isFetchingMeta ? '불러오는중..' : '자동 채우기'}
                        </Button>
                     </div>
@@ -273,7 +273,7 @@ export default function AdminVideoPage() {
                           <ImageIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#78716A]" />
                           <Input value={thumbnailUrl} onChange={e => setThumbnailUrl(e.target.value)} placeholder="https://..." className="bg-black/30 w-full border-[#78716A]/20 text-white pl-9" />
                        </div>
-                       <Button type="button" onClick={generateAIThumbnail} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E6C79C]">
+                       <Button type="button" onClick={generateAIThumbnail} variant="outline" className="shrink-0 text-xs border-[#78716A]/30 text-[#E8481C]">
                           AI생성
                        </Button>
                     </div>
@@ -281,7 +281,7 @@ export default function AdminVideoPage() {
               </div>
 
               <div className="flex items-center gap-2">
-                 <input type="checkbox" id="featured" checked={featured} onChange={e => setFeatured(e.target.checked)} className="w-4 h-4 rounded bg-black/30 border-[#78716A]/20 accent-[#E6C79C]" />
+                 <input type="checkbox" id="featured" checked={featured} onChange={e => setFeatured(e.target.checked)} className="w-4 h-4 rounded bg-black/30 border-[#78716A]/20 accent-[#E8481C]" />
                  <label htmlFor="featured" className="text-gray-300 text-sm">홈페이지 주요 섹션에 노출하기 (Featured)</label>
               </div>
 
@@ -328,7 +328,7 @@ export default function AdminVideoPage() {
                 <Button variant="outline" type="button" onClick={() => setIsModalOpen(false)}>
                   취소
                 </Button>
-                <Button type="submit" disabled={loading} className="bg-[#E6C79C] text-[#2D2926] hover:bg-white">
+                <Button type="submit" disabled={loading} className="bg-[#E8481C] text-[#121110] hover:bg-white">
                   {loading ? '저장 중...' : '저장'}
                 </Button>
               </div>

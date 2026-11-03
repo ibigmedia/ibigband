@@ -33,7 +33,7 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
       <button
         onClick={handleClick}
         disabled={isPending}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[#78716A] hover:bg-[#2D2926]/15 hover:text-[#2D2926] text-sm font-semibold transition-colors"
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-t-muted hover:bg-[#121110]/15 hover:text-[#121110] text-sm font-semibold transition-colors"
         aria-label="Change language"
       >
         <Globe size={16} />
@@ -46,7 +46,7 @@ export default function LanguageSwitcher({ compact = false }: { compact?: boolea
     <button
       onClick={handleClick}
       disabled={isPending}
-      className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#2D2926]/5 hover:bg-[#2D2926]/15 text-[#2D2926] text-sm font-bold transition-colors w-full justify-center"
+      className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#121110]/5 hover:bg-[#121110]/15 text-[#121110] text-sm font-bold transition-colors w-full justify-center"
       aria-label="Change language"
     >
       <Globe size={18} />

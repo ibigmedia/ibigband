@@ -47,19 +47,19 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
   // Theme color mappings
   const t = {
     overlay: isLight ? 'bg-black/60' : 'bg-black/90',
-    modalBg: isLight ? 'bg-[#FAF9F6]' : 'bg-[#0F0F0F]',
+    modalBg: isLight ? 'bg-[#F5F2EC]' : 'bg-[#FFFDF9]',
     borderColor: isLight ? 'border-[#78716A]/15' : 'border-[#27272A]',
     modalHeaderBorder: isLight ? 'border-[#78716A]/10' : 'border-[#27272A]',
-    textMain: isLight ? 'text-[#2D2926]' : 'text-white',
-    textMuted: isLight ? 'text-[#78716A]' : 'text-[#A1A1AA]',
-    textSubMuted: isLight ? 'text-gray-500' : 'text-[#71717A]',
-    btnCloseBg: isLight ? 'hover:bg-[#78716A]/10 text-[#78716A]' : 'bg-[#27272A] hover:bg-[#3F3F46] text-white',
-    contentBg: isLight ? 'bg-white' : 'bg-[#0A0A0A]',
-    previewBg: isLight ? 'bg-[#F5F5F3]' : 'bg-[#141414]',
-    boxBg: isLight ? 'bg-white' : 'bg-[#1A1A1A]',
-    tagBg: isLight ? 'bg-[#78716A]/5' : 'bg-[#27272A]',
+    textMain: isLight ? 'text-[#121110]' : 'text-[#121110]',
+    textMuted: isLight ? 'text-t-muted' : 'text-t-soft',
+    textSubMuted: isLight ? 'text-t-muted' : 'text-[#71717A]',
+    btnCloseBg: isLight ? 'hover:bg-[#2A2826]/10 text-t-muted' : 'bg-[#27272A] hover:bg-[#3F3F46] text-[#121110]',
+    contentBg: isLight ? 'bg-white' : 'bg-[#F5F2EC]',
+    previewBg: isLight ? 'bg-[#F5F5F3]' : 'bg-[#FFFDF9]',
+    boxBg: isLight ? 'bg-white' : 'bg-[#FFFDF9]',
+    tagBg: isLight ? 'bg-[#2A2826]/5' : 'bg-[#27272A]',
     tagBorder: isLight ? 'border-[#78716A]/10' : 'border-[#3F3F46]',
-    tagHover: isLight ? 'hover:text-[#2D2926]' : 'hover:text-white',
+    tagHover: isLight ? 'hover:text-[#121110]' : 'hover:text-[#B3350F]',
   };
 
   // 서버 측 등급 검증을 거쳐 PDF 다운로드 URL을 받아옵니다. 음원은 다운로드를 제공하지 않습니다.
@@ -122,9 +122,9 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
         {/* Modal Header */}
         <div className={`flex justify-between items-center p-4 md:p-6 border-b ${t.modalHeaderBorder} shrink-0`}>
           <div>
-            <span className="text-[10px] font-bold tracking-widest text-[#E6C79C] uppercase mb-1 block">{tx('detailBadge')}</span>
+            <span className="text-[12px] font-bold tracking-widest text-t-gold uppercase mb-1 block">{tx('detailBadge')}</span>
             <div className="flex items-center gap-3">
-              <h2 className={`text-3xl md:text-4xl ${t.textMain} line-clamp-1 tracking-normal font-handwriting`}>{sheet.title}</h2>
+              <h2 className={`text-2xl md:text-3xl ${t.textMain} line-clamp-1 tracking-normal font-handwriting`}>{sheet.title}</h2>
               <FavoriteButton sheet={sheet} size={22} />
             </div>
           </div>
@@ -176,7 +176,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                         <div className="absolute inset-x-0 bottom-[16%] flex items-center justify-center pointer-events-none">
                           <span
                             style={{ transform: 'rotate(-8deg)' }}
-                            className="text-white/55 font-black text-xl sm:text-2xl md:text-3xl tracking-[0.3em] whitespace-nowrap drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] select-none"
+                            className="text-[#121110] font-black text-xl sm:text-2xl md:text-3xl tracking-[0.3em] whitespace-nowrap drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)] select-none"
                           >
                             ibiGband · PREMIUM
                           </span>
@@ -185,11 +185,11 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                         <div
                           className="absolute inset-x-0 bottom-0 h-1/4 pointer-events-none"
                           style={{
-                            background: `linear-gradient(to top, ${isLight ? '#FAF9F6' : '#0F0F0F'} 0%, transparent 100%)`,
+                            background: `linear-gradient(to top, ${isLight ? '#F5F2EC' : '#0F0F0F'} 0%, transparent 100%)`,
                           }}
                         />
                         {/* 우측 상단 잠금 배지 */}
-                        <div className="absolute top-3 right-3 bg-brand-gold/95 text-black text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg pointer-events-none">
+                        <div className="absolute top-3 right-3 bg-brand-gold/95 text-black text-[12px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1 shadow-lg pointer-events-none">
                           <Lock className="w-3 h-3" /> Premium
                         </div>
                       </>
@@ -198,16 +198,16 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                 )}
 
                 {/* 모바일 전용 스크롤 힌트 */}
-                <div className={`lg:hidden flex items-center justify-center gap-1.5 text-xs font-bold py-1 ${isLight ? 'text-[#C9A675]' : 'text-brand-gold/90'}`}>
+                <div className={`lg:hidden flex items-center justify-center gap-1.5 text-xs font-bold py-1 ${isLight ? 'text-t-gold' : 'text-t-gold/90'}`}>
                   <ChevronDown className="w-4 h-4 animate-bounce" /> {tx('scrollHint')}
                 </div>
 
                 {/* YouTube Preview */}
                 {sheet.youtubeId && (
                   <div className={`bg-black border ${t.borderColor} rounded-2xl overflow-hidden shadow-lg`}>
-                    <div className={`px-4 py-2.5 ${isLight ? 'bg-[#2D2926]' : 'bg-[#1A1A1A]'} border-b ${t.borderColor} flex items-center gap-2`}>
+                    <div className={`px-4 py-2.5 ${isLight ? 'bg-[#121110]' : 'bg-[#FFFDF9]'} border-b ${t.borderColor} flex items-center gap-2`}>
                       <PlayCircle className="w-4 h-4 text-red-500" />
-                      <span className="text-xs font-bold text-white uppercase tracking-wider">{tx('videoPreview')}</span>
+                      <span className="text-xs font-bold text-[#121110] uppercase tracking-wider">{tx('videoPreview')}</span>
                     </div>
                     <div className="aspect-video w-full relative">
                       <iframe
@@ -232,7 +232,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                 <div className={`${t.boxBg} p-5 md:p-6 rounded-2xl border-l-4 border-l-brand-gold ${isLight ? 'border border-brand-taupe/15' : 'border-[#1A1A1A]'} shadow-lg`}>
                   <div className="flex items-start gap-4">
                     <div className="w-11 h-11 rounded-full bg-brand-gold/15 flex shrink-0 items-center justify-center border border-brand-gold/30">
-                      <Lock className="w-5 h-5 text-brand-gold" />
+                      <Lock className="w-5 h-5 text-t-gold" />
                     </div>
                     <div className="flex-1">
                       <h4 className={`${t.textMain} font-bold text-base md:text-lg mb-1`}>{tx('premiumOnlyTitle')}</h4>
@@ -240,12 +240,12 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                         {lockReason === 'login'
                           ? tx.rich('lockLoginText', {
                               b: (chunks) => <strong className={t.textMain}>{chunks}</strong>,
-                              gold: (chunks) => <strong className="text-brand-gold">{chunks}</strong>,
+                              gold: (chunks) => <strong className="text-t-gold">{chunks}</strong>,
                               price: unlockPrice,
                               days: SHEET_UNLOCK_VALID_DAYS,
                             })
                           : tx.rich('lockUpgradeText', {
-                              gold: (chunks) => <strong className="text-brand-gold">{chunks}</strong>,
+                              gold: (chunks) => <strong className="text-t-gold">{chunks}</strong>,
                               price: unlockPrice,
                               days: SHEET_UNLOCK_VALID_DAYS,
                               monthly: PREMIUM_MONTHLY_PRICE_USD,
@@ -256,13 +256,13 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                           <>
                             <Button
                               onClick={() => { onClose(); router.push('/auth'); }}
-                              className="bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-5 py-2 font-bold"
+                              className="bg-brand-gold text-black hover:bg-[#E8481C] rounded-xl px-5 py-2 font-bold"
                             >
                               {tx('login')}
                             </Button>
                             <Button
                               onClick={() => { onClose(); router.push('/premium'); }}
-                              className="bg-transparent border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 rounded-xl px-5 py-2 font-bold"
+                              className="bg-transparent border border-brand-gold/40 text-t-gold hover:bg-brand-gold/10 rounded-xl px-5 py-2 font-bold"
                             >
                               {tx('learnMembership')}
                             </Button>
@@ -271,13 +271,13 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                           <>
                             <Button
                               onClick={() => setIsPurchaseOpen(true)}
-                              className="bg-brand-gold text-black hover:bg-[#C9A675] rounded-xl px-5 py-2 font-bold"
+                              className="bg-brand-gold text-black hover:bg-[#E8481C] rounded-xl px-5 py-2 font-bold"
                             >
                               {tx('unlockWithPrice', { price: unlockPrice })}
                             </Button>
                             <Button
                               onClick={() => { onClose(); router.push('/premium'); }}
-                              className="bg-transparent border border-brand-gold/40 text-brand-gold hover:bg-brand-gold/10 rounded-xl px-5 py-2 font-bold"
+                              className="bg-transparent border border-brand-gold/40 text-t-gold hover:bg-brand-gold/10 rounded-xl px-5 py-2 font-bold"
                             >
                               {tx('monthlyMembership', { monthly: PREMIUM_MONTHLY_PRICE_USD })}
                             </Button>
@@ -307,7 +307,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                   </div>
                   <div className="flex justify-between items-center">
                     <span className={`${t.textSubMuted} text-sm`}>{tx('priceLabel')}</span>
-                    <span className="text-brand-gold font-black tracking-wider">{sheet.price === '0' || !sheet.price ? tx('free') : `$${sheet.price}`}</span>
+                    <span className="text-t-gold font-black tracking-wider">{sheet.price === '0' || !sheet.price ? tx('free') : `$${sheet.price}`}</span>
                   </div>
                 </div>
 
@@ -335,7 +335,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                       if (lockReason === 'login') { onClose(); router.push('/auth'); return; }
                       setIsPurchaseOpen(true);
                     }}
-                    className="w-full sm:w-auto bg-brand-gold/15 text-[#C9A675] hover:bg-brand-gold/25 border border-brand-gold/40 rounded-xl px-5 py-3 sm:py-2 transition-colors font-bold flex gap-2"
+                    className="w-full sm:w-auto bg-brand-gold/15 text-t-gold hover:bg-brand-gold/25 border border-brand-gold/40 rounded-xl px-5 py-3 sm:py-2 transition-colors font-bold flex gap-2"
                   >
                     <Lock className="w-4 h-4"/> {lockReason === 'login' ? tx('loginThenPay') : tx('unlockWithPrice', { price: unlockPrice })}
                   </Button>
@@ -354,7 +354,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
               {(sheet.audioUrl || sheet.hasAudio) && (
                 <div className={`${t.boxBg} p-5 md:p-6 rounded-2xl border-l-4 ${isLight ? 'border' : 'border-[#1A1A1A]'} border-l-blue-500 shadow-lg ${isLight ? 'border-brand-taupe/15' : ''}`}>
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-14 h-14 rounded-full bg-blue-500/10 flex shrink-0 items-center justify-center">
+                    <div className="w-14 h-14 rounded-full bg-[#F8D9CC] flex shrink-0 items-center justify-center">
                       <Music className="w-7 h-7 text-blue-500"/>
                     </div>
                     <div className="flex-1">
@@ -383,7 +383,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
               {sheet.albumId && sheet.trackId && (
                 <div className={`${t.boxBg} p-5 md:p-6 rounded-2xl border ${t.borderColor} text-center ${isLight ? 'shadow-sm' : ''}`}>
                   <div className="w-11 h-11 bg-brand-gold/10 rounded-full flex items-center justify-center mx-auto mb-3 border border-brand-gold/20">
-                    <Music className="w-5 h-5 text-brand-gold"/>
+                    <Music className="w-5 h-5 text-t-gold"/>
                   </div>
                   <h4 className={`${t.textMain} font-bold mb-1`}>{tx('linkedAudioTitle')}</h4>
                   <p className={`text-xs ${t.textMuted} mb-3`}>{tx('linkedAudioDesc')}</p>
@@ -392,7 +392,7 @@ export default function SheetModal({ sheet, onClose, theme = 'dark' }: SheetModa
                       onClose();
                       handlePlayLinkedMusic(sheet.albumId!, sheet.trackId!);
                     }}
-                    className="w-full bg-brand-gold text-[#2D2926] hover:bg-[#C9A675] font-bold py-3 tracking-wide shadow-lg shadow-brand-gold/20 border-none"
+                    className="w-full bg-brand-gold text-[#121110] hover:bg-[#E8481C] font-bold py-3 tracking-wide shadow-lg shadow-brand-gold/20 border-none"
                   >
                     <PlayCircle className="w-5 h-5 mr-2"/>
                     {tx('playLinkedAudio')}
