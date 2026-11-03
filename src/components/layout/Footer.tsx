@@ -6,6 +6,13 @@ import { useTranslations } from 'next-intl';
 import { ExternalLink, Youtube, Heart } from 'lucide-react';
 import BandMark from '@/components/layout/BandMark';
 
+const MINISTRIES = [
+  { href: 'https://www.ibigmission.org', name: 'ministryMission', desc: 'ministryMissionDesc' },
+  { href: 'https://3s3k.org', name: 'ministry3s3k', desc: 'ministry3s3kDesc' },
+  { href: 'https://guatemission.org', name: 'ministryGuate', desc: 'ministryGuateDesc' },
+  { href: 'https://giljabi.com', name: 'ministryGiljabi', desc: 'ministryGiljabiDesc' },
+] as const;
+
 export default function Footer() {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
@@ -48,7 +55,24 @@ export default function Footer() {
           </div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto mt-10 md:mt-20 pt-6 md:pt-10 border-t border-white/5 flex flex-col-reverse md:flex-row justify-between gap-4 md:gap-6 text-[12px] md:text-xs uppercase tracking-widest font-bold text-center md:text-left">
+      <nav aria-labelledby="footer-ministries" className="max-w-7xl mx-auto mt-10 md:mt-16 pt-6 md:pt-10 border-t border-white/10">
+        <h5 id="footer-ministries" className="text-white text-[12px] md:text-sm font-bold mb-4 md:mb-6 uppercase tracking-tighter md:tracking-[0.2em]">{t('ministriesHeading')}</h5>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
+          {MINISTRIES.map((m) => (
+            <li key={m.href}>
+              <a href={m.href} target="_blank" rel="noopener" className="group block h-full rounded-[18px] border border-white/10 p-4 md:p-5 transition-colors hover:border-white/40">
+                <span className="flex items-center justify-between gap-2 text-white text-[15px] md:text-base font-bold">
+                  {t(m.name)}
+                  <ExternalLink size={14} aria-hidden="true" className="shrink-0 transition-colors group-hover:text-t-gold" />
+                  <span className="sr-only">({t('ministryNewTab')})</span>
+                </span>
+                <span className="mt-1 block text-[13px] md:text-sm leading-relaxed">{t(m.desc)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <div className="max-w-7xl mx-auto mt-8 md:mt-12 pt-6 md:pt-10 border-t border-white/5 flex flex-col-reverse md:flex-row justify-between gap-4 md:gap-6 text-[12px] md:text-xs uppercase tracking-widest font-bold text-center md:text-left">
         <span className="opacity-70">&copy; {new Date().getFullYear()} ibiGband. {t('builtWith')}</span>
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-8 items-center justify-center md:justify-end">
           <span className="text-t-gold">{t('pwa')}</span>

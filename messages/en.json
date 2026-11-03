@@ -29,7 +29,17 @@
     "support": "Customer Support",
     "builtWith": "Built with Soul & Art.",
     "pwa": "Available on PWA",
-    "hq": "Global HQ: New Jersey, USA"
+    "hq": "Global HQ: New Jersey, USA",
+    "ministriesHeading": "Our Ministries",
+    "ministryMission": "IBIG Mission",
+    "ministryMissionDesc": "Sharing the gospel through music, media, education and field ministry",
+    "ministry3s3k": "3s3k",
+    "ministry3s3kDesc": "A daily devotional, three times a day",
+    "ministryGuate": "Guate Mission",
+    "ministryGuateDesc": "Galilee mission community in Chisec, Guatemala",
+    "ministryGiljabi": "Giljabi",
+    "ministryGiljabiDesc": "Workshops and resources for worship ministry",
+    "ministryNewTab": "opens in a new tab"
   },
   "language": {
     "ko": "한국어",

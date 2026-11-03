@@ -29,7 +29,17 @@
     "support": "고객 지원 센터",
     "builtWith": "Built with Soul & Art.",
     "pwa": "Available on PWA",
-    "hq": "Global HQ: New Jersey, USA"
+    "hq": "Global HQ: New Jersey, USA",
+    "ministriesHeading": "함께하는 사역",
+    "ministryMission": "아이빅미션",
+    "ministryMissionDesc": "음악과 미디어, 교육과 현장 사역으로 복음을 전하는 선교회",
+    "ministry3s3k": "삼시세끼",
+    "ministry3s3kDesc": "하루 세 번, 말씀으로 만나는 묵상",
+    "ministryGuate": "과테말라 선교",
+    "ministryGuateDesc": "과테말라 치섹의 갈릴리 선교 공동체",
+    "ministryGiljabi": "길잡이",
+    "ministryGiljabiDesc": "찬양사역 워크샵과 자료실",
+    "ministryNewTab": "새 창에서 열림"
   },
   "language": {
     "ko": "한국어",
