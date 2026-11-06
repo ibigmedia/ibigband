@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Link } from '@/i18n/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { ExternalLink, Youtube, Heart } from 'lucide-react';
 import BandMark from '@/components/layout/BandMark';
 
@@ -11,11 +11,13 @@ const MINISTRIES = [
   { href: 'https://3s3k.org', name: 'ministry3s3k', desc: 'ministry3s3kDesc' },
   { href: 'https://guatemission.org', name: 'ministryGuate', desc: 'ministryGuateDesc' },
   { href: 'https://giljabi.com', name: 'ministryGiljabi', desc: 'ministryGiljabiDesc' },
+  { href: 'https://ibigmedia.com/ko/print/church/?utm_source=ibigband&utm_medium=footer&utm_campaign=print', name: 'ministryPrint', desc: 'ministryPrintDesc' },
 ] as const;
 
 export default function Footer() {
   const t = useTranslations('footer');
   const tNav = useTranslations('nav');
+  const locale = useLocale();
   return (
     <footer className="bg-[#121110] text-white/75 py-10 md:py-24 px-5 md:px-6 border-t border-black/10">
       <div className="max-w-7xl mx-auto flex flex-col md:grid md:grid-cols-4 gap-6 md:gap-12">
@@ -57,10 +59,10 @@ export default function Footer() {
       </div>
       <nav aria-labelledby="footer-ministries" className="max-w-7xl mx-auto mt-10 md:mt-16 pt-6 md:pt-10 border-t border-white/10">
         <h5 id="footer-ministries" className="text-white text-[12px] md:text-sm font-bold mb-4 md:mb-6 uppercase tracking-tighter md:tracking-[0.2em]">{t('ministriesHeading')}</h5>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3">
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 md:gap-3">
           {MINISTRIES.map((m) => (
             <li key={m.href}>
-              <a href={m.href} target="_blank" rel="noopener" className="group block h-full rounded-[18px] border border-white/10 p-4 md:p-5 transition-colors hover:border-white/40">
+              <a href={locale === 'en' ? m.href.replace('/ko/print/', '/print/') : m.href} target="_blank" rel="noopener" className="group block h-full rounded-[18px] border border-white/10 p-4 md:p-5 transition-colors hover:border-white/40">
                 <span className="flex items-center justify-between gap-2 text-white text-[15px] md:text-base font-bold">
                   {t(m.name)}
                   <ExternalLink size={14} aria-hidden="true" className="shrink-0 transition-colors group-hover:text-t-gold" />

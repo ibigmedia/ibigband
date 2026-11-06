@@ -5,7 +5,7 @@ import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { Music, FileText, List, ArrowRight, Play, PlayCircle, Heart, Download, BookOpen, LayoutList } from 'lucide-react';
 import { useRouter, Link } from '@/i18n/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import Image from 'next/image';
 import HeroBand from '@/components/home/HeroBand';
 import SheetModal from '@/components/sheets/SheetModal';
@@ -19,6 +19,7 @@ import IbigSection from '@/components/embed/IbigSection';
 export default function Home() {
   const router = useRouter();
   const t = useTranslations('home');
+  const locale = useLocale();
   const { user } = useAuth();
   const [previewSheet, setPreviewSheet] = useState<Sheet | null>(null);
   /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -401,6 +402,33 @@ export default function Home() {
                {t('ctaButton')} <ArrowRight size={18} className="ml-1 opacity-80" />
              </Link>
           </div>
+        </div>
+      </section>
+
+      {/* 아이빅 미디어 인쇄 안내 — 교회·찬양팀 인쇄물 */}
+      <section className="px-4 sm:px-6 lg:px-8 max-w-7xl w-full mx-auto mb-10 md:mb-16">
+        <div className="bg-[#FFFDF9] border border-[#E0DBD0] rounded-[18px] p-6 md:p-8 lg:px-12 flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] md:text-[13px] font-semibold text-t-copper mb-2">{t('printEyebrow')}</p>
+            <h2 className="text-lg md:text-2xl font-extrabold text-[#121110] mb-2 tracking-tight">{t('printTitle')}</h2>
+            <p className="text-[13px] md:text-[15px] text-t-muted leading-relaxed max-w-xl">{t('printBody')}</p>
+            <a
+              href={`https://ibigmedia.com/${locale === 'en' ? '' : 'ko/'}print/church/?utm_source=ibigband&utm_medium=home_card&utm_campaign=print`}
+              target="_blank"
+              rel="noopener"
+              className="mt-4 inline-flex items-center gap-1.5 min-h-[44px] text-[14px] md:text-[15px] font-semibold text-[#B3350F] border-b border-current"
+            >
+              {t('printButton')} <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </div>
+          <ul className="grid grid-cols-3 gap-2 md:gap-3 md:w-[44%] shrink-0" aria-hidden="true">
+            {['flyers', 'vinyl-banners', 'retractable-banners'].map((id) => (
+              <li key={id}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`https://ibigmedia.com/print-img/${id}.webp`} alt="" loading="lazy" width={240} height={180} className="w-full aspect-[4/3] object-cover rounded-xl bg-[#ECE7DC]" />
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 

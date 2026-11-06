@@ -60,7 +60,9 @@
     "ministryGuateDesc": "과테말라 치섹의 갈릴리 선교 공동체",
     "ministryGiljabi": "길잡이",
     "ministryGiljabiDesc": "찬양사역 워크샵과 자료실",
-    "ministryNewTab": "새 창에서 열림"
+    "ministryNewTab": "새 창에서 열림",
+    "ministryPrint": "인쇄 주문 · Print shop",
+    "ministryPrintDesc": "주보·전단·현수막, 아이빅 미디어 인쇄"
   },
   "language": {
     "ko": "한국어",
@@ -93,7 +95,11 @@
     "blogEmpty": "아직 작성된 저널이 없습니다",
     "ctaTitle": "모든 컨텐츠를 한곳에서",
     "ctaBody": "음악, 영상, 악보, 저널 등 ibiGband의 숨결이 담긴 모든 자료를 저장소에서 자유롭게 탐색해 보세요.",
-    "ctaButton": "저장소 입장하기"
+    "ctaButton": "저장소 입장하기",
+    "printEyebrow": "함께하는 사역 · 아이빅 미디어 인쇄",
+    "printTitle": "찬양팀과 교회 인쇄물도 함께 준비하세요",
+    "printBody": "주보, 행사 전단, 현수막과 롤업 배너. 배송비 포함 가격에 모든 파일을 사람이 직접 확인합니다. 성탄 초대장은 11월 말까지 주문하시면 넉넉해요.",
+    "printButton": "교회 인쇄물 보기"
   },
   "about": {
     "title": "ibiGband 소개",

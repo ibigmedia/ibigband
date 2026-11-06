@@ -60,7 +60,9 @@
     "ministryGuateDesc": "Galilee mission community in Chisec, Guatemala",
     "ministryGiljabi": "Giljabi",
     "ministryGiljabiDesc": "Workshops and resources for worship ministry",
-    "ministryNewTab": "opens in a new tab"
+    "ministryNewTab": "opens in a new tab",
+    "ministryPrint": "Print shop",
+    "ministryPrintDesc": "Bulletins, flyers and banners by IBIG Media"
   },
   "language": {
     "ko": "한국어",
@@ -93,7 +95,11 @@
     "blogEmpty": "No journal entries yet",
     "ctaTitle": "All our work, in one place",
     "ctaBody": "Music, videos, sheets, journals — explore everything we've poured our heart into, all from a single archive.",
-    "ctaButton": "Enter the archive"
+    "ctaButton": "Enter the archive",
+    "printEyebrow": "Ministry partner · IBIG Media Print",
+    "printTitle": "Print for your worship team and church",
+    "printBody": "Bulletins, event flyers, vinyl banners and roll-up stands. Shipping is included and every file is checked by a person. Order Christmas invitations by late November.",
+    "printButton": "See church printing"
   },
   "about": {
     "title": "About ibiGband",
