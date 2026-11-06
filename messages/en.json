@@ -61,8 +61,8 @@
     "ministryGiljabi": "Giljabi",
     "ministryGiljabiDesc": "Workshops and resources for worship ministry",
     "ministryNewTab": "opens in a new tab",
-    "ministryPrint": "Print shop",
-    "ministryPrintDesc": "Bulletins, flyers and banners by IBIG Media"
+    "ministryPrint": "Print shop (US)",
+    "ministryPrintDesc": "Bulletins, flyers and banners, shipped within the US"
   },
   "language": {
     "ko": "한국어",
@@ -96,10 +96,11 @@
     "ctaTitle": "All our work, in one place",
     "ctaBody": "Music, videos, sheets, journals — explore everything we've poured our heart into, all from a single archive.",
     "ctaButton": "Enter the archive",
-    "printEyebrow": "Ministry partner · IBIG Media Print",
-    "printTitle": "Print for your worship team and church",
+    "printEyebrow": "Ministry partner · IBIG Media Print (US)",
+    "printTitle": "Print for US worship teams and churches",
     "printBody": "Bulletins, event flyers, vinyl banners and roll-up stands. Shipping is included and every file is checked by a person. Order Christmas invitations by late November.",
-    "printButton": "See church printing"
+    "printButton": "See church printing",
+    "printNotice": "For churches and organizations in the US; ships within the US only."
   },
   "about": {
     "title": "About ibiGband",

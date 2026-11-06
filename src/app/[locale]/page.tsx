@@ -412,6 +412,7 @@ export default function Home() {
             <p className="text-[12px] md:text-[13px] font-semibold text-t-copper mb-2">{t('printEyebrow')}</p>
             <h2 className="text-lg md:text-2xl font-extrabold text-[#121110] mb-2 tracking-tight">{t('printTitle')}</h2>
             <p className="text-[13px] md:text-[15px] text-t-muted leading-relaxed max-w-xl">{t('printBody')}</p>
+            <p className="mt-2 text-[12px] md:text-[13px] text-t-muted">{t('printNotice')}</p>
             <a
               href={`https://ibigmedia.com/${locale === 'en' ? '' : 'ko/'}print/church/?utm_source=ibigband&utm_medium=home_card&utm_campaign=print`}
               target="_blank"
